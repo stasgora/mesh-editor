@@ -1,6 +1,6 @@
 package sgora.mesh.editor.model;
 
-public class Point {
+public class Point extends ObservableModel {
 
 	public double x, y;
 
@@ -10,8 +10,12 @@ public class Point {
 	}
 
 	public Point(Point point) {
-		this.x = point.x;
-		this.y = point.y;
+		this(point.x, point.y);
+	}
+
+	public Point set(Point point) {
+		setValues(point.x, point.y);
+		return this;
 	}
 
 	public Point() {
@@ -19,8 +23,7 @@ public class Point {
 	}
 
 	public Point clamp(Point min, Point max) {
-		x = Math.max(min.x, Math.min(max.x, x));
-		y = Math.max(min.y, Math.min(max.y, y));
+		setValues(Math.max(min.x, Math.min(max.x, x)), Math.max(min.y, Math.min(max.y, y)));
 		return this;
 	}
 
@@ -29,9 +32,40 @@ public class Point {
 	}
 
 	public Point min(Point other) {
-		x = Math.max(x, other.x);
-		y = Math.max(y, other.y);
+		setValues(Math.max(x, other.x), Math.max(y, other.y));
 		return this;
+	}
+
+	public Point multiplyByScalar(double amount) {
+		setValues(x * amount, y * amount);
+		return this;
+	}
+
+	public Point multiply(Point point) {
+		setValues(x * point.x, y * point.y);
+		return this;
+	}
+
+	public Point divide(Point point) {
+		setValues(x / point.x, y / point.y);
+		return this;
+	}
+
+	public Point subtract(Point point) {
+		setValues(x - point.x, y - point.y);
+		return this;
+	}
+
+	public Point add(Point point) {
+		setValues(x + point.x, y + point.y);
+		return this;
+	}
+
+	private void setValues(double x, double y) {
+		if(this.x != x || this.y != y)
+			onValueSet();
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -42,36 +76,6 @@ public class Point {
 	@Override
 	public boolean equals(Object obj) {
 		return obj != null && obj.getClass().equals(this.getClass()) && x == ((Point) obj).x && y == ((Point) obj).y;
-	}
-
-	public Point multiplyByScalar(double amount) {
-		x *= amount;
-		y *= amount;
-		return this;
-	}
-
-	public Point multiply(Point point) {
-		x *= point.x;
-		y *= point.y;
-		return this;
-	}
-
-	public Point divide(Point point) {
-		x /= point.x;
-		y /= point.y;
-		return this;
-	}
-
-	public Point substract(Point point) {
-		x -= point.x;
-		y -= point.y;
-		return this;
-	}
-
-	public Point add(Point point) {
-		x += point.x;
-		y += point.y;
-		return this;
 	}
 
 }
