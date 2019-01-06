@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import sgora.mesh.editor.canvas.ImgCanvas?>
+<VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.AppController">
+	<MenuBar layoutX="185.0" layoutY="-14.0">
+		<menus>
+			<Menu mnemonicParsing="false" text="File">
+				<items>
+					<MenuItem mnemonicParsing="false" onAction="#loadImage" text="Load" />
+					<MenuItem mnemonicParsing="false" onAction="#exitApp" text="Exit" />
+				</items>
+			</Menu>
+		</menus>
+	</MenuBar>
+	<SplitPane fx:id="splitPane" dividerPositions="0.25" prefHeight="570.0" prefWidth="808.0" VBox.vgrow="ALWAYS">
+		<items>
+			<AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0"></AnchorPane>
+			<AnchorPane fx:id="canvasPane" minHeight="0.0" minWidth="50.0" prefHeight="160.0" prefWidth="100.0">
+				<ImgCanvas fx:id="canvas" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+			</AnchorPane>
+		</items>
+	</SplitPane>
+</VBox>
