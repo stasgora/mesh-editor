@@ -10,7 +10,7 @@ public class Rectangle extends ObservableModel {
 
 	public void setPosition(Point position) {
 		this.position = position;
-		onValueSet();
+		onValueChanged();
 	}
 
 	public Point getSize() {
@@ -19,7 +19,7 @@ public class Rectangle extends ObservableModel {
 
 	public void setSize(Point size) {
 		this.size = size;
-		onValueSet();
+		onValueChanged();
 	}
 
 }

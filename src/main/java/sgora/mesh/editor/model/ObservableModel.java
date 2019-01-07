@@ -6,22 +6,22 @@ import java.util.function.Consumer;
 
 public abstract class ObservableModel {
 
-	private List<Consumer<ObservableModel>> setListeners = new ArrayList<>();
-	private boolean wasValueSet = false;
+	private List<Consumer<ObservableModel>> listeners = new ArrayList<>();
+	private boolean wasValueChanged = false;
 
-	public void addSetListener(Consumer<ObservableModel> callback) {
-		setListeners.add(callback);
+	public void addListener(Consumer<ObservableModel> callback) {
+		listeners.add(callback);
 	}
 
 	public void notifyListeners() {
-		if(wasValueSet) {
-			setListeners.forEach(listener -> listener.accept(this));
-			wasValueSet = false;
+		if(wasValueChanged) {
+			listeners.forEach(listener -> listener.accept(this));
+			wasValueChanged = false;
 		}
 	}
 
-	protected void onValueSet() {
-		wasValueSet = true;
+	protected void onValueChanged() {
+		wasValueChanged = true;
 	}
 
 }

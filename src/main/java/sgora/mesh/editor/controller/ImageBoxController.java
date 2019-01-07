@@ -1,6 +1,5 @@
 package sgora.mesh.editor.controller;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -11,11 +10,11 @@ import java.util.function.UnaryOperator;
 
 public class ImageBoxController {
 
-	private final Rectangle imageBoxModel;
+	private final Rectangle imageBoxModel = new Rectangle();
 
 	private Image baseImageModel;
 
-	private Point mousePos;
+	private Point mousePos = new Point();
 	private Point lastMouseDragPoint;
 	private Point canvasSize, baseImageSize;
 
@@ -24,11 +23,6 @@ public class ImageBoxController {
 	private static final double DRAG_SPEED = 1;
 	private static final double MIN_ZOOM = 0.2;
 	private static final double MAX_ZOOM = 100;
-
-	public ImageBoxController() {
-		imageBoxModel = new Rectangle();
-		mousePos = new Point();
-	}
 
 	void setBaseImage(String imagePath, Point canvasSize) {
 		this.baseImageModel = new Image("file:" + imagePath);
