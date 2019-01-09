@@ -1,9 +1,9 @@
-package sgora.mesh.editor.view;
+package sgora.mesh.editor.ui;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import sgora.mesh.editor.model.Rectangle;
+import sgora.mesh.editor.model.data.Rectangle;
 
 public class ImageCanvas extends Canvas {
 

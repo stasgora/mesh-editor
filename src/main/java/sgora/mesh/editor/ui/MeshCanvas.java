@@ -1,10 +1,8 @@
-package sgora.mesh.editor.view;
+package sgora.mesh.editor.ui;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import sgora.mesh.editor.model.Point;
-import sgora.mesh.editor.model.Rectangle;
+import sgora.mesh.editor.model.data.Point;
 
 import java.util.List;
 

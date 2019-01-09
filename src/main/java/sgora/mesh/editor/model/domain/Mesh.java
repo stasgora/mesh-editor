@@ -1,15 +1,15 @@
-package sgora.mesh.editor.controller;
+package sgora.mesh.editor.model.domain;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import sgora.mesh.editor.model.Mesh;
-import sgora.mesh.editor.model.Point;
+import sgora.mesh.editor.model.data.MeshModel;
+import sgora.mesh.editor.model.data.Point;
 
 import java.util.List;
 
-public class MeshController {
+public class Mesh {
 
-	private Mesh meshModel = new Mesh();
+	private MeshModel meshModel = new MeshModel();
 
 	private static final int NODE_TOUCH_DIST = 10;
 
@@ -33,7 +33,7 @@ public class MeshController {
 		}
 	}
 
-	public Mesh getMeshModel() {
+	public MeshModel getMeshModel() {
 		return meshModel;
 	}
 

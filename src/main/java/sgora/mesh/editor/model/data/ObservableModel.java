@@ -1,4 +1,4 @@
-package sgora.mesh.editor.model;
+package sgora.mesh.editor.model.data;
 
 import java.util.ArrayList;
 import java.util.List;

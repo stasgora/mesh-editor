@@ -1,10 +1,10 @@
-package sgora.mesh.editor.model;
+package sgora.mesh.editor.model.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Mesh extends ObservableModel {
+public class MeshModel extends ObservableModel {
 
 	private final List<Point> nodes = new ArrayList<>();
 

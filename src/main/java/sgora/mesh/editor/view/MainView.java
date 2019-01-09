@@ -1,4 +1,4 @@
-package sgora.mesh.editor.controller;
+package sgora.mesh.editor.view;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -6,19 +6,21 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import sgora.mesh.editor.model.Point;
-import sgora.mesh.editor.model.Rectangle;
-import sgora.mesh.editor.view.ImageCanvas;
-import sgora.mesh.editor.view.MeshCanvas;
+import sgora.mesh.editor.model.data.Point;
+import sgora.mesh.editor.model.data.Rectangle;
+import sgora.mesh.editor.model.domain.ImageBox;
+import sgora.mesh.editor.model.domain.Mesh;
+import sgora.mesh.editor.ui.ImageCanvas;
+import sgora.mesh.editor.ui.MeshCanvas;
 
 import java.io.File;
 
-public class AppController {
+public class MainView {
 
 	private Stage stage;
 
-	private ImageBoxController imageBoxController;
-	private MeshController meshController;
+	private ImageBox imageBox;
+	private Mesh mesh;
 
 	private final Point canvasViewSize = new Point();
 
@@ -26,12 +28,13 @@ public class AppController {
 	public MeshCanvas meshCanvas;
 
 	public AnchorPane canvasPane;
-	public SplitPane splitPane;
 
 	public void init(Stage stage) {
 		this.stage = stage;
-		imageBoxController = new ImageBoxController();
-		meshController = new MeshController();
+		imageBox = new ImageBox();
+		mesh = new Mesh();
+
+		setEventHandlers();
 
 		canvasPane.widthProperty().addListener((observable, oldVal, newVal) -> {
 			canvasViewSize.set(new Point(canvasPane.getWidth(), canvasPane.getHeight()));
@@ -49,16 +52,18 @@ public class AppController {
 			meshCanvas.setWidth(value.x);
 			meshCanvas.setHeight(value.y);
 		});
+		canvasViewSize.addListener(newVal -> imageBox.onResizeCanvas(new Point((Point) newVal)));
+		imageBox.getImageBoxModel().addListener(newVal -> imageCanvas.drawImage(imageBox.getBaseImageModel(), (Rectangle) newVal));
+		mesh.getMeshModel().addListener(newVal -> meshCanvas.drawMesh(mesh.getMeshModel().getNodes()));
+	}
 
-		meshCanvas.setOnScroll(event -> imageBoxController.onScroll(event));
-		meshCanvas.setOnMouseMoved(event -> imageBoxController.onMouseMove(event));
-		meshCanvas.setOnMouseDragged(event -> imageBoxController.onMouseDrag(event));
-		meshCanvas.setOnMousePressed(event -> imageBoxController.onDragStarted(event));
-		meshCanvas.setOnMouseClicked(event -> meshController.onMouseClick(event));
+	private void setEventHandlers() {
+		meshCanvas.setOnScroll(event -> imageBox.onScroll(event));
+		meshCanvas.setOnMouseMoved(event -> imageBox.onMouseMove(event));
+		meshCanvas.setOnMouseDragged(event -> imageBox.onMouseDrag(event));
+		meshCanvas.setOnMousePressed(event -> imageBox.onDragStarted(event));
 
-		canvasViewSize.addListener(newVal -> imageBoxController.onResizeCanvas(new Point((Point) newVal)));
-		imageBoxController.getImageBoxModel().addListener(newVal -> imageCanvas.drawImage(imageBoxController.getBaseImageModel(), (Rectangle) newVal));
-		meshController.getMeshModel().addListener(newVal -> meshCanvas.drawMesh(meshController.getMeshModel().getNodes()));
+		meshCanvas.setOnMouseClicked(event -> mesh.onMouseClick(event));
 	}
 
 	public void loadImage(ActionEvent event) {
@@ -69,7 +74,7 @@ public class AppController {
 
 		if(image == null)
 			return;
-		imageBoxController.setBaseImage(image.getAbsolutePath(), new Point(canvasViewSize));
+		imageBox.setBaseImage(image.getAbsolutePath(), new Point(canvasViewSize));
 	}
 
 	public void exitApp(ActionEvent event) {

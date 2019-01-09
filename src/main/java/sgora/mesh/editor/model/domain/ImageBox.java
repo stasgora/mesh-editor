@@ -1,14 +1,14 @@
-package sgora.mesh.editor.controller;
+package sgora.mesh.editor.model.domain;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import sgora.mesh.editor.model.Point;
-import sgora.mesh.editor.model.Rectangle;
+import sgora.mesh.editor.model.data.Point;
+import sgora.mesh.editor.model.data.Rectangle;
 
 import java.util.function.UnaryOperator;
 
-public class ImageBoxController {
+public class ImageBox {
 
 	private final Rectangle imageBoxModel = new Rectangle();
 
@@ -24,14 +24,14 @@ public class ImageBoxController {
 	private static final double MIN_ZOOM = 0.2;
 	private static final double MAX_ZOOM = 100;
 
-	void setBaseImage(String imagePath, Point canvasSize) {
+	public void setBaseImage(String imagePath, Point canvasSize) {
 		this.baseImageModel = new Image("file:" + imagePath);
 		this.baseImageSize = new Point(baseImageModel.getWidth(), baseImageModel.getHeight());
 		this.canvasSize = canvasSize;
 		calcImageBox();
 	}
 
-	void onScroll(ScrollEvent event) {
+	public void onScroll(ScrollEvent event) {
 		double zoomAmount = -event.getDeltaY() * ZOOM_SPEED;
 		Point zoomPos = new Point(mousePos).subtract(imageBoxModel.getPosition()).multiplyByScalar(zoomAmount);
 		zoomAmount = 1 - zoomAmount;
@@ -45,11 +45,11 @@ public class ImageBoxController {
 		imageBoxModel.notifyListeners();
 	}
 
-	void onDragStarted(MouseEvent event) {
+	public void onDragStarted(MouseEvent event) {
 		lastMouseDragPoint = new Point(event.getX(), event.getY());
 	}
 
-	void onMouseDrag(MouseEvent event) {
+	public void onMouseDrag(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point moveAmount = new Point(mousePos).subtract(lastMouseDragPoint).multiplyByScalar(DRAG_SPEED);
 
@@ -58,7 +58,7 @@ public class ImageBoxController {
 		imageBoxModel.notifyListeners();
 	}
 
-	void onMouseMove(MouseEvent event) {
+	public void onMouseMove(MouseEvent event) {
 		mousePos.x = event.getX();
 		mousePos.y = event.getY();
 	}
