@@ -1,35 +1,36 @@
 package sgora.mesh.editor.view;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sgora.mesh.editor.model.input.MouseTool;
 import sgora.mesh.editor.model.data.ObservableModel;
-import sgora.mesh.editor.model.data.Point;
-import sgora.mesh.editor.model.data.Rectangle;
-import sgora.mesh.editor.model.domain.ImageBox;
-import sgora.mesh.editor.model.domain.MeshBox;
-import sgora.mesh.editor.ui.ImageCanvas;
-import sgora.mesh.editor.ui.MeshCanvas;
+import sgora.mesh.editor.model.data.*;
+import sgora.mesh.editor.model.domain.*;
+import sgora.mesh.editor.ui.*;
 
 import java.io.File;
 
 public class MainView {
-
 	private Stage stage;
 
+	// Model
 	private ImageBox imageBox;
 	private MeshBox meshBox;
 	private final Rectangle imageBoxModel = new Rectangle();
-
 	private final Point canvasViewSize = new Point();
 
+	// UI
+	public AnchorPane canvasPane;
 	public ImageCanvas imageCanvas;
 	public MeshCanvas meshCanvas;
+	public MainToolBar toolBar;
 
-	public AnchorPane canvasPane;
+	private SimpleObjectProperty<MouseTool> activeTool;
 
 	public void init(Stage stage) {
 		this.stage = stage;

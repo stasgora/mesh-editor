@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MeshCanvas extends Canvas {
 
-	GraphicsContext gc = getGraphicsContext2D();
+	private GraphicsContext gc = getGraphicsContext2D();
 
 	private Color NODE_COLOR = new Color(0.1, 0.2, 1, 1);
 	private int NODE_RADIUS = 8;

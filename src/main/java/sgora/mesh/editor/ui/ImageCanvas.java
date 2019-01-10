@@ -7,7 +7,7 @@ import sgora.mesh.editor.model.data.Rectangle;
 
 public class ImageCanvas extends Canvas {
 
-	GraphicsContext gc = getGraphicsContext2D();
+	private GraphicsContext gc = getGraphicsContext2D();
 
 	public void drawImage(Image image, Rectangle imageBox) {
 		if(!isVisible() || image == null)
