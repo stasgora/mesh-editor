@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MeshModel extends ObservableModel {
+public class Mesh extends ObservableModel {
 
 	private final List<Point> nodes = new ArrayList<>();
 

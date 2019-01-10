@@ -14,7 +14,7 @@ public class MeshEditor extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout.fxml"));
 		Parent root = loader.load();
 		((MainView) loader.getController()).init(stage);
-		stage.setTitle("MeshModel Editor");
+		stage.setTitle("Mesh Editor");
 		stage.setScene(new Scene(root, 1200, 800));
 
 		stage.requestFocus();

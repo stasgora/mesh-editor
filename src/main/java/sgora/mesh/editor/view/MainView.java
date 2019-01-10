@@ -2,14 +2,13 @@ package sgora.mesh.editor.view;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sgora.mesh.editor.model.data.Point;
 import sgora.mesh.editor.model.data.Rectangle;
 import sgora.mesh.editor.model.domain.ImageBox;
-import sgora.mesh.editor.model.domain.Mesh;
+import sgora.mesh.editor.model.domain.MeshBox;
 import sgora.mesh.editor.ui.ImageCanvas;
 import sgora.mesh.editor.ui.MeshCanvas;
 
@@ -20,7 +19,7 @@ public class MainView {
 	private Stage stage;
 
 	private ImageBox imageBox;
-	private Mesh mesh;
+	private MeshBox meshBox;
 
 	private final Point canvasViewSize = new Point();
 
@@ -32,7 +31,7 @@ public class MainView {
 	public void init(Stage stage) {
 		this.stage = stage;
 		imageBox = new ImageBox();
-		mesh = new Mesh();
+		meshBox = new MeshBox();
 
 		setEventHandlers();
 
@@ -54,7 +53,7 @@ public class MainView {
 		});
 		canvasViewSize.addListener(newVal -> imageBox.onResizeCanvas(new Point((Point) newVal)));
 		imageBox.getImageBoxModel().addListener(newVal -> imageCanvas.drawImage(imageBox.getBaseImageModel(), (Rectangle) newVal));
-		mesh.getMeshModel().addListener(newVal -> meshCanvas.drawMesh(mesh.getMeshModel().getNodes()));
+		meshBox.getMesh().addListener(newVal -> meshCanvas.drawMesh(meshBox.getMesh().getNodes()));
 	}
 
 	private void setEventHandlers() {
@@ -63,7 +62,7 @@ public class MainView {
 		meshCanvas.setOnMouseDragged(event -> imageBox.onMouseDrag(event));
 		meshCanvas.setOnMousePressed(event -> imageBox.onDragStarted(event));
 
-		meshCanvas.setOnMouseClicked(event -> mesh.onMouseClick(event));
+		meshCanvas.setOnMouseClicked(event -> meshBox.onMouseClick(event));
 	}
 
 	public void loadImage(ActionEvent event) {

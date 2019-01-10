@@ -2,14 +2,14 @@ package sgora.mesh.editor.model.domain;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import sgora.mesh.editor.model.data.MeshModel;
+import sgora.mesh.editor.model.data.Mesh;
 import sgora.mesh.editor.model.data.Point;
 
 import java.util.List;
 
-public class Mesh {
+public class MeshBox {
 
-	private MeshModel meshModel = new MeshModel();
+	private Mesh mesh = new Mesh();
 
 	private static final int NODE_TOUCH_DIST = 10;
 
@@ -18,23 +18,23 @@ public class Mesh {
 		if(event.getButton() == MouseButton.SECONDARY) {
 			eraseNodes(mousePos);
 		} else if (event.getButton() == MouseButton.PRIMARY) {
-			meshModel.addNode(mousePos);
+			mesh.addNode(mousePos);
 		}
-		meshModel.notifyListeners();
+		mesh.notifyListeners();
 	}
 
 	private void eraseNodes(Point mousePos) {
-		List<Point> nodes = meshModel.getNodes();
+		List<Point> nodes = mesh.getNodes();
 		for (int i = nodes.size() - 1; i >= 0; i--) {
 			Point dist = new Point(nodes.get(i)).subtract(mousePos).abs();
 			if (dist.x <= NODE_TOUCH_DIST && dist.y <= NODE_TOUCH_DIST) {
-				meshModel.removeNode(i);
+				mesh.removeNode(i);
 			}
 		}
 	}
 
-	public MeshModel getMeshModel() {
-		return meshModel;
+	public Mesh getMesh() {
+		return mesh;
 	}
 
 }
