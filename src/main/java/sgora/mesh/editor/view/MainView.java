@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sgora.mesh.editor.model.data.ObservableModel;
 import sgora.mesh.editor.model.data.Point;
 import sgora.mesh.editor.model.data.Rectangle;
 import sgora.mesh.editor.model.domain.ImageBox;
@@ -52,8 +53,8 @@ public class MainView {
 		});
 		canvasViewSize.addListener(newVal -> imageBox.onResizeCanvas(new Point((Point) newVal)));
 		imageBox.getImageBoxModel().addListener(newVal -> imageCanvas.drawImage(imageBox.getBaseImage(), (Rectangle) newVal));
-		imageBox.getImageBoxModel().addListener(newVal -> meshCanvas.drawMesh(meshBox.getMesh().getNodes()));
-		meshBox.getMesh().addListener(newVal -> meshCanvas.drawMesh(meshBox.getMesh().getNodes()));
+		imageBox.getImageBoxModel().addListener(this::drawMesh);
+		meshBox.getMesh().addListener(this::drawMesh);
 	}
 
 	private void setEventHandlers() {
@@ -83,5 +84,9 @@ public class MainView {
 	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
 		canvasViewSize.set(new Point(canvasPane.getWidth(), canvasPane.getHeight()));
 		canvasViewSize.notifyListeners();
+	}
+
+	private void drawMesh(ObservableModel newVal) {
+		meshCanvas.drawMesh(meshBox.getMesh().getNodes());
 	}
 }

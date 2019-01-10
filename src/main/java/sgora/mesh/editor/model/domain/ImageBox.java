@@ -20,10 +20,11 @@ public class ImageBox {
 	private Point canvasSize, baseImageSize;
 
 	private static final double DEF_BORDER = 0.1;
-	private static final double ZOOM_SPEED = 0.0025;
-	private static final double DRAG_SPEED = 1;
 	private static final double MIN_ZOOM = 0.2;
 	private static final double MAX_ZOOM = 100;
+
+	private double ZOOM_SPEED = 0.0025;
+	private double DRAG_SPEED = 1;
 
 	public ImageBox(Rectangle imageBoxModel) {
 		this.imageBoxModel = imageBoxModel;
