@@ -1,6 +1,7 @@
 package sgora.mesh.editor.view;
 
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -20,6 +21,7 @@ public class MainView {
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
+	private final Rectangle imageBoxModel = new Rectangle();
 
 	private final Point canvasViewSize = new Point();
 
@@ -30,19 +32,16 @@ public class MainView {
 
 	public void init(Stage stage) {
 		this.stage = stage;
-		imageBox = new ImageBox();
-		meshBox = new MeshBox();
+		imageBox = new ImageBox(imageBoxModel);
+		meshBox = new MeshBox(imageBoxModel);
 
 		setEventHandlers();
+		setListeners();
+	}
 
-		canvasPane.widthProperty().addListener((observable, oldVal, newVal) -> {
-			canvasViewSize.set(new Point(canvasPane.getWidth(), canvasPane.getHeight()));
-			canvasViewSize.notifyListeners();
-		});
-		canvasPane.heightProperty().addListener((observable, oldVal, newVal) -> {
-			canvasViewSize.set(new Point(canvasPane.getWidth(), canvasPane.getHeight()));
-			canvasViewSize.notifyListeners();
-		});
+	private void setListeners() {
+		canvasPane.widthProperty().addListener(this::paneSizeChanged);
+		canvasPane.heightProperty().addListener(this::paneSizeChanged);
 
 		canvasViewSize.addListener(newVal -> {
 			Point value = (Point) newVal;
@@ -52,7 +51,8 @@ public class MainView {
 			meshCanvas.setHeight(value.y);
 		});
 		canvasViewSize.addListener(newVal -> imageBox.onResizeCanvas(new Point((Point) newVal)));
-		imageBox.getImageBoxModel().addListener(newVal -> imageCanvas.drawImage(imageBox.getBaseImageModel(), (Rectangle) newVal));
+		imageBox.getImageBoxModel().addListener(newVal -> imageCanvas.drawImage(imageBox.getBaseImage(), (Rectangle) newVal));
+		imageBox.getImageBoxModel().addListener(newVal -> meshCanvas.drawMesh(meshBox.getMesh().getNodes()));
 		meshBox.getMesh().addListener(newVal -> meshCanvas.drawMesh(meshBox.getMesh().getNodes()));
 	}
 
@@ -62,7 +62,7 @@ public class MainView {
 		meshCanvas.setOnMouseDragged(event -> imageBox.onMouseDrag(event));
 		meshCanvas.setOnMousePressed(event -> imageBox.onDragStarted(event));
 
-		meshCanvas.setOnMouseClicked(event -> meshBox.onMouseClick(event));
+		meshCanvas.setOnMouseReleased(event -> meshBox.onMouseClick(event));
 	}
 
 	public void loadImage(ActionEvent event) {
@@ -80,4 +80,8 @@ public class MainView {
 		Platform.exit();
 	}
 
+	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+		canvasViewSize.set(new Point(canvasPane.getWidth(), canvasPane.getHeight()));
+		canvasViewSize.notifyListeners();
+	}
 }

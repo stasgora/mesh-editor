@@ -1,6 +1,7 @@
 package sgora.mesh.editor.model.domain;
 
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import sgora.mesh.editor.model.data.Point;
@@ -10,9 +11,9 @@ import java.util.function.UnaryOperator;
 
 public class ImageBox {
 
-	private final Rectangle imageBoxModel = new Rectangle();
+	private final Rectangle imageBoxModel;
 
-	private Image baseImageModel;
+	private Image baseImage;
 
 	private Point mousePos = new Point();
 	private Point lastMouseDragPoint;
@@ -24,9 +25,13 @@ public class ImageBox {
 	private static final double MIN_ZOOM = 0.2;
 	private static final double MAX_ZOOM = 100;
 
+	public ImageBox(Rectangle imageBoxModel) {
+		this.imageBoxModel = imageBoxModel;
+	}
+
 	public void setBaseImage(String imagePath, Point canvasSize) {
-		this.baseImageModel = new Image("file:" + imagePath);
-		this.baseImageSize = new Point(baseImageModel.getWidth(), baseImageModel.getHeight());
+		this.baseImage = new Image("file:" + imagePath);
+		this.baseImageSize = new Point(baseImage.getWidth(), baseImage.getHeight());
 		this.canvasSize = canvasSize;
 		calcImageBox();
 	}
@@ -50,6 +55,8 @@ public class ImageBox {
 	}
 
 	public void onMouseDrag(MouseEvent event) {
+		if(event.getButton() != MouseButton.MIDDLE)
+			return;
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point moveAmount = new Point(mousePos).subtract(lastMouseDragPoint).multiplyByScalar(DRAG_SPEED);
 
@@ -64,7 +71,7 @@ public class ImageBox {
 	}
 
 	public void onResizeCanvas(Point canvasSize) {
-		if(baseImageModel == null)
+		if(baseImage == null)
 			return;
 		Point sizeRatio = new Point(canvasSize).divide(this.canvasSize);
 
@@ -103,8 +110,8 @@ public class ImageBox {
 		return imageBoxModel;
 	}
 
-	public Image getBaseImageModel() {
-		return baseImageModel;
+	public Image getBaseImage() {
+		return baseImage;
 	}
 
 }
