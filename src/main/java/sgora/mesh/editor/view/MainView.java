@@ -50,24 +50,20 @@ public class MainView extends AnchorPane {
 	}
 
 	private void setEventHandlers() {
-		meshCanvas.setOnScroll(event -> imageBox.onScroll(event));
-		meshCanvas.setOnMouseMoved(event -> imageBox.onMouseMove(event));
-		meshCanvas.setOnMouseDragged(event -> imageBox.onMouseDrag(event));
-		meshCanvas.setOnMousePressed(event -> imageBox.onDragStart(event));
-		meshCanvas.setOnMouseEntered(event -> imageBox.onMouseEnter());
-		meshCanvas.setOnMouseExited(event -> imageBox.onMouseExit());
+		setOnScroll(event -> imageBox.onScroll(event));
+		setOnMouseMoved(event -> imageBox.onMouseMove(event));
 
-		meshCanvas.setOnMouseReleased(this::onMouseReleased);
+		setOnMousePressed(event -> imageBox.onDragStart(event));
+		setOnMouseDragged(event -> imageBox.onMouseDrag(event));
+
+		setOnMouseReleased(this::onMouseRelease);
+		setOnMouseEntered(this::onMouseEnter);
+		setOnMouseExited(this::onMouseExit);
 	}
 
 	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
 		model.mainViewSize.set(new Point(getWidth(), getHeight()));
 		model.mainViewSize.notifyListeners();
-	}
-
-	private void onMouseReleased(MouseEvent event) {
-		meshBox.onMouseClick(event);
-		imageBox.onDragEnd(event);
 	}
 
 	private void drawMesh() {
@@ -83,4 +79,18 @@ public class MainView extends AnchorPane {
 		drawMesh();
 	}
 
+	private void onMouseEnter(MouseEvent event) {
+		imageBox.onMouseEnter();
+		meshBox.onMouseEnter();
+	}
+
+	private void onMouseExit(MouseEvent event) {
+		imageBox.onMouseExit();
+		meshBox.onMouseExit();
+	}
+
+	private void onMouseRelease(MouseEvent event) {
+		imageBox.onDragEnd(event);
+		meshBox.onMouseClick(event);
+	}
 }
