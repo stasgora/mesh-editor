@@ -1,8 +1,8 @@
 package sgora.mesh.editor.view;
 
 import javafx.beans.value.ObservableValue;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import sgora.mesh.editor.model.ObservableModel;
 import sgora.mesh.editor.model.containers.Model;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.services.ImageBox;
@@ -44,20 +44,20 @@ public class MainView extends AnchorPane {
 			meshCanvas.setHeight(value.y);
 		});
 		model.mainViewSize.addListener(newVal -> imageBox.onResizeCanvas());
-		model.mainViewSize.addListener(this::drawImage);
-		model.mainViewSize.addListener(this::drawMesh);
-		model.imageBoxModel.imageBox.addListener(this::drawImage);
-		model.imageBoxModel.imageBox.addListener(this::drawMesh);
-		model.meshBoxModel.mesh.addListener(this::drawMesh);
+		model.mainViewSize.addListener(observable -> drawBothLayers());
+		model.imageBoxModel.imageBox.addListener(observable -> drawBothLayers());
+		model.meshBoxModel.mesh.addListener(observable -> drawMesh());
 	}
 
 	private void setEventHandlers() {
 		meshCanvas.setOnScroll(event -> imageBox.onScroll(event));
 		meshCanvas.setOnMouseMoved(event -> imageBox.onMouseMove(event));
 		meshCanvas.setOnMouseDragged(event -> imageBox.onMouseDrag(event));
-		meshCanvas.setOnMousePressed(event -> imageBox.onDragStarted(event));
+		meshCanvas.setOnMousePressed(event -> imageBox.onDragStart(event));
+		meshCanvas.setOnMouseEntered(event -> imageBox.onMouseEnter());
+		meshCanvas.setOnMouseExited(event -> imageBox.onMouseExit());
 
-		meshCanvas.setOnMouseReleased(event -> meshBox.onMouseClick(event));
+		meshCanvas.setOnMouseReleased(this::onMouseReleased);
 	}
 
 	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
@@ -65,11 +65,22 @@ public class MainView extends AnchorPane {
 		model.mainViewSize.notifyListeners();
 	}
 
-	private void drawMesh(ObservableModel newVal) {
+	private void onMouseReleased(MouseEvent event) {
+		meshBox.onMouseClick(event);
+		imageBox.onDragEnd(event);
+	}
+
+	private void drawMesh() {
 		meshCanvas.draw(model.meshBoxModel, meshBox.getMeshNodes());
 	}
 
-	private void drawImage(ObservableModel newVal) {
+	private void drawImage() {
 		imageCanvas.draw(model.imageBoxModel);
 	}
+
+	private void drawBothLayers() {
+		drawImage();
+		drawMesh();
+	}
+
 }

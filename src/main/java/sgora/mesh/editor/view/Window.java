@@ -32,6 +32,7 @@ public class Window {
 		toolBar.init(model.activeTool);
 		mainView.init(model, imageCanvas, meshCanvas);
 
+		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 	}
 

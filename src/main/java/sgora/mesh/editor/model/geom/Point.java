@@ -34,6 +34,10 @@ public class Point extends ObservableModel {
 		return this;
 	}
 
+	public Point clamp(Point max) {
+		return clamp(new Point(), max);
+	}
+
 	public Point multiplyByScalar(double amount) {
 		setValues(x * amount, y * amount);
 		return this;
@@ -57,6 +61,10 @@ public class Point extends ObservableModel {
 	public Point add(Point point) {
 		setValues(x + point.x, y + point.y);
 		return this;
+	}
+
+	public boolean isBetween(Point min, Point max) {
+		return x >= min.x && x < max.x && y >= min.y && y < max.y;
 	}
 
 	private void setValues(double x, double y) {

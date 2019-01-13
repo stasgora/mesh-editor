@@ -13,12 +13,11 @@ public class MeshEditor extends Application {
 	public void start(Stage stage) throws Exception{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout.fxml"));
 		Parent root = loader.load();
-		((Window) loader.getController()).init(stage);
 		stage.setTitle("Mesh Editor");
 		stage.setScene(new Scene(root, 1200, 800));
-
 		stage.requestFocus();
 		stage.show();
+		((Window) loader.getController()).init(stage);
 	}
 
 	public static void main(String[] args) {

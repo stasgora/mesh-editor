@@ -1,5 +1,6 @@
 package sgora.mesh.editor.services;
 
+import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -7,13 +8,14 @@ import javafx.scene.input.ScrollEvent;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.Model;
 import sgora.mesh.editor.model.geom.Point;
+import sgora.mesh.editor.model.input.MouseTool;
 
 import java.util.function.UnaryOperator;
 
 public class ImageBox {
 
 	private final Model model;
-	
+
 	private Point mousePos = new Point();
 	private Point lastMouseDragPoint, lastCanvasSize;
 
@@ -49,18 +51,23 @@ public class ImageBox {
 		model().imageBox.notifyListeners();
 	}
 
-	public void onDragStarted(MouseEvent event) {
+	public void onDragStart(MouseEvent event) {
+		if(model().baseImage == null || model.activeTool.getValue() != MouseTool.IMAGE_MOVER || event.getButton() != model().dragButton)
+			return;
+		model().dragging = true;
 		lastMouseDragPoint = new Point(event.getX(), event.getY());
+
+		model.mouseCursor.setValue(Cursor.CLOSED_HAND);
 	}
 
 	public void onMouseDrag(MouseEvent event) {
-		if(event.getButton() != MouseButton.MIDDLE)
+		if(!model().dragging || event.getButton() != model().dragButton)
 			return;
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point moveAmount = new Point(mousePos).subtract(lastMouseDragPoint).multiplyByScalar(model().dragSpeed);
 
 		modifyPosition(pos -> pos.add(moveAmount).clamp(new Point(model().imageBox.getSize()).multiplyByScalar(-1), model.mainViewSize));
-		lastMouseDragPoint = mousePos;
+		lastMouseDragPoint.set(mousePos);
 		model().imageBox.notifyListeners();
 	}
 
@@ -107,4 +114,24 @@ public class ImageBox {
 		model().imageBox.setSize(operation.apply(model().imageBox.getSize()));
 	}
 
+	public void onMouseEnter() {
+		if(isDragging())
+			model.mouseCursor.setValue(Cursor.HAND);
+	}
+
+	public void onMouseExit() {
+		if(isDragging())
+			model.mouseCursor.setValue(Cursor.DEFAULT);
+	}
+
+	private boolean isDragging() {
+		return model().baseImage != null && model.activeTool.getValue() == MouseTool.IMAGE_MOVER && !model().dragging;
+	}
+
+	public void onDragEnd(MouseEvent event) {
+		if(!model().dragging)
+			return;
+		model.mouseCursor.setValue(new Point(event.getX(), event.getY()).isBetween(new Point(), model.mainViewSize) ? Cursor.HAND : Cursor.DEFAULT);
+		model().dragging = false;
+	}
 }
