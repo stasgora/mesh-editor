@@ -6,7 +6,7 @@ import sgora.mesh.editor.model.input.MouseTool;
 
 public class Model {
 
-	public final Point canvasViewSize = new Point();
+	public Point mainViewSize = new Point();
 
 	public ImageBoxModel imageBoxModel = new ImageBoxModel();
 	public MeshBoxModel meshBoxModel = new MeshBoxModel();

@@ -36,15 +36,17 @@ public class MainView extends AnchorPane {
 		widthProperty().addListener(this::paneSizeChanged);
 		heightProperty().addListener(this::paneSizeChanged);
 
-		model.canvasViewSize.addListener(newVal -> {
+		model.mainViewSize.addListener(newVal -> {
 			Point value = (Point) newVal;
 			imageCanvas.setWidth(value.x);
 			imageCanvas.setHeight(value.y);
 			meshCanvas.setWidth(value.x);
 			meshCanvas.setHeight(value.y);
 		});
-		model.canvasViewSize.addListener(newVal -> imageBox.onResizeCanvas(new Point((Point) newVal)));
-		model.imageBoxModel.imageBox.addListener(newVal -> imageCanvas.draw(model.imageBoxModel));
+		model.mainViewSize.addListener(newVal -> imageBox.onResizeCanvas());
+		model.mainViewSize.addListener(this::drawImage);
+		model.mainViewSize.addListener(this::drawMesh);
+		model.imageBoxModel.imageBox.addListener(this::drawImage);
 		model.imageBoxModel.imageBox.addListener(this::drawMesh);
 		model.meshBoxModel.mesh.addListener(this::drawMesh);
 	}
@@ -59,12 +61,15 @@ public class MainView extends AnchorPane {
 	}
 
 	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
-		model.canvasViewSize.set(new Point(getWidth(), getHeight()));
-		model.canvasViewSize.notifyListeners();
+		model.mainViewSize.set(new Point(getWidth(), getHeight()));
+		model.mainViewSize.notifyListeners();
 	}
 
 	private void drawMesh(ObservableModel newVal) {
 		meshCanvas.draw(model.meshBoxModel, meshBox.getMeshNodes());
 	}
 
+	private void drawImage(ObservableModel newVal) {
+		imageCanvas.draw(model.imageBoxModel);
+	}
 }

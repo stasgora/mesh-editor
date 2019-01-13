@@ -7,7 +7,6 @@ import javafx.scene.input.ScrollEvent;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.Model;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.geom.Rectangle;
 
 import java.util.function.UnaryOperator;
 
@@ -16,7 +15,7 @@ public class ImageBox {
 	private final Model model;
 	
 	private Point mousePos = new Point();
-	private Point lastMouseDragPoint;
+	private Point lastMouseDragPoint, lastCanvasSize;
 
 	private static final double DEF_BORDER = 0.1;
 	private static final double MIN_ZOOM = 0.2;
@@ -41,7 +40,7 @@ public class ImageBox {
 		zoomAmount = 1 - zoomAmount;
 
 		Point newImgSize = new Point(model().imageBox.getSize()).multiplyByScalar(zoomAmount);
-		Point canvasSize = model.canvasViewSize;
+		Point canvasSize = model.mainViewSize;
 		if(newImgSize.x < canvasSize.x * MIN_ZOOM || newImgSize.y < canvasSize.y * MIN_ZOOM
 				|| newImgSize.x > canvasSize.x * MAX_ZOOM || newImgSize.y > canvasSize.y * MAX_ZOOM)
 			return;
@@ -60,7 +59,7 @@ public class ImageBox {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point moveAmount = new Point(mousePos).subtract(lastMouseDragPoint).multiplyByScalar(model().dragSpeed);
 
-		modifyPosition(pos -> pos.add(moveAmount).clamp(new Point(model().imageBox.getSize()).multiplyByScalar(-1), model.canvasViewSize));
+		modifyPosition(pos -> pos.add(moveAmount).clamp(new Point(model().imageBox.getSize()).multiplyByScalar(-1), model.mainViewSize));
 		lastMouseDragPoint = mousePos;
 		model().imageBox.notifyListeners();
 	}
@@ -70,11 +69,13 @@ public class ImageBox {
 		mousePos.y = event.getY();
 	}
 
-	public void onResizeCanvas(Point canvasSize) {
-		if(model().baseImage == null)
+	public void onResizeCanvas() {
+		if(model().baseImage == null || model.mainViewSize.x == 0 || model.mainViewSize.y == 0)
 			return;
-		Point sizeRatio = new Point(canvasSize).divide(model.canvasViewSize);
-
+		if(lastCanvasSize == null)
+			lastCanvasSize = new Point(model.mainViewSize);
+		Point sizeRatio = new Point(model.mainViewSize).divide(lastCanvasSize);
+		lastCanvasSize.set(model.mainViewSize);
 		modifyPosition(pos -> pos.multiply(sizeRatio));
 		modifySize(size -> size.multiplyByScalar((sizeRatio.y + sizeRatio.x) / 2));
 		model().imageBox.notifyListeners();
@@ -83,7 +84,7 @@ public class ImageBox {
 	private void calcImageBox() {
 		double imgRatio = model().baseImage.getWidth() / model().baseImage.getHeight();
 
-		Point canvasSize = model.canvasViewSize;
+		Point canvasSize = model.mainViewSize;
 		if(imgRatio > canvasSize.x / canvasSize.y) {
 			double imgWidth = canvasSize.x * (1 - DEF_BORDER);
 			double imgHeight = imgWidth / imgRatio;
