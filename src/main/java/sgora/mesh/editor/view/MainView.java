@@ -1,61 +1,52 @@
 package sgora.mesh.editor.view;
 
-import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import sgora.mesh.editor.model.input.MouseTool;
-import sgora.mesh.editor.model.data.ObservableModel;
-import sgora.mesh.editor.model.data.*;
-import sgora.mesh.editor.model.domain.*;
-import sgora.mesh.editor.ui.*;
+import sgora.mesh.editor.model.ObservableModel;
+import sgora.mesh.editor.model.containers.Model;
+import sgora.mesh.editor.model.geom.Point;
+import sgora.mesh.editor.services.ImageBox;
+import sgora.mesh.editor.services.MeshBox;
+import sgora.mesh.editor.ui.ImageCanvas;
+import sgora.mesh.editor.ui.MeshCanvas;
 
-import java.io.File;
+public class MainView extends AnchorPane {
 
-public class MainView {
-	private Stage stage;
+	private ImageCanvas imageCanvas;
+	private MeshCanvas meshCanvas;
 
-	// Model
-	private ImageBox imageBox;
-	private MeshBox meshBox;
-	private final Rectangle imageBoxModel = new Rectangle();
-	private final Point canvasViewSize = new Point();
+	public ImageBox imageBox;
+	public MeshBox meshBox;
 
-	// UI
-	public AnchorPane canvasPane;
-	public ImageCanvas imageCanvas;
-	public MeshCanvas meshCanvas;
-	public MainToolBar toolBar;
+	private Model model;
 
-	private SimpleObjectProperty<MouseTool> activeTool;
+	public void init(Model model, ImageCanvas imageCanvas, MeshCanvas meshCanvas) {
+		this.model = model;
+		this.imageCanvas = imageCanvas;
+		this.meshCanvas = meshCanvas;
+		
+		imageBox = new ImageBox(model);
+		meshBox = new MeshBox(model);
 
-	public void init(Stage stage) {
-		this.stage = stage;
-		imageBox = new ImageBox(imageBoxModel);
-		meshBox = new MeshBox(imageBoxModel);
-
-		setEventHandlers();
 		setListeners();
+		setEventHandlers();
 	}
 
 	private void setListeners() {
-		canvasPane.widthProperty().addListener(this::paneSizeChanged);
-		canvasPane.heightProperty().addListener(this::paneSizeChanged);
+		widthProperty().addListener(this::paneSizeChanged);
+		heightProperty().addListener(this::paneSizeChanged);
 
-		canvasViewSize.addListener(newVal -> {
+		model.canvasViewSize.addListener(newVal -> {
 			Point value = (Point) newVal;
 			imageCanvas.setWidth(value.x);
 			imageCanvas.setHeight(value.y);
 			meshCanvas.setWidth(value.x);
 			meshCanvas.setHeight(value.y);
 		});
-		canvasViewSize.addListener(newVal -> imageBox.onResizeCanvas(new Point((Point) newVal)));
-		imageBox.getImageBoxModel().addListener(newVal -> imageCanvas.drawImage(imageBox.getBaseImage(), (Rectangle) newVal));
-		imageBox.getImageBoxModel().addListener(this::drawMesh);
-		meshBox.getMesh().addListener(this::drawMesh);
+		model.canvasViewSize.addListener(newVal -> imageBox.onResizeCanvas(new Point((Point) newVal)));
+		model.imageBoxModel.imageBox.addListener(newVal -> imageCanvas.draw(model.imageBoxModel));
+		model.imageBoxModel.imageBox.addListener(this::drawMesh);
+		model.meshBoxModel.mesh.addListener(this::drawMesh);
 	}
 
 	private void setEventHandlers() {
@@ -67,27 +58,13 @@ public class MainView {
 		meshCanvas.setOnMouseReleased(event -> meshBox.onMouseClick(event));
 	}
 
-	public void loadImage(ActionEvent event) {
-		FileChooser imageChooser = new FileChooser();
-		imageChooser.setTitle("Choose Image");
-		imageChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp"));
-		File image = imageChooser.showOpenDialog(stage);
-
-		if(image == null)
-			return;
-		imageBox.setBaseImage(image.getAbsolutePath(), new Point(canvasViewSize));
-	}
-
-	public void exitApp(ActionEvent event) {
-		Platform.exit();
-	}
-
 	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
-		canvasViewSize.set(new Point(canvasPane.getWidth(), canvasPane.getHeight()));
-		canvasViewSize.notifyListeners();
+		model.canvasViewSize.set(new Point(getWidth(), getHeight()));
+		model.canvasViewSize.notifyListeners();
 	}
 
 	private void drawMesh(ObservableModel newVal) {
-		meshCanvas.drawMesh(meshBox.getMesh().getNodes());
+		meshCanvas.draw(model.meshBoxModel, meshBox.getMeshNodes());
 	}
+
 }

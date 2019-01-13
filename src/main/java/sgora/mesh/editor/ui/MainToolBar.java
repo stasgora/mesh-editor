@@ -3,6 +3,7 @@ package sgora.mesh.editor.ui;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
+import sgora.mesh.editor.model.SimpleModelProperty;
 import sgora.mesh.editor.model.input.MouseTool;
 
 import java.util.Arrays;
@@ -10,7 +11,10 @@ import java.util.stream.Collectors;
 
 public class MainToolBar extends ToolBar {
 
-	public MainToolBar() {
+	private SimpleModelProperty<MouseTool> mouseToolProperty;
+
+	public void init(SimpleModelProperty<MouseTool> mouseToolProperty) {
+		this.mouseToolProperty = mouseToolProperty;
 		Arrays.asList(MouseTool.values()).forEach(this::addTool);
 	}
 
@@ -26,7 +30,7 @@ public class MainToolBar extends ToolBar {
 	}
 
 	private void onToolChosen(ActionEvent event) {
-		//event.g
+		mouseToolProperty.setValue((MouseTool) ((Button) event.getSource()).getUserData());
 	}
 
 }

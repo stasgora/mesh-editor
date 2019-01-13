@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sgora.mesh.editor.view.MainView;
+import sgora.mesh.editor.view.Window;
 
 public class MeshEditor extends Application {
 
@@ -13,7 +13,7 @@ public class MeshEditor extends Application {
 	public void start(Stage stage) throws Exception{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout.fxml"));
 		Parent root = loader.load();
-		((MainView) loader.getController()).init(stage);
+		((Window) loader.getController()).init(stage);
 		stage.setTitle("Mesh Editor");
 		stage.setScene(new Scene(root, 1200, 800));
 

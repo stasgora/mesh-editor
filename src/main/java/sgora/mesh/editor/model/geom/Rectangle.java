@@ -1,4 +1,6 @@
-package sgora.mesh.editor.model.data;
+package sgora.mesh.editor.model.geom;
+
+import sgora.mesh.editor.model.ObservableModel;
 
 public class Rectangle extends ObservableModel {
 
