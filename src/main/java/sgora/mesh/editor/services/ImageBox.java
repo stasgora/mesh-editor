@@ -16,8 +16,7 @@ public class ImageBox {
 
 	private final Model model;
 
-	private Point mousePos = new Point();
-	private Point lastMouseDragPoint, lastCanvasSize;
+	private Point lastCanvasSize;
 
 	private static final double DEF_BORDER = 0.1;
 	private static final double MIN_ZOOM = 0.2;
@@ -33,47 +32,8 @@ public class ImageBox {
 
 	public void setBaseImage(String imagePath) {
 		model().baseImage = new Image("file:" + imagePath);
+		model.imageBoxModel.imageLoaded = true;
 		calcImageBox();
-	}
-
-	public void onScroll(ScrollEvent event) {
-		double zoomAmount = -event.getDeltaY() * model().zoomSpeed;
-		Point zoomPos = new Point(mousePos).subtract(model().imageBox.getPosition()).multiplyByScalar(zoomAmount);
-		zoomAmount = 1 - zoomAmount;
-
-		Point newImgSize = new Point(model().imageBox.getSize()).multiplyByScalar(zoomAmount);
-		Point canvasSize = model.mainViewSize;
-		if(newImgSize.x < canvasSize.x * MIN_ZOOM || newImgSize.y < canvasSize.y * MIN_ZOOM
-				|| newImgSize.x > canvasSize.x * MAX_ZOOM || newImgSize.y > canvasSize.y * MAX_ZOOM)
-			return;
-		modifyPosition(pos -> pos.add(zoomPos));
-		modifySize(size -> newImgSize);
-		model().imageBox.notifyListeners();
-	}
-
-	public void onDragStart(MouseEvent event) {
-		if(model().baseImage == null || model.activeTool.getValue() != MouseTool.IMAGE_MOVER || event.getButton() != model().dragButton)
-			return;
-		model().dragging = true;
-		lastMouseDragPoint = new Point(event.getX(), event.getY());
-
-		model.mouseCursor.setValue(Cursor.CLOSED_HAND);
-	}
-
-	public void onMouseDrag(MouseEvent event) {
-		if(!model().dragging || event.getButton() != model().dragButton)
-			return;
-		Point mousePos = new Point(event.getX(), event.getY());
-		Point moveAmount = new Point(mousePos).subtract(lastMouseDragPoint).multiplyByScalar(model().dragSpeed);
-
-		modifyPosition(pos -> pos.add(moveAmount).clamp(new Point(model().imageBox.getSize()).multiplyByScalar(-1), model.mainViewSize));
-		lastMouseDragPoint.set(mousePos);
-		model().imageBox.notifyListeners();
-	}
-
-	public void onMouseMove(MouseEvent event) {
-		mousePos.x = event.getX();
-		mousePos.y = event.getY();
 	}
 
 	public void onResizeCanvas() {
@@ -114,24 +74,41 @@ public class ImageBox {
 		model().imageBox.setSize(operation.apply(model().imageBox.getSize()));
 	}
 
-	public void onMouseEnter() {
-		if(isDragging())
+	public void onZoom(double amount, Point mousePos) {
+		double zoomAmount = amount * model().zoomDir * model().zoomSpeed;
+		Point zoomPos = new Point(mousePos).subtract(model().imageBox.getPosition()).multiplyByScalar(zoomAmount);
+		Point newImgSize = new Point(model().imageBox.getSize()).multiplyByScalar(1 - zoomAmount);
+
+		if(newImgSize.x < model.mainViewSize.x * MIN_ZOOM || newImgSize.y < model.mainViewSize.y * MIN_ZOOM
+				|| newImgSize.x > model.mainViewSize.x * MAX_ZOOM || newImgSize.y > model.mainViewSize.y * MAX_ZOOM)
+			return;
+		modifyPosition(pos -> pos.add(zoomPos));
+		modifySize(size -> newImgSize);
+		model().imageBox.notifyListeners();
+	}
+
+	public void onDragStart() {
+		model.mouseCursor.setValue(Cursor.CLOSED_HAND);
+	}
+
+	public void onMouseDrag(Point dragAmount) {
+		System.out.println(dragAmount);
+		modifyPosition(pos -> pos.add(dragAmount.multiplyByScalar(model().dragSpeed)).clamp(new Point(model().imageBox.getSize()).multiplyByScalar(-1), model.mainViewSize));
+		model().imageBox.notifyListeners();
+	}
+
+	public void onDragEnd(Point mousePos) {
+		model.mouseCursor.setValue(mousePos.isBetween(new Point(), model.mainViewSize) ? Cursor.HAND : Cursor.DEFAULT);
+	}
+
+	public void onMouseEnter(boolean isDragging) {
+		if(!isDragging)
 			model.mouseCursor.setValue(Cursor.HAND);
 	}
 
-	public void onMouseExit() {
-		if(isDragging())
+	public void onMouseExit(boolean isDragging) {
+		if(!isDragging)
 			model.mouseCursor.setValue(Cursor.DEFAULT);
 	}
 
-	private boolean isDragging() {
-		return model().baseImage != null && model.activeTool.getValue() == MouseTool.IMAGE_MOVER && !model().dragging;
-	}
-
-	public void onDragEnd(MouseEvent event) {
-		if(!model().dragging)
-			return;
-		model.mouseCursor.setValue(new Point(event.getX(), event.getY()).isBetween(new Point(), model.mainViewSize) ? Cursor.HAND : Cursor.DEFAULT);
-		model().dragging = false;
-	}
 }

@@ -24,14 +24,10 @@ public class MeshBox {
 		return model.meshBoxModel;
 	}
 
-	public void onMouseClick(MouseEvent event) {
-		if(model.imageBoxModel.baseImage == null || model.activeTool.getValue() != MouseTool.MESH_EDITOR ||
-				!new Point(event.getX(), event.getY()).isBetween(new Point(), model.mainViewSize))
-			return;
-		Point mousePos = new Point(event.getX(), event.getY());
-		if(event.getButton() == model().removeNodeButton) {
+	public void onMouseClick(Point mousePos, MouseButton mouseButton) {
+		if(mouseButton == model().removeNodeButton) {
 			eraseNodes(mousePos);
-		} else if (event.getButton() == model().placeNodeButton) {
+		} else if (mouseButton == model().placeNodeButton) {
 			model().mesh.addNode(mousePos.subtract(model.imageBoxModel.imageBox.getPosition()).divide(model.imageBoxModel.imageBox.getSize()));
 		}
 		model().mesh.notifyListeners();
@@ -53,12 +49,10 @@ public class MeshBox {
 	}
 
 	public void onMouseEnter() {
-		if(model.activeTool.getValue() == MouseTool.MESH_EDITOR)
-			model.mouseCursor.setValue(Cursor.CROSSHAIR);
+		model.mouseCursor.setValue(Cursor.CROSSHAIR);
 	}
 
 	public void onMouseExit() {
-		if(model.activeTool.getValue() == MouseTool.MESH_EDITOR)
-			model.mouseCursor.setValue(Cursor.DEFAULT);
+		model.mouseCursor.setValue(Cursor.DEFAULT);
 	}
 }
