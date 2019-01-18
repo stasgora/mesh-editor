@@ -1,9 +1,9 @@
-package sgora.mesh.editor.model;
+package sgora.mesh.editor.model.observables;
 
 /**
  * Notifies listeners when model value is set
  */
-public class SimpleModelProperty<T> extends ObservableModel {
+public class SimpleModelProperty<T> extends SimpleObservable {
 
 	private T modelValue;
 
@@ -17,7 +17,7 @@ public class SimpleModelProperty<T> extends ObservableModel {
 
 	public void setValue(T modelValue) {
 		this.modelValue = modelValue;
-		notifyListeners();
+		onValueChanged();
 	}
 
 }

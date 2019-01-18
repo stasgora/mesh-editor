@@ -2,17 +2,15 @@ package sgora.mesh.editor.services;
 
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.containers.Model;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.input.MouseTool;
-
-import java.util.List;
 
 public class MeshBox {
 
 	private final Model model;
+
+	private Integer draggedNodeIndex;
 
 	private final int NODE_TOUCH_DIST = 10;
 
@@ -24,28 +22,61 @@ public class MeshBox {
 		return model.meshBoxModel;
 	}
 
-	public void onMouseClick(Point mousePos, MouseButton mouseButton) {
-		if(mouseButton == model().removeNodeButton) {
-			eraseNodes(mousePos);
-		} else if (mouseButton == model().placeNodeButton) {
-			model().mesh.addNode(mousePos.subtract(model.imageBoxModel.imageBox.getPosition()).divide(model.imageBoxModel.imageBox.getSize()));
+	private Integer findNodeIndex(Point position) {
+		Point[] nodes = getMeshNodes();
+		for (int i = nodes.length - 1; i >= 0; i--) {
+			Point dist = new Point(nodes[i]).subtract(position).abs();
+			if (dist.x <= NODE_TOUCH_DIST && dist.y <= NODE_TOUCH_DIST)
+				return i;
+		}
+		return null;
+	}
+
+	private void removeNode(Point mousePos) {
+		Integer nodeIndex = findNodeIndex(mousePos);
+		if(nodeIndex != null)
+			model().mesh.removeNode(nodeIndex);
+	}
+
+	public Point[] getMeshNodes() {
+		return model().mesh.getNodes().stream().map(this::getNodePixelPos).toArray(Point[]::new);
+	}
+
+	private Point getNodePixelPos(Point node) {
+		return new Point(node).multiply(model.imageBoxModel.imageBox.getSize()).add(model.imageBoxModel.imageBox.getPosition());
+	}
+
+	private Point getNodeRelativePos(Point node) {
+		return new Point(node).subtract(model.imageBoxModel.imageBox.getPosition()).divide(model.imageBoxModel.imageBox.getSize());
+	}
+
+	public void onDragStart(Point mousePos, MouseButton mouseButton) {
+		draggedNodeIndex = findNodeIndex(mousePos);
+		if(draggedNodeIndex != null) {
+			if(mouseButton == model().removeNodeButton)
+				removeNode(mousePos);
+			else if(mouseButton == model().moveNodeButton) {
+				model.mouseCursor.setValue(Cursor.CLOSED_HAND);
+				draggedNodeIndex = findNodeIndex(mousePos);
+			}
 		}
 		model().mesh.notifyListeners();
 	}
 
-	private void eraseNodes(Point mousePos) {
-		Point[] nodes = getMeshNodes();
-		for (int i = nodes.length - 1; i >= 0; i--) {
-			Point dist = new Point(nodes[i]).subtract(mousePos).abs();
-			if (dist.x <= NODE_TOUCH_DIST && dist.y <= NODE_TOUCH_DIST) {
-				model().mesh.removeNode(i);
-			}
-		}
+	public void onMouseDrag(Point dragAmount) {
+		if(draggedNodeIndex == null)
+			return;
+		Point node = model().mesh.getNode(draggedNodeIndex);
+		node.set(getNodeRelativePos(getNodePixelPos(node).add(dragAmount).clamp(model.mainViewSize)));
+		model().mesh.notifyListeners();
 	}
 
-	public Point[] getMeshNodes() {
-		return model().mesh.getNodes().stream().map(node -> new Point(node).multiply(model.imageBoxModel.imageBox.getSize())
-				.add(model.imageBoxModel.imageBox.getPosition())).toArray(Point[]::new);
+	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
+		if(draggedNodeIndex == null && mouseButton == model().placeNodeButton)
+			model().mesh.addNode(getNodeRelativePos(mousePos));
+		draggedNodeIndex = null;
+		model.mouseCursor.setValue(mousePos.isBetween(new Point(), model.mainViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
+		model().mesh.notifyListeners();
 	}
 
 	public void onMouseEnter() {
@@ -55,4 +86,5 @@ public class MeshBox {
 	public void onMouseExit() {
 		model.mouseCursor.setValue(Cursor.DEFAULT);
 	}
+
 }

@@ -2,7 +2,7 @@ package sgora.mesh.editor.model.containers;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
-import sgora.mesh.editor.model.SimpleModelProperty;
+import sgora.mesh.editor.model.observables.SimpleModelProperty;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.input.MouseTool;
 

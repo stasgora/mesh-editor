@@ -1,8 +1,8 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.ObservableModel;
+import sgora.mesh.editor.model.observables.ControlledObservable;
 
-public class Rectangle extends ObservableModel {
+public class Rectangle extends ControlledObservable {
 
 	private Point position, size;
 

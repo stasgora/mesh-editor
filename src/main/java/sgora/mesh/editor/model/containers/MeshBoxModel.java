@@ -12,6 +12,6 @@ public class MeshBoxModel {
 
 	public MouseButton placeNodeButton = MouseButton.PRIMARY;
 	public MouseButton removeNodeButton = MouseButton.SECONDARY;
-	public MouseButton moveNodeButton = MouseButton.MIDDLE;
+	public MouseButton moveNodeButton = MouseButton.PRIMARY;
 
 }

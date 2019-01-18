@@ -1,8 +1,8 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.ObservableModel;
+import sgora.mesh.editor.model.observables.ControlledObservable;
 
-public class Point extends ObservableModel {
+public class Point extends ControlledObservable {
 
 	public double x, y;
 

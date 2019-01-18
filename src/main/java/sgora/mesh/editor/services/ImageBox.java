@@ -92,7 +92,6 @@ public class ImageBox {
 	}
 
 	public void onMouseDrag(Point dragAmount) {
-		System.out.println(dragAmount);
 		modifyPosition(pos -> pos.add(dragAmount.multiplyByScalar(model().dragSpeed)).clamp(new Point(model().imageBox.getSize()).multiplyByScalar(-1), model.mainViewSize));
 		model().imageBox.notifyListeners();
 	}
