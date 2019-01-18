@@ -85,8 +85,8 @@ public class MainView extends AnchorPane {
 	private void onMousePress(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		if(model.imageBoxModel.imageLoaded) {
-			if(model.activeTool.get() == MouseTool.IMAGE_MOVER && event.getButton() == model.imageBoxModel.dragButton)
-				imageBox.onDragStart();
+			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
+				imageBox.onDragStart(event.getButton());
 			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
 				meshBox.onDragStart(mousePos, event.getButton());
 		}
@@ -97,10 +97,10 @@ public class MainView extends AnchorPane {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
 		if(model.imageBoxModel.imageLoaded) {
-			if (model.activeTool.get() == MouseTool.IMAGE_MOVER && event.getButton() == model.imageBoxModel.dragButton)
-				imageBox.onMouseDrag(new Point(dragAmount));
-			else if(model.activeTool.get() == MouseTool.MESH_EDITOR && event.getButton() == model.meshBoxModel.moveNodeButton)
-				meshBox.onMouseDrag(new Point(dragAmount));
+			if (model.activeTool.get() == MouseTool.IMAGE_MOVER)
+				imageBox.onMouseDrag(new Point(dragAmount), event.getButton());
+			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
+				meshBox.onMouseDrag(new Point(dragAmount), event.getButton());
 		}
 		lastMouseDragPoint.set(mousePos);
 	}
@@ -126,19 +126,21 @@ public class MainView extends AnchorPane {
 
 	private void onMouseEnter(MouseEvent event) {
 		if(model.imageBoxModel.imageLoaded) {
+			boolean isDragging = lastMouseDragPoint != null;
 			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
-				imageBox.onMouseEnter(lastMouseDragPoint != null);
+				imageBox.onMouseEnter(isDragging);
 			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
-				meshBox.onMouseEnter();
+				meshBox.onMouseEnter(isDragging);
 		}
 	}
 
 	private void onMouseExit(MouseEvent event) {
 		if(model.imageBoxModel.imageLoaded) {
+			boolean isDragging = lastMouseDragPoint != null;
 			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
-				imageBox.onMouseExit(lastMouseDragPoint != null);
+				imageBox.onMouseExit(isDragging);
 			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
-				meshBox.onMouseExit();
+				meshBox.onMouseExit(isDragging);
 		}
 	}
 

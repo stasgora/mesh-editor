@@ -79,11 +79,14 @@ public class ImageBox {
 		model().imageBox.notifyListeners();
 	}
 
-	public void onDragStart() {
-		model.mouseCursor.setValue(Cursor.CLOSED_HAND);
+	public void onDragStart(MouseButton button) {
+		if(button == model.imageBoxModel.dragButton)
+			model.mouseCursor.setValue(Cursor.CLOSED_HAND);
 	}
 
-	public void onMouseDrag(Point dragAmount) {
+	public void onMouseDrag(Point dragAmount, MouseButton button) {
+		if(button != model.imageBoxModel.dragButton)
+			return;
 		model().imageBox.position.add(dragAmount.multiplyByScalar(model().dragSpeed)).clamp(new Point(model().imageBox.size).multiplyByScalar(-1), model.mainViewSize);
 		model().imageBox.notifyListeners();
 	}

@@ -63,11 +63,11 @@ public class MeshBox {
 		model().mesh.notifyListeners();
 	}
 
-	public void onMouseDrag(Point dragAmount) {
-		if(draggedNodeIndex == null)
+	public void onMouseDrag(Point dragAmount, MouseButton button) {
+		if(draggedNodeIndex == null || button != model.meshBoxModel.moveNodeButton)
 			return;
 		Point node = model().mesh.getNode(draggedNodeIndex);
-		node.set(getNodeRelativePos(getNodePixelPos(node).add(dragAmount).clamp(model.mainViewSize)));
+		node.set(getNodeRelativePos(getNodePixelPos(node).add(dragAmount)));
 		model().mesh.notifyListeners();
 	}
 
@@ -79,12 +79,14 @@ public class MeshBox {
 		model().mesh.notifyListeners();
 	}
 
-	public void onMouseEnter() {
-		model.mouseCursor.setValue(Cursor.CROSSHAIR);
+	public void onMouseEnter(boolean isDragging) {
+		if(!isDragging)
+			model.mouseCursor.setValue(Cursor.CROSSHAIR);
 	}
 
-	public void onMouseExit() {
-		model.mouseCursor.setValue(Cursor.DEFAULT);
+	public void onMouseExit(boolean isDragging) {
+		if(!isDragging)
+			model.mouseCursor.setValue(Cursor.DEFAULT);
 	}
 
 }
