@@ -11,8 +11,6 @@ public class Mesh extends ComplexObservable {
 	private final List<Point> nodes = new ArrayList<>();
 
 	public void addNode(Point node) {
-		node.setUnchanged();
-		node.notifyManually = false;
 		nodes.add(node);
 		addSubObservable(node);
 		onValueChanged();

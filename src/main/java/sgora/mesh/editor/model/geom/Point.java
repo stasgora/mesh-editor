@@ -20,7 +20,11 @@ public class Point extends ControlledObservable {
 	}
 
 	public Point set(Point point) {
-		setValues(point.x, point.y);
+		return set(point.x, point.y);
+	}
+
+	public Point set(double x, double y) {
+		setValues(x, y);
 		return this;
 	}
 

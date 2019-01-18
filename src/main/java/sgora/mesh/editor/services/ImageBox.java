@@ -43,8 +43,8 @@ public class ImageBox {
 			lastCanvasSize = new Point(model.mainViewSize);
 		Point sizeRatio = new Point(model.mainViewSize).divide(lastCanvasSize);
 		lastCanvasSize.set(model.mainViewSize);
-		modifyPosition(pos -> pos.multiply(sizeRatio));
-		modifySize(size -> size.multiplyByScalar((sizeRatio.y + sizeRatio.x) / 2));
+		model().imageBox.position.multiply(sizeRatio);
+		model().imageBox.size.multiplyByScalar((sizeRatio.y + sizeRatio.x) / 2);
 		model().imageBox.notifyListeners();
 	}
 
@@ -55,35 +55,27 @@ public class ImageBox {
 		if(imgRatio > canvasSize.x / canvasSize.y) {
 			double imgWidth = canvasSize.x * (1 - DEF_BORDER);
 			double imgHeight = imgWidth / imgRatio;
-			modifyPosition(pos -> new Point(canvasSize.x * DEF_BORDER * 0.5, (canvasSize.y - imgHeight) / 2));
-			modifySize(size -> new Point(imgWidth, imgHeight));
+			model().imageBox.position.set(canvasSize.x * DEF_BORDER * 0.5, (canvasSize.y - imgHeight) / 2);
+			model().imageBox.size.set(imgWidth, imgHeight);
 		} else {
 			double imgHeight = canvasSize.y * (1 - DEF_BORDER);
 			double imgWidth = imgRatio * imgHeight;
-			modifyPosition(pos -> new Point((canvasSize.x - imgWidth) / 2, canvasSize.y * DEF_BORDER * 0.5));
-			modifySize(size -> new Point(imgWidth, imgHeight));
+			model().imageBox.position.set((canvasSize.x - imgWidth) / 2, canvasSize.y * DEF_BORDER * 0.5);
+			model().imageBox.size.set(imgWidth, imgHeight);
 		}
 		model().imageBox.notifyListeners();
 	}
 
-	private void modifyPosition(UnaryOperator<Point> operation) {
-		model().imageBox.setPosition(operation.apply(model().imageBox.getPosition()));
-	}
-
-	private void modifySize(UnaryOperator<Point> operation) {
-		model().imageBox.setSize(operation.apply(model().imageBox.getSize()));
-	}
-
 	public void onZoom(double amount, Point mousePos) {
 		double zoomAmount = amount * model().zoomDir * model().zoomSpeed;
-		Point zoomPos = new Point(mousePos).subtract(model().imageBox.getPosition()).multiplyByScalar(zoomAmount);
-		Point newImgSize = new Point(model().imageBox.getSize()).multiplyByScalar(1 - zoomAmount);
+		Point zoomPos = new Point(mousePos).subtract(model().imageBox.position).multiplyByScalar(zoomAmount);
+		Point newImgSize = new Point(model().imageBox.size).multiplyByScalar(1 - zoomAmount);
 
 		if(newImgSize.x < model.mainViewSize.x * MIN_ZOOM || newImgSize.y < model.mainViewSize.y * MIN_ZOOM
 				|| newImgSize.x > model.mainViewSize.x * MAX_ZOOM || newImgSize.y > model.mainViewSize.y * MAX_ZOOM)
 			return;
-		modifyPosition(pos -> pos.add(zoomPos));
-		modifySize(size -> newImgSize);
+		model().imageBox.position.add(zoomPos);
+		model().imageBox.size.set(newImgSize);
 		model().imageBox.notifyListeners();
 	}
 
@@ -92,7 +84,7 @@ public class ImageBox {
 	}
 
 	public void onMouseDrag(Point dragAmount) {
-		modifyPosition(pos -> pos.add(dragAmount.multiplyByScalar(model().dragSpeed)).clamp(new Point(model().imageBox.getSize()).multiplyByScalar(-1), model.mainViewSize));
+		model().imageBox.position.add(dragAmount.multiplyByScalar(model().dragSpeed)).clamp(new Point(model().imageBox.size).multiplyByScalar(-1), model.mainViewSize);
 		model().imageBox.notifyListeners();
 	}
 

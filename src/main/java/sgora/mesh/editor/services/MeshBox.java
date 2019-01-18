@@ -43,11 +43,11 @@ public class MeshBox {
 	}
 
 	private Point getNodePixelPos(Point node) {
-		return new Point(node).multiply(model.imageBoxModel.imageBox.getSize()).add(model.imageBoxModel.imageBox.getPosition());
+		return new Point(node).multiply(model.imageBoxModel.imageBox.size).add(model.imageBoxModel.imageBox.position);
 	}
 
 	private Point getNodeRelativePos(Point node) {
-		return new Point(node).subtract(model.imageBoxModel.imageBox.getPosition()).divide(model.imageBoxModel.imageBox.getSize());
+		return new Point(node).subtract(model.imageBoxModel.imageBox.position).divide(model.imageBoxModel.imageBox.size);
 	}
 
 	public void onDragStart(Point mousePos, MouseButton mouseButton) {

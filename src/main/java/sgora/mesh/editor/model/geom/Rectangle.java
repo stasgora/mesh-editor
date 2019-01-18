@@ -1,27 +1,16 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.observables.ControlledObservable;
+import sgora.mesh.editor.model.observables.ComplexObservable;
 
-public class Rectangle extends ControlledObservable {
+public class Rectangle extends ComplexObservable {
 
-	private Point position, size;
+	public final Point position, size;
 
-	public Point getPosition() {
-		return position;
-	}
-
-	public void setPosition(Point position) {
-		this.position = position;
-		onValueChanged();
-	}
-
-	public Point getSize() {
-		return size;
-	}
-
-	public void setSize(Point size) {
-		this.size = size;
-		onValueChanged();
+	public Rectangle() {
+		position = new Point();
+		addSubObservable(position);
+		size = new Point();
+		addSubObservable(size);
 	}
 
 }

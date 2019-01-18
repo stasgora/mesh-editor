@@ -14,7 +14,7 @@ public class ImageCanvas extends Canvas {
 		if(!isVisible() || imageBox.baseImage == null)
 			return;
 		gc.clearRect(0, 0, getWidth(), getHeight());
-		gc.drawImage(imageBox.baseImage, imageBox.imageBox.getPosition().x, imageBox.imageBox.getPosition().y, imageBox.imageBox.getSize().x, imageBox.imageBox.getSize().y);
+		gc.drawImage(imageBox.baseImage, imageBox.imageBox.position.x, imageBox.imageBox.position.y, imageBox.imageBox.size.x, imageBox.imageBox.size.y);
 	}
 
 	@Override
