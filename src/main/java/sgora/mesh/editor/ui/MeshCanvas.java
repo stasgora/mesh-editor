@@ -3,11 +3,7 @@ package sgora.mesh.editor.ui;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
-import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.services.MeshBox;
-
-import java.util.List;
 
 public class MeshCanvas extends Canvas {
 
@@ -17,9 +13,9 @@ public class MeshCanvas extends Canvas {
 		if(!isVisible() || nodes == null)
 			return;
 		gc.clearRect(0, 0, getWidth(), getHeight());
-		gc.setFill(meshBox.nodeColor);
+		gc.setFill(meshBox.nodeColor.get());
 		for (Point node : nodes) {
-			gc.fillOval(node.x - meshBox.nodeRadius / 2d, node.y - meshBox.nodeRadius / 2d, meshBox.nodeRadius, meshBox.nodeRadius);
+			gc.fillOval(node.x - meshBox.nodeRadius.get() / 2d, node.y - meshBox.nodeRadius.get() / 2d, meshBox.nodeRadius.get(), meshBox.nodeRadius.get());
 		}
 	}
 

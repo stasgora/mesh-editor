@@ -49,7 +49,7 @@ public class MainView extends AnchorPane {
 		model.mainViewSize.addListener(() -> imageBox.onResizeCanvas());
 		model.mainViewSize.addListener(this::drawBothLayers);
 		model.imageBoxModel.imageBox.addListener(this::drawBothLayers);
-		model.meshBoxModel.mesh.addListener(this::drawMesh);
+		model.meshBoxModel.addListener(this::drawMesh);
 	}
 
 	private void setMouseHandlers() {
@@ -85,9 +85,9 @@ public class MainView extends AnchorPane {
 	private void onMousePress(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		if(model.imageBoxModel.imageLoaded) {
-			if(model.activeTool.getValue() == MouseTool.IMAGE_MOVER && event.getButton() == model.imageBoxModel.dragButton)
+			if(model.activeTool.get() == MouseTool.IMAGE_MOVER && event.getButton() == model.imageBoxModel.dragButton)
 				imageBox.onDragStart();
-			else if(model.activeTool.getValue() == MouseTool.MESH_EDITOR)
+			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
 				meshBox.onDragStart(mousePos, event.getButton());
 		}
 		lastMouseDragPoint = mousePos;
@@ -97,9 +97,9 @@ public class MainView extends AnchorPane {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
 		if(model.imageBoxModel.imageLoaded) {
-			if (model.activeTool.getValue() == MouseTool.IMAGE_MOVER && event.getButton() == model.imageBoxModel.dragButton)
+			if (model.activeTool.get() == MouseTool.IMAGE_MOVER && event.getButton() == model.imageBoxModel.dragButton)
 				imageBox.onMouseDrag(new Point(dragAmount));
-			else if(model.activeTool.getValue() == MouseTool.MESH_EDITOR && event.getButton() == model.meshBoxModel.moveNodeButton)
+			else if(model.activeTool.get() == MouseTool.MESH_EDITOR && event.getButton() == model.meshBoxModel.moveNodeButton)
 				meshBox.onMouseDrag(new Point(dragAmount));
 		}
 		lastMouseDragPoint.set(mousePos);
@@ -109,9 +109,9 @@ public class MainView extends AnchorPane {
 		lastMouseDragPoint = null;
 		Point mousePos = new Point(event.getX(), event.getY());
 		if(model.imageBoxModel.imageLoaded) {
-			if(model.activeTool.getValue() == MouseTool.IMAGE_MOVER)
+			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
 				imageBox.onDragEnd(new Point(mousePos));
-			else if(model.activeTool.getValue() == MouseTool.MESH_EDITOR)
+			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
 				meshBox.onDragEnd(new Point(mousePos), event.getButton());
 		}
 	}
@@ -126,18 +126,18 @@ public class MainView extends AnchorPane {
 
 	private void onMouseEnter(MouseEvent event) {
 		if(model.imageBoxModel.imageLoaded) {
-			if(model.activeTool.getValue() == MouseTool.IMAGE_MOVER)
+			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
 				imageBox.onMouseEnter(lastMouseDragPoint != null);
-			else if(model.activeTool.getValue() == MouseTool.MESH_EDITOR)
+			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
 				meshBox.onMouseEnter();
 		}
 	}
 
 	private void onMouseExit(MouseEvent event) {
 		if(model.imageBoxModel.imageLoaded) {
-			if(model.activeTool.getValue() == MouseTool.IMAGE_MOVER)
+			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
 				imageBox.onMouseExit(lastMouseDragPoint != null);
-			else if(model.activeTool.getValue() == MouseTool.MESH_EDITOR)
+			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
 				meshBox.onMouseExit();
 		}
 	}
