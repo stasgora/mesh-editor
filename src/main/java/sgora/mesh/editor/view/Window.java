@@ -41,7 +41,7 @@ public class Window {
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
 	}
 
-	public void loadImage(ActionEvent event) {
+	public void loadImage() {
 		FileChooser imageChooser = new FileChooser();
 		imageChooser.setTitle("Choose Image");
 		imageChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp"));
@@ -55,4 +55,21 @@ public class Window {
 	public void exitApp(ActionEvent event) {
 		Platform.exit();
 	}
+
+	public void newProject(ActionEvent event) {
+		loadImage();
+	}
+
+	public void openProject(ActionEvent event) {
+
+	}
+
+	public void saveProject(ActionEvent event) {
+
+	}
+
+	public void saveProjectAs(ActionEvent event) {
+
+	}
+
 }

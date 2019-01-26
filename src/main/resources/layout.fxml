@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -14,7 +15,14 @@
 <VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.Window">
 	<MenuBar layoutX="185.0" layoutY="-14.0">
 		<Menu mnemonicParsing="false" text="File">
-			<MenuItem mnemonicParsing="false" onAction="#loadImage" text="Load" />
+			<MenuItem mnemonicParsing="false" onAction="#newProject" text="New" />
+			<MenuItem mnemonicParsing="false" onAction="#openProject" text="Open" />
+			<MenuItem mnemonicParsing="false" onAction="#openProject" text="Open Recent" />
+			<MenuItem mnemonicParsing="false" onAction="#openProject" text="Close" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#saveProject" text="Save" />
+            <MenuItem mnemonicParsing="false" onAction="#saveProjectAs" text="Save As" />
+			<SeparatorMenuItem mnemonicParsing="false" />
 			<MenuItem mnemonicParsing="false" onAction="#exitApp" text="Exit" />
 		</Menu>
 	</MenuBar>
