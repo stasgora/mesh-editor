@@ -26,14 +26,26 @@ public class Window {
 	public MeshCanvas meshCanvas;
 	public MainToolBar toolBar;
 
+	private final static String APP_NAME = "Mesh Editor";
 
 	public void init(Stage stage) {
 		this.stage = stage;
 		toolBar.init(model.activeTool);
 		mainView.init(model, imageCanvas, meshCanvas);
 
+		setWindowTitle();
+		model.projectLoaded.addListener(this::setWindowTitle);
+
 		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
+	}
+
+	private void setWindowTitle() {
+		String title = APP_NAME;
+		if(model.projectLoaded.get() && model.projectName != null && !model.projectName.isEmpty()) {
+			title = model.projectName + " - " + title;
+		}
+		stage.setTitle(title);
 	}
 
 	private void keepDividerInPlace(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
@@ -41,7 +53,7 @@ public class Window {
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
 	}
 
-	public void loadImage() {
+	private void loadImage() {
 		FileChooser imageChooser = new FileChooser();
 		imageChooser.setTitle("Choose Image");
 		imageChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp"));
@@ -49,6 +61,7 @@ public class Window {
 
 		if(image == null)
 			return;
+		model.projectLoaded.set(true);
 		mainView.imageBox.setBaseImage(image.getAbsolutePath());
 	}
 
@@ -61,6 +74,14 @@ public class Window {
 	}
 
 	public void openProject(ActionEvent event) {
+
+	}
+
+	public void openRecentProject(ActionEvent event) {
+
+	}
+
+	public void closeProject(ActionEvent event) {
 
 	}
 

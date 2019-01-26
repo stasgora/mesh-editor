@@ -16,4 +16,7 @@ public class Model {
 	public ObservableProperty<MouseTool> activeTool = new ObservableProperty<>(MouseTool.IMAGE_MOVER);
 	public ObjectProperty<Cursor> mouseCursor;
 
+	public String projectName = "Untitled";
+	public ObservableProperty<Boolean> projectLoaded = new ObservableProperty<>(false);
+
 }

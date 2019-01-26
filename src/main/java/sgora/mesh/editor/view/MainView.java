@@ -84,7 +84,7 @@ public class MainView extends AnchorPane {
 
 	private void onMousePress(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
-		if(model.imageBoxModel.imageLoaded) {
+		if(model.projectLoaded.get()) {
 			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
 				imageBox.onDragStart(event.getButton());
 			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
@@ -96,7 +96,7 @@ public class MainView extends AnchorPane {
 	private void onMouseDrag(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
-		if(model.imageBoxModel.imageLoaded) {
+		if(model.projectLoaded.get()) {
 			if (model.activeTool.get() == MouseTool.IMAGE_MOVER)
 				imageBox.onMouseDrag(new Point(dragAmount), event.getButton());
 			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
@@ -108,7 +108,7 @@ public class MainView extends AnchorPane {
 	private void onMouseRelease(MouseEvent event) {
 		lastMouseDragPoint = null;
 		Point mousePos = new Point(event.getX(), event.getY());
-		if(model.imageBoxModel.imageLoaded) {
+		if(model.projectLoaded.get()) {
 			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
 				imageBox.onDragEnd(new Point(mousePos));
 			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
@@ -117,7 +117,7 @@ public class MainView extends AnchorPane {
 	}
 
 	private void onScroll(ScrollEvent event) {
-		if(model.imageBoxModel.imageLoaded)
+		if(model.projectLoaded.get())
 			imageBox.onZoom(event.getDeltaY(), new Point(event.getX(), event.getY()));
 	}
 
@@ -125,7 +125,7 @@ public class MainView extends AnchorPane {
 	}
 
 	private void onMouseEnter(MouseEvent event) {
-		if(model.imageBoxModel.imageLoaded) {
+		if(model.projectLoaded.get()) {
 			boolean isDragging = lastMouseDragPoint != null;
 			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
 				imageBox.onMouseEnter(isDragging);
@@ -135,7 +135,7 @@ public class MainView extends AnchorPane {
 	}
 
 	private void onMouseExit(MouseEvent event) {
-		if(model.imageBoxModel.imageLoaded) {
+		if(model.projectLoaded.get()) {
 			boolean isDragging = lastMouseDragPoint != null;
 			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
 				imageBox.onMouseExit(isDragging);

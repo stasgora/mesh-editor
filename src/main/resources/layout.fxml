@@ -14,16 +14,16 @@
 
 <VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.Window">
 	<MenuBar layoutX="185.0" layoutY="-14.0">
-		<Menu mnemonicParsing="false" text="File">
-			<MenuItem mnemonicParsing="false" onAction="#newProject" text="New" />
-			<MenuItem mnemonicParsing="false" onAction="#openProject" text="Open" />
-			<MenuItem mnemonicParsing="false" onAction="#openProject" text="Open Recent" />
-			<MenuItem mnemonicParsing="false" onAction="#openProject" text="Close" />
+		<Menu text="_File">
+			<MenuItem onAction="#newProject" text="_New" />
+			<MenuItem onAction="#openProject" text="_Open" />
+			<MenuItem onAction="#openRecentProject" text="Open _Recent" />
+			<MenuItem onAction="#closeProject" text="_Close" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#saveProject" text="Save" />
-            <MenuItem mnemonicParsing="false" onAction="#saveProjectAs" text="Save As" />
+            <MenuItem onAction="#saveProject" text="_Save" />
+            <MenuItem onAction="#saveProjectAs" text="Save _As" />
 			<SeparatorMenuItem mnemonicParsing="false" />
-			<MenuItem mnemonicParsing="false" onAction="#exitApp" text="Exit" />
+			<MenuItem onAction="#exitApp" text="_Exit" />
 		</Menu>
 	</MenuBar>
    <MainToolBar fx:id="toolBar" prefHeight="18.0" prefWidth="808.0" />

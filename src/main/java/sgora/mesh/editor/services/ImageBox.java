@@ -3,14 +3,9 @@ package sgora.mesh.editor.services;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.Model;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.input.MouseTool;
-
-import java.util.function.UnaryOperator;
 
 public class ImageBox {
 
@@ -32,7 +27,6 @@ public class ImageBox {
 
 	public void setBaseImage(String imagePath) {
 		model().baseImage = new Image("file:" + imagePath);
-		model.imageBoxModel.imageLoaded = true;
 		calcImageBox();
 	}
 
