@@ -6,8 +6,6 @@ import sgora.mesh.editor.model.observables.ObservableProperty;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.input.MouseTool;
 
-import java.io.File;
-
 public class Model {
 
 	public Point mainViewSize = new Point();

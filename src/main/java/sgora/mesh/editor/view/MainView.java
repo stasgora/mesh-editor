@@ -17,14 +17,14 @@ public class MainView extends AnchorPane {
 	private ImageCanvas imageCanvas;
 	private MeshCanvas meshCanvas;
 
-	public ImageBox imageBox;
-	public MeshBox meshBox;
+	ImageBox imageBox;
+	MeshBox meshBox;
 
 	private Model model;
 
 	private Point lastMouseDragPoint;
 
-	public void init(Model model, ImageCanvas imageCanvas, MeshCanvas meshCanvas) {
+	void init(Model model, ImageCanvas imageCanvas, MeshCanvas meshCanvas) {
 		this.model = model;
 		this.imageCanvas = imageCanvas;
 		this.meshCanvas = meshCanvas;

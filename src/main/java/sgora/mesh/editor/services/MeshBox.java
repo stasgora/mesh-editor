@@ -17,6 +17,7 @@ public class MeshBox implements MouseListener {
 
 	public MeshBox(Model model) {
 		this.model = model;
+		model().mesh.addListener(() -> model.project.stateSaved.set(false));
 	}
 
 	private MeshBoxModel model() {

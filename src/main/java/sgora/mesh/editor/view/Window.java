@@ -46,6 +46,7 @@ public class Window {
 		setWindowTitle();
 		model.project.loaded.addListener(this::setWindowTitle);
 		model.project.name.addListener(this::setWindowTitle);
+		model.project.stateSaved.addListener(this::setWindowTitle);
 
 		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
@@ -56,7 +57,10 @@ public class Window {
 	private void setWindowTitle() {
 		String title = APP_NAME;
 		if(model.project.loaded.get() && model.project.name.get() != null && !model.project.name.get().isEmpty()) {
-			title = model.project.name.get() + " - " + title;
+			String projectName = model.project.name.get();
+			if(!model.project.stateSaved.get())
+				projectName += "*";
+			title = projectName + " - " + title;
 		}
 		stage.setTitle(title);
 	}
@@ -83,6 +87,7 @@ public class Window {
 
 	private void onProjectLoaded() {
 		model.project.loaded.set(true);
+		model.project.stateSaved.set(true);
 		closeProjectMenuItem.setDisable(false);
 		saveProjectMenuItem.setDisable(false);
 		saveAsMenuItem.setDisable(false);
@@ -126,6 +131,7 @@ public class Window {
 			saveNewProject();
 		else
 			projectWriter.saveProject(model);
+		model.project.stateSaved.set(true);
 	}
 
 	private void saveNewProject() {
@@ -139,6 +145,7 @@ public class Window {
 
 	public void saveProjectAs(ActionEvent event) {
 		saveNewProject();
+		model.project.stateSaved.set(true);
 	}
 
 }
