@@ -54,7 +54,6 @@ public class MainView extends AnchorPane {
 
 	private void setMouseHandlers() {
 		setOnScroll(this::onScroll);
-		setOnMouseMoved(this::onMouseMove);
 
 		setOnMousePressed(this::onMousePress);
 		setOnMouseDragged(this::onMouseDrag);
@@ -86,7 +85,7 @@ public class MainView extends AnchorPane {
 		Point mousePos = new Point(event.getX(), event.getY());
 		if(model.projectLoaded.get()) {
 			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
-				imageBox.onDragStart(event.getButton());
+				imageBox.onDragStart(mousePos, event.getButton());
 			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
 				meshBox.onDragStart(mousePos, event.getButton());
 		}
@@ -110,7 +109,7 @@ public class MainView extends AnchorPane {
 		Point mousePos = new Point(event.getX(), event.getY());
 		if(model.projectLoaded.get()) {
 			if(model.activeTool.get() == MouseTool.IMAGE_MOVER)
-				imageBox.onDragEnd(new Point(mousePos));
+				imageBox.onDragEnd(new Point(mousePos), event.getButton());
 			else if(model.activeTool.get() == MouseTool.MESH_EDITOR)
 				meshBox.onDragEnd(new Point(mousePos), event.getButton());
 		}
@@ -119,9 +118,6 @@ public class MainView extends AnchorPane {
 	private void onScroll(ScrollEvent event) {
 		if(model.projectLoaded.get())
 			imageBox.onZoom(event.getDeltaY(), new Point(event.getX(), event.getY()));
-	}
-
-	private void onMouseMove(MouseEvent event) {
 	}
 
 	private void onMouseEnter(MouseEvent event) {

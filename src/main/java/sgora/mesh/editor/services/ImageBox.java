@@ -6,8 +6,9 @@ import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.Model;
 import sgora.mesh.editor.model.geom.Point;
+import sgora.mesh.editor.interfaces.MouseListener;
 
-public class ImageBox {
+public class ImageBox implements MouseListener {
 
 	private final Model model;
 
@@ -60,6 +61,7 @@ public class ImageBox {
 		model().imageBox.notifyListeners();
 	}
 
+	@Override
 	public void onZoom(double amount, Point mousePos) {
 		double zoomAmount = amount * model().zoomDir * model().zoomSpeed;
 		Point zoomPos = new Point(mousePos).subtract(model().imageBox.position).multiplyByScalar(zoomAmount);
@@ -73,11 +75,13 @@ public class ImageBox {
 		model().imageBox.notifyListeners();
 	}
 
-	public void onDragStart(MouseButton button) {
+	@Override
+	public void onDragStart(Point mousePos, MouseButton button) {
 		if(button == model.imageBoxModel.dragButton)
 			model.mouseCursor.setValue(Cursor.CLOSED_HAND);
 	}
 
+	@Override
 	public void onMouseDrag(Point dragAmount, MouseButton button) {
 		if(button != model.imageBoxModel.dragButton)
 			return;
@@ -85,15 +89,18 @@ public class ImageBox {
 		model().imageBox.notifyListeners();
 	}
 
-	public void onDragEnd(Point mousePos) {
+	@Override
+	public void onDragEnd(Point mousePos, MouseButton button) {
 		model.mouseCursor.setValue(mousePos.isBetween(new Point(), model.mainViewSize) ? Cursor.HAND : Cursor.DEFAULT);
 	}
 
+	@Override
 	public void onMouseEnter(boolean isDragging) {
 		if(!isDragging)
 			model.mouseCursor.setValue(Cursor.HAND);
 	}
 
+	@Override
 	public void onMouseExit(boolean isDragging) {
 		if(!isDragging)
 			model.mouseCursor.setValue(Cursor.DEFAULT);
