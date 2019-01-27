@@ -5,7 +5,7 @@ import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.containers.Model;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.interfaces.MouseListener;
+import sgora.mesh.editor.interfaces.MouseListener;
 
 public class MeshBox implements MouseListener {
 

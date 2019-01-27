@@ -1,4 +1,4 @@
-package sgora.mesh.editor.model.interfaces;
+package sgora.mesh.editor.interfaces;
 
 import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.model.geom.Point;
