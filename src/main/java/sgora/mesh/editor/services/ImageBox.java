@@ -32,7 +32,7 @@ public class ImageBox implements MouseListener {
 	}
 
 	public void onResizeCanvas() {
-		if(model().baseImage == null || model.mainViewSize.x == 0 || model.mainViewSize.y == 0)
+		if(!model.project.loaded.get())
 			return;
 		if(lastCanvasSize == null)
 			lastCanvasSize = new Point(model.mainViewSize);

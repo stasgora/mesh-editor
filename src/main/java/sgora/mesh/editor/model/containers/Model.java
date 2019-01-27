@@ -14,12 +14,9 @@ public class Model {
 
 	public ImageBoxModel imageBoxModel = new ImageBoxModel();
 	public MeshBoxModel meshBoxModel = new MeshBoxModel();
+	public ProjectModel project = new ProjectModel();
 
 	public ObservableProperty<MouseTool> activeTool = new ObservableProperty<>(MouseTool.IMAGE_MOVER);
 	public ObjectProperty<Cursor> mouseCursor;
-
-	public ObservableProperty<String> projectName = new ObservableProperty<>("Untitled");
-	public ObservableProperty<Boolean> projectLoaded = new ObservableProperty<>(false);
-	public File projectFile;
 
 }

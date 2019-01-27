@@ -17,11 +17,11 @@
 		<Menu text="_File">
 			<MenuItem onAction="#newProject" text="_New" />
 			<MenuItem onAction="#openProject" text="_Open" />
-			<MenuItem onAction="#openRecentProject" text="Open _Recent" />
-			<MenuItem onAction="#closeProject" text="_Close" />
+			<MenuItem fx:id="openRecentMenuItem" onAction="#openRecentProject" text="Open _Recent" />
+			<MenuItem fx:id="closeProjectMenuItem" onAction="#closeProject" text="_Close" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem onAction="#saveProject" text="_Save" />
-            <MenuItem onAction="#saveProjectAs" text="Save _As" />
+            <MenuItem fx:id="saveProjectMenuItem" onAction="#saveProject" text="_Save" />
+            <MenuItem fx:id="saveAsMenuItem" onAction="#saveProjectAs" text="Save _As" />
 			<SeparatorMenuItem mnemonicParsing="false" />
 			<MenuItem onAction="#exitApp" text="_Exit" />
 		</Menu>

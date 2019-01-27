@@ -3,6 +3,7 @@ package sgora.mesh.editor.view;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -28,6 +29,11 @@ public class Window {
 	public MeshCanvas meshCanvas;
 	public MainToolBar toolBar;
 
+	public MenuItem openRecentMenuItem;
+	public MenuItem closeProjectMenuItem;
+	public MenuItem saveProjectMenuItem;
+	public MenuItem saveAsMenuItem;
+
 	private ProjectWriter projectWriter = new ProjectFileWriter();
 
 	private final static String APP_NAME = "Mesh Editor";
@@ -38,17 +44,19 @@ public class Window {
 		mainView.init(model, imageCanvas, meshCanvas);
 
 		setWindowTitle();
-		model.projectLoaded.addListener(this::setWindowTitle);
-		model.projectName.addListener(this::setWindowTitle);
+		model.project.loaded.addListener(this::setWindowTitle);
+		model.project.name.addListener(this::setWindowTitle);
 
 		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
+
+		onProjectUnloaded();
 	}
 
 	private void setWindowTitle() {
 		String title = APP_NAME;
-		if(model.projectLoaded.get() && model.projectName.get() != null && !model.projectName.get().isEmpty()) {
-			title = model.projectName.get() + " - " + title;
+		if(model.project.loaded.get() && model.project.name.get() != null && !model.project.name.get().isEmpty()) {
+			title = model.project.name.get() + " - " + title;
 		}
 		stage.setTitle(title);
 	}
@@ -73,11 +81,25 @@ public class Window {
 		Platform.exit();
 	}
 
+	private void onProjectLoaded() {
+		model.project.loaded.set(true);
+		closeProjectMenuItem.setDisable(false);
+		saveProjectMenuItem.setDisable(false);
+		saveAsMenuItem.setDisable(false);
+	}
+
+	private void onProjectUnloaded() {
+		model.project.loaded.set(false);
+		closeProjectMenuItem.setDisable(true);
+		saveProjectMenuItem.setDisable(true);
+		saveAsMenuItem.setDisable(true);
+	}
+
 	public void newProject(ActionEvent event) {
 		String imagePath = chooseBaseImage();
 		if(imagePath == null)
 			return;
-		model.projectLoaded.set(true);
+		onProjectLoaded();
 		mainView.imageBox.setBaseImage(imagePath);
 	}
 
@@ -90,7 +112,7 @@ public class Window {
 	}
 
 	public void closeProject(ActionEvent event) {
-		model.projectLoaded.set(false);
+		onProjectUnloaded();
 	}
 
 	private File chooseProjectFileLocation() {
@@ -100,7 +122,7 @@ public class Window {
 	}
 
 	public void saveProject(ActionEvent event) {
-		if(model.projectFile == null)
+		if(model.project.file == null)
 			saveNewProject();
 		else
 			projectWriter.saveProject(model);
@@ -111,8 +133,8 @@ public class Window {
 		if(newProjectFile == null)
 			return;
 		projectWriter.saveProject(model);
-		model.projectFile = newProjectFile;
-		model.projectName.set(newProjectFile.getName());
+		model.project.file = newProjectFile;
+		model.project.name.set(newProjectFile.getName());
 	}
 
 	public void saveProjectAs(ActionEvent event) {
