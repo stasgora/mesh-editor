@@ -6,6 +6,8 @@ import sgora.mesh.editor.model.observables.ObservableProperty;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.input.MouseTool;
 
+import java.io.File;
+
 public class Model {
 
 	public Point mainViewSize = new Point();
@@ -16,7 +18,8 @@ public class Model {
 	public ObservableProperty<MouseTool> activeTool = new ObservableProperty<>(MouseTool.IMAGE_MOVER);
 	public ObjectProperty<Cursor> mouseCursor;
 
-	public String projectName = "Untitled";
+	public ObservableProperty<String> projectName = new ObservableProperty<>("Untitled");
 	public ObservableProperty<Boolean> projectLoaded = new ObservableProperty<>(false);
+	public File projectFile;
 
 }

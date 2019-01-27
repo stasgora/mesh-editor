@@ -7,7 +7,9 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sgora.mesh.editor.interfaces.ProjectWriter;
 import sgora.mesh.editor.model.containers.Model;
+import sgora.mesh.editor.services.ProjectFileWriter;
 import sgora.mesh.editor.ui.*;
 
 import java.io.File;
@@ -26,6 +28,8 @@ public class Window {
 	public MeshCanvas meshCanvas;
 	public MainToolBar toolBar;
 
+	private ProjectWriter projectWriter = new ProjectFileWriter();
+
 	private final static String APP_NAME = "Mesh Editor";
 
 	public void init(Stage stage) {
@@ -35,6 +39,7 @@ public class Window {
 
 		setWindowTitle();
 		model.projectLoaded.addListener(this::setWindowTitle);
+		model.projectName.addListener(this::setWindowTitle);
 
 		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
@@ -42,8 +47,8 @@ public class Window {
 
 	private void setWindowTitle() {
 		String title = APP_NAME;
-		if(model.projectLoaded.get() && model.projectName != null && !model.projectName.isEmpty()) {
-			title = model.projectName + " - " + title;
+		if(model.projectLoaded.get() && model.projectName.get() != null && !model.projectName.get().isEmpty()) {
+			title = model.projectName.get() + " - " + title;
 		}
 		stage.setTitle(title);
 	}
@@ -53,16 +58,15 @@ public class Window {
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
 	}
 
-	private void loadImage() {
+	private String chooseBaseImage() {
 		FileChooser imageChooser = new FileChooser();
 		imageChooser.setTitle("Choose Image");
 		imageChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp"));
 		File image = imageChooser.showOpenDialog(stage);
 
 		if(image == null)
-			return;
-		model.projectLoaded.set(true);
-		mainView.imageBox.setBaseImage(image.getAbsolutePath());
+			return null;
+		return image.getAbsolutePath();
 	}
 
 	public void exitApp(ActionEvent event) {
@@ -70,7 +74,11 @@ public class Window {
 	}
 
 	public void newProject(ActionEvent event) {
-		loadImage();
+		String imagePath = chooseBaseImage();
+		if(imagePath == null)
+			return;
+		model.projectLoaded.set(true);
+		mainView.imageBox.setBaseImage(imagePath);
 	}
 
 	public void openProject(ActionEvent event) {
@@ -82,15 +90,33 @@ public class Window {
 	}
 
 	public void closeProject(ActionEvent event) {
+		model.projectLoaded.set(false);
+	}
 
+	private File chooseProjectFileLocation() {
+		FileChooser projectFileChooser = new FileChooser();
+		projectFileChooser.setTitle("Choose Project File");
+		return projectFileChooser.showSaveDialog(stage);
 	}
 
 	public void saveProject(ActionEvent event) {
+		if(model.projectFile == null)
+			saveNewProject();
+		else
+			projectWriter.saveProject(model);
+	}
 
+	private void saveNewProject() {
+		File newProjectFile = chooseProjectFileLocation();
+		if(newProjectFile == null)
+			return;
+		projectWriter.saveProject(model);
+		model.projectFile = newProjectFile;
+		model.projectName.set(newProjectFile.getName());
 	}
 
 	public void saveProjectAs(ActionEvent event) {
-
+		saveNewProject();
 	}
 
 }
