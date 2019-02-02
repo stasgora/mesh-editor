@@ -5,9 +5,8 @@ import sgora.mesh.editor.model.geom.Point;
 
 public class MeshCanvas extends Canvas {
 
-	public void draw(MeshBoxModel meshBox, Point[] nodes, boolean projectLoaded) {
-		context.clearRect(0, 0, getWidth(), getHeight());
-		if(!projectLoaded || !isVisible())
+	public void draw(MeshBoxModel meshBox, Point[] nodes) {
+		if(!isVisible())
 			return;
 		context.setFill(meshBox.nodeColor.get());
 		for (Point node : nodes) {

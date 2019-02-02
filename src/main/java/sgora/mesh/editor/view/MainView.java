@@ -47,10 +47,15 @@ public class MainView extends AnchorPane {
 			meshCanvas.setHeight(model.mainViewSize.y);
 		});
 		model.mainViewSize.addListener(() -> imageBox.onResizeCanvas());
+		model.project.baseImage.addListener(() -> imageBox.calcImageBox());
+		model.project.mesh.addStaticListener(() -> model.project.stateSaved.set(false));
+
 		model.mainViewSize.addListener(this::drawBothLayers);
 		model.imageBoxModel.imageBox.addListener(this::drawBothLayers);
-		model.project.loaded.addListener(this::drawBothLayers);
+		model.project.addListener(this::drawBothLayers);
+
 		model.meshBoxModel.addListener(this::drawMesh);
+		model.project.mesh.addStaticListener(this::drawMesh);
 	}
 
 	private void setMouseHandlers() {
@@ -70,11 +75,15 @@ public class MainView extends AnchorPane {
 	}
 
 	private void drawMesh() {
-		meshCanvas.draw(model.meshBoxModel, meshBox.getMeshNodes(), model.project.loaded.get());
+		meshCanvas.clear();
+		if(model.project.loaded.get())
+			meshCanvas.draw(model.meshBoxModel, meshBox.getPixelMeshNodes());
 	}
 
 	private void drawImage() {
-		imageCanvas.draw(model.imageBoxModel, model.project.loaded.get());
+		imageCanvas.clear();
+		if(model.project.loaded.get())
+			imageCanvas.draw(model);
 	}
 
 	private void drawBothLayers() {

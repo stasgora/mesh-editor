@@ -1,14 +1,14 @@
 package sgora.mesh.editor.model.observables;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Holds a list of listeners and notifies them of any change
  */
 public abstract class SimpleObservable {
 
-	protected List<ChangeListener> listeners = new ArrayList<>();
+	protected Set<ChangeListener> listeners = new HashSet<>();
 
 	public void addListener(ChangeListener callback) {
 		listeners.add(callback);
@@ -20,6 +20,14 @@ public abstract class SimpleObservable {
 
 	void callListeners() {
 		listeners.forEach(ChangeListener::call);
+	}
+
+	public void copyListeners(SimpleObservable observable) {
+		listeners.forEach(observable::addListener);
+	}
+
+	public void clearListeners() {
+		listeners.clear();
 	}
 
 }

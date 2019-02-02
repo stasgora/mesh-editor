@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.Model;
+import sgora.mesh.editor.model.containers.ProjectModel;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.interfaces.MouseListener;
 
@@ -26,9 +27,8 @@ public class ImageBox implements MouseListener {
 		return model.imageBoxModel;
 	}
 
-	public void setBaseImage(String imagePath) {
-		model().baseImage = new Image("file:" + imagePath);
-		calcImageBox();
+	private ProjectModel project() {
+		return model.project;
 	}
 
 	public void onResizeCanvas() {
@@ -43,8 +43,10 @@ public class ImageBox implements MouseListener {
 		model().imageBox.notifyListeners();
 	}
 
-	private void calcImageBox() {
-		double imgRatio = model().baseImage.getWidth() / model().baseImage.getHeight();
+	public void calcImageBox() {
+		if(project().baseImage.get() == null)
+			return;
+		double imgRatio = project().baseImage.get().getWidth() / project().baseImage.get().getHeight();
 
 		Point canvasSize = model.mainViewSize;
 		if(imgRatio > canvasSize.x / canvasSize.y) {

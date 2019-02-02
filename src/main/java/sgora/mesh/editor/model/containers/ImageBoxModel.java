@@ -7,7 +7,6 @@ import sgora.mesh.editor.model.geom.Rectangle;
 public class ImageBoxModel {
 
 	public final Rectangle imageBox = new Rectangle();
-	public Image baseImage;
 
 	public double zoomSpeed = 0.0025;
 	public double zoomDir = -1;

@@ -4,6 +4,7 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.containers.Model;
+import sgora.mesh.editor.model.containers.ProjectModel;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.interfaces.MouseListener;
 
@@ -17,15 +18,18 @@ public class MeshBox implements MouseListener {
 
 	public MeshBox(Model model) {
 		this.model = model;
-		model().mesh.addListener(() -> model.project.stateSaved.set(false));
 	}
 
 	private MeshBoxModel model() {
 		return model.meshBoxModel;
 	}
+	
+	private ProjectModel project() {
+		return model.project;
+	}
 
 	private Integer findNodeIndex(Point position) {
-		Point[] nodes = getMeshNodes();
+		Point[] nodes = getPixelMeshNodes();
 		for (int i = nodes.length - 1; i >= 0; i--) {
 			Point dist = new Point(nodes[i]).subtract(position).abs();
 			if (dist.x <= NODE_TOUCH_DIST && dist.y <= NODE_TOUCH_DIST)
@@ -37,11 +41,11 @@ public class MeshBox implements MouseListener {
 	private void removeNode(Point mousePos) {
 		Integer nodeIndex = findNodeIndex(mousePos);
 		if(nodeIndex != null)
-			model().mesh.removeNode(nodeIndex);
+			project().mesh.get().removeNode(nodeIndex);
 	}
 
-	public Point[] getMeshNodes() {
-		return model().mesh.getNodes().stream().map(this::getNodePixelPos).toArray(Point[]::new);
+	public Point[] getPixelMeshNodes() {
+		return project().mesh.get().getNodes().stream().map(this::getNodePixelPos).toArray(Point[]::new);
 	}
 
 	private Point getNodePixelPos(Point node) {
@@ -63,25 +67,25 @@ public class MeshBox implements MouseListener {
 				draggedNodeIndex = findNodeIndex(mousePos);
 			}
 		}
-		model().mesh.notifyListeners();
+		project().mesh.get().notifyListeners();
 	}
 
 	@Override
 	public void onMouseDrag(Point dragAmount, MouseButton button) {
 		if(draggedNodeIndex == null || button != model.meshBoxModel.moveNodeButton)
 			return;
-		Point node = model().mesh.getNode(draggedNodeIndex);
+		Point node = project().mesh.get().getNode(draggedNodeIndex);
 		node.set(getNodeRelativePos(getNodePixelPos(node).add(dragAmount)));
-		model().mesh.notifyListeners();
+		project().mesh.get().notifyListeners();
 	}
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
 		if(draggedNodeIndex == null && mouseButton == model().placeNodeButton)
-			model().mesh.addNode(getNodeRelativePos(mousePos));
+			project().mesh.get().addNode(getNodeRelativePos(mousePos));
 		draggedNodeIndex = null;
 		model.mouseCursor.setValue(mousePos.isBetween(new Point(), model.mainViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
-		model().mesh.notifyListeners();
+		project().mesh.get().notifyListeners();
 	}
 
 	@Override

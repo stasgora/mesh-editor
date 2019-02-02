@@ -11,4 +11,8 @@ public class Canvas extends javafx.scene.canvas.Canvas {
 		return true;
 	}
 
+	public void clear() {
+		context.clearRect(0, 0, getWidth(), getHeight());
+	}
+
 }

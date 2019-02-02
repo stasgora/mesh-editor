@@ -1,14 +1,29 @@
 package sgora.mesh.editor.model.containers;
 
-import sgora.mesh.editor.model.observables.ObservableProperty;
+import javafx.scene.image.Image;
+import sgora.mesh.editor.model.geom.Mesh;
+import sgora.mesh.editor.model.observables.ComplexObservable;
+import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.observables.SettableProperty;
 
-import java.io.File;
+import java.io.*;
 
-public class ProjectModel {
+public class ProjectModel extends ComplexObservable {
 
-	public ObservableProperty<String> name = new ObservableProperty<>("Untitled");
-	public ObservableProperty<Boolean> loaded = new ObservableProperty<>(false);
-	public ObservableProperty<Boolean> stateSaved = new ObservableProperty<>(true);
-	public File file;
+	public SettableProperty<String> name = new SettableProperty<>();
+	public SettableProperty<Boolean> stateSaved = new SettableProperty<>(true);
+	public SettableProperty<File> file = new SettableProperty<>();
+	public SettableProperty<Boolean> loaded = new SettableProperty<>(false);
+
+	public SettableObservable<Mesh> mesh = new SettableObservable<>();
+
+	public SettableProperty<Image> baseImage = new SettableProperty<>();
+	public byte[] rawImageFile;
+
+	public ProjectModel() {
+		// only notify on set
+		addSubObservable(mesh);
+		addSubObservable(baseImage);
+	}
 
 }

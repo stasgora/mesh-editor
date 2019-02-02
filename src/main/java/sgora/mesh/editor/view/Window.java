@@ -8,12 +8,15 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import sgora.mesh.editor.interfaces.ProjectWriter;
+import sgora.mesh.editor.enums.ProjectFileAction;
+import sgora.mesh.editor.exceptions.ProjectIOException;
+import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.model.containers.Model;
-import sgora.mesh.editor.services.ProjectFileWriter;
+import sgora.mesh.editor.model.geom.Mesh;
+import sgora.mesh.editor.services.ProjectFileUtils;
 import sgora.mesh.editor.ui.*;
 
-import java.io.File;
+import java.io.*;
 
 public class Window {
 
@@ -34,7 +37,7 @@ public class Window {
 	public MenuItem saveProjectMenuItem;
 	public MenuItem saveAsMenuItem;
 
-	private ProjectWriter projectWriter = new ProjectFileWriter();
+	private FileUtils fileUtils = new ProjectFileUtils();
 
 	private final static String APP_NAME = "Mesh Editor";
 
@@ -44,14 +47,16 @@ public class Window {
 		mainView.init(model, imageCanvas, meshCanvas);
 
 		setWindowTitle();
-		model.project.loaded.addListener(this::setWindowTitle);
+		model.project.loaded.addListener(this::onProjectLoadedChange);
+		model.project.addListener(this::setWindowTitle);
+		model.project.baseImage.addListener(this::onProjectChanged);
 		model.project.name.addListener(this::setWindowTitle);
 		model.project.stateSaved.addListener(this::setWindowTitle);
 
 		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 
-		onProjectUnloaded();
+		onProjectLoadedChange();
 	}
 
 	private void setWindowTitle() {
@@ -70,46 +75,83 @@ public class Window {
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
 	}
 
-	private String chooseBaseImage() {
+	private File chooseBaseImage() {
 		FileChooser imageChooser = new FileChooser();
 		imageChooser.setTitle("Choose Image");
 		imageChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp"));
-		File image = imageChooser.showOpenDialog(stage);
-
-		if(image == null)
-			return null;
-		return image.getAbsolutePath();
+		return imageChooser.showOpenDialog(stage);
 	}
 
-	public void exitApp(ActionEvent event) {
-		Platform.exit();
+	private File showProjectFileChooser(ProjectFileAction action) {
+		FileChooser projectFileChooser = new FileChooser();
+		projectFileChooser.setTitle("Choose Project File");
+		projectFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Project Files", "*." + ProjectFileUtils.PROJECT_FILE_EXTENSION));
+		if(action == ProjectFileAction.SAVE)
+			return projectFileChooser.showSaveDialog(stage);
+		else if(action == ProjectFileAction.OPEN)
+			return projectFileChooser.showOpenDialog(stage);
+		return null;
 	}
 
-	private void onProjectLoaded() {
-		model.project.loaded.set(true);
-		model.project.stateSaved.set(true);
-		closeProjectMenuItem.setDisable(false);
-		saveProjectMenuItem.setDisable(false);
-		saveAsMenuItem.setDisable(false);
+	private void onProjectLoadedChange() {
+		boolean loaded = model.project.loaded.get();
+		closeProjectMenuItem.setDisable(!loaded);
+		saveProjectMenuItem.setDisable(!loaded);
+		saveAsMenuItem.setDisable(!loaded);
 	}
 
-	private void onProjectUnloaded() {
-		model.project.loaded.set(false);
-		closeProjectMenuItem.setDisable(true);
-		saveProjectMenuItem.setDisable(true);
-		saveAsMenuItem.setDisable(true);
+	private void onProjectChanged() {
+		if(model.project.loaded.get())
+			model.project.stateSaved.set(true);
+		fileUtils.setProjectFileName(model.project);
+	}
+
+	private void saveNewProject() {
+		File location = showProjectFileChooser(ProjectFileAction.SAVE);
+		if(location == null)
+			return;
+		location = fileUtils.getProjectFileWithExtension(location);
+		saveProjectToFile(location);
+		model.project.file.set(location);
+		fileUtils.setProjectFileName(model.project);
+	}
+
+	private void saveProjectToFile(File location) {
+		try {
+			fileUtils.save(model.project, location);
+		} catch (ProjectIOException e) {
+		}
 	}
 
 	public void newProject(ActionEvent event) {
-		String imagePath = chooseBaseImage();
-		if(imagePath == null)
+		File image = chooseBaseImage();
+		if(image == null)
 			return;
-		onProjectLoaded();
-		mainView.imageBox.setBaseImage(imagePath);
+		try(FileInputStream fileStream = new FileInputStream(image)) {
+			fileUtils.loadImage(model.project, fileStream);
+			model.project.mesh.set(new Mesh());
+			model.project.loaded.set(true);
+			model.project.file.set(null);
+			fileUtils.setProjectFileName(model.project);
+			model.project.notifyListeners();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void openProject(ActionEvent event) {
-
+		File location = showProjectFileChooser(ProjectFileAction.OPEN);
+		if(location == null)
+			return;
+		try {
+			fileUtils.load(model.project, location);
+			mainView.imageBox.calcImageBox();
+			model.project.loaded.set(true);
+			model.project.file.set(location);
+			fileUtils.setProjectFileName(model.project);
+			model.project.notifyListeners();
+		} catch (ProjectIOException e) {
+		}
 	}
 
 	public void openRecentProject(ActionEvent event) {
@@ -117,35 +159,29 @@ public class Window {
 	}
 
 	public void closeProject(ActionEvent event) {
-		onProjectUnloaded();
-	}
-
-	private File chooseProjectFileLocation() {
-		FileChooser projectFileChooser = new FileChooser();
-		projectFileChooser.setTitle("Choose Project File");
-		return projectFileChooser.showSaveDialog(stage);
+		model.project.mesh.set(null);
+		model.project.baseImage.set(null);
+		model.project.loaded.set(false);
+		model.project.file.set(null);
+		fileUtils.setProjectFileName(model.project);
+		model.project.notifyListeners();
 	}
 
 	public void saveProject(ActionEvent event) {
-		if(model.project.file == null)
+		if(model.project.file.get() == null)
 			saveNewProject();
 		else
-			projectWriter.saveProject(model);
+			saveProjectToFile(model.project.file.get());
 		model.project.stateSaved.set(true);
-	}
-
-	private void saveNewProject() {
-		File newProjectFile = chooseProjectFileLocation();
-		if(newProjectFile == null)
-			return;
-		projectWriter.saveProject(model);
-		model.project.file = newProjectFile;
-		model.project.name.set(newProjectFile.getName());
 	}
 
 	public void saveProjectAs(ActionEvent event) {
 		saveNewProject();
 		model.project.stateSaved.set(true);
+	}
+
+	public void exitApp(ActionEvent event) {
+		Platform.exit();
 	}
 
 }

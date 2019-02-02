@@ -2,7 +2,12 @@ package sgora.mesh.editor.model.geom;
 
 import sgora.mesh.editor.model.observables.ControlledObservable;
 
-public class Point extends ControlledObservable {
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class Point extends ControlledObservable implements Serializable {
 
 	public double x, y;
 
@@ -86,6 +91,16 @@ public class Point extends ControlledObservable {
 	@Override
 	public boolean equals(Object obj) {
 		return obj != null && obj.getClass().equals(this.getClass()) && x == ((Point) obj).x && y == ((Point) obj).y;
+	}
+
+	private void writeObject(ObjectOutputStream out) throws IOException {
+		out.writeDouble(x);
+		out.writeDouble(y);
+	}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		x = in.readDouble();
+		y = in.readDouble();
 	}
 
 }
