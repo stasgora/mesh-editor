@@ -47,7 +47,7 @@ public class Window {
 		mainView.init(model, imageCanvas, meshCanvas);
 
 		setWindowTitle();
-		model.project.loaded.addListener(this::onProjectLoadedChange);
+		model.project.loaded.addListener(this::changeMenuItemState);
 		model.project.addListener(this::setWindowTitle);
 		model.project.baseImage.addListener(this::onProjectChanged);
 		model.project.name.addListener(this::setWindowTitle);
@@ -55,8 +55,6 @@ public class Window {
 
 		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
-
-		onProjectLoadedChange();
 	}
 
 	private void setWindowTitle() {
@@ -93,7 +91,7 @@ public class Window {
 		return null;
 	}
 
-	private void onProjectLoadedChange() {
+	private void changeMenuItemState() {
 		boolean loaded = model.project.loaded.get();
 		closeProjectMenuItem.setDisable(!loaded);
 		saveProjectMenuItem.setDisable(!loaded);
@@ -161,6 +159,8 @@ public class Window {
 	public void closeProject(ActionEvent event) {
 		model.project.mesh.set(null);
 		model.project.baseImage.set(null);
+		model.project.rawImageFile = null;
+
 		model.project.loaded.set(false);
 		model.project.file.set(null);
 		fileUtils.setProjectFileName(model.project);
