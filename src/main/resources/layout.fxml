@@ -3,7 +3,9 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import sgora.mesh.editor.ui.ImageCanvas?>
@@ -13,9 +15,44 @@
 
 <VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.Window">
 	<MenuBar layoutX="185.0" layoutY="-14.0">
-		<Menu mnemonicParsing="false" text="File">
-			<MenuItem mnemonicParsing="false" onAction="#loadImage" text="Load" />
-			<MenuItem mnemonicParsing="false" onAction="#exitApp" text="Exit" />
+		<Menu text="_File">
+			<MenuItem onAction="#newProject" text="_New">
+				<accelerator>
+					<KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+				</accelerator>
+			</MenuItem>
+			<MenuItem onAction="#openProject" text="_Open">
+				<accelerator>
+					<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+				</accelerator>
+			</MenuItem>
+			<Menu disable="true" mnemonicParsing="false" text="Open _Recent">
+				<accelerator>
+					<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+				</accelerator>
+			</Menu>
+			<MenuItem fx:id="closeProjectMenuItem" disable="true" onAction="#closeProject" text="_Close">
+				<accelerator>
+					<KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+				</accelerator>
+			</MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="saveProjectMenuItem" disable="true" onAction="#saveProject" text="_Save">
+	            <accelerator>
+		            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+	            </accelerator>
+            </MenuItem>
+            <MenuItem fx:id="saveAsMenuItem" disable="true" onAction="#saveProjectAs" text="Save _As">
+	            <accelerator>
+		            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+	            </accelerator>
+            </MenuItem>
+			<SeparatorMenuItem mnemonicParsing="false" />
+			<MenuItem accelerator="Ctrl+Q" onAction="#exitApp" text="_Quit">
+				<accelerator>
+					<KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+				</accelerator>
+			</MenuItem>
 		</Menu>
 	</MenuBar>
    <MainToolBar fx:id="toolBar" prefHeight="18.0" prefWidth="808.0" />

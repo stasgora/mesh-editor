@@ -2,7 +2,7 @@ package sgora.mesh.editor.model.containers;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
-import sgora.mesh.editor.model.observables.ObservableProperty;
+import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.input.MouseTool;
 
@@ -12,8 +12,9 @@ public class Model {
 
 	public ImageBoxModel imageBoxModel = new ImageBoxModel();
 	public MeshBoxModel meshBoxModel = new MeshBoxModel();
+	public ProjectModel project = new ProjectModel();
 
-	public ObservableProperty<MouseTool> activeTool = new ObservableProperty<>(MouseTool.IMAGE_MOVER);
+	public SettableProperty<MouseTool> activeTool = new SettableProperty<>(MouseTool.IMAGE_MOVER);
 	public ObjectProperty<Cursor> mouseCursor;
 
 }

@@ -5,11 +5,14 @@ import java.util.function.UnaryOperator;
 /**
  * Notifies listeners when model value is set
  */
-public class ObservableProperty<T> extends SimpleObservable {
+public class SettableProperty<T> extends SimpleObservable {
 
-	private T modelValue;
+	protected T modelValue;
 
-	public ObservableProperty(T modelValue) {
+	public SettableProperty() {
+	}
+
+	public SettableProperty(T modelValue) {
 		this.modelValue = modelValue;
 	}
 
@@ -18,6 +21,8 @@ public class ObservableProperty<T> extends SimpleObservable {
 	}
 
 	public void set(T modelValue) {
+		if(this.modelValue == modelValue)
+			return;
 		this.modelValue = modelValue;
 		onValueChanged();
 	}

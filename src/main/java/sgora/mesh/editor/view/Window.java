@@ -3,14 +3,22 @@ package sgora.mesh.editor.view;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import sgora.mesh.editor.enums.FileChooserAction;
 import sgora.mesh.editor.model.containers.Model;
+import sgora.mesh.editor.services.ProjectFileUtils;
+import sgora.mesh.editor.services.UiDialogUtils;
+import sgora.mesh.editor.services.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
 
-import java.io.File;
+import java.io.*;
+import java.util.Optional;
 
 public class Window {
 
@@ -26,14 +34,56 @@ public class Window {
 	public MeshCanvas meshCanvas;
 	public MainToolBar toolBar;
 
+	public MenuItem openRecentMenuItem;
+	public MenuItem closeProjectMenuItem;
+	public MenuItem saveProjectMenuItem;
+	public MenuItem saveAsMenuItem;
+
+	private WorkspaceActionHandler workspaceActionHandler;
+	private UiDialogUtils dialogUtils;
+
+	private final static String APP_NAME = "Mesh Editor";
 
 	public void init(Stage stage) {
 		this.stage = stage;
 		toolBar.init(model.activeTool);
 		mainView.init(model, imageCanvas, meshCanvas);
+		workspaceActionHandler = new WorkspaceActionHandler(model.project);
+		dialogUtils = new UiDialogUtils(stage);
+
+		setWindowTitle();
+		model.project.loaded.addListener(this::changeMenuItemState);
+
+		model.project.file.addListener(this::setWindowTitle);
+		model.project.stateSaved.addListener(this::setWindowTitle);
+		model.project.addListener(this::setWindowTitle);
 
 		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
+
+		stage.setOnCloseRequest(this::onWindowCloseRequest);
+	}
+
+	private void setWindowTitle() {
+		String title = APP_NAME;
+		if(model.project.loaded.get()) {
+			String projectName = getProjectName();
+			if(!model.project.stateSaved.get())
+				projectName += "*";
+			title = projectName + " - " + title;
+		}
+		stage.setTitle(title);
+	}
+
+	private String getProjectName() {
+		String projectName;
+		if(model.project.file.get() == null) {
+			projectName = model.project.loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
+		} else {
+			String fileName = model.project.file.get().getName();
+			projectName = fileName.substring(0, fileName.length() - ProjectFileUtils.PROJECT_FILE_EXTENSION.length() - 1);
+		}
+		return projectName;
 	}
 
 	private void keepDividerInPlace(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
@@ -41,18 +91,91 @@ public class Window {
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
 	}
 
-	public void loadImage(ActionEvent event) {
-		FileChooser imageChooser = new FileChooser();
-		imageChooser.setTitle("Choose Image");
-		imageChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp"));
-		File image = imageChooser.showOpenDialog(stage);
+	private void changeMenuItemState() {
+		boolean loaded = model.project.loaded.get();
+		closeProjectMenuItem.setDisable(!loaded);
+		saveProjectMenuItem.setDisable(!loaded);
+		saveAsMenuItem.setDisable(!loaded);
+	}
 
-		if(image == null)
+	private File showProjectFileChooser(FileChooserAction action) {
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project Files", "*." + ProjectFileUtils.PROJECT_FILE_EXTENSION);
+		return dialogUtils.showFileChooser(action, "Choose Project File", filter);
+	}
+
+	private void saveProject(boolean asNew) {
+		File location;
+		if(asNew || model.project.file.get() == null) {
+			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
+			if(location == null)
+				return;
+		} else
+			location = model.project.file.get();
+		workspaceActionHandler.saveProject(location);
+	}
+
+	private void saveProject() {
+		saveProject(false);
+	}
+
+	private boolean confirmWorkspaceAction(String action) {
+		if(model.project.stateSaved.get())
+			return true;
+		ButtonType saveButton = new ButtonType("Save");
+		ButtonType discardButton = new ButtonType("Discard");
+		ButtonType cancelButton = new ButtonType("Cancel");
+		String headerText = "Currently open project \"" + getProjectName() + "\" has been modified";
+		String contentText = "Do you want to save your changes or discard them?";
+		ButtonType[] buttonTypes = {saveButton, discardButton, cancelButton};
+		Optional<ButtonType> response = dialogUtils.showWarningDialog(action, headerText, contentText, buttonTypes);
+		if(!response.isPresent() || response.get() == cancelButton)
+			return false;
+		if(response.get() == saveButton)
+			saveProject();
+		return true;
+	}
+
+	public void newProject(ActionEvent event) {
+		if(!confirmWorkspaceAction("Create Project"))
 			return;
-		mainView.imageBox.setBaseImage(image.getAbsolutePath());
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp");
+		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, "Choose Image", filter);
+		if(location != null)
+			workspaceActionHandler.createNewProject(location);
+	}
+
+	public void openProject(ActionEvent event) {
+		if(!confirmWorkspaceAction("Open Project"))
+			return;
+		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
+		if(location != null)
+			workspaceActionHandler.openProject(location);
+	}
+
+	public void openRecentProject(ActionEvent event) {
+	}
+
+	public void closeProject(ActionEvent event) {
+		if(confirmWorkspaceAction("Close Project"))
+			workspaceActionHandler.closeProject();
+	}
+
+	public void saveProject(ActionEvent event) {
+		saveProject();
+	}
+
+	public void saveProjectAs(ActionEvent event) {
+		saveProject(true);
+	}
+
+	private void onWindowCloseRequest(WindowEvent event) {
+		if(!confirmWorkspaceAction("Exit"))
+			event.consume();
 	}
 
 	public void exitApp(ActionEvent event) {
-		Platform.exit();
+		if(confirmWorkspaceAction("Exit"))
+			Platform.exit();
 	}
+
 }
