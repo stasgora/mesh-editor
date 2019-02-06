@@ -48,7 +48,7 @@ public class WorkspaceActionHandler {
 			project.mesh.set(new Mesh());
 			project.loaded.set(true);
 			project.file.set(null);
-			project.stateSaved.set(true);
+			project.stateSaved.set(false);
 			project.notifyListeners();
 		} catch (IOException e) {
 			e.printStackTrace();

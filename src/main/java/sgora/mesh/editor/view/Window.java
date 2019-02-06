@@ -3,18 +3,22 @@ package sgora.mesh.editor.view;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import sgora.mesh.editor.enums.WorkspaceAction;
+import javafx.stage.WindowEvent;
+import sgora.mesh.editor.enums.FileChooserAction;
 import sgora.mesh.editor.model.containers.Model;
 import sgora.mesh.editor.services.ProjectFileUtils;
+import sgora.mesh.editor.services.UiDialogUtils;
 import sgora.mesh.editor.services.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
 
 import java.io.*;
+import java.util.Optional;
 
 public class Window {
 
@@ -36,6 +40,7 @@ public class Window {
 	public MenuItem saveAsMenuItem;
 
 	private WorkspaceActionHandler workspaceActionHandler;
+	private UiDialogUtils dialogUtils;
 
 	private final static String APP_NAME = "Mesh Editor";
 
@@ -44,6 +49,7 @@ public class Window {
 		toolBar.init(model.activeTool);
 		mainView.init(model, imageCanvas, meshCanvas);
 		workspaceActionHandler = new WorkspaceActionHandler(model.project);
+		dialogUtils = new UiDialogUtils(stage);
 
 		setWindowTitle();
 		model.project.loaded.addListener(this::changeMenuItemState);
@@ -54,18 +60,14 @@ public class Window {
 
 		model.mouseCursor = stage.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
+
+		stage.setOnCloseRequest(this::onWindowCloseRequest);
 	}
 
 	private void setWindowTitle() {
 		String title = APP_NAME;
 		if(model.project.loaded.get()) {
-			String projectName;
-			if(model.project.file.get() == null) {
-				projectName = model.project.loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
-			} else {
-				String fileName = model.project.file.get().getName();
-				projectName = fileName.substring(0, fileName.length() - ProjectFileUtils.PROJECT_FILE_EXTENSION.length() - 1);
-			}
+			String projectName = getProjectName();
 			if(!model.project.stateSaved.get())
 				projectName += "*";
 			title = projectName + " - " + title;
@@ -73,27 +75,20 @@ public class Window {
 		stage.setTitle(title);
 	}
 
+	private String getProjectName() {
+		String projectName;
+		if(model.project.file.get() == null) {
+			projectName = model.project.loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
+		} else {
+			String fileName = model.project.file.get().getName();
+			projectName = fileName.substring(0, fileName.length() - ProjectFileUtils.PROJECT_FILE_EXTENSION.length() - 1);
+		}
+		return projectName;
+	}
+
 	private void keepDividerInPlace(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
 		SplitPane.Divider divider = mainSplitPane.getDividers().get(0);
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
-	}
-
-	private File chooseBaseImage() {
-		FileChooser imageChooser = new FileChooser();
-		imageChooser.setTitle("Choose Image");
-		imageChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp"));
-		return imageChooser.showOpenDialog(stage);
-	}
-
-	private File showProjectFileChooser(WorkspaceAction action) {
-		FileChooser projectFileChooser = new FileChooser();
-		projectFileChooser.setTitle("Choose Project File");
-		projectFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Project Files", "*." + ProjectFileUtils.PROJECT_FILE_EXTENSION));
-		if(action == WorkspaceAction.SAVE_PROJECT)
-			return projectFileChooser.showSaveDialog(stage);
-		else if(action == WorkspaceAction.OPEN_PROJECT)
-			return projectFileChooser.showOpenDialog(stage);
-		return null;
 	}
 
 	private void changeMenuItemState() {
@@ -103,32 +98,15 @@ public class Window {
 		saveAsMenuItem.setDisable(!loaded);
 	}
 
-	public void newProject(ActionEvent event) {
-		File location = chooseBaseImage();
-		if(location == null)
-			return;
-		workspaceActionHandler.createNewProject(location);
+	private File showProjectFileChooser(FileChooserAction action) {
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project Files", "*." + ProjectFileUtils.PROJECT_FILE_EXTENSION);
+		return dialogUtils.showFileChooser(action, "Choose Project File", filter);
 	}
 
-	public void openProject(ActionEvent event) {
-		File location = showProjectFileChooser(WorkspaceAction.OPEN_PROJECT);
-		if(location == null)
-			return;
-		workspaceActionHandler.openProject(location);
-	}
-
-	public void openRecentProject(ActionEvent event) {
-
-	}
-
-	public void closeProject(ActionEvent event) {
-		workspaceActionHandler.closeProject();
-	}
-
-	public void saveProject(ActionEvent event) {
+	private void saveProject(boolean asNew) {
 		File location;
-		if(model.project.file.get() == null) {
-			location = showProjectFileChooser(WorkspaceAction.SAVE_PROJECT);
+		if(asNew || model.project.file.get() == null) {
+			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if(location == null)
 				return;
 		} else
@@ -136,15 +114,68 @@ public class Window {
 		workspaceActionHandler.saveProject(location);
 	}
 
-	public void saveProjectAs(ActionEvent event) {
-		File location = showProjectFileChooser(WorkspaceAction.SAVE_PROJECT);
-		if(location == null)
+	private void saveProject() {
+		saveProject(false);
+	}
+
+	private boolean confirmWorkspaceAction(String action) {
+		if(model.project.stateSaved.get())
+			return true;
+		ButtonType saveButton = new ButtonType("Save");
+		ButtonType discardButton = new ButtonType("Discard");
+		ButtonType cancelButton = new ButtonType("Cancel");
+		String headerText = "Currently open project \"" + getProjectName() + "\" has been modified";
+		String contentText = "Do you want to save your changes or discard them?";
+		ButtonType[] buttonTypes = {saveButton, discardButton, cancelButton};
+		Optional<ButtonType> response = dialogUtils.showWarningDialog(action, headerText, contentText, buttonTypes);
+		if(!response.isPresent() || response.get() == cancelButton)
+			return false;
+		if(response.get() == saveButton)
+			saveProject();
+		return true;
+	}
+
+	public void newProject(ActionEvent event) {
+		if(!confirmWorkspaceAction("Create Project"))
 			return;
-		workspaceActionHandler.saveProject(location);
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp");
+		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, "Choose Image", filter);
+		if(location != null)
+			workspaceActionHandler.createNewProject(location);
+	}
+
+	public void openProject(ActionEvent event) {
+		if(!confirmWorkspaceAction("Open Project"))
+			return;
+		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
+		if(location != null)
+			workspaceActionHandler.openProject(location);
+	}
+
+	public void openRecentProject(ActionEvent event) {
+	}
+
+	public void closeProject(ActionEvent event) {
+		if(confirmWorkspaceAction("Close Project"))
+			workspaceActionHandler.closeProject();
+	}
+
+	public void saveProject(ActionEvent event) {
+		saveProject();
+	}
+
+	public void saveProjectAs(ActionEvent event) {
+		saveProject(true);
+	}
+
+	private void onWindowCloseRequest(WindowEvent event) {
+		if(!confirmWorkspaceAction("Exit"))
+			event.consume();
 	}
 
 	public void exitApp(ActionEvent event) {
-		Platform.exit();
+		if(confirmWorkspaceAction("Exit"))
+			Platform.exit();
 	}
 
 }
