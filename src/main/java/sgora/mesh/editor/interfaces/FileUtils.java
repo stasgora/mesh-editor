@@ -8,16 +8,14 @@ import java.io.FileInputStream;
 
 public interface FileUtils {
 
-	void save(ProjectModel model, File location) throws ProjectIOException;
+	void save(File location) throws ProjectIOException;
 
-	void load(ProjectModel model, File location) throws ProjectIOException;
+	void load(File location) throws ProjectIOException;
 
-	void loadImage(ProjectModel model, FileInputStream fileStream) throws ProjectIOException;
+	void loadImage(FileInputStream fileStream) throws ProjectIOException;
 
 	byte[] readFileIntoMemory(FileInputStream fileStream) throws ProjectIOException;
 
 	File getProjectFileWithExtension(File projectFile);
-
-	void setProjectFileName(ProjectModel model);
 
 }

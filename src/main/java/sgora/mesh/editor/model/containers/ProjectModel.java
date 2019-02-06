@@ -10,7 +10,6 @@ import java.io.*;
 
 public class ProjectModel extends ComplexObservable {
 
-	public SettableProperty<String> name = new SettableProperty<>();
 	public SettableProperty<Boolean> stateSaved = new SettableProperty<>(true);
 	public SettableProperty<File> file = new SettableProperty<>();
 	public SettableProperty<Boolean> loaded = new SettableProperty<>(false);
