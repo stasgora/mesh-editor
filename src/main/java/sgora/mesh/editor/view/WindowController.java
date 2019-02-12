@@ -49,7 +49,7 @@ public class WindowController {
 		this.window = window;
 		toolBar.init(state.model.activeTool);
 		mainView.init(state, imageCanvas, meshCanvas);
-		workspaceActionHandler = new WorkspaceActionHandler(project());
+		workspaceActionHandler = new WorkspaceActionHandler(state);
 		dialogUtils = new UiDialogUtils(window);
 
 		setWindowTitle();
@@ -90,7 +90,7 @@ public class WindowController {
 			projectName = project().loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
 		} else {
 			String fileName = project().file.get().getName();
-			projectName = fileName.substring(0, fileName.length() - ProjectFileUtils.PROJECT_FILE_EXTENSION.length() - 1);
+			projectName = fileName.substring(0, fileName.length() - state.config.appConfig.<String>getValue("projectExtension").length() - 1);
 		}
 		return projectName;
 	}
@@ -108,7 +108,8 @@ public class WindowController {
 	}
 
 	private File showProjectFileChooser(FileChooserAction action) {
-		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project Files", "*." + ProjectFileUtils.PROJECT_FILE_EXTENSION);
+		String projectExtension = state.config.appConfig.<String>getValue("projectExtension");
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project Files", "*." + projectExtension);
 		return dialogUtils.showFileChooser(action, "Choose Project File", filter);
 	}
 
