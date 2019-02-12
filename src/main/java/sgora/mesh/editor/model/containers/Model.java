@@ -2,6 +2,7 @@ package sgora.mesh.editor.model.containers;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
+import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.input.MouseTool;
@@ -11,6 +12,8 @@ public class Model {
 	public Point mainViewSize = new Point();
 
 	public ImageBoxModel imageBoxModel = new ImageBoxModel();
+	public final Rectangle imageBox = new Rectangle();
+
 	public MeshBoxModel meshBoxModel = new MeshBoxModel();
 	public ProjectModel project = new ProjectModel();
 

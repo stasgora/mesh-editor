@@ -11,10 +11,10 @@ import java.util.Optional;
 
 public class UiDialogUtils {
 
-	private Stage stage;
+	private Stage window;
 
-	public UiDialogUtils(Stage stage) {
-		this.stage = stage;
+	public UiDialogUtils(Stage window) {
+		this.window = window;
 	}
 
 	public File showFileChooser(FileChooserAction action, String title, FileChooser.ExtensionFilter extensionFilter) {
@@ -22,9 +22,9 @@ public class UiDialogUtils {
 		projectFileChooser.setTitle(title);
 		projectFileChooser.getExtensionFilters().add(extensionFilter);
 		if(action == FileChooserAction.SAVE_DIALOG)
-			return projectFileChooser.showSaveDialog(stage);
+			return projectFileChooser.showSaveDialog(window);
 		else if(action == FileChooserAction.OPEN_DIALOG)
-			return projectFileChooser.showOpenDialog(stage);
+			return projectFileChooser.showOpenDialog(window);
 		return null;
 	}
 

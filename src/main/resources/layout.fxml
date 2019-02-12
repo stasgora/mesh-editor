@@ -13,7 +13,7 @@
 <?import sgora.mesh.editor.ui.MeshCanvas?>
 <?import sgora.mesh.editor.view.MainView?>
 
-<VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.Window">
+<VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.WindowController">
 	<MenuBar layoutX="185.0" layoutY="-14.0">
 		<Menu text="_File">
 			<MenuItem onAction="#newProject" text="_New">

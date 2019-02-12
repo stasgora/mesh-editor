@@ -1,0 +1,24 @@
+{
+	"settings": {
+		"language": "eng",
+		"imageBox": {
+			"zoomSpeed": 0.0025,
+			"zoomDir": -1
+		}
+	},
+	"last": {
+		"windowPlacement": {
+			"position": {
+				"x": 0,
+				"y": 0
+			},
+			"size": {
+				"x": 1200,
+				"y": 800
+			}
+		},
+		"projects": [
+
+		]
+	}
+}

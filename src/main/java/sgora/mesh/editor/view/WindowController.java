@@ -10,8 +10,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import sgora.mesh.editor.State;
 import sgora.mesh.editor.enums.FileChooserAction;
-import sgora.mesh.editor.model.containers.Model;
+import sgora.mesh.editor.model.containers.ProjectModel;
 import sgora.mesh.editor.services.ProjectFileUtils;
 import sgora.mesh.editor.services.UiDialogUtils;
 import sgora.mesh.editor.services.WorkspaceActionHandler;
@@ -20,11 +21,10 @@ import sgora.mesh.editor.ui.*;
 import java.io.*;
 import java.util.Optional;
 
-public class Window {
+public class WindowController {
 
-	private Stage stage;
-
-	private Model model = new Model();
+	private State state;
+	private Stage window;
 
 	public SplitPane mainSplitPane;
 	public MainView mainView;
@@ -44,43 +44,52 @@ public class Window {
 
 	private final static String APP_NAME = "Mesh Editor";
 
-	public void init(Stage stage) {
-		this.stage = stage;
-		toolBar.init(model.activeTool);
-		mainView.init(model, imageCanvas, meshCanvas);
-		workspaceActionHandler = new WorkspaceActionHandler(model.project);
-		dialogUtils = new UiDialogUtils(stage);
+	public void init(State state, Stage window) {
+		this.state = state;
+		this.window = window;
+		toolBar.init(state.model.activeTool);
+		mainView.init(state, imageCanvas, meshCanvas);
+		workspaceActionHandler = new WorkspaceActionHandler(project());
+		dialogUtils = new UiDialogUtils(window);
 
 		setWindowTitle();
-		model.project.loaded.addListener(this::changeMenuItemState);
+		project().loaded.addListener(this::changeMenuItemState);
 
-		model.project.file.addListener(this::setWindowTitle);
-		model.project.stateSaved.addListener(this::setWindowTitle);
-		model.project.addListener(this::setWindowTitle);
+		project().file.addListener(this::setWindowTitle);
+		project().stateSaved.addListener(this::setWindowTitle);
+		project().addListener(this::setWindowTitle);
 
-		model.mouseCursor = stage.getScene().cursorProperty();
+		state.model.mouseCursor = window.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 
-		stage.setOnCloseRequest(this::onWindowCloseRequest);
+		window.setOnCloseRequest(this::onWindowCloseRequest);
+	}
+
+	private ProjectModel project() {
+		return state.model.project;
+	}
+
+	private boolean showConfirmDialog() {
+		return state.config.appConfig.<Boolean>getValue("flags.showConfirmDialogs");
 	}
 
 	private void setWindowTitle() {
 		String title = APP_NAME;
-		if(model.project.loaded.get()) {
+		if(project().loaded.get()) {
 			String projectName = getProjectName();
-			if(!model.project.stateSaved.get())
+			if(!project().stateSaved.get())
 				projectName += "*";
 			title = projectName + " - " + title;
 		}
-		stage.setTitle(title);
+		window.setTitle(title);
 	}
 
 	private String getProjectName() {
 		String projectName;
-		if(model.project.file.get() == null) {
-			projectName = model.project.loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
+		if(project().file.get() == null) {
+			projectName = project().loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
 		} else {
-			String fileName = model.project.file.get().getName();
+			String fileName = project().file.get().getName();
 			projectName = fileName.substring(0, fileName.length() - ProjectFileUtils.PROJECT_FILE_EXTENSION.length() - 1);
 		}
 		return projectName;
@@ -92,7 +101,7 @@ public class Window {
 	}
 
 	private void changeMenuItemState() {
-		boolean loaded = model.project.loaded.get();
+		boolean loaded = project().loaded.get();
 		closeProjectMenuItem.setDisable(!loaded);
 		saveProjectMenuItem.setDisable(!loaded);
 		saveAsMenuItem.setDisable(!loaded);
@@ -105,12 +114,12 @@ public class Window {
 
 	private void saveProject(boolean asNew) {
 		File location;
-		if(asNew || model.project.file.get() == null) {
+		if(asNew || project().file.get() == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if(location == null)
 				return;
 		} else
-			location = model.project.file.get();
+			location = project().file.get();
 		workspaceActionHandler.saveProject(location);
 	}
 
@@ -118,8 +127,8 @@ public class Window {
 		saveProject(false);
 	}
 
-	private boolean confirmWorkspaceAction(String action) {
-		if(model.project.stateSaved.get())
+	private boolean confirmWorkspaceAction(String title) {
+		if(project().stateSaved.get())
 			return true;
 		ButtonType saveButton = new ButtonType("Save");
 		ButtonType discardButton = new ButtonType("Discard");
@@ -127,7 +136,7 @@ public class Window {
 		String headerText = "Currently open project \"" + getProjectName() + "\" has been modified";
 		String contentText = "Do you want to save your changes or discard them?";
 		ButtonType[] buttonTypes = {saveButton, discardButton, cancelButton};
-		Optional<ButtonType> response = dialogUtils.showWarningDialog(action, headerText, contentText, buttonTypes);
+		Optional<ButtonType> response = dialogUtils.showWarningDialog(title, headerText, contentText, buttonTypes);
 		if(!response.isPresent() || response.get() == cancelButton)
 			return false;
 		if(response.get() == saveButton)
@@ -136,7 +145,7 @@ public class Window {
 	}
 
 	public void newProject(ActionEvent event) {
-		if(!confirmWorkspaceAction("Create Project"))
+		if(showConfirmDialog() && !confirmWorkspaceAction("Create Project"))
 			return;
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp");
 		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, "Choose Image", filter);
@@ -145,7 +154,7 @@ public class Window {
 	}
 
 	public void openProject(ActionEvent event) {
-		if(!confirmWorkspaceAction("Open Project"))
+		if(showConfirmDialog() && !confirmWorkspaceAction("Open Project"))
 			return;
 		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
 		if(location != null)
@@ -156,7 +165,7 @@ public class Window {
 	}
 
 	public void closeProject(ActionEvent event) {
-		if(confirmWorkspaceAction("Close Project"))
+		if(!showConfirmDialog() || confirmWorkspaceAction("Close Project"))
 			workspaceActionHandler.closeProject();
 	}
 
@@ -169,13 +178,14 @@ public class Window {
 	}
 
 	private void onWindowCloseRequest(WindowEvent event) {
-		if(!confirmWorkspaceAction("Exit"))
+		if(showConfirmDialog() && !confirmWorkspaceAction("Exit"))
 			event.consume();
 	}
 
 	public void exitApp(ActionEvent event) {
-		if(confirmWorkspaceAction("Exit"))
+		if(!showConfirmDialog() || confirmWorkspaceAction("Exit"))
 			Platform.exit();
+
 	}
 
 }

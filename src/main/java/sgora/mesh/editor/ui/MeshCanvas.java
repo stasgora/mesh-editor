@@ -1,16 +1,16 @@
 package sgora.mesh.editor.ui;
 
-import sgora.mesh.editor.model.containers.MeshBoxModel;
+import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
 
 public class MeshCanvas extends Canvas {
 
-	public void draw(MeshBoxModel meshBox, Point[] nodes) {
+	public void draw(Mesh mesh, Point[] nodes) {
 		if(!isVisible())
 			return;
-		context.setFill(meshBox.nodeColor.get());
+		context.setFill(mesh.nodeColor.get());
 		for (Point node : nodes) {
-			context.fillOval(node.x - meshBox.nodeRadius.get() / 2d, node.y - meshBox.nodeRadius.get() / 2d, meshBox.nodeRadius.get(), meshBox.nodeRadius.get());
+			context.fillOval(node.x - mesh.nodeRadius.get() / 2d, node.y - mesh.nodeRadius.get() / 2d, mesh.nodeRadius.get(), mesh.nodeRadius.get());
 		}
 	}
 

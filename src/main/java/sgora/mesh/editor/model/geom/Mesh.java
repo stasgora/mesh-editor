@@ -1,6 +1,8 @@
 package sgora.mesh.editor.model.geom;
 
+import javafx.scene.paint.Color;
 import sgora.mesh.editor.model.observables.ComplexObservable;
+import sgora.mesh.editor.model.observables.SettableProperty;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,6 +15,9 @@ import java.util.List;
 public class Mesh extends ComplexObservable implements Serializable {
 
 	private List<Point> nodes = new ArrayList<>();
+
+	public SettableProperty<Color> nodeColor = new SettableProperty<>(new Color(0.1, 0.2, 1, 1));
+	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
 
 	public void addNode(Point node) {
 		nodes.add(node);

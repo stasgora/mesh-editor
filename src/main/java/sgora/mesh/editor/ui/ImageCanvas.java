@@ -8,7 +8,7 @@ public class ImageCanvas extends Canvas {
 	public void draw(Model model) {
 		if(!isVisible())
 			return;
-		Rectangle imageBox = model.imageBoxModel.imageBox;
+		Rectangle imageBox = model.imageBox;
 		context.drawImage(model.project.baseImage.get(), imageBox.position.x, imageBox.position.y, imageBox.size.x,  imageBox.size.y);
 	}
 
