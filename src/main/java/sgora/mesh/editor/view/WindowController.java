@@ -53,6 +53,11 @@ public class WindowController {
 		this.dialogUtils = dialogUtils;
 
 		setWindowTitle();
+		setListeners();
+		window.setOnCloseRequest(this::onWindowCloseRequest);
+	}
+
+	private void setListeners() {
 		project.loaded.addListener(this::changeMenuItemState);
 
 		project.file.addListener(this::setWindowTitle);
@@ -60,11 +65,10 @@ public class WindowController {
 		project.addListener(this::setWindowTitle);
 
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
-		window.setOnCloseRequest(this::onWindowCloseRequest);
 	}
 
 	private boolean showConfirmDialog() {
-		return appConfig.<Boolean>getValue("flags.showConfirmDialogs");
+		return appConfig.getBool("flags.showConfirmDialogs");
 	}
 
 	private void setWindowTitle() {
@@ -84,7 +88,7 @@ public class WindowController {
 			projectName = project.loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
 		} else {
 			String fileName = project.file.get().getName();
-			projectName = fileName.substring(0, fileName.length() - appConfig.<String>getValue("projectExtension").length() - 1);
+			projectName = fileName.substring(0, fileName.length() - appConfig.getString("projectExtension").length() - 1);
 		}
 		return projectName;
 	}
@@ -102,7 +106,7 @@ public class WindowController {
 	}
 
 	private File showProjectFileChooser(FileChooserAction action) {
-		String projectExtension = appConfig.<String>getValue("projectExtension");
+		String projectExtension = appConfig.getString("projectExtension");
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project Files", "*." + projectExtension);
 		return dialogUtils.showFileChooser(action, "Choose Project File", filter);
 	}

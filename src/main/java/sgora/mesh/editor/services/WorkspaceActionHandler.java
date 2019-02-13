@@ -8,8 +8,12 @@ import sgora.mesh.editor.model.geom.Mesh;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WorkspaceActionHandler {
+
+	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionHandler.class.getName());
 
 	private FileUtils fileUtils;
 	private Project project;
@@ -27,7 +31,7 @@ public class WorkspaceActionHandler {
 			project.stateSaved.set(true);
 			project.notifyListeners();
 		} catch (ProjectIOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -38,7 +42,7 @@ public class WorkspaceActionHandler {
 			project.file.set(location);
 			project.stateSaved.set(true);
 		} catch (ProjectIOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -51,7 +55,7 @@ public class WorkspaceActionHandler {
 			project.stateSaved.set(false);
 			project.notifyListeners();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
