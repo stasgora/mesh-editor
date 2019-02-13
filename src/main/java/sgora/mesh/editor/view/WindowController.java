@@ -53,6 +53,11 @@ public class WindowController {
 		this.dialogUtils = dialogUtils;
 
 		setWindowTitle();
+		setListeners();
+		window.setOnCloseRequest(this::onWindowCloseRequest);
+	}
+
+	private void setListeners() {
 		project.loaded.addListener(this::changeMenuItemState);
 
 		project.file.addListener(this::setWindowTitle);
@@ -60,7 +65,6 @@ public class WindowController {
 		project.addListener(this::setWindowTitle);
 
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
-		window.setOnCloseRequest(this::onWindowCloseRequest);
 	}
 
 	private boolean showConfirmDialog() {

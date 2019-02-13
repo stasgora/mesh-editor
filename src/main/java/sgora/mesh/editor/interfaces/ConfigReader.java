@@ -8,4 +8,6 @@ public interface ConfigReader {
 	<T> T getValue(String keyPath);
 
 	<T> List<T> getList(String keyPath);
+
+	boolean containsPath(String keyPath);
 }

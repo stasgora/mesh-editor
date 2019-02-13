@@ -11,12 +11,12 @@
 	"last": {
 		"windowPlacement": {
 			"position": {
-				"x": 0,
-				"y": 0
+				"x": 360,
+				"y": 100
 			},
 			"size": {
-				"x": 1200,
-				"y": 800
+				"w": 1200,
+				"h": 800
 			}
 		},
 		"projects": [

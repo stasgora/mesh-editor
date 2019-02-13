@@ -39,6 +39,11 @@ public class JsonConfigReader implements ConfigReader {
 		return list;
 	}
 
+	@Override
+	public boolean containsPath(String keyPath) {
+		return getParent(keyPath).has(getLastKey(keyPath));
+	}
+
 	private String getLastKey(String keyPath) {
 		String[] path = keyPath.split("\\.");
 		return path.length > 0 ? path[path.length - 1] : keyPath;

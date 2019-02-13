@@ -52,7 +52,16 @@ public class ObjectGraphFactory {
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project);
 		dialogUtils = new UiDialogUtils(stage);
 
-		stage.setScene(new Scene(root, 1200, 800));
+		Scene scene;
+		String windowPath = "last.windowPlacement";
+		if(appSettings.containsPath(windowPath)) {
+			scene = new Scene(root, appSettings.<Integer>getValue(windowPath + ".size.w"), appSettings.<Integer>getValue(windowPath + ".size.h"));
+			stage.setX(appSettings.<Integer>getValue(windowPath + ".position.x"));
+			stage.setY(appSettings.<Integer>getValue(windowPath + ".position.y"));
+		} else {
+			scene = new Scene(root, appConfig.<Integer>getValue("defaultWindowSize.w"), appConfig.<Integer>getValue("defaultWindowSize.h"));
+		}
+		stage.setScene(scene);
 
 		activeTool = new SettableProperty<>(MouseTool.IMAGE_MOVER);
 		mouseCursor = stage.getScene().cursorProperty();
