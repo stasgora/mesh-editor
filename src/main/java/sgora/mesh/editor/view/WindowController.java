@@ -19,6 +19,7 @@ import sgora.mesh.editor.services.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
 
 import java.io.*;
+import java.util.List;
 import java.util.Optional;
 
 public class WindowController {
@@ -42,8 +43,6 @@ public class WindowController {
 
 	private WorkspaceActionHandler workspaceActionHandler;
 	private UiDialogUtils dialogUtils;
-
-	private final static String APP_NAME = "Mesh Editor";
 
 	public void init(Project project, Stage window, ConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler, UiDialogUtils dialogUtils) {
 		this.project = project;
@@ -72,7 +71,7 @@ public class WindowController {
 	}
 
 	private void setWindowTitle() {
-		String title = APP_NAME;
+		String title = appConfig.getString("appName");
 		if(project.loaded.get()) {
 			String projectName = getProjectName();
 			if(!project.stateSaved.get())
@@ -88,7 +87,7 @@ public class WindowController {
 			projectName = project.loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
 		} else {
 			String fileName = project.file.get().getName();
-			projectName = fileName.substring(0, fileName.length() - appConfig.getString("projectExtension").length() - 1);
+			projectName = fileName.substring(0, fileName.length() - appConfig.getString("extension.project").length() - 1);
 		}
 		return projectName;
 	}
@@ -106,7 +105,7 @@ public class WindowController {
 	}
 
 	private File showProjectFileChooser(FileChooserAction action) {
-		String projectExtension = appConfig.getString("projectExtension");
+		String projectExtension = appConfig.getString("extension.project");
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project Files", "*." + projectExtension);
 		return dialogUtils.showFileChooser(action, "Choose Project File", filter);
 	}
@@ -146,7 +145,8 @@ public class WindowController {
 	public void newProject(ActionEvent event) {
 		if(showConfirmDialog() && !confirmWorkspaceAction("Create Project"))
 			return;
-		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.bmp");
+		String[] imageTypes = appConfig.<String>getList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Images", imageTypes);
 		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, "Choose Image", filter);
 		if(location != null)
 			workspaceActionHandler.createNewProject(location);
@@ -177,12 +177,12 @@ public class WindowController {
 	}
 
 	private void onWindowCloseRequest(WindowEvent event) {
-		if(showConfirmDialog() && !confirmWorkspaceAction("Exit"))
+		if(showConfirmDialog() && !confirmWorkspaceAction("Quit"))
 			event.consume();
 	}
 
 	public void exitApp(ActionEvent event) {
-		if(!showConfirmDialog() || confirmWorkspaceAction("Exit"))
+		if(!showConfirmDialog() || confirmWorkspaceAction("Quit"))
 			Platform.exit();
 
 	}

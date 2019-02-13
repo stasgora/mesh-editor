@@ -1,0 +1,44 @@
+{
+	"defaultProjectName": "Untitled",
+	"action": {
+		"new": "New",
+		"open": "Open",
+		"openRecent": "Open Recent",
+		"close": "Close",
+		"save": "Save",
+		"saveAs": "Save As",
+		"discard": "Discard",
+		"cancel": "Cancel",
+		"quit": "Quit",
+		"createProject": "Create Project",
+		"openProject": "Open Project",
+		"closeProject": "Close Project"
+	},
+	"tools": {
+		"meshEditor": "Mesh Editor",
+		"imageMover": "Image Mover"
+	},
+	"dialog": {
+		"fileChooser": {
+			"title": {
+				"project": "Choose Project File",
+				"image": "Choose Image"
+			},
+			"extension": {
+				"project": "Project Files",
+				"image": "Images"
+			}
+		},
+		"warning": {
+			"header": {
+				"modified": [
+					"Currently open project '",
+					"' has been modified"
+				]
+			},
+			"content": {
+				"modified": "Do you want to save your changes or discard them?"
+			}
+		}
+	}
+}

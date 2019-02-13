@@ -55,8 +55,8 @@ public class JsonConfigReader implements ConfigReader {
 
 	@Override
 	public <T> List<T> getList(String keyPath) {
-		List<T> list = new ArrayList<>();
 		JSONArray jsonArray = getParent(keyPath).optJSONArray(getLastKey(keyPath));
+		List<T> list = new ArrayList<>(jsonArray.length());
 		jsonArray.forEach(item -> list.add((T) item));
 		return list;
 	}
