@@ -46,7 +46,7 @@ public class ObjectGraphFactory {
 
 	public ObjectGraphFactory buildDependencies() {
 		//services
-		appConfig = JsonConfigReader.forResourceFile("/app.config");
+		appConfig = JsonConfigReader.forResource("/app.config");
 		appSettings = JsonConfigReader.forFile("config/app.settings");
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project);
