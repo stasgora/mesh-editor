@@ -26,6 +26,7 @@ public class ObjectGraphFactory {
 	private Project project = new Project();
 
 	private ConfigReader appConfig;
+	private ConfigReader appSettings;
 	private UiDialogUtils dialogUtils;
 	private WorkspaceActionHandler workspaceActionHandler;
 	private FileUtils fileUtils;
@@ -46,6 +47,7 @@ public class ObjectGraphFactory {
 	public ObjectGraphFactory buildDependencies() {
 		//services
 		appConfig = JsonConfigReader.forResourceFile("/app.config");
+		appSettings = JsonConfigReader.forFile("config/app.settings");
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project);
 		dialogUtils = new UiDialogUtils(stage);
@@ -64,7 +66,7 @@ public class ObjectGraphFactory {
 	}
 
 	public void createObjectGraph() {
-		ImageBox imageBox = new ImageBox(mainViewSize, project, appConfig, mouseCursor, imageBoxModel);
+		ImageBox imageBox = new ImageBox(mainViewSize, project, appConfig, appSettings, mouseCursor, imageBoxModel);
 		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor);
 
 		controller.toolBar.init(activeTool);

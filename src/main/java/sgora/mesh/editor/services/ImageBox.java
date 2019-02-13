@@ -18,13 +18,15 @@ public class ImageBox implements MouseListener {
 	private final Point mainViewSize;
 	private final Project project;
 	private ConfigReader appConfig;
+	private ConfigReader appSettings;
 	private ObjectProperty<Cursor> mouseCursor;
 	private ImageBoxModel imageBoxModel;
 
-	public ImageBox(Point mainViewSize, Project project, ConfigReader appConfig, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
+	public ImageBox(Point mainViewSize, Project project, ConfigReader appConfig, ConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
 		this.mainViewSize = mainViewSize;
 		this.project = project;
 		this.appConfig = appConfig;
+		this.appSettings = appSettings;
 		this.mouseCursor = mouseCursor;
 		this.imageBoxModel = imageBoxModel;
 	}
@@ -65,15 +67,15 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onZoom(double amount, Point mousePos) {
-		double zoomAmount = amount * imageBoxModel.zoomDir * imageBoxModel.zoomSpeed;
-		Point zoomPos = new Point(mousePos).subtract(project.imageBox.position).multiplyByScalar(zoomAmount);
-		Point newImgSize = new Point(project.imageBox.size).multiplyByScalar(1 - zoomAmount);
-
 		double minZoom = appConfig.getDouble("imageBox.zoom.min");
 		double maxZoom = appConfig.getDouble("imageBox.zoom.max");
-		if(newImgSize.x < mainViewSize.x * minZoom || newImgSize.y < mainViewSize.y * minZoom
-				|| newImgSize.x > mainViewSize.x * maxZoom || newImgSize.y > mainViewSize.y * maxZoom)
-			return;
+		double zoomAmount = amount * appSettings.getDouble("settings.imageBox.zoom.dir") * appSettings.getDouble("settings.imageBox.zoom.speed");
+
+		Point newImgSize = new Point(project.imageBox.size).multiplyByScalar(1 - zoomAmount);
+		newImgSize.clamp(new Point(mainViewSize).multiplyByScalar(minZoom), new Point(mainViewSize).multiplyByScalar(maxZoom));
+		double correctedZoomAmount = 1 - new Point(newImgSize).divide(project.imageBox.size).x;
+
+		Point zoomPos = new Point(mousePos).subtract(project.imageBox.position).multiplyByScalar(correctedZoomAmount);
 		project.imageBox.position.add(zoomPos);
 		project.imageBox.size.set(newImgSize);
 		project.imageBox.notifyListeners();

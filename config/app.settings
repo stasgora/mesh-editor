@@ -2,8 +2,10 @@
 	"settings": {
 		"language": "eng",
 		"imageBox": {
-			"zoomSpeed": 0.0025,
-			"zoomDir": -1
+			"zoom": {
+				"speed": 0.0025,
+				"dir": -1
+			}
 		}
 	},
 	"last": {
