@@ -72,7 +72,7 @@ public class ProjectFileUtils implements FileUtils {
 
 	@Override
 	public File getProjectFileWithExtension(File projectFile) {
-		String projectExtension = "." + appConfig.<String>getValue("projectExtension");
+		String projectExtension = "." + appConfig.getString("projectExtension");
 		if(!projectFile.getName().endsWith(projectExtension))
 			return new File(projectFile.getPath() + projectExtension);
 		return projectFile;

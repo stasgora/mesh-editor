@@ -50,7 +50,7 @@ public class ImageBox implements MouseListener {
 		double imgRatio = baseImage.get().getWidth() / baseImage.get().getHeight();
 
 		Point canvasSize = mainViewSize;
-		double defBorder = appConfig.<Double>getValue("imageBox.defaultBorder");
+		double defBorder = appConfig.getDouble("imageBox.defaultBorder");
 		if(imgRatio > canvasSize.x / canvasSize.y) {
 			double imgWidth = canvasSize.x * (1 - defBorder);
 			double imgHeight = imgWidth / imgRatio;
@@ -69,7 +69,7 @@ public class ImageBox implements MouseListener {
 	public void onZoom(double amount, Point mousePos) {
 		double minZoom = appConfig.getDouble("imageBox.zoom.min");
 		double maxZoom = appConfig.getDouble("imageBox.zoom.max");
-		double zoomAmount = amount * appSettings.getDouble("settings.imageBox.zoom.dir") * appSettings.getDouble("settings.imageBox.zoom.speed");
+		double zoomAmount = amount * appSettings.getInt("settings.imageBox.zoom.dir") * appSettings.getDouble("settings.imageBox.zoom.speed");
 
 		Point newImgSize = new Point(project.imageBox.size).multiplyByScalar(1 - zoomAmount);
 		newImgSize.clamp(new Point(mainViewSize).multiplyByScalar(minZoom), new Point(mainViewSize).multiplyByScalar(maxZoom));

@@ -55,11 +55,11 @@ public class ObjectGraphFactory {
 		Scene scene;
 		String windowPath = "last.windowPlacement";
 		if(appSettings.containsPath(windowPath)) {
-			scene = new Scene(root, appSettings.<Integer>getValue(windowPath + ".size.w"), appSettings.<Integer>getValue(windowPath + ".size.h"));
-			stage.setX(appSettings.<Integer>getValue(windowPath + ".position.x"));
-			stage.setY(appSettings.<Integer>getValue(windowPath + ".position.y"));
+			scene = new Scene(root, appSettings.getInt(windowPath + ".size.w"), appSettings.getInt(windowPath + ".size.h"));
+			stage.setX(appSettings.getInt(windowPath + ".position.x"));
+			stage.setY(appSettings.getInt(windowPath + ".position.y"));
 		} else {
-			scene = new Scene(root, appConfig.<Integer>getValue("defaultWindowSize.w"), appConfig.<Integer>getValue("defaultWindowSize.h"));
+			scene = new Scene(root, appConfig.getInt("defaultWindowSize.w"), appConfig.getInt("defaultWindowSize.h"));
 		}
 		stage.setScene(scene);
 

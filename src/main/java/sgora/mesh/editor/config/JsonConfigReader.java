@@ -27,6 +27,21 @@ public class JsonConfigReader implements ConfigReader {
 	}
 
 	@Override
+	public String getString(String keyPath) {
+		return getParent(keyPath).getString(getLastKey(keyPath));
+	}
+
+	@Override
+	public int getInt(String keyPath) {
+		return getParent(keyPath).getInt(getLastKey(keyPath));
+	}
+
+	@Override
+	public boolean getBool(String keyPath) {
+		return getParent(keyPath).getBoolean(getLastKey(keyPath));
+	}
+
+	@Override
 	public <T> T getValue(String keyPath) {
 		return (T) getParent(keyPath).get(getLastKey(keyPath));
 	}
