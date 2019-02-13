@@ -1,107 +1,113 @@
 package sgora.mesh.editor.services;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import sgora.mesh.editor.State;
+import sgora.mesh.editor.interfaces.ConfigReader;
+import sgora.mesh.editor.model.containers.ImageBoxModel;
+import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.interfaces.MouseListener;
-import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.observables.SettableProperty;
 
 public class ImageBox implements MouseListener {
 
-	private final State state;
-
 	private Point lastCanvasSize;
 
-	public ImageBox(State state) {
-		this.state = state;
-	}
+	private final Point mainViewSize;
+	private final Project project;
+	private ConfigReader appConfig;
+	private ObjectProperty<Cursor> mouseCursor;
+	private ImageBoxModel imageBoxModel;
 
-	private Rectangle imageBox() {
-		return state.model.imageBox;
+	public ImageBox(Point mainViewSize, Project project, ConfigReader appConfig, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
+		this.mainViewSize = mainViewSize;
+		this.project = project;
+		this.appConfig = appConfig;
+		this.mouseCursor = mouseCursor;
+		this.imageBoxModel = imageBoxModel;
 	}
 
 	public void onResizeCanvas() {
-		if(!state.model.project.loaded.get())
+		if(!project.loaded.get())
 			return;
 		if(lastCanvasSize == null)
-			lastCanvasSize = new Point(state.model.mainViewSize);
-		Point sizeRatio = new Point(state.model.mainViewSize).divide(lastCanvasSize);
-		lastCanvasSize.set(state.model.mainViewSize);
-		imageBox().position.multiply(sizeRatio);
-		imageBox().size.multiplyByScalar((sizeRatio.y + sizeRatio.x) / 2);
-		imageBox().notifyListeners();
+			lastCanvasSize = new Point(mainViewSize);
+		Point sizeRatio = new Point(mainViewSize).divide(lastCanvasSize);
+		lastCanvasSize.set(mainViewSize);
+		project.imageBox.position.multiply(sizeRatio);
+		project.imageBox.size.multiplyByScalar((sizeRatio.y + sizeRatio.x) / 2);
+		project.imageBox.notifyListeners();
 	}
 
 	public void calcImageBox() {
-		if(state.model.project.baseImage.get() == null)
+		if(project.baseImage.get() == null)
 			return;
-		SettableProperty<Image> baseImage = state.model.project.baseImage;
+		SettableProperty<Image> baseImage = project.baseImage;
 		double imgRatio = baseImage.get().getWidth() / baseImage.get().getHeight();
 
-		Point canvasSize = state.model.mainViewSize;
-		double defBorder = state.config.appConfig.<Double>getValue("imageBox.defaultBorder");
+		Point canvasSize = mainViewSize;
+		double defBorder = appConfig.<Double>getValue("imageBox.defaultBorder");
 		if(imgRatio > canvasSize.x / canvasSize.y) {
 			double imgWidth = canvasSize.x * (1 - defBorder);
 			double imgHeight = imgWidth / imgRatio;
-			imageBox().position.set(canvasSize.x * defBorder * 0.5, (canvasSize.y - imgHeight) / 2);
-			imageBox().size.set(imgWidth, imgHeight);
+			project.imageBox.position.set(canvasSize.x * defBorder * 0.5, (canvasSize.y - imgHeight) / 2);
+			project.imageBox.size.set(imgWidth, imgHeight);
 		} else {
 			double imgHeight = canvasSize.y * (1 - defBorder);
 			double imgWidth = imgRatio * imgHeight;
-			imageBox().position.set((canvasSize.x - imgWidth) / 2, canvasSize.y * defBorder * 0.5);
-			imageBox().size.set(imgWidth, imgHeight);
+			project.imageBox.position.set((canvasSize.x - imgWidth) / 2, canvasSize.y * defBorder * 0.5);
+			project.imageBox.size.set(imgWidth, imgHeight);
 		}
-		imageBox().notifyListeners();
+		project.imageBox.notifyListeners();
 	}
 
 	@Override
 	public void onZoom(double amount, Point mousePos) {
-		double zoomAmount = amount * state.model.imageBoxModel.zoomDir * state.model.imageBoxModel.zoomSpeed;
-		Point zoomPos = new Point(mousePos).subtract(imageBox().position).multiplyByScalar(zoomAmount);
-		Point newImgSize = new Point(imageBox().size).multiplyByScalar(1 - zoomAmount);
+		double zoomAmount = amount * imageBoxModel.zoomDir * imageBoxModel.zoomSpeed;
+		Point zoomPos = new Point(mousePos).subtract(project.imageBox.position).multiplyByScalar(zoomAmount);
+		Point newImgSize = new Point(project.imageBox.size).multiplyByScalar(1 - zoomAmount);
 
-		double minZoom = state.config.appConfig.getDouble("imageBox.zoom.min");
-		double maxZoom = state.config.appConfig.getDouble("imageBox.zoom.max");
-		if(newImgSize.x < state.model.mainViewSize.x * minZoom || newImgSize.y < state.model.mainViewSize.y * minZoom
-				|| newImgSize.x > state.model.mainViewSize.x * maxZoom || newImgSize.y > state.model.mainViewSize.y * maxZoom)
+		double minZoom = appConfig.getDouble("imageBox.zoom.min");
+		double maxZoom = appConfig.getDouble("imageBox.zoom.max");
+		if(newImgSize.x < mainViewSize.x * minZoom || newImgSize.y < mainViewSize.y * minZoom
+				|| newImgSize.x > mainViewSize.x * maxZoom || newImgSize.y > mainViewSize.y * maxZoom)
 			return;
-		imageBox().position.add(zoomPos);
-		imageBox().size.set(newImgSize);
-		imageBox().notifyListeners();
+		project.imageBox.position.add(zoomPos);
+		project.imageBox.size.set(newImgSize);
+		project.imageBox.notifyListeners();
 	}
 
 	@Override
 	public void onDragStart(Point mousePos, MouseButton button) {
-		if(button == state.model.imageBoxModel.dragButton)
-			state.model.mouseCursor.setValue(Cursor.CLOSED_HAND);
+		if(button == imageBoxModel.dragButton)
+			mouseCursor.setValue(Cursor.CLOSED_HAND);
 	}
 
 	@Override
 	public void onMouseDrag(Point dragAmount, MouseButton button) {
-		if(button != state.model.imageBoxModel.dragButton)
+		if(button != imageBoxModel.dragButton)
 			return;
-		imageBox().position.add(dragAmount).clamp(new Point(imageBox().size).multiplyByScalar(-1), state.model.mainViewSize);
-		imageBox().notifyListeners();
+		project.imageBox.position.add(dragAmount).clamp(new Point(project.imageBox.size).multiplyByScalar(-1), mainViewSize);
+		project.imageBox.notifyListeners();
 	}
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton button) {
-		state.model.mouseCursor.setValue(mousePos.isBetween(new Point(), state.model.mainViewSize) ? Cursor.HAND : Cursor.DEFAULT);
+		mouseCursor.setValue(mousePos.isBetween(new Point(), mainViewSize) ? Cursor.HAND : Cursor.DEFAULT);
 	}
 
 	@Override
 	public void onMouseEnter(boolean isDragging) {
 		if(!isDragging)
-			state.model.mouseCursor.setValue(Cursor.HAND);
+			mouseCursor.setValue(Cursor.HAND);
 	}
 
 	@Override
 	public void onMouseExit(boolean isDragging) {
 		if(!isDragging)
-			state.model.mouseCursor.setValue(Cursor.DEFAULT);
+			mouseCursor.setValue(Cursor.DEFAULT);
 	}
 
 }

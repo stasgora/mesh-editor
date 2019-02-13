@@ -1,9 +1,10 @@
 package sgora.mesh.editor.services;
 
 import javafx.scene.image.Image;
-import sgora.mesh.editor.State;
 import sgora.mesh.editor.exceptions.ProjectIOException;
+import sgora.mesh.editor.interfaces.ConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
+import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Mesh;
 
 import java.io.*;
@@ -12,10 +13,12 @@ public class ProjectFileUtils implements FileUtils {
 
 	public static final String DEFAULT_PROJECT_FILE_NAME = "Untitled";
 	
-	private State state;
+	private Project project;
+	private ConfigReader appConfig;
 
-	public ProjectFileUtils(State state) {
-		this.state = state;
+	public ProjectFileUtils(Project project, ConfigReader appConfig) {
+		this.project = project;
+		this.appConfig = appConfig;
 	}
 
 	@Override
@@ -24,8 +27,8 @@ public class ProjectFileUtils implements FileUtils {
 			location.createNewFile();
 			try(FileOutputStream fileStream = new FileOutputStream(location, false);
 			    ObjectOutputStream objectStream = new ObjectOutputStream(fileStream)) {
-				objectStream.writeObject(state.model.project.mesh.get());
-				fileStream.write(state.model.project.rawImageFile);
+				objectStream.writeObject(project.mesh.get());
+				fileStream.write(project.rawImageFile);
 			}
 		} catch (IOException e) {
 			throw new ProjectIOException(e);
@@ -36,7 +39,7 @@ public class ProjectFileUtils implements FileUtils {
 	public void load(File location) throws ProjectIOException {
 		try(FileInputStream fileStream = new FileInputStream(location);
 		    ObjectInputStream objectStream = new ObjectInputStream(fileStream)) {
-			state.model.project.mesh.set((Mesh) objectStream.readObject());
+			project.mesh.set((Mesh) objectStream.readObject());
 			loadImage(fileStream);
 		} catch (IOException | ClassNotFoundException e) {
 			throw new ProjectIOException(e);
@@ -45,9 +48,9 @@ public class ProjectFileUtils implements FileUtils {
 
 	@Override
 	public void loadImage(FileInputStream fileStream) throws ProjectIOException {
-		state.model.project.rawImageFile = readFileIntoMemory(fileStream);
-		try(ByteArrayInputStream imageStream = new ByteArrayInputStream(state.model.project.rawImageFile)) {
-			state.model.project.baseImage.set(new Image(imageStream));
+		project.rawImageFile = readFileIntoMemory(fileStream);
+		try(ByteArrayInputStream imageStream = new ByteArrayInputStream(project.rawImageFile)) {
+			project.baseImage.set(new Image(imageStream));
 		} catch (IOException e) {
 			throw new ProjectIOException(e);
 		}
@@ -69,7 +72,7 @@ public class ProjectFileUtils implements FileUtils {
 
 	@Override
 	public File getProjectFileWithExtension(File projectFile) {
-		String projectExtension = "." + state.config.appConfig.<String>getValue("projectExtension");
+		String projectExtension = "." + appConfig.<String>getValue("projectExtension");
 		if(!projectFile.getName().endsWith(projectExtension))
 			return new File(projectFile.getPath() + projectExtension);
 		return projectFile;

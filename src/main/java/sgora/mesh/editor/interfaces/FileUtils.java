@@ -1,7 +1,6 @@
 package sgora.mesh.editor.interfaces;
 
 import sgora.mesh.editor.exceptions.ProjectIOException;
-import sgora.mesh.editor.model.containers.ProjectModel;
 
 import java.io.File;
 import java.io.FileInputStream;
