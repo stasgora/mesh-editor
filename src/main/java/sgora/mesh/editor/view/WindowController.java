@@ -10,9 +10,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import sgora.mesh.editor.State;
 import sgora.mesh.editor.enums.FileChooserAction;
-import sgora.mesh.editor.model.containers.ProjectModel;
+import sgora.mesh.editor.interfaces.ConfigReader;
+import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.services.ProjectFileUtils;
 import sgora.mesh.editor.services.UiDialogUtils;
 import sgora.mesh.editor.services.WorkspaceActionHandler;
@@ -23,7 +23,8 @@ import java.util.Optional;
 
 public class WindowController {
 
-	private State state;
+	private ConfigReader appConfig;
+	private Project project;
 	private Stage window;
 
 	public SplitPane mainSplitPane;
@@ -44,40 +45,33 @@ public class WindowController {
 
 	private final static String APP_NAME = "Mesh Editor";
 
-	public void init(State state, Stage window) {
-		this.state = state;
+	public void init(Project project, Stage window, ConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler, UiDialogUtils dialogUtils) {
+		this.project = project;
 		this.window = window;
-		toolBar.init(state.model.activeTool);
-		mainView.init(state, imageCanvas, meshCanvas);
-		workspaceActionHandler = new WorkspaceActionHandler(state);
-		dialogUtils = new UiDialogUtils(window);
+		this.appConfig = appConfig;
+		this.workspaceActionHandler = workspaceActionHandler;
+		this.dialogUtils = dialogUtils;
 
 		setWindowTitle();
-		project().loaded.addListener(this::changeMenuItemState);
+		project.loaded.addListener(this::changeMenuItemState);
 
-		project().file.addListener(this::setWindowTitle);
-		project().stateSaved.addListener(this::setWindowTitle);
-		project().addListener(this::setWindowTitle);
+		project.file.addListener(this::setWindowTitle);
+		project.stateSaved.addListener(this::setWindowTitle);
+		project.addListener(this::setWindowTitle);
 
-		state.model.mouseCursor = window.getScene().cursorProperty();
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
-
 		window.setOnCloseRequest(this::onWindowCloseRequest);
 	}
 
-	private ProjectModel project() {
-		return state.model.project;
-	}
-
 	private boolean showConfirmDialog() {
-		return state.config.appConfig.<Boolean>getValue("flags.showConfirmDialogs");
+		return appConfig.<Boolean>getValue("flags.showConfirmDialogs");
 	}
 
 	private void setWindowTitle() {
 		String title = APP_NAME;
-		if(project().loaded.get()) {
+		if(project.loaded.get()) {
 			String projectName = getProjectName();
-			if(!project().stateSaved.get())
+			if(!project.stateSaved.get())
 				projectName += "*";
 			title = projectName + " - " + title;
 		}
@@ -86,11 +80,11 @@ public class WindowController {
 
 	private String getProjectName() {
 		String projectName;
-		if(project().file.get() == null) {
-			projectName = project().loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
+		if(project.file.get() == null) {
+			projectName = project.loaded.get() ? ProjectFileUtils.DEFAULT_PROJECT_FILE_NAME : null;
 		} else {
-			String fileName = project().file.get().getName();
-			projectName = fileName.substring(0, fileName.length() - state.config.appConfig.<String>getValue("projectExtension").length() - 1);
+			String fileName = project.file.get().getName();
+			projectName = fileName.substring(0, fileName.length() - appConfig.<String>getValue("projectExtension").length() - 1);
 		}
 		return projectName;
 	}
@@ -101,26 +95,26 @@ public class WindowController {
 	}
 
 	private void changeMenuItemState() {
-		boolean loaded = project().loaded.get();
+		boolean loaded = project.loaded.get();
 		closeProjectMenuItem.setDisable(!loaded);
 		saveProjectMenuItem.setDisable(!loaded);
 		saveAsMenuItem.setDisable(!loaded);
 	}
 
 	private File showProjectFileChooser(FileChooserAction action) {
-		String projectExtension = state.config.appConfig.<String>getValue("projectExtension");
+		String projectExtension = appConfig.<String>getValue("projectExtension");
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project Files", "*." + projectExtension);
 		return dialogUtils.showFileChooser(action, "Choose Project File", filter);
 	}
 
 	private void saveProject(boolean asNew) {
 		File location;
-		if(asNew || project().file.get() == null) {
+		if(asNew || project.file.get() == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if(location == null)
 				return;
 		} else
-			location = project().file.get();
+			location = project.file.get();
 		workspaceActionHandler.saveProject(location);
 	}
 
@@ -129,7 +123,7 @@ public class WindowController {
 	}
 
 	private boolean confirmWorkspaceAction(String title) {
-		if(project().stateSaved.get())
+		if(project.stateSaved.get())
 			return true;
 		ButtonType saveButton = new ButtonType("Save");
 		ButtonType discardButton = new ButtonType("Discard");

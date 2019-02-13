@@ -1,6 +1,6 @@
 package sgora.mesh.editor.model.geom;
 
-import javafx.scene.paint.Color;
+import sgora.mesh.editor.model.paint.SerializableColor;
 import sgora.mesh.editor.model.observables.ComplexObservable;
 import sgora.mesh.editor.model.observables.SettableProperty;
 
@@ -16,8 +16,13 @@ public class Mesh extends ComplexObservable implements Serializable {
 
 	private List<Point> nodes = new ArrayList<>();
 
-	public SettableProperty<Color> nodeColor = new SettableProperty<>(new Color(0.1, 0.2, 1, 1));
+	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
+
+	public Mesh() {
+		addSubObservable(nodeColor);
+		addSubObservable(nodeRadius);
+	}
 
 	public void addNode(Point node) {
 		nodes.add(node);
@@ -44,10 +49,14 @@ public class Mesh extends ComplexObservable implements Serializable {
 
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.writeObject(nodes);
+		out.writeObject(nodeColor);
+		out.writeObject(nodeRadius);
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		nodes = (List<Point>) in.readObject();
+		nodeColor = (SettableProperty<SerializableColor>) in.readObject();
+		nodeRadius = (SettableProperty<Integer>) in.readObject();
 		nodes.forEach(this::addSubObservable);
 	}
 

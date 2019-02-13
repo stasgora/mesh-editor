@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import sgora.mesh.editor.model.observables.SettableProperty;
-import sgora.mesh.editor.model.input.MouseTool;
+import sgora.mesh.editor.enums.MouseTool;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

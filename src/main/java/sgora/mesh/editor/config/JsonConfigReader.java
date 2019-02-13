@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import sgora.mesh.editor.interfaces.ConfigReader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +13,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonConfigReader {
+public class JsonConfigReader implements ConfigReader {
 
 	private JSONObject config;
 
@@ -20,14 +21,17 @@ public class JsonConfigReader {
 		this.config = config;
 	}
 
+	@Override
 	public double getDouble(String keyPath) {
 		return getParent(keyPath).getDouble(getLastKey(keyPath));
 	}
 
+	@Override
 	public <T> T getValue(String keyPath) {
 		return (T) getParent(keyPath).get(getLastKey(keyPath));
 	}
 
+	@Override
 	public <T> List<T> getList(String keyPath) {
 		List<T> list = new ArrayList<>();
 		JSONArray jsonArray = getParent(keyPath).getJSONArray(getLastKey(keyPath));
@@ -49,7 +53,7 @@ public class JsonConfigReader {
 		return parent;
 	}
 
-	public static JsonConfigReader fromResourceFile(String fileName) {
+	public static JsonConfigReader forResourceFile(String fileName) {
 		try(InputStream input = JsonConfigReader.class.getResourceAsStream(fileName)) {
 			return constructNew(input);
 		} catch (IOException e) {
@@ -58,7 +62,7 @@ public class JsonConfigReader {
 		return null;
 	}
 
-	public static JsonConfigReader fromFile(String fileName) {
+	public static JsonConfigReader forFile(String fileName) {
 		try(InputStream input = new FileInputStream(new File(fileName))) {
 			return constructNew(input);
 		} catch (IOException e) {

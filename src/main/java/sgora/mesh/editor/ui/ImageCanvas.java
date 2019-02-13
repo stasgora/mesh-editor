@@ -1,15 +1,13 @@
 package sgora.mesh.editor.ui;
 
-import sgora.mesh.editor.model.containers.Model;
+import javafx.scene.image.Image;
 import sgora.mesh.editor.model.geom.Rectangle;
 
 public class ImageCanvas extends Canvas {
 
-	public void draw(Model model) {
+	public void draw(Rectangle imageBox, Image baseImage) {
 		if(!isVisible())
 			return;
-		Rectangle imageBox = model.imageBox;
-		context.drawImage(model.project.baseImage.get(), imageBox.position.x, imageBox.position.y, imageBox.size.x,  imageBox.size.y);
+		context.drawImage(baseImage, imageBox.position.x, imageBox.position.y, imageBox.size.x,  imageBox.size.y);
 	}
-
 }
