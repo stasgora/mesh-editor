@@ -1,6 +1,7 @@
 package sgora.mesh.editor;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,6 +23,7 @@ public class ObjectGraphFactory {
 	private final WindowController controller;
 	private final Parent root;
 	private final Stage stage;
+	private FXMLLoader loader;
 
 	private Project project = new Project();
 
@@ -38,10 +40,11 @@ public class ObjectGraphFactory {
 	private ImageBoxModel imageBoxModel;
 	private MeshBoxModel meshBoxModel;
 
-	public ObjectGraphFactory(WindowController controller, Parent root, Stage stage) {
+	public ObjectGraphFactory(WindowController controller, Parent root, Stage stage, FXMLLoader loader) {
 		this.controller = controller;
 		this.root = root;
 		this.stage = stage;
+		this.loader = loader;
 	}
 
 	public ObjectGraphFactory buildDependencies() {
@@ -80,7 +83,7 @@ public class ObjectGraphFactory {
 
 		controller.toolBar.init(activeTool);
 		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox);
-		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils);
+		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace());
 	}
 
 }

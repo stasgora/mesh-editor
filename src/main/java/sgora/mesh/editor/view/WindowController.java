@@ -2,6 +2,7 @@ package sgora.mesh.editor.view;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
@@ -37,19 +38,19 @@ public class WindowController {
 	public MainToolBar toolBar;
 
 	public MenuItem openRecentMenuItem;
-	public MenuItem closeProjectMenuItem;
-	public MenuItem saveProjectMenuItem;
-	public MenuItem saveAsMenuItem;
 
 	private WorkspaceActionHandler workspaceActionHandler;
 	private UiDialogUtils dialogUtils;
+	private ObservableMap<String, Object> fxmlNamespace;
 
-	public void init(Project project, Stage window, ConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler, UiDialogUtils dialogUtils) {
+	public void init(Project project, Stage window, ConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler, UiDialogUtils dialogUtils, ObservableMap<String, Object> fxmlNamespace) {
 		this.project = project;
 		this.window = window;
 		this.appConfig = appConfig;
 		this.workspaceActionHandler = workspaceActionHandler;
 		this.dialogUtils = dialogUtils;
+		this.fxmlNamespace = fxmlNamespace;
+		fxmlNamespace.put("menu_file_item_disabled", true);
 
 		setWindowTitle();
 		setListeners();
@@ -57,7 +58,7 @@ public class WindowController {
 	}
 
 	private void setListeners() {
-		project.loaded.addListener(this::changeMenuItemState);
+		project.loaded.addListener(() -> fxmlNamespace.put("menu_file_item_disabled", !((boolean) fxmlNamespace.get("menu_file_item_disabled"))));
 
 		project.file.addListener(this::setWindowTitle);
 		project.stateSaved.addListener(this::setWindowTitle);
@@ -95,13 +96,6 @@ public class WindowController {
 	private void keepDividerInPlace(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
 		SplitPane.Divider divider = mainSplitPane.getDividers().get(0);
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
-	}
-
-	private void changeMenuItemState() {
-		boolean loaded = project.loaded.get();
-		closeProjectMenuItem.setDisable(!loaded);
-		saveProjectMenuItem.setDisable(!loaded);
-		saveAsMenuItem.setDisable(!loaded);
 	}
 
 	private File showProjectFileChooser(FileChooserAction action) {

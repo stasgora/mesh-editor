@@ -26,23 +26,23 @@
 					<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 				</accelerator>
 			</MenuItem>
-			<Menu disable="true" mnemonicParsing="false" text="Open _Recent">
+			<Menu fx:id="openRecentMenuItem" disable="${menu_file_item_disabled}" text="Open _Recent">
 				<accelerator>
 					<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
 				</accelerator>
 			</Menu>
-			<MenuItem fx:id="closeProjectMenuItem" disable="true" onAction="#closeProject" text="_Close">
+			<MenuItem disable="${menu_file_item_disabled}" onAction="#closeProject" text="_Close">
 				<accelerator>
 					<KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 				</accelerator>
 			</MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="saveProjectMenuItem" disable="true" onAction="#saveProject" text="_Save">
+            <MenuItem disable="${menu_file_item_disabled}" onAction="#saveProject" text="_Save">
 	            <accelerator>
 		            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 	            </accelerator>
             </MenuItem>
-            <MenuItem fx:id="saveAsMenuItem" disable="true" onAction="#saveProjectAs" text="Save _As">
+            <MenuItem disable="${menu_file_item_disabled}" onAction="#saveProjectAs" text="Save _As">
 	            <accelerator>
 		            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
 	            </accelerator>
