@@ -6,9 +6,12 @@ import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sgora.mesh.editor.config.JsonAppConfigReader;
 import sgora.mesh.editor.config.JsonConfigReader;
-import sgora.mesh.editor.interfaces.ConfigReader;
+import sgora.mesh.editor.config.JsonLangConfigReader;
+import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
+import sgora.mesh.editor.interfaces.LangConfigReader;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
@@ -27,8 +30,10 @@ public class ObjectGraphFactory {
 
 	private Project project = new Project();
 
-	private ConfigReader appConfig;
-	private ConfigReader appSettings;
+	private AppConfigReader appConfig;
+	private AppConfigReader appSettings;
+	private LangConfigReader appLang;
+
 	private UiDialogUtils dialogUtils;
 	private WorkspaceActionHandler workspaceActionHandler;
 	private FileUtils fileUtils;
@@ -49,8 +54,10 @@ public class ObjectGraphFactory {
 
 	public ObjectGraphFactory buildDependencies() {
 		//services
-		appConfig = JsonConfigReader.forResource("/app.config");
-		appSettings = JsonConfigReader.forFile("config/app.settings");
+		appConfig = JsonAppConfigReader.forResource("/app.config");
+		appSettings = JsonAppConfigReader.forFile("config/app.settings");
+		appLang = new JsonLangConfigReader(appConfig, appSettings);
+
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project);
 		dialogUtils = new UiDialogUtils(stage);

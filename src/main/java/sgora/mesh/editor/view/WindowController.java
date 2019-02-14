@@ -12,7 +12,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import sgora.mesh.editor.enums.FileChooserAction;
-import sgora.mesh.editor.interfaces.ConfigReader;
+import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.services.ProjectFileUtils;
 import sgora.mesh.editor.services.UiDialogUtils;
@@ -20,12 +20,11 @@ import sgora.mesh.editor.services.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
 
 import java.io.*;
-import java.util.List;
 import java.util.Optional;
 
 public class WindowController {
 
-	private ConfigReader appConfig;
+	private AppConfigReader appConfig;
 	private Project project;
 	private Stage window;
 
@@ -43,7 +42,7 @@ public class WindowController {
 	private UiDialogUtils dialogUtils;
 	private ObservableMap<String, Object> fxmlNamespace;
 
-	public void init(Project project, Stage window, ConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler, UiDialogUtils dialogUtils, ObservableMap<String, Object> fxmlNamespace) {
+	public void init(Project project, Stage window, AppConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler, UiDialogUtils dialogUtils, ObservableMap<String, Object> fxmlNamespace) {
 		this.project = project;
 		this.window = window;
 		this.appConfig = appConfig;
@@ -139,7 +138,7 @@ public class WindowController {
 	public void newProject(ActionEvent event) {
 		if(showConfirmDialog() && !confirmWorkspaceAction("Create Project"))
 			return;
-		String[] imageTypes = appConfig.<String>getList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
+		String[] imageTypes = appConfig.getStringList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Images", imageTypes);
 		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, "Choose Image", filter);
 		if(location != null)

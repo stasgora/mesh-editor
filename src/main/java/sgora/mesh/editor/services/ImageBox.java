@@ -4,7 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import sgora.mesh.editor.interfaces.ConfigReader;
+import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Point;
@@ -17,12 +17,12 @@ public class ImageBox implements MouseListener {
 
 	private final Point mainViewSize;
 	private final Project project;
-	private ConfigReader appConfig;
-	private ConfigReader appSettings;
+	private AppConfigReader appConfig;
+	private AppConfigReader appSettings;
 	private ObjectProperty<Cursor> mouseCursor;
 	private ImageBoxModel imageBoxModel;
 
-	public ImageBox(Point mainViewSize, Project project, ConfigReader appConfig, ConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
+	public ImageBox(Point mainViewSize, Project project, AppConfigReader appConfig, AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
 		this.mainViewSize = mainViewSize;
 		this.project = project;
 		this.appConfig = appConfig;
