@@ -32,7 +32,7 @@
 	"dialog": {
 		"fileChooser": {
 			"title": {
-				"project": "Choose Project File",
+				"project": "Choose Project",
 				"image": "Choose Image"
 			},
 			"extension": {

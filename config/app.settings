@@ -1,6 +1,6 @@
 {
 	"settings": {
-		"language": "eng",
+		"language": "en_US",
 		"imageBox": {
 			"zoom": {
 				"speed": 0.0025,

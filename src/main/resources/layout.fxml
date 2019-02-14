@@ -48,7 +48,7 @@
 	            </accelerator>
             </MenuItem>
 			<SeparatorMenuItem mnemonicParsing="false" />
-			<MenuItem accelerator="Ctrl+Q" onAction="#exitApp" text="_Quit">
+			<MenuItem onAction="#exitApp" text="_Quit">
 				<accelerator>
 					<KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
 				</accelerator>

@@ -59,7 +59,7 @@ public class ObjectGraphFactory {
 			stage.setX(appSettings.getInt(windowPath + ".position.x"));
 			stage.setY(appSettings.getInt(windowPath + ".position.y"));
 		} else {
-			scene = new Scene(root, appConfig.getInt("defaultWindowSize.w"), appConfig.getInt("defaultWindowSize.h"));
+			scene = new Scene(root, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
 		}
 		stage.setScene(scene);
 
