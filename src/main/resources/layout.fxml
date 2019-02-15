@@ -32,17 +32,17 @@
 					<KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 				</accelerator>
 			</MenuItem>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="${menu_file_item_disabled}" onAction="#saveProject" text="${menu_file_item_save}">
-	            <accelerator>
-		            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-	            </accelerator>
-            </MenuItem>
-            <MenuItem disable="${menu_file_item_disabled}" onAction="#saveProjectAs" text="${menu_file_item_saveAs}">
-	            <accelerator>
-		            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-	            </accelerator>
-            </MenuItem>
+			<SeparatorMenuItem mnemonicParsing="false" />
+			<MenuItem disable="${menu_file_item_disabled}" onAction="#saveProject" text="${menu_file_item_save}">
+				<accelerator>
+					<KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+				</accelerator>
+			</MenuItem>
+			<MenuItem disable="${menu_file_item_disabled}" onAction="#saveProjectAs" text="${menu_file_item_saveAs}">
+				<accelerator>
+					<KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+				</accelerator>
+			</MenuItem>
 			<SeparatorMenuItem mnemonicParsing="false" />
 			<MenuItem onAction="#exitApp" text="${menu_file_item_quit}">
 				<accelerator>
@@ -51,7 +51,7 @@
 			</MenuItem>
 		</Menu>
 	</MenuBar>
-   <MainToolbar fx:id="toolBar" prefHeight="18.0" prefWidth="808.0" />
+	<MainToolbar fx:id="toolBar" prefHeight="18.0" prefWidth="808.0" />
 	<SplitPane fx:id="mainSplitPane" dividerPositions="0.25" prefHeight="465.0" prefWidth="808.0" VBox.vgrow="ALWAYS">
 		<AnchorPane fx:id="propertiesPane" minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0" />
 		<MainView fx:id="mainView" minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">
