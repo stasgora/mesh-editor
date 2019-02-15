@@ -32,10 +32,12 @@ public class ImageBox implements MouseListener {
 	}
 
 	public void onResizeCanvas() {
-		if(!project.loaded.get())
+		if(!project.loaded.get()) {
 			return;
-		if(lastCanvasSize == null)
+		}
+		if(lastCanvasSize == null) {
 			lastCanvasSize = new Point(mainViewSize);
+		}
 		Point sizeRatio = new Point(mainViewSize).divide(lastCanvasSize);
 		lastCanvasSize.set(mainViewSize);
 		project.imageBox.position.multiply(sizeRatio);
@@ -44,8 +46,9 @@ public class ImageBox implements MouseListener {
 	}
 
 	public void calcImageBox() {
-		if(project.baseImage.get() == null)
+		if(project.baseImage.get() == null) {
 			return;
+		}
 		SettableProperty<Image> baseImage = project.baseImage;
 		double imgRatio = baseImage.get().getWidth() / baseImage.get().getHeight();
 
@@ -83,14 +86,16 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onDragStart(Point mousePos, MouseButton button) {
-		if(button == imageBoxModel.dragButton)
+		if(button == imageBoxModel.dragButton) {
 			mouseCursor.setValue(Cursor.CLOSED_HAND);
+		}
 	}
 
 	@Override
 	public void onMouseDrag(Point dragAmount, MouseButton button) {
-		if(button != imageBoxModel.dragButton)
+		if(button != imageBoxModel.dragButton) {
 			return;
+		}
 		project.imageBox.position.add(dragAmount).clamp(new Point(project.imageBox.size).multiplyByScalar(-1), mainViewSize);
 		project.imageBox.notifyListeners();
 	}
@@ -102,14 +107,16 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onMouseEnter(boolean isDragging) {
-		if(!isDragging)
+		if(!isDragging) {
 			mouseCursor.setValue(Cursor.HAND);
+		}
 	}
 
 	@Override
 	public void onMouseExit(boolean isDragging) {
-		if(!isDragging)
+		if(!isDragging) {
 			mouseCursor.setValue(Cursor.DEFAULT);
+		}
 	}
 
 }

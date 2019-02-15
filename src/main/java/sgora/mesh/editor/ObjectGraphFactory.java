@@ -56,7 +56,7 @@ public class ObjectGraphFactory {
 		//services
 		appConfig = JsonAppConfigReader.forResource("/app.config");
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
-		appLang = new JsonLangConfigReader(appConfig, appSettings);
+		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project);

@@ -77,8 +77,9 @@ public class Point extends ControlledObservable implements Serializable {
 	}
 
 	private void setValues(double x, double y) {
-		if(this.x != x || this.y != y)
+		if(this.x != x || this.y != y) {
 			onValueChanged();
+		}
 		this.x = x;
 		this.y = y;
 	}

@@ -25,8 +25,9 @@ public class SettableProperty<T> extends SimpleObservable implements Serializabl
 	}
 
 	public void set(T modelValue) {
-		if(this.modelValue == modelValue)
+		if(this.modelValue == modelValue) {
 			return;
+		}
 		this.modelValue = modelValue;
 		onValueChanged();
 	}

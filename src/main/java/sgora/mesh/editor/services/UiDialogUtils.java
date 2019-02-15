@@ -21,10 +21,11 @@ public class UiDialogUtils {
 		FileChooser projectFileChooser = new FileChooser();
 		projectFileChooser.setTitle(title);
 		projectFileChooser.getExtensionFilters().add(extensionFilter);
-		if(action == FileChooserAction.SAVE_DIALOG)
+		if(action == FileChooserAction.SAVE_DIALOG) {
 			return projectFileChooser.showSaveDialog(window);
-		else if(action == FileChooserAction.OPEN_DIALOG)
+		} else if(action == FileChooserAction.OPEN_DIALOG) {
 			return projectFileChooser.showOpenDialog(window);
+		}
 		return null;
 	}
 

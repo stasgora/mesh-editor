@@ -21,10 +21,11 @@ public abstract class ControlledObservable extends SimpleObservable {
 
 	@Override
 	protected void onValueChanged() {
-		if(notifyManually)
+		if(notifyManually) {
 			wasValueChanged = true;
-		else
+		} else {
 			super.onValueChanged();
+		}
 	}
 
 }

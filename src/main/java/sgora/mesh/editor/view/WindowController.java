@@ -74,8 +74,9 @@ public class WindowController {
 		String title = appConfig.getString("appName");
 		if(project.loaded.get()) {
 			String projectName = getProjectName();
-			if(!project.stateSaved.get())
+			if(!project.stateSaved.get()) {
 				projectName += "*";
+			}
 			title = projectName + " - " + title;
 		}
 		window.setTitle(title);
@@ -107,10 +108,12 @@ public class WindowController {
 		File location;
 		if(asNew || project.file.get() == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
-			if(location == null)
+			if(location == null) {
 				return;
-		} else
+			}
+		} else {
 			location = project.file.get();
+		}
 		workspaceActionHandler.saveProject(location);
 	}
 
@@ -119,8 +122,9 @@ public class WindowController {
 	}
 
 	private boolean confirmWorkspaceAction(String title) {
-		if(project.stateSaved.get())
+		if(project.stateSaved.get()) {
 			return true;
+		}
 		ButtonType saveButton = new ButtonType("Save");
 		ButtonType discardButton = new ButtonType("Discard");
 		ButtonType cancelButton = new ButtonType("Cancel");
@@ -128,37 +132,44 @@ public class WindowController {
 		String contentText = "Do you want to save your changes or discard them?";
 		ButtonType[] buttonTypes = {saveButton, discardButton, cancelButton};
 		Optional<ButtonType> response = dialogUtils.showWarningDialog(title, headerText, contentText, buttonTypes);
-		if(!response.isPresent() || response.get() == cancelButton)
+		if(!response.isPresent() || response.get() == cancelButton) {
 			return false;
-		if(response.get() == saveButton)
+		}
+		if(response.get() == saveButton) {
 			saveProject();
+		}
 		return true;
 	}
 
 	public void newProject(ActionEvent event) {
-		if(showConfirmDialog() && !confirmWorkspaceAction("Create Project"))
+		if(showConfirmDialog() && !confirmWorkspaceAction("Create Project")) {
 			return;
+		}
 		String[] imageTypes = appConfig.getStringList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Images", imageTypes);
 		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, "Choose Image", filter);
-		if(location != null)
+		if(location != null) {
 			workspaceActionHandler.createNewProject(location);
+		}
 	}
 
 	public void openProject(ActionEvent event) {
-		if(showConfirmDialog() && !confirmWorkspaceAction("Open Project"))
+		if(showConfirmDialog() && !confirmWorkspaceAction("Open Project")) {
 			return;
+		}
 		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
-		if(location != null)
+		if(location != null) {
 			workspaceActionHandler.openProject(location);
+		}
 	}
 
 	public void openRecentProject(ActionEvent event) {
 	}
 
 	public void closeProject(ActionEvent event) {
-		if(!showConfirmDialog() || confirmWorkspaceAction("Close Project"))
+		if(!showConfirmDialog() || confirmWorkspaceAction("Close Project")) {
 			workspaceActionHandler.closeProject();
+		}
 	}
 
 	public void saveProject(ActionEvent event) {
@@ -170,13 +181,15 @@ public class WindowController {
 	}
 
 	private void onWindowCloseRequest(WindowEvent event) {
-		if(showConfirmDialog() && !confirmWorkspaceAction("Quit"))
+		if(showConfirmDialog() && !confirmWorkspaceAction("Quit")) {
 			event.consume();
+		}
 	}
 
 	public void exitApp(ActionEvent event) {
-		if(!showConfirmDialog() || confirmWorkspaceAction("Quit"))
+		if(!showConfirmDialog() || confirmWorkspaceAction("Quit")) {
 			Platform.exit();
+		}
 
 	}
 
