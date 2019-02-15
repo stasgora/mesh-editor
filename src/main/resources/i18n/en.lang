@@ -14,6 +14,10 @@
 					"quit": "_Quit"
 				}
 			}
+		},
+		"tool": {
+			"meshEditor": "Mesh Editor",
+			"imageMover": "Image Mover"
 		}
 	},
 	"action": {
@@ -24,10 +28,6 @@
 		"createProject": "Create Project",
 		"openProject": "Open Project",
 		"closeProject": "Close Project"
-	},
-	"tools": {
-		"meshEditor": "Mesh Editor",
-		"imageMover": "Image Mover"
 	},
 	"dialog": {
 		"fileChooser": {

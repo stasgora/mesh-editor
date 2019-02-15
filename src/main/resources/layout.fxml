@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import sgora.mesh.editor.ui.ImageCanvas?>
-<?import sgora.mesh.editor.ui.MainToolBar?>
+<?import sgora.mesh.editor.ui.MainToolbar?>
 <?import sgora.mesh.editor.ui.MeshCanvas?>
 <?import sgora.mesh.editor.view.MainView?>
 
@@ -26,7 +26,7 @@
 					<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 				</accelerator>
 			</MenuItem>
-			<Menu fx:id="openRecentMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_openRecent}" />
+			<Menu fx:id="openRecentMenuItem" disable="true" text="${menu_file_item_openRecent}" />
 			<MenuItem disable="${menu_file_item_disabled}" onAction="#closeProject" text="${menu_file_item_close}">
 				<accelerator>
 					<KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -51,7 +51,7 @@
 			</MenuItem>
 		</Menu>
 	</MenuBar>
-   <MainToolBar fx:id="toolBar" prefHeight="18.0" prefWidth="808.0" />
+   <MainToolbar fx:id="toolBar" prefHeight="18.0" prefWidth="808.0" />
 	<SplitPane fx:id="mainSplitPane" dividerPositions="0.25" prefHeight="465.0" prefWidth="808.0" VBox.vgrow="ALWAYS">
 		<AnchorPane fx:id="propertiesPane" minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0" />
 		<MainView fx:id="mainView" minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">

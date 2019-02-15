@@ -88,7 +88,7 @@ public class ObjectGraphFactory {
 		ImageBox imageBox = new ImageBox(mainViewSize, project, appConfig, appSettings, mouseCursor, imageBoxModel);
 		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor);
 
-		controller.toolBar.init(activeTool);
+		controller.toolBar.init(activeTool, appLang);
 		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox);
 		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
 	}

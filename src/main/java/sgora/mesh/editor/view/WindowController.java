@@ -15,7 +15,6 @@ import sgora.mesh.editor.enums.FileChooserAction;
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.LangConfigReader;
 import sgora.mesh.editor.model.Project;
-import sgora.mesh.editor.services.ProjectFileUtils;
 import sgora.mesh.editor.services.UiDialogUtils;
 import sgora.mesh.editor.services.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
@@ -36,7 +35,7 @@ public class WindowController {
 
 	public ImageCanvas imageCanvas;
 	public MeshCanvas meshCanvas;
-	public MainToolBar toolBar;
+	public MainToolbar toolBar;
 
 	public MenuItem openRecentMenuItem;
 
