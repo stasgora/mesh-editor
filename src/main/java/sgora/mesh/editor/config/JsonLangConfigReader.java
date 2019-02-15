@@ -20,14 +20,14 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 
 	private final AppConfigReader appConfig;
 	private final AppConfigReader appSettings;
-	private ObservableMap<String, Object> namespace;
+	private ObservableMap<String, Object> fxmlNamespace;
 
 	private List<JsonConfig> configList = new ArrayList<>();
 
-	public JsonLangConfigReader(AppConfigReader appConfig, AppConfigReader appSettings, ObservableMap<String, Object> namespace) {
+	public JsonLangConfigReader(AppConfigReader appConfig, AppConfigReader appSettings, ObservableMap<String, Object> fxmlNamespace) {
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
-		this.namespace = namespace;
+		this.fxmlNamespace = fxmlNamespace;
 		configList.add(loadJsonConfig(getLangFileName(appConfig.getString("default.language"))));
 		onSetMainLanguage();
 	}
@@ -87,7 +87,21 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 	}
 
 	private void populateFXMLNamespace() {
+		//iterate over default language property tree
+		JSONObject root = configList.get(configList.size() - 1).config.getJSONObject("fxml");
+		scanChildren("", root);
+	}
 
+	private void scanChildren(String keyPath, JSONObject current) {
+		for (String key : current.keySet()) {
+			Object child = current.get(key);
+			String childKey = keyPath.isEmpty() ? key : keyPath + "." + key;
+			if(child instanceof JSONObject) {
+				scanChildren(childKey, (JSONObject) child);
+			} else {
+				fxmlNamespace.put(childKey.replace('.', '_'), getText("fxml." + childKey));
+			}
+		}
 	}
 
 	private void logMissingKey(String keyPath) {

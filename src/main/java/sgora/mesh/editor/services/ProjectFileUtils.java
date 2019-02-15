@@ -10,8 +10,6 @@ import sgora.mesh.editor.model.geom.Mesh;
 import java.io.*;
 
 public class ProjectFileUtils implements FileUtils {
-
-	public static final String DEFAULT_PROJECT_FILE_NAME = "Untitled";
 	
 	private Project project;
 	private AppConfigReader appConfig;

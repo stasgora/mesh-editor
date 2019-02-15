@@ -15,42 +15,38 @@
 
 <VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.WindowController">
 	<MenuBar layoutX="185.0" layoutY="-14.0">
-		<Menu text="_File">
-			<MenuItem onAction="#newProject" text="_New">
+		<Menu text="${menu_file_title}">
+			<MenuItem onAction="#newProject" text="${menu_file_item_new}">
 				<accelerator>
 					<KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 				</accelerator>
 			</MenuItem>
-			<MenuItem onAction="#openProject" text="_Open">
+			<MenuItem onAction="#openProject" text="${menu_file_item_open}">
 				<accelerator>
 					<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 				</accelerator>
 			</MenuItem>
-			<Menu fx:id="openRecentMenuItem" disable="${menu_file_item_disabled}" text="Open _Recent">
-				<accelerator>
-					<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-				</accelerator>
-			</Menu>
-			<MenuItem disable="${menu_file_item_disabled}" onAction="#closeProject" text="_Close">
+			<Menu fx:id="openRecentMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_openRecent}" />
+			<MenuItem disable="${menu_file_item_disabled}" onAction="#closeProject" text="${menu_file_item_close}">
 				<accelerator>
 					<KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 				</accelerator>
 			</MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="${menu_file_item_disabled}" onAction="#saveProject" text="_Save">
+            <MenuItem disable="${menu_file_item_disabled}" onAction="#saveProject" text="${menu_file_item_save}">
 	            <accelerator>
 		            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 	            </accelerator>
             </MenuItem>
-            <MenuItem disable="${menu_file_item_disabled}" onAction="#saveProjectAs" text="Save _As">
+            <MenuItem disable="${menu_file_item_disabled}" onAction="#saveProjectAs" text="${menu_file_item_saveAs}">
 	            <accelerator>
 		            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
 	            </accelerator>
             </MenuItem>
 			<SeparatorMenuItem mnemonicParsing="false" />
-			<MenuItem onAction="#exitApp" text="_Quit">
+			<MenuItem onAction="#exitApp" text="${menu_file_item_quit}">
 				<accelerator>
-					<KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+					<KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 				</accelerator>
 			</MenuItem>
 		</Menu>

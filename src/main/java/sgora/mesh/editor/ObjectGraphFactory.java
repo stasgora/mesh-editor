@@ -90,7 +90,7 @@ public class ObjectGraphFactory {
 
 		controller.toolBar.init(activeTool);
 		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox);
-		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace());
+		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
 	}
 
 }
