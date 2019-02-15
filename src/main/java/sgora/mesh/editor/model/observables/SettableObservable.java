@@ -23,10 +23,12 @@ public class SettableObservable<T extends SimpleObservable> extends SettableProp
 
 	@Override
 	public void set(T modelValue) {
-		if(this.modelValue == modelValue)
+		if(this.modelValue == modelValue) {
 			return;
-		if(modelValue != null)
+		}
+		if(modelValue != null) {
 			staticListeners.forEach(modelValue::addListener);
+		}
 		super.set(modelValue);
 	}
 

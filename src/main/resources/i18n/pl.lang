@@ -1,0 +1,51 @@
+{
+	"defaultProjectName": "Bez tytułu",
+	"fxml": {
+		"menu": {
+			"file": {
+				"title": "_Plik",
+				"item": {
+					"new": "_Nowy",
+					"open": "_Otwórz",
+					"openRecent": "_Niedawno Otwierane",
+					"close": "Zam_knij",
+					"save": "_Zapisz",
+					"saveAs": "Zapisz _Jako",
+					"quit": "_Wyjdź"
+				}
+			}
+		}
+	},
+	"action": {
+		"save": "Zapisz",
+		"discard": "Odrzuć",
+		"cancel": "Anuluj",
+		"quit": "Wyjdź",
+		"createProject": "Utwórz Projekt",
+		"openProject": "Otwórz Projekt",
+		"closeProject": "Zamknij Projekt"
+	},
+	"dialog": {
+		"fileChooser": {
+			"title": {
+				"project": "Wybierz Projekt",
+				"image": "Wybierz Obraz"
+			},
+			"extension": {
+				"project": "Pliki Projektu",
+				"image": "Obrazy"
+			}
+		},
+		"warning": {
+			"header": {
+				"modified": [
+					"Otwarty projekt '",
+					"' został zmodyfikowany"
+				]
+			},
+			"content": {
+				"modified": "Chcesz zapisać czy odrzucić swoje zmiany?"
+			}
+		}
+	}
+}

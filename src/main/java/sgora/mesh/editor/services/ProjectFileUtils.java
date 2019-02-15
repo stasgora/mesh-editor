@@ -2,7 +2,7 @@ package sgora.mesh.editor.services;
 
 import javafx.scene.image.Image;
 import sgora.mesh.editor.exceptions.ProjectIOException;
-import sgora.mesh.editor.interfaces.ConfigReader;
+import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Mesh;
@@ -10,13 +10,11 @@ import sgora.mesh.editor.model.geom.Mesh;
 import java.io.*;
 
 public class ProjectFileUtils implements FileUtils {
-
-	public static final String DEFAULT_PROJECT_FILE_NAME = "Untitled";
 	
 	private Project project;
-	private ConfigReader appConfig;
+	private AppConfigReader appConfig;
 
-	public ProjectFileUtils(Project project, ConfigReader appConfig) {
+	public ProjectFileUtils(Project project, AppConfigReader appConfig) {
 		this.project = project;
 		this.appConfig = appConfig;
 	}
@@ -72,9 +70,10 @@ public class ProjectFileUtils implements FileUtils {
 
 	@Override
 	public File getProjectFileWithExtension(File projectFile) {
-		String projectExtension = "." + appConfig.getString("projectExtension");
-		if(!projectFile.getName().endsWith(projectExtension))
+		String projectExtension = "." + appConfig.getString("extension.project");
+		if(!projectFile.getName().endsWith(projectExtension)) {
 			return new File(projectFile.getPath() + projectExtension);
+		}
 		return projectFile;
 	}
 
