@@ -15,6 +15,7 @@ import java.util.List;
 public class Mesh extends ComplexObservable implements Serializable {
 
 	private List<Point> nodes = new ArrayList<>();
+	private List<Triangle> triangles = new ArrayList<>();
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
@@ -35,10 +36,6 @@ public class Mesh extends ComplexObservable implements Serializable {
 		onValueChanged();
 	}
 
-	public void clear() {
-		nodes.clear();
-	}
-
 	public Point getNode(int index) {
 		return nodes.get(index);
 	}
@@ -47,16 +44,38 @@ public class Mesh extends ComplexObservable implements Serializable {
 		return Collections.unmodifiableList(nodes);
 	}
 
+	public void addTriangle(Triangle triangle) {
+		triangles.add(triangle);
+		addSubObservable(triangle);
+		onValueChanged();
+	}
+
+	public void removeTriangle(int triangleIndex) {
+		triangles.remove(triangleIndex);
+		onValueChanged();
+	}
+
+	public Triangle getTriangle(int index) {
+		return triangles.get(index);
+	}
+
+	public List<Triangle> getTriangles() {
+		return Collections.unmodifiableList(triangles);
+	}
+
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.writeObject(nodes);
+		out.writeObject(triangles);
 		out.writeObject(nodeColor);
 		out.writeObject(nodeRadius);
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		nodes = (List<Point>) in.readObject();
+		triangles = (List<Triangle>) in.readObject();
 		nodeColor = (SettableProperty<SerializableColor>) in.readObject();
 		nodeRadius = (SettableProperty<Integer>) in.readObject();
+
 		nodes.forEach(this::addSubObservable);
 		addSubObservable(nodeColor);
 		addSubObservable(nodeRadius);
