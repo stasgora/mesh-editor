@@ -48,11 +48,11 @@ public class MeshBox implements MouseListener {
 	}
 
 	private Point getNodePixelPos(Point node) {
-		return new Point(node).multiply(project.imageBox.size).add(project.imageBox.position);
+		return new Point(node).multiplyByScalar(project.imageBox.size.x).add(project.imageBox.position);
 	}
 
 	private Point getNodeRelativePos(Point node) {
-		return new Point(node).subtract(project.imageBox.position).divide(project.imageBox.size);
+		return new Point(node).subtract(project.imageBox.position).divideByScalar(project.imageBox.size.x);
 	}
 
 	@Override

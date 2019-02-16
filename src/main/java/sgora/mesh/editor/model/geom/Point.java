@@ -62,6 +62,11 @@ public class Point extends ControlledObservable implements Serializable {
 		return this;
 	}
 
+	public Point divideByScalar(double amount) {
+		setValues(x / amount, y / amount);
+		return this;
+	}
+
 	public Point subtract(Point point) {
 		setValues(x - point.x, y - point.y);
 		return this;

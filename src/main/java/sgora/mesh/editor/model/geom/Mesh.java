@@ -58,6 +58,8 @@ public class Mesh extends ComplexObservable implements Serializable {
 		nodeColor = (SettableProperty<SerializableColor>) in.readObject();
 		nodeRadius = (SettableProperty<Integer>) in.readObject();
 		nodes.forEach(this::addSubObservable);
+		addSubObservable(nodeColor);
+		addSubObservable(nodeRadius);
 	}
 
 }
