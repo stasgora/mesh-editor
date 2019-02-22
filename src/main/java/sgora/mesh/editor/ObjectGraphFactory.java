@@ -19,6 +19,7 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
+import sgora.mesh.editor.triangulation.TriangulationService;
 import sgora.mesh.editor.view.WindowController;
 
 public class ObjectGraphFactory {
@@ -37,6 +38,7 @@ public class ObjectGraphFactory {
 	private UiDialogUtils dialogUtils;
 	private WorkspaceActionHandler workspaceActionHandler;
 	private FileUtils fileUtils;
+	private TriangulationService triangulationService;
 
 	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
@@ -61,7 +63,21 @@ public class ObjectGraphFactory {
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project);
 		dialogUtils = new UiDialogUtils(stage);
+		triangulationService = new TriangulationService(project.mesh);
 
+		constructScene();
+
+		activeTool = new SettableProperty<>(MouseTool.IMAGE_MOVER);
+		mouseCursor = stage.getScene().cursorProperty();
+		mainViewSize = new Point();
+		//temp
+		imageBoxModel = new ImageBoxModel();
+		meshBoxModel = new MeshBoxModel();
+		return this;
+	}
+
+	private void constructScene() {
+		//FIXME move logic from factory
 		Scene scene;
 		String windowPath = "last.windowPlacement";
 		if(appSettings.containsPath(windowPath)) {
@@ -72,21 +88,11 @@ public class ObjectGraphFactory {
 			scene = new Scene(root, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
 		}
 		stage.setScene(scene);
-
-		activeTool = new SettableProperty<>(MouseTool.IMAGE_MOVER);
-		mouseCursor = stage.getScene().cursorProperty();
-		mainViewSize = new Point();
-
-		//temp
-		imageBoxModel = new ImageBoxModel();
-		meshBoxModel = new MeshBoxModel();
-
-		return this;
 	}
 
 	public void createObjectGraph() {
 		ImageBox imageBox = new ImageBox(mainViewSize, project, appConfig, appSettings, mouseCursor, imageBoxModel);
-		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor);
+		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor, triangulationService);
 
 		controller.toolBar.init(activeTool, appLang);
 		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox);

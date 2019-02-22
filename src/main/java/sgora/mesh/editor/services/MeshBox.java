@@ -7,6 +7,7 @@ import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Point;
+import sgora.mesh.editor.triangulation.TriangulationService;
 
 public class MeshBox implements MouseListener {
 
@@ -16,12 +17,14 @@ public class MeshBox implements MouseListener {
 	private final MeshBoxModel meshBoxModel;
 	private final Point mainViewSize;
 	private final ObjectProperty<Cursor> mouseCursor;
+	private TriangulationService triangulationService;
 
-	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor) {
+	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor, TriangulationService triangulationService) {
 		this.project = project;
 		this.meshBoxModel = meshBoxModel;
 		this.mainViewSize = mainViewSize;
 		this.mouseCursor = mouseCursor;
+		this.triangulationService = triangulationService;
 	}
 
 	private Integer findNodeIndex(Point position) {
