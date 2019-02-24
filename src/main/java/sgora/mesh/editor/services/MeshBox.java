@@ -3,6 +3,7 @@ package sgora.mesh.editor.services;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
+import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
@@ -18,13 +19,15 @@ public class MeshBox implements MouseListener {
 	private final Point mainViewSize;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private TriangulationService triangulationService;
+	private AppConfigReader appConfig;
 
-	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor, TriangulationService triangulationService) {
+	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor, TriangulationService triangulationService, AppConfigReader appConfig) {
 		this.project = project;
 		this.meshBoxModel = meshBoxModel;
 		this.mainViewSize = mainViewSize;
 		this.mouseCursor = mouseCursor;
 		this.triangulationService = triangulationService;
+		this.appConfig = appConfig;
 	}
 
 	private Integer findNodeIndex(Point position) {
@@ -58,6 +61,13 @@ public class MeshBox implements MouseListener {
 		return new Point(node).subtract(project.imageBox.position).divideByScalar(project.imageBox.size.x);
 	}
 
+	private Point clampPixelNodePos(Point node) {
+		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
+		Point minNodePos = new Point(project.imageBox.position).subtract(new Point(project.imageBox.size).multiplyByScalar(spaceAroundImage));
+		Point maxNodePos = new Point(project.imageBox.position).add(new Point(project.imageBox.size).multiplyByScalar(spaceAroundImage + 1));
+		return node.clamp(minNodePos, maxNodePos);
+	}
+
 	@Override
 	public void onDragStart(Point mousePos, MouseButton mouseButton) {
 		draggedNodeIndex = findNodeIndex(mousePos);
@@ -73,19 +83,20 @@ public class MeshBox implements MouseListener {
 	}
 
 	@Override
-	public void onMouseDrag(Point dragAmount, MouseButton button) {
+	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
 		if(draggedNodeIndex == null || button != meshBoxModel.moveNodeButton) {
 			return;
 		}
 		Point node = project.mesh.get().getNode(draggedNodeIndex);
-		node.set(getNodeRelativePos(getNodePixelPos(node).add(dragAmount)));
+		Point newNodePos = clampPixelNodePos(mousePos.clamp(mainViewSize));
+		node.set(getNodeRelativePos(newNodePos));
 		project.mesh.get().notifyListeners();
 	}
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
 		if(draggedNodeIndex == null && mouseButton == meshBoxModel.placeNodeButton) {
-			project.mesh.get().addNode(getNodeRelativePos(mousePos));
+			project.mesh.get().addNode(getNodeRelativePos(clampPixelNodePos(mousePos)));
 		}
 		draggedNodeIndex = null;
 		mouseCursor.setValue(mousePos.isBetween(new Point(), mainViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);

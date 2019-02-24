@@ -60,10 +60,10 @@ public class ObjectGraphFactory {
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
-		fileUtils = new ProjectFileUtils(project, appConfig);
-		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project);
-		dialogUtils = new UiDialogUtils(stage);
 		triangulationService = new TriangulationService(project.mesh);
+		fileUtils = new ProjectFileUtils(project, appConfig);
+		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);
+		dialogUtils = new UiDialogUtils(stage);
 
 		constructScene();
 
@@ -92,7 +92,7 @@ public class ObjectGraphFactory {
 
 	public void createObjectGraph() {
 		ImageBox imageBox = new ImageBox(mainViewSize, project, appConfig, appSettings, mouseCursor, imageBoxModel);
-		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor, triangulationService);
+		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor, triangulationService, appConfig);
 
 		controller.toolBar.init(activeTool, appLang);
 		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox);

@@ -6,7 +6,7 @@ import sgora.mesh.editor.model.geom.Point;
 public interface MouseListener {
 
 	void onDragStart(Point mousePos, MouseButton button);
-	void onMouseDrag(Point mousePos, MouseButton button);
+	void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button);
 	void onDragEnd(Point mousePos, MouseButton button);
 
 	void onZoom(double amount, Point mousePos);

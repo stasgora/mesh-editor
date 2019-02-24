@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +17,9 @@ public class Mesh extends ComplexObservable implements Serializable {
 
 	private List<Point> nodes = new ArrayList<>();
 	private List<Triangle> triangles = new ArrayList<>();
+
+	private List<Triangle> validTriangles = new ArrayList<>();
+	private List<Point> boundingNodes = Arrays.asList(new Point[3]);
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
@@ -44,18 +48,33 @@ public class Mesh extends ComplexObservable implements Serializable {
 		return Collections.unmodifiableList(nodes);
 	}
 
-	public void addTriangle(Triangle triangle) {
-		triangles.add(triangle);
-		onValueChanged();
+	public void setBoundingNodes(Point a, Point b, Point c) {
+		addNode(a);
+		addNode(b);
+		addNode(c);
+		boundingNodes.set(0, a);
+		boundingNodes.set(1, b);
+		boundingNodes.set(2, c);
 	}
 
-	public void removeTriangle(int triangleIndex) {
-		triangles.remove(triangleIndex);
+	public void addTriangle(Triangle triangle) {
+		triangles.add(triangle);
+		boolean isBoundingTriangle =false;
+		for (Point node : triangle.nodes) {
+			if(boundingNodes.contains(node)) {
+				isBoundingTriangle = true;
+				break;
+			}
+		}
+		if(!isBoundingTriangle) {
+			validTriangles.add(triangle);
+		}
 		onValueChanged();
 	}
 
 	public void removeTriangle(Triangle triangle) {
 		triangles.remove(triangle);
+		validTriangles.remove(triangle);
 		onValueChanged();
 	}
 
@@ -65,6 +84,10 @@ public class Mesh extends ComplexObservable implements Serializable {
 
 	public List<Triangle> getTriangles() {
 		return Collections.unmodifiableList(triangles);
+	}
+
+	public List<Triangle> getValidTriangles() {
+		return Collections.unmodifiableList(validTriangles);
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {

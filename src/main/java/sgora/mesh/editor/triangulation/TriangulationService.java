@@ -20,9 +20,14 @@ public class TriangulationService {
 		this.mesh = mesh;
 	}
 
+	public void createNewMesh() {
+		mesh.set(new Mesh());
+	}
+
 	public void addNode(Point node) {
+		Mesh mesh = this.mesh.get();
 		Triangle triangle = walkToContainerTriangle(node);
-		mesh.get().removeTriangle(triangle);
+		mesh.removeTriangle(triangle);
 		Triangle[] newTriangles = new Triangle[3];
 		for (int i = 0; i < 3; i++) {
 			newTriangles[i] = new Triangle(triangle.nodes[i], triangle.nodes[(i + 1) % 3], node);
@@ -32,11 +37,12 @@ public class TriangulationService {
 		for (int i = 0; i < 3; i++) {
 			newTriangles[i].triangles[1] = newTriangles[(i + 1) % 3];
 			newTriangles[i].triangles[2] = newTriangles[(i + 2) % 3];
-			mesh.get().addTriangle(newTriangles[i]);
+			mesh.addTriangle(newTriangles[i]);
 			trianglesToCheck.push(newTriangles[i]);
 		}
 		flipInvalidTriangles(trianglesToCheck);
-		mesh.get().notifyListeners();
+		mesh.addNode(node);
+		mesh.notifyListeners();
 	}
 
 	private void flipInvalidTriangles(Stack<Triangle> remaining) {
@@ -53,7 +59,7 @@ public class TriangulationService {
 	}
 
 	private Triangle walkToContainerTriangle(Point node) {
-		Triangle current = mesh.get().getTriangles().get(0);
+		Triangle current = mesh.get().getTriangle(0);
 		Triangle next = null;
 		do {
 			for (int i = 0; i < 3; i++) {
@@ -100,6 +106,8 @@ public class TriangulationService {
 		Triangle[] added = new Triangle[2];
 		added[0] = new Triangle(a.nodes[aNodeIndex], a.nodes[(aNodeIndex + 1) % 3], b.nodes[bNodeIndex]);
 		added[1] = new Triangle(b.nodes[bNodeIndex], b.nodes[(bNodeIndex + 1) % 3], a.nodes[aNodeIndex]);
+		added[0].triangles = new Triangle[]{a.triangles[aNodeIndex], b.triangles[(bNodeIndex + 2) % 3], added[1]};
+		added[1].triangles = new Triangle[]{b.triangles[bNodeIndex], a.triangles[(aNodeIndex + 2) % 3], added[0]};
 		mesh.addTriangle(added[0]);
 		mesh.addTriangle(added[1]);
 		return added;

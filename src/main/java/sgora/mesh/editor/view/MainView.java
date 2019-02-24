@@ -113,9 +113,9 @@ public class MainView extends AnchorPane {
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
 		if(project.loaded.get()) {
 			if (activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onMouseDrag(new Point(dragAmount), event.getButton());
+				imageBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
 			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onMouseDrag(new Point(dragAmount), event.getButton());
+				meshBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
 			}
 		}
 		lastMouseDragPoint.set(mousePos);
