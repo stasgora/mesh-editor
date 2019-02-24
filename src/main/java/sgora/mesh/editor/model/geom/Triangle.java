@@ -1,20 +1,18 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.observables.ControlledObservable;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class Triangle extends ControlledObservable implements Serializable {
+public class Triangle implements Serializable {
 
 	public Point[] nodes;
 	public Triangle[] triangles;
 
-	public Triangle(Point[] nodes, Triangle[] triangles) {
-		this.nodes = nodes;
-		this.triangles = triangles;
+	public Triangle(Point a, Point b, Point c) {
+		this.nodes = new Point[]{a, b, c};
+		triangles = new Triangle[3];
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {

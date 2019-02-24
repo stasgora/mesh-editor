@@ -46,12 +46,16 @@ public class Mesh extends ComplexObservable implements Serializable {
 
 	public void addTriangle(Triangle triangle) {
 		triangles.add(triangle);
-		addSubObservable(triangle);
 		onValueChanged();
 	}
 
 	public void removeTriangle(int triangleIndex) {
 		triangles.remove(triangleIndex);
+		onValueChanged();
+	}
+
+	public void removeTriangle(Triangle triangle) {
+		triangles.remove(triangle);
 		onValueChanged();
 	}
 
