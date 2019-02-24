@@ -8,6 +8,7 @@ import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Point;
+import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.triangulation.TriangulationService;
 
 public class MeshBox implements MouseListener {
@@ -61,11 +62,17 @@ public class MeshBox implements MouseListener {
 		return new Point(node).subtract(project.imageBox.position).divideByScalar(project.imageBox.size.x);
 	}
 
-	private Point clampPixelNodePos(Point node) {
+	public Rectangle getPixelNodeArea() {
 		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
-		Point minNodePos = new Point(project.imageBox.position).subtract(new Point(project.imageBox.size).multiplyByScalar(spaceAroundImage));
-		Point maxNodePos = new Point(project.imageBox.position).add(new Point(project.imageBox.size).multiplyByScalar(spaceAroundImage + 1));
-		return node.clamp(minNodePos, maxNodePos);
+		Rectangle area = new Rectangle();
+		area.position = new Point(project.imageBox.position).subtract(new Point(project.imageBox.size).multiplyByScalar(spaceAroundImage));
+		area.size = new Point(project.imageBox.size).multiplyByScalar(spaceAroundImage * 2 + 1);
+		return area;
+	}
+
+	private Point clampPixelNodePos(Point node) {
+		Rectangle pixelNodeArea = getPixelNodeArea();
+		return node.clamp(pixelNodeArea.position, new Point(pixelNodeArea.position).add(pixelNodeArea.size));
 	}
 
 	@Override

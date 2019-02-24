@@ -80,7 +80,7 @@ public class MainView extends AnchorPane {
 	private void drawMesh() {
 		meshCanvas.clear();
 		if(project.loaded.get()) {
-			meshCanvas.draw(project.mesh.get(), meshBox.getPixelMeshNodes());
+			meshCanvas.draw(project.mesh.get(), meshBox.getPixelMeshNodes(), meshBox.getPixelNodeArea());
 		}
 	}
 
