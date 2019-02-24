@@ -2,6 +2,7 @@ package sgora.mesh.editor.triangulation;
 
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
+import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
 
@@ -15,13 +16,21 @@ public class TriangulationService {
 	private static final Logger LOGGER = Logger.getLogger(TriangulationService.class.getName());
 
 	private SettableObservable<Mesh> mesh;
+	private Rectangle imageBox;
 
-	public TriangulationService(SettableObservable<Mesh> mesh) {
+	public TriangulationService(SettableObservable<Mesh> mesh, Rectangle imageBox) {
 		this.mesh = mesh;
+		this.imageBox = imageBox;
 	}
 
 	public void createNewMesh() {
-		mesh.set(new Mesh());
+		double majorSize = Math.max(1, imageBox.size.y / imageBox.size.x) + 1;
+		Mesh mesh = new Mesh(new Point[]{
+				new Point(1d / 2d, -majorSize),
+				new Point(-majorSize, majorSize),
+				new Point(majorSize + 1, majorSize)
+		});
+		this.mesh.set(mesh);
 	}
 
 	public void addNode(Point node) {
@@ -37,7 +46,7 @@ public class TriangulationService {
 		for (int i = 0; i < 3; i++) {
 			newTriangles[i].triangles[1] = newTriangles[(i + 1) % 3];
 			newTriangles[i].triangles[2] = newTriangles[(i + 2) % 3];
-			mesh.addTriangle(newTriangles[i]);
+			addTriangle(newTriangles[i]);
 			trianglesToCheck.push(newTriangles[i]);
 		}
 		flipInvalidTriangles(trianglesToCheck);
@@ -97,6 +106,21 @@ public class TriangulationService {
 		return -1;
 	}
 
+	private void addTriangle(Triangle triangle) {
+		List<Point> boundingNodes = mesh.get().getBoundingNodes();
+		boolean isBoundingTriangle =false;
+		for (Point node : triangle.nodes) {
+			if(boundingNodes.contains(node)) {
+				isBoundingTriangle = true;
+				break;
+			}
+		}
+		if(!isBoundingTriangle) {
+			mesh.get().addValidTriangle(triangle);
+		}
+		mesh.get().addTriangle(triangle);
+	}
+
 	private Triangle[] flipTriangles(Triangle a, Triangle b) {
 		Mesh mesh = this.mesh.get();
 		int aNodeIndex = getSeparateNodeIndex(a, b);
@@ -108,8 +132,8 @@ public class TriangulationService {
 		added[1] = new Triangle(b.nodes[bNodeIndex], b.nodes[(bNodeIndex + 1) % 3], a.nodes[aNodeIndex]);
 		added[0].triangles = new Triangle[]{a.triangles[aNodeIndex], b.triangles[(bNodeIndex + 2) % 3], added[1]};
 		added[1].triangles = new Triangle[]{b.triangles[bNodeIndex], a.triangles[(aNodeIndex + 2) % 3], added[0]};
-		mesh.addTriangle(added[0]);
-		mesh.addTriangle(added[1]);
+		addTriangle(added[0]);
+		addTriangle(added[1]);
 		return added;
 	}
 

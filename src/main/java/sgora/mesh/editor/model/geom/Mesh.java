@@ -12,19 +12,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Mesh extends ComplexObservable implements Serializable {
+
+	private static final Logger LOGGER = Logger.getLogger(Mesh.class.getName());
 
 	private List<Point> nodes = new ArrayList<>();
 	private List<Triangle> triangles = new ArrayList<>();
 
 	private List<Triangle> validTriangles = new ArrayList<>();
-	private List<Point> boundingNodes = Arrays.asList(new Point[3]);
+
+	private final List<Point> boundingNodes;
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
 
-	public Mesh() {
+	public Mesh(Point[] boundingNodes) {
+		if(boundingNodes.length != 3) {
+			LOGGER.warning("Mesh bounding nodes number wrong");
+		}
+		this.boundingNodes = Collections.unmodifiableList(Arrays.asList(boundingNodes));
+		this.boundingNodes.forEach(this::addNode);
+
 		addSubObservable(nodeColor);
 		addSubObservable(nodeRadius);
 	}
@@ -48,27 +58,8 @@ public class Mesh extends ComplexObservable implements Serializable {
 		return Collections.unmodifiableList(nodes);
 	}
 
-	public void setBoundingNodes(Point a, Point b, Point c) {
-		addNode(a);
-		addNode(b);
-		addNode(c);
-		boundingNodes.set(0, a);
-		boundingNodes.set(1, b);
-		boundingNodes.set(2, c);
-	}
-
 	public void addTriangle(Triangle triangle) {
 		triangles.add(triangle);
-		boolean isBoundingTriangle =false;
-		for (Point node : triangle.nodes) {
-			if(boundingNodes.contains(node)) {
-				isBoundingTriangle = true;
-				break;
-			}
-		}
-		if(!isBoundingTriangle) {
-			validTriangles.add(triangle);
-		}
 		onValueChanged();
 	}
 
@@ -86,8 +77,16 @@ public class Mesh extends ComplexObservable implements Serializable {
 		return Collections.unmodifiableList(triangles);
 	}
 
+	public void addValidTriangle(Triangle triangle) {
+		validTriangles.add(triangle);
+	}
+
 	public List<Triangle> getValidTriangles() {
 		return Collections.unmodifiableList(validTriangles);
+	}
+
+	public List<Point> getBoundingNodes() {
+		return boundingNodes;
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {

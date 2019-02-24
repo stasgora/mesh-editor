@@ -60,7 +60,7 @@ public class ObjectGraphFactory {
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
-		triangulationService = new TriangulationService(project.mesh);
+		triangulationService = new TriangulationService(project.mesh, project.imageBox);
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);
 		dialogUtils = new UiDialogUtils(stage);
