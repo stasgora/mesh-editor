@@ -1,9 +1,7 @@
 package sgora.mesh.editor.triangulation;
 
-import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
 
@@ -17,24 +15,15 @@ public class TriangulationService {
 	private static final Logger LOGGER = Logger.getLogger(TriangulationService.class.getName());
 
 	private SettableObservable<Mesh> mesh;
-	private Rectangle imageBox;
-	private AppConfigReader appConfig;
+	private NodeUtils nodeUtils;
 
-	public TriangulationService(SettableObservable<Mesh> mesh, Rectangle imageBox, AppConfigReader appConfig) {
+	public TriangulationService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils) {
 		this.mesh = mesh;
-		this.imageBox = imageBox;
-		this.appConfig = appConfig;
+		this.nodeUtils = nodeUtils;
 	}
 
 	public void createNewMesh() {
-		Rectangle boundingBox = calcBoundingBox();
-		double height = boundingBox.size.y / boundingBox.size.x;
-		double majorSize = Math.max(1, height) + 1;
-		Mesh mesh = new Mesh(new Point[] {
-				new Point(1d / 2d, -majorSize),
-				new Point(-majorSize, height + 1),
-				new Point(majorSize + 1, height + 1)
-		}, boundingBox);
+		Mesh mesh = new Mesh(nodeUtils.getBoundingNodes());
 		this.mesh.set(mesh);
 	}
 
@@ -99,15 +88,6 @@ public class TriangulationService {
 		return H_matrixDet(triangle.nodes[2], triangle.nodes[1], triangle.nodes[0], node) > 0;
 	}
 
-	private Rectangle calcBoundingBox() {
-		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
-		double relHeight = imageBox.size.y / imageBox.size.x;
-		Rectangle area = new Rectangle();
-		area.position = new Point(-1, -relHeight).multiplyByScalar(spaceAroundImage);
-		area.size = new Point(1, relHeight).multiplyByScalar(spaceAroundImage * 2 + 1);
-		return area;
-	}
-
 	private Point getSeparateNode(Triangle from, Triangle with) {
 		return from.nodes[getSeparateNodeIndex(from, with)];
 	}
@@ -133,7 +113,7 @@ public class TriangulationService {
 			}
 		}
 		if (!isBoundingTriangle) {
-			mesh.get().addValidTriangle(triangle);
+			//mesh.get().addValidTriangle(triangle);
 		}
 		mesh.get().addTriangle(triangle);
 	}

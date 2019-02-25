@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sgora.mesh.editor.config.JsonAppConfigReader;
-import sgora.mesh.editor.config.JsonConfigReader;
 import sgora.mesh.editor.config.JsonLangConfigReader;
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
@@ -19,6 +18,7 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
+import sgora.mesh.editor.triangulation.NodeUtils;
 import sgora.mesh.editor.triangulation.TriangulationService;
 import sgora.mesh.editor.view.WindowController;
 
@@ -39,6 +39,7 @@ public class ObjectGraphFactory {
 	private WorkspaceActionHandler workspaceActionHandler;
 	private FileUtils fileUtils;
 	private TriangulationService triangulationService;
+	private NodeUtils nodeUtils;
 
 	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
@@ -60,7 +61,8 @@ public class ObjectGraphFactory {
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
-		triangulationService = new TriangulationService(project.mesh, project.imageBox, appConfig);
+		nodeUtils = new NodeUtils(appConfig, project.imageBox, project.mesh);
+		triangulationService = new TriangulationService(project.mesh, nodeUtils);
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);
 		dialogUtils = new UiDialogUtils(stage);
@@ -92,10 +94,10 @@ public class ObjectGraphFactory {
 
 	public void createObjectGraph() {
 		ImageBox imageBox = new ImageBox(mainViewSize, project, appConfig, appSettings, mouseCursor, imageBoxModel);
-		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor, triangulationService);
+		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor, triangulationService, nodeUtils);
 
 		controller.toolBar.init(activeTool, appLang);
-		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox);
+		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox, nodeUtils);
 		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
 	}
 

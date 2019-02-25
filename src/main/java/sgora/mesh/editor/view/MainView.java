@@ -10,6 +10,8 @@ import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.ImageBox;
 import sgora.mesh.editor.services.MeshBox;
+import sgora.mesh.editor.triangulation.NodeUtils;
+import sgora.mesh.editor.triangulation.TriangulationService;
 import sgora.mesh.editor.ui.ImageCanvas;
 import sgora.mesh.editor.ui.MeshCanvas;
 
@@ -24,10 +26,12 @@ public class MainView extends AnchorPane {
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
+	private NodeUtils nodeUtils;
 
 	private Point lastMouseDragPoint;
 
-	public void init(Project project, ImageCanvas imageCanvas, MeshCanvas meshCanvas, SettableProperty<MouseTool> activeTool, Point mainViewSize, ImageBox imageBox, MeshBox meshBox) {
+	public void init(Project project, ImageCanvas imageCanvas, MeshCanvas meshCanvas, SettableProperty<MouseTool> activeTool,
+	                 Point mainViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils) {
 		this.project = project;
 		this.imageCanvas = imageCanvas;
 		this.meshCanvas = meshCanvas;
@@ -35,6 +39,7 @@ public class MainView extends AnchorPane {
 		this.mainViewSize = mainViewSize;
 		this.imageBox = imageBox;
 		this.meshBox = meshBox;
+		this.nodeUtils = nodeUtils;
 
 		setListeners();
 		setMouseHandlers();
@@ -80,7 +85,7 @@ public class MainView extends AnchorPane {
 	private void drawMesh() {
 		meshCanvas.clear();
 		if(project.loaded.get()) {
-			meshCanvas.draw(project.mesh.get(), meshBox.getPixelMeshNodes(), meshBox.getPixelTriangles(), meshBox.getPixelNodeBoundingBox());
+			meshCanvas.draw(project.mesh.get(), nodeUtils.getPixelMeshNodes(), nodeUtils.getPixelTriangles(), nodeUtils.getPixelNodeBoundingBox());
 		}
 	}
 

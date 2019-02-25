@@ -3,12 +3,14 @@ package sgora.mesh.editor.services;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
+import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.geom.Triangle;
+import sgora.mesh.editor.triangulation.NodeUtils;
 import sgora.mesh.editor.triangulation.TriangulationService;
 
 import java.util.Arrays;
@@ -24,17 +26,20 @@ public class MeshBox implements MouseListener {
 	private final Point mainViewSize;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private TriangulationService triangulationService;
+	private NodeUtils nodeUtils;
 
-	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor, TriangulationService triangulationService) {
+	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor,
+	               TriangulationService triangulationService, NodeUtils nodeUtils) {
 		this.project = project;
 		this.meshBoxModel = meshBoxModel;
 		this.mainViewSize = mainViewSize;
 		this.mouseCursor = mouseCursor;
 		this.triangulationService = triangulationService;
+		this.nodeUtils = nodeUtils;
 	}
 
 	private Integer findNodeIndex(Point position) {
-		Point[] nodes = getPixelMeshNodes();
+		Point[] nodes = nodeUtils.getPixelMeshNodes();
 		int nodeTouchDist = project.mesh.get().nodeRadius.get();
 		for (int i = nodes.length - 1; i >= 0; i--) {
 			Point dist = new Point(nodes[i]).subtract(position).abs();
@@ -52,36 +57,8 @@ public class MeshBox implements MouseListener {
 		}
 	}
 
-	public Point[] getPixelMeshNodes() {
-		return project.mesh.get().getNodes().stream().map(this::getNodePixelPos).toArray(Point[]::new);
-	}
-
-	public List<Point[]> getPixelTriangles() {
-		return project.mesh.get().getValidTriangles().stream().map(this::getPixelTriangle).collect(Collectors.toList());
-	}
-
-	private Point[] getPixelTriangle(Triangle triangle) {
-		return Arrays.stream(triangle.nodes).map(node -> getNodePixelPos(new Point(node))).toArray(Point[]::new);
-	}
-
-	private Point getNodePixelPos(Point node) {
-		return new Point(node).multiplyByScalar(project.imageBox.size.x).add(project.imageBox.position);
-	}
-
-	private Point getNodeRelativePos(Point node) {
-		return new Point(node).subtract(project.imageBox.position).divideByScalar(project.imageBox.size.x);
-	}
-
-	public Rectangle getPixelNodeBoundingBox() {
-		Rectangle boundingBox = project.mesh.get().nodeBoundingBox;
-		Rectangle pixelBoundingBox = new Rectangle();
-		pixelBoundingBox.position = getNodePixelPos(boundingBox.position);
-		pixelBoundingBox.size = new Point(boundingBox.size).multiplyByScalar(project.imageBox.size.x);
-		return pixelBoundingBox;
-	}
-
 	private Point clampPixelNodePos(Point node) {
-		Rectangle box = getPixelNodeBoundingBox();
+		Rectangle box = nodeUtils.getPixelNodeBoundingBox();
 		return node.clamp(box.position, new Point(box.position).add(box.size));
 	}
 
@@ -106,14 +83,14 @@ public class MeshBox implements MouseListener {
 		}
 		Point node = project.mesh.get().getNode(draggedNodeIndex);
 		Point newNodePos = clampPixelNodePos(mousePos.clamp(mainViewSize));
-		node.set(getNodeRelativePos(newNodePos));
+		node.set(nodeUtils.getNodeRelativePos(newNodePos));
 		project.mesh.get().notifyListeners();
 	}
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
 		if(draggedNodeIndex == null && mouseButton == meshBoxModel.placeNodeButton) {
-			triangulationService.addNode(getNodeRelativePos(clampPixelNodePos(mousePos)));
+			triangulationService.addNode(nodeUtils.getNodeRelativePos(clampPixelNodePos(mousePos)));
 		}
 		draggedNodeIndex = null;
 		mouseCursor.setValue(mousePos.isBetween(new Point(), mainViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
