@@ -20,20 +20,21 @@ public class Mesh extends ComplexObservable implements Serializable {
 
 	private List<Point> nodes = new ArrayList<>();
 	private List<Triangle> triangles = new ArrayList<>();
-
 	private List<Triangle> validTriangles = new ArrayList<>();
 
-	private final List<Point> boundingNodes;
+	public final List<Point> boundingNodes;
+	public Rectangle nodeBoundingBox;
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
 
-	public Mesh(Point[] boundingNodes) {
+	public Mesh(Point[] boundingNodes, Rectangle nodeBoundingBox) {
 		if(boundingNodes.length != 3) {
 			LOGGER.warning("Mesh bounding nodes number wrong");
 		}
 		this.boundingNodes = Collections.unmodifiableList(Arrays.asList(boundingNodes));
-		this.boundingNodes.forEach(this::addNode);
+		addTriangle(new Triangle(boundingNodes[0], boundingNodes[1], boundingNodes[2]));
+		this.nodeBoundingBox = nodeBoundingBox;
 
 		addSubObservable(nodeColor);
 		addSubObservable(nodeRadius);
@@ -85,13 +86,10 @@ public class Mesh extends ComplexObservable implements Serializable {
 		return Collections.unmodifiableList(validTriangles);
 	}
 
-	public List<Point> getBoundingNodes() {
-		return boundingNodes;
-	}
-
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.writeObject(nodes);
 		out.writeObject(triangles);
+		out.writeObject(nodeBoundingBox);
 		out.writeObject(nodeColor);
 		out.writeObject(nodeRadius);
 	}
@@ -99,6 +97,7 @@ public class Mesh extends ComplexObservable implements Serializable {
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		nodes = (List<Point>) in.readObject();
 		triangles = (List<Triangle>) in.readObject();
+		nodeBoundingBox = (Rectangle) in.readObject();
 		nodeColor = (SettableProperty<SerializableColor>) in.readObject();
 		nodeRadius = (SettableProperty<Integer>) in.readObject();
 

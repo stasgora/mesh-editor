@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Triangle implements Serializable {
 
@@ -23,6 +24,11 @@ public class Triangle implements Serializable {
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		nodes = (Point[]) in.readObject();
 		triangles = (Triangle[]) in.readObject();
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(nodes);
 	}
 
 }

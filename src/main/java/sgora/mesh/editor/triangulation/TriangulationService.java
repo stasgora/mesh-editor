@@ -1,5 +1,6 @@
 package sgora.mesh.editor.triangulation;
 
+import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
@@ -17,19 +18,23 @@ public class TriangulationService {
 
 	private SettableObservable<Mesh> mesh;
 	private Rectangle imageBox;
+	private AppConfigReader appConfig;
 
-	public TriangulationService(SettableObservable<Mesh> mesh, Rectangle imageBox) {
+	public TriangulationService(SettableObservable<Mesh> mesh, Rectangle imageBox, AppConfigReader appConfig) {
 		this.mesh = mesh;
 		this.imageBox = imageBox;
+		this.appConfig = appConfig;
 	}
 
 	public void createNewMesh() {
-		double majorSize = Math.max(1, imageBox.size.y / imageBox.size.x) + 1;
-		Mesh mesh = new Mesh(new Point[]{
+		Rectangle boundingBox = calcBoundingBox();
+		double height = boundingBox.size.y / boundingBox.size.x;
+		double majorSize = Math.max(1, height) + 1;
+		Mesh mesh = new Mesh(new Point[] {
 				new Point(1d / 2d, -majorSize),
-				new Point(-majorSize, majorSize),
-				new Point(majorSize + 1, majorSize)
-		});
+				new Point(-majorSize, height + 1),
+				new Point(majorSize + 1, height + 1)
+		}, boundingBox);
 		this.mesh.set(mesh);
 	}
 
@@ -40,7 +45,7 @@ public class TriangulationService {
 		Triangle[] newTriangles = new Triangle[3];
 		for (int i = 0; i < 3; i++) {
 			newTriangles[i] = new Triangle(triangle.nodes[i], triangle.nodes[(i + 1) % 3], node);
-			newTriangles[i].triangles[0] = triangle.triangles[i];
+			bindTrianglesBothWays(newTriangles[i], 0, triangle.triangles[i], triangle);
 		}
 		Stack<Triangle> trianglesToCheck = new Stack<>();
 		for (int i = 0; i < 3; i++) {
@@ -58,8 +63,11 @@ public class TriangulationService {
 		while (!remaining.empty()) {
 			Triangle current = remaining.pop();
 			for (Triangle neighbour : current.triangles) {
-				Point otherNode = getSeparateNode(current, neighbour);
-				if(isPointInsideCircumcircle(otherNode, current)) {
+				if (neighbour == null) {
+					continue;
+				}
+				Point otherNode = getSeparateNode(neighbour, current);
+				if (isPointInsideCircumcircle(otherNode, current)) {
 					Triangle[] created = flipTriangles(current, neighbour);
 					remaining.addAll(Arrays.asList(created));
 				}
@@ -83,12 +91,21 @@ public class TriangulationService {
 	}
 
 	private Triangle getCloserTriangle(Point node, Triangle current, int nodeIndex) {
-		double det = D_matrixDet(current.nodes[nodeIndex], current.nodes[(nodeIndex + 1) % 3], node);
+		double det = D_matrixDet(current.nodes[nodeIndex], node, current.nodes[(nodeIndex + 1) % 3]);
 		return det < 0 ? current.triangles[nodeIndex] : null;
 	}
 
 	private boolean isPointInsideCircumcircle(Point node, Triangle triangle) {
-		return H_matrixDet(triangle.nodes[0], triangle.nodes[1], triangle.nodes[2], node) > 0;
+		return H_matrixDet(triangle.nodes[2], triangle.nodes[1], triangle.nodes[0], node) > 0;
+	}
+
+	private Rectangle calcBoundingBox() {
+		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
+		double relHeight = imageBox.size.y / imageBox.size.x;
+		Rectangle area = new Rectangle();
+		area.position = new Point(-1, -relHeight).multiplyByScalar(spaceAroundImage);
+		area.size = new Point(1, relHeight).multiplyByScalar(spaceAroundImage * 2 + 1);
+		return area;
 	}
 
 	private Point getSeparateNode(Triangle from, Triangle with) {
@@ -107,18 +124,30 @@ public class TriangulationService {
 	}
 
 	private void addTriangle(Triangle triangle) {
-		List<Point> boundingNodes = mesh.get().getBoundingNodes();
-		boolean isBoundingTriangle =false;
+		List<Point> boundingNodes = mesh.get().boundingNodes;
+		boolean isBoundingTriangle = false;
 		for (Point node : triangle.nodes) {
-			if(boundingNodes.contains(node)) {
+			if (boundingNodes.contains(node)) {
 				isBoundingTriangle = true;
 				break;
 			}
 		}
-		if(!isBoundingTriangle) {
+		if (!isBoundingTriangle) {
 			mesh.get().addValidTriangle(triangle);
 		}
 		mesh.get().addTriangle(triangle);
+	}
+
+	private void bindTrianglesBothWays(Triangle a, int aIndex, Triangle b, Triangle bIndex) {
+		a.triangles[aIndex] = b;
+		if(b == null) {
+			return;
+		}
+		int index = Arrays.asList(b.triangles).indexOf(bIndex);
+		if(index == -1) {
+			LOGGER.warning("Triangle " + bIndex + " is not an neighbour of " + b);
+		}
+		b.triangles[index] = a;
 	}
 
 	private Triangle[] flipTriangles(Triangle a, Triangle b) {
@@ -130,8 +159,12 @@ public class TriangulationService {
 		Triangle[] added = new Triangle[2];
 		added[0] = new Triangle(a.nodes[aNodeIndex], a.nodes[(aNodeIndex + 1) % 3], b.nodes[bNodeIndex]);
 		added[1] = new Triangle(b.nodes[bNodeIndex], b.nodes[(bNodeIndex + 1) % 3], a.nodes[aNodeIndex]);
-		added[0].triangles = new Triangle[]{a.triangles[aNodeIndex], b.triangles[(bNodeIndex + 2) % 3], added[1]};
-		added[1].triangles = new Triangle[]{b.triangles[bNodeIndex], a.triangles[(aNodeIndex + 2) % 3], added[0]};
+		bindTrianglesBothWays(added[0], 0, a.triangles[aNodeIndex], a);
+		bindTrianglesBothWays(added[0], 1, b.triangles[(bNodeIndex + 2) % 3], b);
+		bindTrianglesBothWays(added[1], 0, b.triangles[bNodeIndex], b);
+		bindTrianglesBothWays(added[1], 1, a.triangles[(aNodeIndex + 2) % 3], a);
+		added[0].triangles[2] = added[1];
+		added[1].triangles[2] = added[0];
 		addTriangle(added[0]);
 		addTriangle(added[1]);
 		return added;
@@ -142,11 +175,14 @@ public class TriangulationService {
 	}
 
 	private double H_matrixDet(Point a, Point b, Point c, Point d) {
-		return b.x * (a.x * a.x * (c.y - d.y) + b.x * (a.x * (d.y - c.y) + a.y * (c.x - d.x) - c.x * d.y + c.y * d.x) + a.y * (a.y * (c.y - d.y) - c.x * c.x
-				- c.y * c.y + d.x * d.x + d.y * d.y) + c.x * c.x * d.y - c.y * d.x * d.x + c.y * (c.y * d.y - d.y * d.y)) + b.y * (b.y * (a.x * (d.y - c.y)
-				+ a.y * (c.x - d.x) - c.x * d.y + c.y * d.x) + a.x * (a.x * (d.x - c.x) + c.x * c.x + c.y * c.y - d.x * d.x - d.y * d.y) + a.y * a.y * (d.x
-				- c.x) + d.x * (-c.x * c.x + c.x * d.x - c.y * c.y) + c.x * d.y * d.y) + a.x * (a.x * (c.x * d.y - c.y * d.x) + c.x * c.x * (-d.y) + c.y * d.x
-				* d.x + c.y * (d.y * d.y - c.y * d.y)) + a.y * (a.y * (c.x * d.y - c.y * d.x) + d.x * (c.x * c.x - c.x * d.x + c.y * c.y) - c.x * d.y * d.y);
+		return a.x * a.x * b.x * c.y - a.x * a.x * b.x * d.y + a.x * a.x * (-b.y) * c.x + a.x * a.x * b.y * d.x + a.x * a.x * c.x * d.y - a.x * a.x * c.y * d.x
+				- a.x * b.x * b.x * c.y + a.x * b.x * b.x * d.y - a.x * b.y * b.y * c.y + a.x * b.y * b.y * d.y + a.x * b.y * c.x * c.x + a.x * b.y * c.y * c.y
+				- a.x * b.y * d.x * d.x - a.x * b.y * d.y * d.y - a.x * c.x * c.x * d.y - a.x * c.y * c.y * d.y + a.x * c.y * d.x * d.x + a.x * c.y * d.y * d.y
+				+ a.y * a.y * b.x * c.y - a.y * a.y * b.x * d.y - a.y * a.y * b.y * c.x + a.y * a.y * b.y * d.x + a.y * a.y * c.x * d.y - a.y * a.y * c.y * d.x
+				+ a.y * b.x * b.x * c.x - a.y * b.x * b.x * d.x - a.y * b.x * c.x * c.x - a.y * b.x * c.y * c.y + a.y * b.x * d.x * d.x + a.y * b.x * d.y * d.y
+				+ a.y * b.y * b.y * c.x - a.y * b.y * b.y * d.x + a.y * c.x * c.x * d.x - a.y * c.x * d.x * d.x - a.y * c.x * d.y * d.y + a.y * c.y * c.y * d.x
+				- b.x * b.x * c.x * d.y + b.x * b.x * c.y * d.x + b.x * c.x * c.x * d.y + b.x * c.y * c.y * d.y - b.x * c.y * d.x * d.x - b.x * c.y * d.y * d.y
+				- b.y * b.y * c.x * d.y + b.y * b.y * c.y * d.x - b.y * c.x * c.x * d.x + b.y * c.x * d.x * d.x + b.y * c.x * d.y * d.y - b.y * c.y * c.y * d.x;
 	}
 
 }

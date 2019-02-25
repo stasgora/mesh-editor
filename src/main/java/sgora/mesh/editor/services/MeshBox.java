@@ -3,13 +3,17 @@ package sgora.mesh.editor.services;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
-import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
+import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.triangulation.TriangulationService;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MeshBox implements MouseListener {
 
@@ -20,15 +24,13 @@ public class MeshBox implements MouseListener {
 	private final Point mainViewSize;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private TriangulationService triangulationService;
-	private AppConfigReader appConfig;
 
-	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor, TriangulationService triangulationService, AppConfigReader appConfig) {
+	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor, TriangulationService triangulationService) {
 		this.project = project;
 		this.meshBoxModel = meshBoxModel;
 		this.mainViewSize = mainViewSize;
 		this.mouseCursor = mouseCursor;
 		this.triangulationService = triangulationService;
-		this.appConfig = appConfig;
 	}
 
 	private Integer findNodeIndex(Point position) {
@@ -54,6 +56,14 @@ public class MeshBox implements MouseListener {
 		return project.mesh.get().getNodes().stream().map(this::getNodePixelPos).toArray(Point[]::new);
 	}
 
+	public List<Point[]> getPixelTriangles() {
+		return project.mesh.get().getValidTriangles().stream().map(this::getPixelTriangle).collect(Collectors.toList());
+	}
+
+	private Point[] getPixelTriangle(Triangle triangle) {
+		return Arrays.stream(triangle.nodes).map(node -> getNodePixelPos(new Point(node))).toArray(Point[]::new);
+	}
+
 	private Point getNodePixelPos(Point node) {
 		return new Point(node).multiplyByScalar(project.imageBox.size.x).add(project.imageBox.position);
 	}
@@ -62,17 +72,17 @@ public class MeshBox implements MouseListener {
 		return new Point(node).subtract(project.imageBox.position).divideByScalar(project.imageBox.size.x);
 	}
 
-	public Rectangle getPixelNodeArea() {
-		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
-		Rectangle area = new Rectangle();
-		area.position = new Point(project.imageBox.position).subtract(new Point(project.imageBox.size).multiplyByScalar(spaceAroundImage));
-		area.size = new Point(project.imageBox.size).multiplyByScalar(spaceAroundImage * 2 + 1);
-		return area;
+	public Rectangle getPixelNodeBoundingBox() {
+		Rectangle boundingBox = project.mesh.get().nodeBoundingBox;
+		Rectangle pixelBoundingBox = new Rectangle();
+		pixelBoundingBox.position = getNodePixelPos(boundingBox.position);
+		pixelBoundingBox.size = new Point(boundingBox.size).multiplyByScalar(project.imageBox.size.x);
+		return pixelBoundingBox;
 	}
 
 	private Point clampPixelNodePos(Point node) {
-		Rectangle pixelNodeArea = getPixelNodeArea();
-		return node.clamp(pixelNodeArea.position, new Point(pixelNodeArea.position).add(pixelNodeArea.size));
+		Rectangle box = getPixelNodeBoundingBox();
+		return node.clamp(box.position, new Point(box.position).add(box.size));
 	}
 
 	@Override
@@ -103,11 +113,10 @@ public class MeshBox implements MouseListener {
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
 		if(draggedNodeIndex == null && mouseButton == meshBoxModel.placeNodeButton) {
-			project.mesh.get().addNode(getNodeRelativePos(clampPixelNodePos(mousePos)));
+			triangulationService.addNode(getNodeRelativePos(clampPixelNodePos(mousePos)));
 		}
 		draggedNodeIndex = null;
 		mouseCursor.setValue(mousePos.isBetween(new Point(), mainViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
-		project.mesh.get().notifyListeners();
 	}
 
 	@Override
