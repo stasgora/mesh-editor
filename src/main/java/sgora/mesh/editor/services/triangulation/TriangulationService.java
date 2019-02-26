@@ -12,8 +12,6 @@ import java.util.logging.Logger;
 
 public class TriangulationService {
 
-	private static final Logger LOGGER = Logger.getLogger(TriangulationService.class.getName());
-
 	private SettableObservable<Mesh> mesh;
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
@@ -48,6 +46,38 @@ public class TriangulationService {
 		flipInvalidTriangles(trianglesToCheck);
 		mesh.addNode(node);
 		mesh.notifyListeners();
+	}
+
+	public void removeNode(Point location) {
+		Mesh mesh = this.mesh.get();
+		Triangle triangle = walkToContainerTriangle(location);
+		Point node = nodeUtils.getClosestNode(location, triangle);
+		if(node == null) {
+			return;
+		}
+		List<Point> neighbours = nodeUtils.collectNodeNeighbours(node, triangle);
+		int[] ids = new int[] {0, 1, 2};
+		while (neighbours.size() > 3) {
+			double earTest = triangleUtils.D_matrixDet(neighbours.get(ids[2]), neighbours.get(ids[1]), neighbours.get(ids[0]));
+			double enclosingTest = triangleUtils.D_matrixDet(node, neighbours.get(ids[2]), neighbours.get(ids[0]));
+			if (earTest >= 0 && enclosingTest >= 0) {
+				boolean earValid = true;
+				for (int i = 0; i < neighbours.size() - 3; i++) {
+					int index = (ids[0] + 3 + i) % neighbours.size();
+					double circumcircleTest = triangleUtils.H_matrixDet(neighbours.get(ids[2]), neighbours.get(ids[1]), neighbours.get(ids[0]), neighbours.get(index));
+					if(circumcircleTest > 0) {
+						earValid = false;
+						break;
+					}
+				}
+				if(earValid) {
+
+				}
+			}
+			for (int i = 0; i < ids.length; i++) {
+				ids[i] = (ids[i] + 1) % neighbours.size();
+			}
+		}
 	}
 
 	private void flipInvalidTriangles(Stack<Triangle> remaining) {

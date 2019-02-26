@@ -7,11 +7,15 @@ import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class NodeUtils {
+
+	private static final Logger LOGGER = Logger.getLogger(NodeUtils.class.getName());
 
 	private final AppConfigReader appConfig;
 	private final Rectangle imageBox;
@@ -21,6 +25,31 @@ public class NodeUtils {
 		this.appConfig = appConfig;
 		this.imageBox = imageBox;
 		this.mesh = mesh;
+	}
+
+	Point getClosestNode(Point location, Triangle triangle) {
+		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius");
+		for (Point node : triangle.nodes) {
+			Point dist = new Point(node).subtract(location).abs();
+			if (dist.x <= nodeBoxRadius && dist.y <= nodeBoxRadius) {
+				return node;
+			}
+		}
+		return null;
+	}
+
+	List<Point> collectNodeNeighbours(Point node, Triangle firstTriangle) {
+		Triangle currentTriangle = firstTriangle;
+		List<Point> neighbours = new ArrayList<>();
+		do {
+			int nodeIndex = Arrays.asList(currentTriangle.nodes).indexOf(node);
+			if(nodeIndex == -1) {
+				LOGGER.warning("triangle " + currentTriangle + " does not contain given node " + node);
+			}
+			neighbours.add(currentTriangle.nodes[(nodeIndex + 1) % 3]);
+			currentTriangle = currentTriangle.triangles[nodeIndex];
+		} while (currentTriangle != firstTriangle);
+		return neighbours;
 	}
 
 	public Point[] getPixelMeshNodes() {
