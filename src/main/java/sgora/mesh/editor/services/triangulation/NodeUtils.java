@@ -1,4 +1,4 @@
-package sgora.mesh.editor.triangulation;
+package sgora.mesh.editor.services.triangulation;
 
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.model.geom.Mesh;

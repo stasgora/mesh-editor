@@ -10,8 +10,7 @@ import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.ImageBox;
 import sgora.mesh.editor.services.MeshBox;
-import sgora.mesh.editor.triangulation.NodeUtils;
-import sgora.mesh.editor.triangulation.TriangulationService;
+import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.ui.ImageCanvas;
 import sgora.mesh.editor.ui.MeshCanvas;
 

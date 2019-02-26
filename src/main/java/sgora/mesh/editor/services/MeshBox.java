@@ -3,19 +3,13 @@ package sgora.mesh.editor.services;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
-import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.MouseListener;
-import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
+import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
-import sgora.mesh.editor.model.geom.Triangle;
-import sgora.mesh.editor.triangulation.NodeUtils;
-import sgora.mesh.editor.triangulation.TriangulationService;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import sgora.mesh.editor.services.triangulation.NodeUtils;
+import sgora.mesh.editor.services.triangulation.TriangulationService;
 
 public class MeshBox implements MouseListener {
 
@@ -89,8 +83,8 @@ public class MeshBox implements MouseListener {
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
-		if(draggedNodeIndex == null && mouseButton == meshBoxModel.placeNodeButton) {
-			triangulationService.addNode(nodeUtils.getNodeRelativePos(clampPixelNodePos(mousePos)));
+		if(draggedNodeIndex == null && mouseButton == meshBoxModel.placeNodeButton && nodeUtils.getPixelNodeBoundingBox().contains(mousePos)) {
+			triangulationService.addNode(nodeUtils.getNodeRelativePos(mousePos));
 		}
 		draggedNodeIndex = null;
 		mouseCursor.setValue(mousePos.isBetween(new Point(), mainViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);

@@ -18,6 +18,10 @@ public class Rectangle extends ComplexObservable implements Serializable {
 		addSubObservable(size);
 	}
 
+	public boolean contains(Point point) {
+		return point.x >= position.x && point.x <= position.x + size.x && point.y >= position.y && point.y <= position.y + size.y;
+	}
+
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.writeObject(position);
 		out.writeObject(size);

@@ -18,8 +18,9 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
-import sgora.mesh.editor.triangulation.NodeUtils;
-import sgora.mesh.editor.triangulation.TriangulationService;
+import sgora.mesh.editor.services.triangulation.NodeUtils;
+import sgora.mesh.editor.services.triangulation.TriangleUtils;
+import sgora.mesh.editor.services.triangulation.TriangulationService;
 import sgora.mesh.editor.view.WindowController;
 
 public class ObjectGraphFactory {
@@ -38,8 +39,10 @@ public class ObjectGraphFactory {
 	private UiDialogUtils dialogUtils;
 	private WorkspaceActionHandler workspaceActionHandler;
 	private FileUtils fileUtils;
+
 	private TriangulationService triangulationService;
 	private NodeUtils nodeUtils;
+	private TriangleUtils triangleUtils;
 
 	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
@@ -61,8 +64,10 @@ public class ObjectGraphFactory {
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
+		triangleUtils = new TriangleUtils();
 		nodeUtils = new NodeUtils(appConfig, project.imageBox, project.mesh);
-		triangulationService = new TriangulationService(project.mesh, nodeUtils);
+		triangulationService = new TriangulationService(project.mesh, nodeUtils, triangleUtils);
+
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);
 		dialogUtils = new UiDialogUtils(stage);
