@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sgora.mesh.editor.config.JsonAppConfigReader;
-import sgora.mesh.editor.config.JsonConfigReader;
 import sgora.mesh.editor.config.JsonLangConfigReader;
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
@@ -19,6 +18,8 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
+import sgora.mesh.editor.services.files.ProjectFileUtils;
+import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.view.WindowController;
 
 public class ObjectGraphFactory {

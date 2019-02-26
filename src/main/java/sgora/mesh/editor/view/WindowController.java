@@ -16,7 +16,7 @@ import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.LangConfigReader;
 import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.services.UiDialogUtils;
-import sgora.mesh.editor.services.WorkspaceActionHandler;
+import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
 
 import java.io.*;
