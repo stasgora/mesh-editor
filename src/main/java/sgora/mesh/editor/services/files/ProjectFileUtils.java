@@ -1,4 +1,4 @@
-package sgora.mesh.editor.services;
+package sgora.mesh.editor.services.files;
 
 import javafx.scene.image.Image;
 import sgora.mesh.editor.exceptions.ProjectIOException;

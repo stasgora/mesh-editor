@@ -1,4 +1,4 @@
-package sgora.mesh.editor.services;
+package sgora.mesh.editor.services.files;
 
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.FileUtils;

@@ -21,6 +21,8 @@ import sgora.mesh.editor.services.*;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.services.triangulation.TriangulationService;
+import sgora.mesh.editor.services.files.ProjectFileUtils;
+import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.view.WindowController;
 
 public class ObjectGraphFactory {
