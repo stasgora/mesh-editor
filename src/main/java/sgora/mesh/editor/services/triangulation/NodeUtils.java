@@ -27,14 +27,6 @@ public class NodeUtils {
 		return mesh.get().getNodes().stream().map(this::getNodePixelPos).toArray(Point[]::new);
 	}
 
-	public List<Point[]> getPixelTriangles() {
-		return mesh.get().getTriangles().stream().map(this::getPixelTriangle).collect(Collectors.toList());
-	}
-
-	private Point[] getPixelTriangle(Triangle triangle) {
-		return Arrays.stream(triangle.nodes).map(node -> getNodePixelPos(new Point(node))).toArray(Point[]::new);
-	}
-
 	public Point getNodePixelPos(Point node) {
 		return new Point(node).multiplyByScalar(imageBox.size.x).add(imageBox.position);
 	}

@@ -1,15 +1,43 @@
 package sgora.mesh.editor.services.triangulation;
 
+import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Triangle;
+import sgora.mesh.editor.model.observables.SettableObservable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class TriangleUtils {
 
 	private static final Logger LOGGER = Logger.getLogger(TriangleUtils.class.getName());
+	private SettableObservable<Mesh> mesh;
+	private NodeUtils nodeUtils;
+
+	public TriangleUtils(SettableObservable<Mesh> mesh, NodeUtils nodeUtils) {
+		this.mesh = mesh;
+		this.nodeUtils = nodeUtils;
+	}
+
+	public List<Point[]> getPixelTriangles() {
+		return mesh.get().getTriangles().stream().filter(this::isTriangleValid).map(this::getPixelTriangle).collect(Collectors.toList());
+	}
+
+	private boolean isTriangleValid(Triangle triangle) {
+		List<Point> boundingNodes = mesh.get().boundingNodes;
+		for (Point node : triangle.nodes) {
+			if (boundingNodes.contains(node)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private Point[] getPixelTriangle(Triangle triangle) {
+		return Arrays.stream(triangle.nodes).map(node -> nodeUtils.getNodePixelPos(new Point(node))).toArray(Point[]::new);
+	}
 
 	Point getSeparateNode(Triangle from, Triangle with) {
 		return from.nodes[getSeparateNodeIndex(from, with)];

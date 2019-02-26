@@ -64,8 +64,8 @@ public class ObjectGraphFactory {
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
-		triangleUtils = new TriangleUtils();
 		nodeUtils = new NodeUtils(appConfig, project.imageBox, project.mesh);
+		triangleUtils = new TriangleUtils(project.mesh, nodeUtils);
 		triangulationService = new TriangulationService(project.mesh, nodeUtils, triangleUtils);
 
 		fileUtils = new ProjectFileUtils(project, appConfig);
@@ -102,7 +102,7 @@ public class ObjectGraphFactory {
 		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor, triangulationService, nodeUtils);
 
 		controller.toolBar.init(activeTool, appLang);
-		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox, nodeUtils);
+		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils);
 		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
 	}
 

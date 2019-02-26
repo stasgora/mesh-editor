@@ -42,7 +42,7 @@ public class TriangulationService {
 		for (int i = 0; i < 3; i++) {
 			newTriangles[i].triangles[1] = newTriangles[(i + 1) % 3];
 			newTriangles[i].triangles[2] = newTriangles[(i + 2) % 3];
-			addTriangle(newTriangles[i]);
+			mesh.addTriangle(newTriangles[i]);
 			trianglesToCheck.push(newTriangles[i]);
 		}
 		flipInvalidTriangles(trianglesToCheck);
@@ -90,21 +90,6 @@ public class TriangulationService {
 		return triangleUtils.H_matrixDet(triangle.nodes[2], triangle.nodes[1], triangle.nodes[0], node) > 0;
 	}
 
-	private void addTriangle(Triangle triangle) {
-		List<Point> boundingNodes = mesh.get().boundingNodes;
-		boolean isBoundingTriangle = false;
-		for (Point node : triangle.nodes) {
-			if (boundingNodes.contains(node)) {
-				isBoundingTriangle = true;
-				break;
-			}
-		}
-		if (!isBoundingTriangle) {
-			//mesh.get().addValidTriangle(triangle);
-		}
-		mesh.get().addTriangle(triangle);
-	}
-
 	private Triangle[] flipTriangles(Triangle a, Triangle b) {
 		Mesh mesh = this.mesh.get();
 		int aNodeIndex = triangleUtils.getSeparateNodeIndex(a, b);
@@ -120,8 +105,8 @@ public class TriangulationService {
 		triangleUtils.bindTrianglesBothWays(added[1], 1, a.triangles[(aNodeIndex + 2) % 3], a);
 		added[0].triangles[2] = added[1];
 		added[1].triangles[2] = added[0];
-		addTriangle(added[0]);
-		addTriangle(added[1]);
+		mesh.addTriangle(added[0]);
+		mesh.addTriangle(added[1]);
 		return added;
 	}
 
