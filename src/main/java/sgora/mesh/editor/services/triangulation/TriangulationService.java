@@ -5,10 +5,10 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.Logger;
 
 public class TriangulationService {
 
@@ -49,35 +49,57 @@ public class TriangulationService {
 	}
 
 	public void removeNode(Point location) {
-		Mesh mesh = this.mesh.get();
 		Triangle triangle = walkToContainerTriangle(location);
 		Point node = nodeUtils.getClosestNode(location, triangle);
 		if(node == null) {
 			return;
 		}
-		List<Point> neighbours = nodeUtils.collectNodeNeighbours(node, triangle);
-		int[] ids = new int[] {0, 1, 2};
-		while (neighbours.size() > 3) {
-			double earTest = triangleUtils.D_matrixDet(neighbours.get(ids[2]), neighbours.get(ids[1]), neighbours.get(ids[0]));
-			double enclosingTest = triangleUtils.D_matrixDet(node, neighbours.get(ids[2]), neighbours.get(ids[0]));
-			if (earTest >= 0 && enclosingTest >= 0) {
-				boolean earValid = true;
-				for (int i = 0; i < neighbours.size() - 3; i++) {
-					int index = (ids[0] + 3 + i) % neighbours.size();
-					double circumcircleTest = triangleUtils.H_matrixDet(neighbours.get(ids[2]), neighbours.get(ids[1]), neighbours.get(ids[0]), neighbours.get(index));
-					if(circumcircleTest > 0) {
-						earValid = false;
-						break;
-					}
-				}
-				if(earValid) {
+		List<Point> points = new ArrayList<>();
+		List<Triangle> triangles = new ArrayList<>();
+		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
+		retriangulateWithoutCenterNode(node, points, triangles);
+	}
 
-				}
-			}
-			for (int i = 0; i < ids.length; i++) {
-				ids[i] = (ids[i] + 1) % neighbours.size();
+	private void retriangulateWithoutCenterNode(Point node, List<Point> nodes, List<Triangle> triangles) {
+		Mesh mesh = this.mesh.get();
+		Point[] currentNodes = new Point[3];
+		currentNodes[0] = nodes.get(0);
+		while (nodes.size() > 3) {
+			int currentId = nodes.indexOf(currentNodes[0]);
+			currentNodes[1] = nodes.get((currentId + 1) % nodes.size());
+			currentNodes[2] = nodes.get((currentId + 2) % nodes.size());
+			double earTest = triangleUtils.D_matrixDet(currentNodes[0], currentNodes[1], currentNodes[2]);
+			double enclosingTest = triangleUtils.D_matrixDet(currentNodes[0], currentNodes[2], node);
+			if (earTest >= 0 && enclosingTest >= 0 && checkTriangleAgainstNodes(nodes, currentNodes, currentId)) {
+				flipTrianglesFromRing(node, nodes, triangles, currentId);
+			} else {
+				currentNodes[0] = nodes.get((currentId + 1) % nodes.size());
 			}
 		}
+		triangleUtils.mergeTrianglesIntoOne(nodes, triangles);
+		mesh.removeNode(node);
+	}
+
+	private void flipTrianglesFromRing(Point node, List<Point> nodes, List<Triangle> triangles, int currentId) {
+		int nextId = (currentId + 1) % nodes.size();
+		Triangle[] currentTriangles = new Triangle[] { triangles.get(currentId), triangles.get(nextId) };
+		Triangle[] newTriangles = flipTriangles(currentTriangles[0], currentTriangles[1]);
+		Triangle newNeighbour = Arrays.asList(newTriangles[0].nodes).contains(node) ? newTriangles[0] : newTriangles[1];
+		nodes.remove(nextId);
+		triangles.add(currentId, newNeighbour);
+		triangles.remove(currentTriangles[0]);
+		triangles.remove(currentTriangles[1]);
+	}
+
+	private boolean checkTriangleAgainstNodes(List<Point> nodes, Point[] currentNodes, int currentId) {
+		for (int i = 0; i < nodes.size() - 3; i++) {
+			int index = (currentId + 3 + i) % nodes.size();
+			double circumcircleTest = triangleUtils.H_matrixDet(currentNodes[0], currentNodes[1], currentNodes[2], nodes.get(index));
+			if(circumcircleTest > 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void flipInvalidTriangles(Stack<Triangle> remaining) {

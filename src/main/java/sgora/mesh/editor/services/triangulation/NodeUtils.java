@@ -35,21 +35,21 @@ public class NodeUtils {
 				return node;
 			}
 		}
+		LOGGER.warning("No closest node found");
 		return null;
 	}
 
-	List<Point> collectNodeNeighbours(Point node, Triangle firstTriangle) {
+	void getNodeNeighbours(Point node, Triangle firstTriangle, List<Point> points, List<Triangle> triangles) {
 		Triangle currentTriangle = firstTriangle;
-		List<Point> neighbours = new ArrayList<>();
 		do {
 			int nodeIndex = Arrays.asList(currentTriangle.nodes).indexOf(node);
 			if(nodeIndex == -1) {
 				LOGGER.warning("triangle " + currentTriangle + " does not contain given node " + node);
 			}
-			neighbours.add(currentTriangle.nodes[(nodeIndex + 1) % 3]);
+			points.add(currentTriangle.nodes[(nodeIndex + 1) % 3]);
 			currentTriangle = currentTriangle.triangles[nodeIndex];
+			triangles.add(currentTriangle);
 		} while (currentTriangle != firstTriangle);
-		return neighbours;
 	}
 
 	public Point[] getPixelMeshNodes() {

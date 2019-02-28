@@ -61,7 +61,7 @@ public class MeshBox implements MouseListener {
 		draggedNodeIndex = findNodeIndex(mousePos);
 		if(draggedNodeIndex != null) {
 			if(mouseButton == meshBoxModel.removeNodeButton) {
-				removeNode(mousePos);
+				triangulationService.removeNode(nodeUtils.getNodeRelativePos(mousePos));
 			} else if(mouseButton == meshBoxModel.moveNodeButton) {
 				mouseCursor.setValue(Cursor.CLOSED_HAND);
 				draggedNodeIndex = findNodeIndex(mousePos);

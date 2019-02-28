@@ -48,6 +48,11 @@ public class Mesh extends ComplexObservable implements Serializable {
 		onValueChanged();
 	}
 
+	public void removeNode(Point node) {
+		nodes.remove(node);
+		onValueChanged();
+	}
+
 	public Point getNode(int index) {
 		return nodes.get(index);
 	}

@@ -11,9 +11,13 @@ public class Triangle implements Serializable {
 	public Point[] nodes;
 	public Triangle[] triangles;
 
-	public Triangle(Point a, Point b, Point c) {
-		this.nodes = new Point[]{a, b, c};
+	public Triangle(Point[] nodes) {
+		this.nodes = nodes;
 		triangles = new Triangle[3];
+	}
+
+	public Triangle(Point a, Point b, Point c) {
+		this(new Point[]{a, b, c});
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {

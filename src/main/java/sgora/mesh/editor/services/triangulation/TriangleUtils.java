@@ -22,6 +22,18 @@ public class TriangleUtils {
 		this.nodeUtils = nodeUtils;
 	}
 
+	void mergeTrianglesIntoOne(List<Point> nodes, List<Triangle> triangles) {
+		Mesh mesh = this.mesh.get();
+		Triangle merged = new Triangle(nodes.toArray(new Point[3]));
+		for (int i = 0; i < 3; i++) {
+			Triangle triangle = triangles.get(i);
+			int triNeighbourId = Arrays.asList(triangle.nodes).indexOf(nodes.get(i));
+			bindTrianglesBothWays(merged, i, triangle.triangles[(triNeighbourId + 2) % 3], triangle);
+		}
+		triangles.forEach(mesh::removeTriangle);
+		mesh.addTriangle(merged);
+	}
+
 	public List<Point[]> getPixelTriangles() {
 		return mesh.get().getTriangles().stream().filter(this::isTriangleValid).map(this::getPixelTriangle).collect(Collectors.toList());
 	}
@@ -63,6 +75,7 @@ public class TriangleUtils {
 		int index = Arrays.asList(b.triangles).indexOf(bIndex);
 		if(index == -1) {
 			LOGGER.warning("Triangle " + bIndex + " is not an neighbour of " + b);
+			return;
 		}
 		b.triangles[index] = a;
 	}
