@@ -58,6 +58,7 @@ public class TriangulationService {
 		List<Triangle> triangles = new ArrayList<>();
 		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
 		retriangulateWithoutCenterNode(node, points, triangles);
+		mesh.get().notifyListeners();
 	}
 
 	private void retriangulateWithoutCenterNode(Point node, List<Point> nodes, List<Triangle> triangles) {

@@ -28,14 +28,13 @@ public class NodeUtils {
 	}
 
 	Point getClosestNode(Point location, Triangle triangle) {
-		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius");
+		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / imageBox.size.x;
 		for (Point node : triangle.nodes) {
 			Point dist = new Point(node).subtract(location).abs();
 			if (dist.x <= nodeBoxRadius && dist.y <= nodeBoxRadius) {
 				return node;
 			}
 		}
-		LOGGER.warning("No closest node found");
 		return null;
 	}
 
