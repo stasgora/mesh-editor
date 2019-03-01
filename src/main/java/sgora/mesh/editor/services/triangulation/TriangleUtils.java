@@ -5,7 +5,9 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -24,14 +26,14 @@ public class TriangleUtils {
 
 	void mergeTrianglesIntoOne(List<Point> nodes, List<Triangle> triangles) {
 		Mesh mesh = this.mesh.get();
-		Triangle merged = new Triangle(nodes.toArray(new Point[3]));
+		Triangle newTriangle = new Triangle(nodes.toArray(new Point[3]));
 		for (int i = 0; i < 3; i++) {
 			Triangle triangle = triangles.get(i);
 			int triNeighbourId = Arrays.asList(triangle.nodes).indexOf(nodes.get(i));
-			bindTrianglesBothWays(merged, i, triangle.triangles[(triNeighbourId + 2) % 3], triangle);
+			bindTrianglesBothWays(newTriangle, i, triangle.triangles[triNeighbourId], triangle);
 		}
 		triangles.forEach(mesh::removeTriangle);
-		mesh.addTriangle(merged);
+		mesh.addTriangle(newTriangle);
 	}
 
 	public List<Point[]> getPixelTriangles() {

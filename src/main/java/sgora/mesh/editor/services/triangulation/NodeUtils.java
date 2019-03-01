@@ -45,7 +45,8 @@ public class NodeUtils {
 			if(nodeIndex == -1) {
 				LOGGER.warning("triangle " + currentTriangle + " does not contain given node " + node);
 			}
-			points.add(currentTriangle.nodes[(nodeIndex + 1) % 3]);
+			nodeIndex = (nodeIndex + 2) % 3;
+			points.add(currentTriangle.nodes[nodeIndex]);
 			currentTriangle = currentTriangle.triangles[nodeIndex];
 			triangles.add(currentTriangle);
 		} while (currentTriangle != firstTriangle);

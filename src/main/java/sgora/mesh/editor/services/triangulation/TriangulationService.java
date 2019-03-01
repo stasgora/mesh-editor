@@ -57,11 +57,11 @@ public class TriangulationService {
 		List<Point> points = new ArrayList<>();
 		List<Triangle> triangles = new ArrayList<>();
 		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
-		retriangulateWithoutCenterNode(node, points, triangles);
+		retriangulateNodeHole(node, points, triangles);
 		mesh.get().notifyListeners();
 	}
 
-	private void retriangulateWithoutCenterNode(Point node, List<Point> nodes, List<Triangle> triangles) {
+	private void retriangulateNodeHole(Point node, List<Point> nodes, List<Triangle> triangles) {
 		Mesh mesh = this.mesh.get();
 		Point[] currentNodes = new Point[3];
 		currentNodes[0] = nodes.get(0);
@@ -69,8 +69,8 @@ public class TriangulationService {
 			int currentId = nodes.indexOf(currentNodes[0]);
 			currentNodes[1] = nodes.get((currentId + 1) % nodes.size());
 			currentNodes[2] = nodes.get((currentId + 2) % nodes.size());
-			double earTest = triangleUtils.D_matrixDet(currentNodes[0], currentNodes[1], currentNodes[2]);
-			double enclosingTest = triangleUtils.D_matrixDet(currentNodes[0], currentNodes[2], node);
+			double earTest = triangleUtils.D_matrixDet(currentNodes[2], currentNodes[1], currentNodes[0]);
+			double enclosingTest = triangleUtils.D_matrixDet(currentNodes[0], node, currentNodes[2]);
 			if (earTest >= 0 && enclosingTest >= 0 && checkTriangleAgainstNodes(nodes, currentNodes, currentId)) {
 				flipTrianglesFromRing(node, nodes, triangles, currentId);
 			} else {
@@ -95,7 +95,7 @@ public class TriangulationService {
 	private boolean checkTriangleAgainstNodes(List<Point> nodes, Point[] currentNodes, int currentId) {
 		for (int i = 0; i < nodes.size() - 3; i++) {
 			int index = (currentId + 3 + i) % nodes.size();
-			double circumcircleTest = triangleUtils.H_matrixDet(currentNodes[0], currentNodes[1], currentNodes[2], nodes.get(index));
+			double circumcircleTest = triangleUtils.H_matrixDet(currentNodes[2], currentNodes[1], currentNodes[0], nodes.get(index));
 			if(circumcircleTest > 0) {
 				return false;
 			}
