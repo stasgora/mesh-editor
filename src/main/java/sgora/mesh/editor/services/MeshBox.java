@@ -44,13 +44,6 @@ public class MeshBox implements MouseListener {
 		return null;
 	}
 
-	private void removeNode(Point mousePos) {
-		Integer nodeIndex = findNodeIndex(mousePos);
-		if(nodeIndex != null) {
-			project.mesh.get().removeNode(nodeIndex);
-		}
-	}
-
 	private Point clampPixelNodePos(Point node) {
 		Rectangle box = nodeUtils.getPixelNodeBoundingBox();
 		return node.clamp(box.position, new Point(box.position).add(box.size));

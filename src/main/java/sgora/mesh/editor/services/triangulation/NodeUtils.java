@@ -21,14 +21,17 @@ public class NodeUtils {
 	private final Rectangle imageBox;
 	private SettableObservable<Mesh> mesh;
 
+	private final double REL_SPACE_FACTOR;
+
 	public NodeUtils(AppConfigReader appConfig, Rectangle imageBox, SettableObservable<Mesh> mesh) {
 		this.appConfig = appConfig;
 		this.imageBox = imageBox;
 		this.mesh = mesh;
+		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.relativeSpaceFactor");
 	}
 
 	Point getClosestNode(Point location, Triangle triangle) {
-		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / imageBox.size.x;
+		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (imageBox.size.x / REL_SPACE_FACTOR);
 		for (Point node : triangle.nodes) {
 			Point dist = new Point(node).subtract(location).abs();
 			if (dist.x <= nodeBoxRadius && dist.y <= nodeBoxRadius) {
@@ -57,11 +60,11 @@ public class NodeUtils {
 	}
 
 	public Point getNodePixelPos(Point node) {
-		return new Point(node).multiplyByScalar(imageBox.size.x).add(imageBox.position);
+		return new Point(node).multiplyByScalar(imageBox.size.x / REL_SPACE_FACTOR).add(imageBox.position);
 	}
 
 	public Point getNodeRelativePos(Point node) {
-		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x);
+		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
 	}
 
 	public Rectangle getPixelNodeBoundingBox() {
@@ -77,19 +80,17 @@ public class NodeUtils {
 		Rectangle boundingBox = getRelativeNodeBoundingBox();
 		double majorLength = Math.max(boundingBox.size.x, boundingBox.size.y) + 1;
 		return new Point[] {
-			new Point(1d / 2d, -majorLength),
+			new Point(boundingBox.size.x / 2, -majorLength),
 			new Point(boundingBox.position.x - majorLength, boundingBox.size.y + 1),
 			new Point(boundingBox.position.x + boundingBox.size.x + majorLength, boundingBox.size.y + 1)
 		};
 	}
 
 	private Rectangle getRelativeNodeBoundingBox() {
-		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
-		double relHeight = imageBox.size.y / imageBox.size.x;
-		Rectangle area = new Rectangle();
-		area.position = new Point(-1, -relHeight).multiplyByScalar(spaceAroundImage);
-		area.size = new Point(1, relHeight).multiplyByScalar(spaceAroundImage * 2 + 1);
-		return area;
+		Rectangle pixelBox = getPixelNodeBoundingBox();
+		pixelBox.position = getNodeRelativePos(pixelBox.position);
+		pixelBox.size = getNodeRelativePos(pixelBox.size);
+		return pixelBox;
 	}
 
 }
