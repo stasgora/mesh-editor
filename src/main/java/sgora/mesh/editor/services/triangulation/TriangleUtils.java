@@ -53,7 +53,7 @@ public class TriangleUtils {
 
 	private Triangle getCloserTriangle(Point node, Triangle current, int nodeIndex) {
 		double det = D_matrixDet(current.nodes[nodeIndex], node, current.nodes[(nodeIndex + 1) % 3]);
-		return det < 0 ? current.triangles[nodeIndex] : null;
+		return det + 1e-5 < 0 ? current.triangles[nodeIndex] : null;
 	}
 
 	public List<Point[]> getPixelTriangles() {
