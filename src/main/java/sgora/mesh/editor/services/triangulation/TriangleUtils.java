@@ -36,6 +36,26 @@ public class TriangleUtils {
 		mesh.addTriangle(newTriangle);
 	}
 
+	Triangle findTriangleByLocation(Point location) {
+		Triangle current = mesh.get().getTriangle(0);
+		Triangle next = null;
+		do {
+			for (int i = 0; i < 3; i++) {
+				next = getCloserTriangle(location, current, i);
+				if (next != null) {
+					current = next;
+					break;
+				}
+			}
+		} while (next != null);
+		return current;
+	}
+
+	private Triangle getCloserTriangle(Point node, Triangle current, int nodeIndex) {
+		double det = D_matrixDet(current.nodes[nodeIndex], node, current.nodes[(nodeIndex + 1) % 3]);
+		return det < 0 ? current.triangles[nodeIndex] : null;
+	}
+
 	public List<Point[]> getPixelTriangles() {
 		return mesh.get().getTriangles().stream().filter(this::isTriangleValid).map(this::getPixelTriangle).collect(Collectors.toList());
 	}

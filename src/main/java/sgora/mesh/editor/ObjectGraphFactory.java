@@ -11,6 +11,7 @@ import sgora.mesh.editor.config.JsonLangConfigReader;
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.interfaces.LangConfigReader;
+import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
@@ -18,9 +19,10 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
+import sgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
+import sgora.mesh.editor.services.triangulation.FlippingUtils;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
-import sgora.mesh.editor.services.triangulation.TriangulationService;
 import sgora.mesh.editor.services.files.ProjectFileUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.view.WindowController;
@@ -45,6 +47,7 @@ public class ObjectGraphFactory {
 	private TriangulationService triangulationService;
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
+	private FlippingUtils flippingUtils;
 
 	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
@@ -68,7 +71,8 @@ public class ObjectGraphFactory {
 
 		nodeUtils = new NodeUtils(appConfig, project.imageBox, project.mesh);
 		triangleUtils = new TriangleUtils(project.mesh, nodeUtils);
-		triangulationService = new TriangulationService(project.mesh, nodeUtils, triangleUtils);
+		flippingUtils = new FlippingUtils(project.mesh, triangleUtils);
+		triangulationService = new FlipBasedTriangulationService(project.mesh, nodeUtils, triangleUtils, flippingUtils);
 
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);

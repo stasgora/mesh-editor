@@ -2,8 +2,8 @@ package sgora.mesh.editor.services.files;
 
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.FileUtils;
+import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.Project;
-import sgora.mesh.editor.services.triangulation.TriangulationService;
 
 import java.io.File;
 import java.io.FileInputStream;

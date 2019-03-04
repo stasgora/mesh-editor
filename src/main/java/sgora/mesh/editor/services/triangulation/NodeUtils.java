@@ -41,7 +41,7 @@ public class NodeUtils {
 		return null;
 	}
 
-	void getNodeNeighbours(Point node, Triangle firstTriangle, List<Point> points, List<Triangle> triangles) {
+	void getNodeNeighbours(Point node, Triangle firstTriangle, List<Point> outPoints, List<Triangle> outTriangles) {
 		Triangle currentTriangle = firstTriangle;
 		do {
 			int nodeIndex = Arrays.asList(currentTriangle.nodes).indexOf(node);
@@ -49,9 +49,9 @@ public class NodeUtils {
 				LOGGER.warning("triangle " + currentTriangle + " does not contain given node " + node);
 			}
 			nodeIndex = (nodeIndex + 2) % 3;
-			points.add(currentTriangle.nodes[nodeIndex]);
+			outPoints.add(currentTriangle.nodes[nodeIndex]);
 			currentTriangle = currentTriangle.triangles[nodeIndex];
-			triangles.add(currentTriangle);
+			outTriangles.add(currentTriangle);
 		} while (currentTriangle != firstTriangle);
 	}
 
