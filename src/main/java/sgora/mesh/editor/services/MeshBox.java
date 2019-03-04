@@ -39,10 +39,11 @@ public class MeshBox implements MouseListener {
 
 	@Override
 	public void onDragStart(Point mousePos, MouseButton mouseButton) {
+		Point relativePos = nodeUtils.getNodeRelativePos(mousePos);
 		if(mouseButton == meshBoxModel.removeNodeButton) {
-			triangulationService.removeNode(nodeUtils.getNodeRelativePos(mousePos));
+			triangulationService.removeNode(relativePos);
 		} else if(mouseButton == meshBoxModel.moveNodeButton) {
-			draggedNode = triangulationService.findNodeByLocation(mousePos);
+			draggedNode = triangulationService.findNodeByLocation(relativePos);
 			if(draggedNode != null) {
 				mouseCursor.setValue(Cursor.CLOSED_HAND);
 			}
@@ -54,9 +55,8 @@ public class MeshBox implements MouseListener {
 		if(draggedNode == null || button != meshBoxModel.moveNodeButton) {
 			return;
 		}
-		triangulationService.moveNode(draggedNode);
 		Point newNodePos = clampPixelNodePos(mousePos.clamp(mainViewSize));
-		draggedNode.set(nodeUtils.getNodeRelativePos(newNodePos));
+		triangulationService.moveNode(draggedNode, nodeUtils.getNodeRelativePos(newNodePos));
 		project.mesh.get().notifyListeners();
 	}
 

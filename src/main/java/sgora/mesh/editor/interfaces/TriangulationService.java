@@ -12,6 +12,6 @@ public interface TriangulationService {
 
 	void removeNode(Point location);
 
-	void moveNode(Point location);
+	void moveNode(Point node, Point position);
 
 }

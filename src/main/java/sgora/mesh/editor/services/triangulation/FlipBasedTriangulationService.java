@@ -6,10 +6,7 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class FlipBasedTriangulationService implements TriangulationService {
 
@@ -35,6 +32,9 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	public void addNode(Point location) {
 		Mesh mesh = this.mesh.get();
 		Triangle triangle = triangleUtils.findTriangleByLocation(location);
+		if(nodeUtils.getClosestNode(location, triangle) != null) {
+			return;
+		}
 		mesh.removeTriangle(triangle);
 		Triangle[] newTriangles = new Triangle[3];
 		for (int i = 0; i < 3; i++) {
@@ -74,8 +74,17 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	}
 
 	@Override
-	public void moveNode(Point location) {
+	public void moveNode(Point node, Point position) {
+		Triangle triangle = triangleUtils.findTriangleByLocation(node);
+		List<Point> points = new ArrayList<>();
+		List<Triangle> triangles = new ArrayList<>();
+		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
 
+		node.set(position);
+		Stack<Triangle> trianglesToCheck = new Stack<>();
+		trianglesToCheck.addAll(triangles);
+		flippingUtils.flipInvalidTriangles(trianglesToCheck);
+		mesh.get().notifyListeners();
 	}
 
 	private void retriangulateNodeHole(Point node, List<Point> nodes, List<Triangle> triangles) {
