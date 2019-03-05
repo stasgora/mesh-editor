@@ -22,6 +22,9 @@ public class FlippingUtils {
 	void flipInvalidTriangles(Stack<Triangle> remaining) {
 		while (!remaining.empty()) {
 			Triangle current = remaining.pop();
+			if(!mesh.get().getTriangles().contains(current)) {
+				continue;
+			}
 			for (Triangle neighbour : current.triangles) {
 				if (neighbour == null) {
 					continue;
