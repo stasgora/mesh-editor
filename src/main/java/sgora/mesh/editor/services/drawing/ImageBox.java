@@ -1,4 +1,4 @@
-package sgora.mesh.editor.services;
+package sgora.mesh.editor.services.drawing;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;

@@ -7,11 +7,9 @@ import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class NodeUtils {
 
@@ -27,7 +25,7 @@ public class NodeUtils {
 		this.appConfig = appConfig;
 		this.imageBox = imageBox;
 		this.mesh = mesh;
-		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.relativeSpaceFactor");
+		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.proportionalSpaceFactor");
 	}
 
 	Point getClosestNode(Point location, Triangle triangle) {
@@ -55,19 +53,19 @@ public class NodeUtils {
 		} while (currentTriangle != firstTriangle);
 	}
 
-	public Point[] getPixelMeshNodes() {
-		return mesh.get().getNodes().stream().map(this::getNodePixelPos).toArray(Point[]::new);
+	public Point[] getCanvasSpaceNodes() {
+		return mesh.get().getNodes().stream().map(this::proportionalToCanvasPos).toArray(Point[]::new);
 	}
 
-	public Point getNodePixelPos(Point node) {
+	public Point proportionalToCanvasPos(Point node) {
 		return new Point(node).multiplyByScalar(imageBox.size.x / REL_SPACE_FACTOR).add(imageBox.position);
 	}
 
-	public Point getNodeRelativePos(Point node) {
+	public Point canvasToProportionalPos(Point node) {
 		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
 	}
 
-	public Rectangle getPixelNodeBoundingBox() {
+	public Rectangle getCanvasSpaceNodeBoundingBox() {
 		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
 		Rectangle area = new Rectangle();
 		Point boxSize = imageBox.size;
@@ -77,7 +75,7 @@ public class NodeUtils {
 	}
 
 	Point[] getBoundingNodes() {
-		Rectangle boundingBox = getRelativeNodeBoundingBox();
+		Rectangle boundingBox = getProportionalNodeBoundingBox();
 		double majorLength = Math.max(boundingBox.size.x, boundingBox.size.y) + 1;
 		return new Point[] {
 			new Point(boundingBox.size.x / 2, -majorLength),
@@ -86,11 +84,11 @@ public class NodeUtils {
 		};
 	}
 
-	private Rectangle getRelativeNodeBoundingBox() {
-		Rectangle pixelBox = getPixelNodeBoundingBox();
-		pixelBox.position = getNodeRelativePos(pixelBox.position);
-		pixelBox.size = getNodeRelativePos(pixelBox.size);
-		return pixelBox;
+	private Rectangle getProportionalNodeBoundingBox() {
+		Rectangle canvasSpaceBox = getCanvasSpaceNodeBoundingBox();
+		canvasSpaceBox.position = canvasToProportionalPos(canvasSpaceBox.position);
+		canvasSpaceBox.size = canvasToProportionalPos(canvasSpaceBox.size);
+		return canvasSpaceBox;
 	}
 
 }

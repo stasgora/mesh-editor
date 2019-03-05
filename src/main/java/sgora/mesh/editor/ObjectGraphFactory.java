@@ -19,6 +19,9 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
+import sgora.mesh.editor.services.drawing.ColorUtils;
+import sgora.mesh.editor.services.drawing.ImageBox;
+import sgora.mesh.editor.services.drawing.MeshBox;
 import sgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
 import sgora.mesh.editor.services.triangulation.FlippingUtils;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
@@ -48,6 +51,7 @@ public class ObjectGraphFactory {
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
 	private FlippingUtils flippingUtils;
+	private ColorUtils colorUtils;
 
 	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
@@ -73,6 +77,7 @@ public class ObjectGraphFactory {
 		triangleUtils = new TriangleUtils(project.mesh, nodeUtils);
 		flippingUtils = new FlippingUtils(project.mesh, triangleUtils);
 		triangulationService = new FlipBasedTriangulationService(project.mesh, nodeUtils, triangleUtils, flippingUtils);
+		colorUtils = new ColorUtils(nodeUtils);
 
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);

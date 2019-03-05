@@ -1,4 +1,4 @@
-package sgora.mesh.editor.ui;
+package sgora.mesh.editor.ui.canvas;
 
 import javafx.scene.paint.Color;
 import sgora.mesh.editor.model.geom.Mesh;

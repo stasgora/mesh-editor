@@ -8,12 +8,12 @@ import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
-import sgora.mesh.editor.services.ImageBox;
-import sgora.mesh.editor.services.MeshBox;
+import sgora.mesh.editor.services.drawing.ImageBox;
+import sgora.mesh.editor.services.drawing.MeshBox;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
-import sgora.mesh.editor.ui.ImageCanvas;
-import sgora.mesh.editor.ui.MeshCanvas;
+import sgora.mesh.editor.ui.canvas.ImageCanvas;
+import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
 public class MainView extends AnchorPane {
 	
@@ -87,7 +87,7 @@ public class MainView extends AnchorPane {
 	private void drawMesh() {
 		meshCanvas.clear();
 		if(project.loaded.get()) {
-			meshCanvas.draw(project.mesh.get(), nodeUtils.getPixelMeshNodes(), triangleUtils.getPixelTriangles(), nodeUtils.getPixelNodeBoundingBox());
+			meshCanvas.draw(project.mesh.get(), nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
 	}
 

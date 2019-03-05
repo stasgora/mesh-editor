@@ -1,4 +1,4 @@
-package sgora.mesh.editor.ui;
+package sgora.mesh.editor.ui.canvas;
 
 import javafx.scene.canvas.GraphicsContext;
 

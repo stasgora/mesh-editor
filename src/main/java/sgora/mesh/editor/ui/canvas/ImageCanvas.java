@@ -1,4 +1,4 @@
-package sgora.mesh.editor.ui;
+package sgora.mesh.editor.ui.canvas;
 
 import javafx.scene.image.Image;
 import sgora.mesh.editor.model.geom.Rectangle;

@@ -18,6 +18,8 @@ import sgora.mesh.editor.model.Project;
 import sgora.mesh.editor.services.UiDialogUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
+import sgora.mesh.editor.ui.canvas.ImageCanvas;
+import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
 import java.io.*;
 import java.util.List;

@@ -1,4 +1,4 @@
-package sgora.mesh.editor.services;
+package sgora.mesh.editor.services.drawing;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
@@ -32,18 +32,18 @@ public class MeshBox implements MouseListener {
 		this.nodeUtils = nodeUtils;
 	}
 
-	private Point clampPixelNodePos(Point node) {
-		Rectangle box = nodeUtils.getPixelNodeBoundingBox();
+	private Point clampCanvasSpaceNodePos(Point node) {
+		Rectangle box = nodeUtils.getCanvasSpaceNodeBoundingBox();
 		return node.clamp(box.position, new Point(box.position).add(box.size));
 	}
 
 	@Override
 	public void onDragStart(Point mousePos, MouseButton mouseButton) {
-		Point relativePos = nodeUtils.getNodeRelativePos(mousePos);
+		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
 		if(mouseButton == meshBoxModel.removeNodeButton) {
-			triangulationService.removeNode(relativePos);
+			triangulationService.removeNode(proportionalPos);
 		} else if(mouseButton == meshBoxModel.moveNodeButton) {
-			draggedNode = triangulationService.findNodeByLocation(relativePos);
+			draggedNode = triangulationService.findNodeByLocation(proportionalPos);
 			if(draggedNode != null) {
 				mouseCursor.setValue(Cursor.CLOSED_HAND);
 			}
@@ -55,15 +55,15 @@ public class MeshBox implements MouseListener {
 		if(draggedNode == null || button != meshBoxModel.moveNodeButton) {
 			return;
 		}
-		Point newNodePos = clampPixelNodePos(mousePos.clamp(mainViewSize));
-		triangulationService.moveNode(draggedNode, nodeUtils.getNodeRelativePos(newNodePos));
+		Point newNodePos = clampCanvasSpaceNodePos(mousePos.clamp(mainViewSize));
+		triangulationService.moveNode(draggedNode, nodeUtils.canvasToProportionalPos(newNodePos));
 		project.mesh.get().notifyListeners();
 	}
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
-		if(draggedNode == null && mouseButton == meshBoxModel.placeNodeButton && nodeUtils.getPixelNodeBoundingBox().contains(mousePos)) {
-			triangulationService.addNode(nodeUtils.getNodeRelativePos(mousePos));
+		if(draggedNode == null && mouseButton == meshBoxModel.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
+			triangulationService.addNode(nodeUtils.canvasToProportionalPos(mousePos));
 		}
 		draggedNode = null;
 		mouseCursor.setValue(mousePos.isBetween(new Point(), mainViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
