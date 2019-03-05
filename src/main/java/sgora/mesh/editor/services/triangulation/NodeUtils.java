@@ -1,11 +1,13 @@
 package sgora.mesh.editor.services.triangulation;
 
+import javafx.scene.image.Image;
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.observables.SettableProperty;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,11 +22,13 @@ public class NodeUtils {
 	private SettableObservable<Mesh> mesh;
 
 	private final double REL_SPACE_FACTOR;
+	private SettableProperty<Image> baseImage;
 
-	public NodeUtils(AppConfigReader appConfig, Rectangle imageBox, SettableObservable<Mesh> mesh) {
+	public NodeUtils(AppConfigReader appConfig, Rectangle imageBox, SettableObservable<Mesh> mesh, SettableProperty<Image> baseImage) {
 		this.appConfig = appConfig;
 		this.imageBox = imageBox;
 		this.mesh = mesh;
+		this.baseImage = baseImage;
 		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.proportionalSpaceFactor");
 	}
 
@@ -64,6 +68,8 @@ public class NodeUtils {
 	public Point canvasToProportionalPos(Point node) {
 		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
 	}
+
+	public Point canvasToPixelPos(Point node) { return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / baseImage.get().getWidth()); }
 
 	public Rectangle getCanvasSpaceNodeBoundingBox() {
 		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");

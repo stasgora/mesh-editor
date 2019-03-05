@@ -73,7 +73,7 @@ public class ObjectGraphFactory {
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
-		nodeUtils = new NodeUtils(appConfig, project.imageBox, project.mesh);
+		nodeUtils = new NodeUtils(appConfig, project.imageBox, project.mesh, project.baseImage);
 		triangleUtils = new TriangleUtils(project.mesh, nodeUtils);
 		flippingUtils = new FlippingUtils(project.mesh, triangleUtils);
 		triangulationService = new FlipBasedTriangulationService(project.mesh, nodeUtils, triangleUtils, flippingUtils);
@@ -115,6 +115,7 @@ public class ObjectGraphFactory {
 		controller.toolBar.init(activeTool, appLang);
 		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils);
 		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
+		controller.meshCanvas.init(colorUtils, project.baseImage);
 	}
 
 }
