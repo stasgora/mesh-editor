@@ -2,8 +2,8 @@ package sgora.mesh.editor.services.files;
 
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.FileUtils;
+import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.Project;
-import sgora.mesh.editor.model.geom.Mesh;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,10 +17,12 @@ public class WorkspaceActionHandler {
 
 	private FileUtils fileUtils;
 	private Project project;
+	private TriangulationService triangulationService;
 
-	public WorkspaceActionHandler(FileUtils fileUtils, Project project) {
+	public WorkspaceActionHandler(FileUtils fileUtils, Project project, TriangulationService triangulationService) {
 		this.fileUtils = fileUtils;
 		this.project = project;
+		this.triangulationService = triangulationService;
 	}
 
 	public void openProject(File location) {
@@ -49,7 +51,7 @@ public class WorkspaceActionHandler {
 	public void createNewProject(File location) {
 		try(FileInputStream fileStream = new FileInputStream(location)) {
 			fileUtils.loadImage(fileStream);
-			project.mesh.set(new Mesh());
+			triangulationService.createNewMesh();
 			project.loaded.set(true);
 			project.file.set(null);
 			project.stateSaved.set(false);

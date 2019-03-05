@@ -11,6 +11,8 @@ public class Point extends ControlledObservable implements Serializable {
 
 	public double x, y;
 
+	private static final double ROUNDING_MULT = 100;
+
 	public Point(double x, double y) {
 		this.x = x;
 		this.y = y;
@@ -62,6 +64,11 @@ public class Point extends ControlledObservable implements Serializable {
 		return this;
 	}
 
+	public Point divideByScalar(double amount) {
+		setValues(x / amount, y / amount);
+		return this;
+	}
+
 	public Point subtract(Point point) {
 		setValues(x - point.x, y - point.y);
 		return this;
@@ -86,7 +93,7 @@ public class Point extends ControlledObservable implements Serializable {
 
 	@Override
 	public String toString() {
-		return "(" + x + ", " + y + ')';
+		return "(" + Math.round(x * ROUNDING_MULT) / ROUNDING_MULT + ", " + Math.round(y * ROUNDING_MULT) / ROUNDING_MULT + ')';
 	}
 
 	@Override

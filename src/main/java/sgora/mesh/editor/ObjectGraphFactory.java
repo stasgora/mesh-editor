@@ -11,6 +11,7 @@ import sgora.mesh.editor.config.JsonLangConfigReader;
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.interfaces.LangConfigReader;
+import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
@@ -18,6 +19,10 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
+import sgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
+import sgora.mesh.editor.services.triangulation.FlippingUtils;
+import sgora.mesh.editor.services.triangulation.NodeUtils;
+import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.services.files.ProjectFileUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.view.WindowController;
@@ -39,6 +44,11 @@ public class ObjectGraphFactory {
 	private WorkspaceActionHandler workspaceActionHandler;
 	private FileUtils fileUtils;
 
+	private TriangulationService triangulationService;
+	private NodeUtils nodeUtils;
+	private TriangleUtils triangleUtils;
+	private FlippingUtils flippingUtils;
+
 	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
 	private Point mainViewSize;
@@ -59,10 +69,28 @@ public class ObjectGraphFactory {
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
+		nodeUtils = new NodeUtils(appConfig, project.imageBox, project.mesh);
+		triangleUtils = new TriangleUtils(project.mesh, nodeUtils);
+		flippingUtils = new FlippingUtils(project.mesh, triangleUtils);
+		triangulationService = new FlipBasedTriangulationService(project.mesh, nodeUtils, triangleUtils, flippingUtils);
+
 		fileUtils = new ProjectFileUtils(project, appConfig);
-		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project);
+		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);
 		dialogUtils = new UiDialogUtils(stage);
 
+		constructScene();
+
+		activeTool = new SettableProperty<>(MouseTool.IMAGE_MOVER);
+		mouseCursor = stage.getScene().cursorProperty();
+		mainViewSize = new Point();
+		//temp
+		imageBoxModel = new ImageBoxModel();
+		meshBoxModel = new MeshBoxModel();
+		return this;
+	}
+
+	private void constructScene() {
+		//FIXME move logic from factory
 		Scene scene;
 		String windowPath = "last.windowPlacement";
 		if(appSettings.containsPath(windowPath)) {
@@ -73,24 +101,14 @@ public class ObjectGraphFactory {
 			scene = new Scene(root, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
 		}
 		stage.setScene(scene);
-
-		activeTool = new SettableProperty<>(MouseTool.IMAGE_MOVER);
-		mouseCursor = stage.getScene().cursorProperty();
-		mainViewSize = new Point();
-
-		//temp
-		imageBoxModel = new ImageBoxModel();
-		meshBoxModel = new MeshBoxModel();
-
-		return this;
 	}
 
 	public void createObjectGraph() {
 		ImageBox imageBox = new ImageBox(mainViewSize, project, appConfig, appSettings, mouseCursor, imageBoxModel);
-		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor);
+		MeshBox meshBox = new MeshBox(project, meshBoxModel, mainViewSize, mouseCursor, triangulationService, nodeUtils);
 
 		controller.toolBar.init(activeTool, appLang);
-		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox);
+		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils);
 		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
 	}
 

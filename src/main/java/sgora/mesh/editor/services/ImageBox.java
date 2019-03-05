@@ -14,6 +14,7 @@ import sgora.mesh.editor.model.observables.SettableProperty;
 public class ImageBox implements MouseListener {
 
 	private Point lastCanvasSize;
+	private double zoom = 1;
 
 	private final Point mainViewSize;
 	private final Project project;
@@ -37,12 +38,11 @@ public class ImageBox implements MouseListener {
 		}
 		if(lastCanvasSize == null) {
 			lastCanvasSize = new Point(mainViewSize);
+			return;
 		}
-		Point sizeRatio = new Point(mainViewSize).divide(lastCanvasSize);
+		Point sizeDiff = new Point(mainViewSize).subtract(lastCanvasSize);
+		project.imageBox.position.add(sizeDiff.divideByScalar(2));
 		lastCanvasSize.set(mainViewSize);
-		project.imageBox.position.multiply(sizeRatio);
-		project.imageBox.size.multiplyByScalar((sizeRatio.y + sizeRatio.x) / 2);
-		project.imageBox.notifyListeners();
 	}
 
 	public void calcImageBox() {
@@ -72,15 +72,16 @@ public class ImageBox implements MouseListener {
 	public void onZoom(double amount, Point mousePos) {
 		double minZoom = appConfig.getDouble("imageBox.zoom.min");
 		double maxZoom = appConfig.getDouble("imageBox.zoom.max");
-		double zoomAmount = amount * appSettings.getInt("settings.imageBox.zoom.dir") * appSettings.getDouble("settings.imageBox.zoom.speed");
 
-		Point newImgSize = new Point(project.imageBox.size).multiplyByScalar(1 - zoomAmount);
-		newImgSize.clamp(new Point(mainViewSize).multiplyByScalar(minZoom), new Point(mainViewSize).multiplyByScalar(maxZoom));
-		double correctedZoomAmount = 1 - new Point(newImgSize).divide(project.imageBox.size).x;
+		Point baseImageSize = new Point(project.baseImage.get().getWidth(), project.baseImage.get().getHeight());
+		double zoomFactor = 1 - amount * appSettings.getInt("settings.imageBox.zoom.dir") * appSettings.getDouble("settings.imageBox.zoom.speed");
+		zoom = Math.max(minZoom, Math.min(maxZoom, zoom * zoomFactor));
 
-		Point zoomPos = new Point(mousePos).subtract(project.imageBox.position).multiplyByScalar(correctedZoomAmount);
+		double moveFactor = 1 - baseImageSize.x * zoom / project.imageBox.size.x;
+		Point zoomPos = new Point(mousePos).subtract(project.imageBox.position).multiplyByScalar(moveFactor);
+
 		project.imageBox.position.add(zoomPos);
-		project.imageBox.size.set(newImgSize);
+		project.imageBox.size.set(new Point(baseImageSize).multiplyByScalar(zoom));
 		project.imageBox.notifyListeners();
 	}
 
@@ -92,7 +93,7 @@ public class ImageBox implements MouseListener {
 	}
 
 	@Override
-	public void onMouseDrag(Point dragAmount, MouseButton button) {
+	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
 		if(button != imageBoxModel.dragButton) {
 			return;
 		}

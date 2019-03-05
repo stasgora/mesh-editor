@@ -10,6 +10,8 @@ import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.ImageBox;
 import sgora.mesh.editor.services.MeshBox;
+import sgora.mesh.editor.services.triangulation.NodeUtils;
+import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.ui.ImageCanvas;
 import sgora.mesh.editor.ui.MeshCanvas;
 
@@ -24,10 +26,13 @@ public class MainView extends AnchorPane {
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
+	private NodeUtils nodeUtils;
+	private TriangleUtils triangleUtils;
 
 	private Point lastMouseDragPoint;
 
-	public void init(Project project, ImageCanvas imageCanvas, MeshCanvas meshCanvas, SettableProperty<MouseTool> activeTool, Point mainViewSize, ImageBox imageBox, MeshBox meshBox) {
+	public void init(Project project, ImageCanvas imageCanvas, MeshCanvas meshCanvas, SettableProperty<MouseTool> activeTool,
+	                 Point mainViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils, TriangleUtils triangleUtils) {
 		this.project = project;
 		this.imageCanvas = imageCanvas;
 		this.meshCanvas = meshCanvas;
@@ -35,6 +40,8 @@ public class MainView extends AnchorPane {
 		this.mainViewSize = mainViewSize;
 		this.imageBox = imageBox;
 		this.meshBox = meshBox;
+		this.nodeUtils = nodeUtils;
+		this.triangleUtils = triangleUtils;
 
 		setListeners();
 		setMouseHandlers();
@@ -80,7 +87,7 @@ public class MainView extends AnchorPane {
 	private void drawMesh() {
 		meshCanvas.clear();
 		if(project.loaded.get()) {
-			meshCanvas.draw(project.mesh.get(), meshBox.getPixelMeshNodes());
+			meshCanvas.draw(project.mesh.get(), nodeUtils.getPixelMeshNodes(), triangleUtils.getPixelTriangles(), nodeUtils.getPixelNodeBoundingBox());
 		}
 	}
 
@@ -113,9 +120,9 @@ public class MainView extends AnchorPane {
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
 		if(project.loaded.get()) {
 			if (activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onMouseDrag(new Point(dragAmount), event.getButton());
+				imageBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
 			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onMouseDrag(new Point(dragAmount), event.getButton());
+				meshBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
 			}
 		}
 		lastMouseDragPoint.set(mousePos);
