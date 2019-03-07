@@ -8,7 +8,7 @@ import java.util.Set;
  */
 public class SettableObservable<T extends SimpleObservable> extends SettableProperty<T> {
 
-	protected Set<ChangeListener> staticListeners = new HashSet<>();
+	protected transient Set<ChangeListener> staticListeners = new HashSet<>();
 
 	public SettableObservable() {
 	}

@@ -5,8 +5,8 @@ package sgora.mesh.editor.model.observables;
  */
 public abstract class ControlledObservable extends SimpleObservable {
 
-	public boolean notifyManually = true;
-	private boolean wasValueChanged = false;
+	public transient boolean notifyManually = true;
+	private transient boolean wasValueChanged = false;
 
 	public void notifyListeners() {
 		if(wasValueChanged) {

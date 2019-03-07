@@ -8,7 +8,7 @@ import java.util.Set;
  */
 public abstract class SimpleObservable {
 
-	protected Set<ChangeListener> listeners = new HashSet<>();
+	protected transient Set<ChangeListener> listeners = new HashSet<>();
 
 	public void addListener(ChangeListener callback) {
 		listeners.add(callback);
