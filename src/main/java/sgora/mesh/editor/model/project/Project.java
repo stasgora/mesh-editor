@@ -9,7 +9,9 @@ import sgora.mesh.editor.model.observables.SettableProperty;
 
 import java.io.*;
 
-public class Project extends ComplexObservable {
+public class Project extends ComplexObservable implements Serializable {
+
+	private static final long serialVersionUID = 7L;
 
 	public SettableProperty<Boolean> stateSaved = new SettableProperty<>(true);
 	public SettableProperty<File> file = new SettableProperty<>();

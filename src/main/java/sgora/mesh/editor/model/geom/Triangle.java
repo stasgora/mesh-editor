@@ -11,6 +11,8 @@ public class Triangle implements Serializable {
 	public Point[] nodes;
 	public Triangle[] triangles;
 
+	private static final long serialVersionUID = 3L;
+
 	public Triangle(Point[] nodes) {
 		this.nodes = nodes;
 		triangles = new Triangle[3];

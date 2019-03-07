@@ -10,6 +10,8 @@ public class SettableProperty<T> extends SimpleObservable implements Serializabl
 
 	protected T modelValue;
 
+	private static final long serialVersionUID = 5L;
+
 	public SettableProperty() {
 	}
 

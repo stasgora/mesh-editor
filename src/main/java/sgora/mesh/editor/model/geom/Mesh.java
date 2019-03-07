@@ -1,8 +1,6 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.paint.SerializableColor;
 import sgora.mesh.editor.model.observables.ComplexObservable;
-import sgora.mesh.editor.model.observables.SettableProperty;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,6 +15,7 @@ import java.util.logging.Logger;
 public class Mesh extends ComplexObservable implements Serializable {
 
 	private static final Logger LOGGER = Logger.getLogger(Mesh.class.getName());
+	private static final long serialVersionUID = 0L;
 
 	private List<Point> nodes = new ArrayList<>();
 	private List<Triangle> triangles = new ArrayList<>();
@@ -74,16 +73,11 @@ public class Mesh extends ComplexObservable implements Serializable {
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.writeObject(nodes);
-		out.writeObject(triangles);
-		out.writeObject(boundingNodes);
+		out.defaultWriteObject();
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		nodes = (List<Point>) in.readObject();
-		triangles = (List<Triangle>) in.readObject();
-		boundingNodes = (List<Point>) in.readObject();
-
+		in.defaultReadObject();
 		nodes.forEach(this::addSubObservable);
 	}
 

@@ -12,6 +12,7 @@ public class Point extends ControlledObservable implements Serializable {
 	public double x, y;
 
 	private static final double ROUNDING_MULT = 100;
+	private static final long serialVersionUID = 1L;
 
 	public Point(double x, double y) {
 		this.x = x;
