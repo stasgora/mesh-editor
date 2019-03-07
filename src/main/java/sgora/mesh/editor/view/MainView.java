@@ -4,7 +4,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
-import sgora.mesh.editor.model.Project;
+import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
@@ -87,7 +87,7 @@ public class MainView extends AnchorPane {
 	private void drawMesh() {
 		meshCanvas.clear();
 		if(project.loaded.get()) {
-			meshCanvas.draw(project.mesh.get(), nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
+			meshCanvas.draw(nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
 	}
 

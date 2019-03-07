@@ -14,7 +14,7 @@ import javafx.stage.WindowEvent;
 import sgora.mesh.editor.enums.FileChooserAction;
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.LangConfigReader;
-import sgora.mesh.editor.model.Project;
+import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.services.UiDialogUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;

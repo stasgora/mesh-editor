@@ -12,9 +12,11 @@ import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.interfaces.LangConfigReader;
 import sgora.mesh.editor.interfaces.TriangulationService;
-import sgora.mesh.editor.model.containers.ImageBoxModel;
-import sgora.mesh.editor.model.containers.MeshBoxModel;
-import sgora.mesh.editor.model.Project;
+import sgora.mesh.editor.model.ImageBoxModel;
+import sgora.mesh.editor.model.MeshBoxModel;
+import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
@@ -38,6 +40,7 @@ public class ObjectGraphFactory {
 	private FXMLLoader loader;
 
 	private Project project = new Project();
+	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
 
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
@@ -79,8 +82,8 @@ public class ObjectGraphFactory {
 		triangulationService = new FlipBasedTriangulationService(project.mesh, nodeUtils, triangleUtils, flippingUtils);
 		colorUtils = new ColorUtils(nodeUtils);
 
-		fileUtils = new ProjectFileUtils(project, appConfig);
-		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);
+		fileUtils = new ProjectFileUtils(project, appConfig, visualProperties);
+		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService, visualProperties);
 		dialogUtils = new UiDialogUtils(stage);
 
 		constructScene();
@@ -115,7 +118,7 @@ public class ObjectGraphFactory {
 		controller.toolBar.init(activeTool, appLang);
 		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils);
 		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
-		controller.meshCanvas.init(colorUtils, project.baseImage);
+		controller.meshCanvas.init(colorUtils, project.baseImage, visualProperties);
 	}
 
 }

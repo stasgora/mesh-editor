@@ -4,7 +4,9 @@ import javafx.scene.image.Image;
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
-import sgora.mesh.editor.model.Project;
+import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Mesh;
 
 import java.io.*;
@@ -13,10 +15,12 @@ public class ProjectFileUtils implements FileUtils {
 	
 	private Project project;
 	private AppConfigReader appConfig;
+	private SettableObservable<VisualProperties> visualProperties;
 
-	public ProjectFileUtils(Project project, AppConfigReader appConfig) {
+	public ProjectFileUtils(Project project, AppConfigReader appConfig, SettableObservable<VisualProperties> visualProperties) {
 		this.project = project;
 		this.appConfig = appConfig;
+		this.visualProperties = visualProperties;
 	}
 
 	@Override
@@ -26,6 +30,7 @@ public class ProjectFileUtils implements FileUtils {
 			try(FileOutputStream fileStream = new FileOutputStream(location, false);
 			    ObjectOutputStream objectStream = new ObjectOutputStream(fileStream)) {
 				objectStream.writeObject(project.mesh.get());
+				objectStream.writeObject(visualProperties.get());
 				fileStream.write(project.rawImageFile);
 			}
 		} catch (IOException e) {
@@ -38,6 +43,7 @@ public class ProjectFileUtils implements FileUtils {
 		try(FileInputStream fileStream = new FileInputStream(location);
 		    ObjectInputStream objectStream = new ObjectInputStream(fileStream)) {
 			project.mesh.set((Mesh) objectStream.readObject());
+			visualProperties.set((VisualProperties) objectStream.readObject());
 			loadImage(fileStream);
 		} catch (IOException | ClassNotFoundException e) {
 			throw new ProjectIOException(e);

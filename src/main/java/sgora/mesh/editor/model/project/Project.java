@@ -1,4 +1,4 @@
-package sgora.mesh.editor.model;
+package sgora.mesh.editor.model.project;
 
 import javafx.scene.image.Image;
 import sgora.mesh.editor.model.geom.Mesh;
