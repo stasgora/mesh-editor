@@ -1,7 +1,7 @@
 package sgora.mesh.editor.services.triangulation;
 
 import javafx.scene.image.Image;
-import sgora.mesh.editor.interfaces.AppConfigReader;
+import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;

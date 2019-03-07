@@ -5,7 +5,7 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.interfaces.TriangulationService;
-import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.model.project.ProjectState;
 import sgora.mesh.editor.model.MeshBoxModel;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
@@ -15,16 +15,16 @@ public class MeshBox implements MouseListener {
 
 	private Point draggedNode;
 	
-	private final Project project;
+	private final ProjectState projectState;
 	private final MeshBoxModel meshBoxModel;
 	private final Point mainViewSize;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private TriangulationService triangulationService;
 	private NodeUtils nodeUtils;
 
-	public MeshBox(Project project, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor,
+	public MeshBox(ProjectState projectState, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor,
 	               TriangulationService triangulationService, NodeUtils nodeUtils) {
-		this.project = project;
+		this.projectState = projectState;
 		this.meshBoxModel = meshBoxModel;
 		this.mainViewSize = mainViewSize;
 		this.mouseCursor = mouseCursor;
@@ -57,7 +57,7 @@ public class MeshBox implements MouseListener {
 		}
 		Point newNodePos = clampCanvasSpaceNodePos(mousePos.clamp(mainViewSize));
 		triangulationService.moveNode(draggedNode, nodeUtils.canvasToProportionalPos(newNodePos));
-		project.mesh.get().notifyListeners();
+		projectState.mesh.get().notifyListeners();
 	}
 
 	@Override

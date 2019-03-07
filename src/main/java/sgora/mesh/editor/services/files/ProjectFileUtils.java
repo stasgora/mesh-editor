@@ -2,10 +2,10 @@ package sgora.mesh.editor.services.files;
 
 import javafx.scene.image.Image;
 import sgora.mesh.editor.exceptions.ProjectIOException;
-import sgora.mesh.editor.interfaces.AppConfigReader;
+import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.model.project.ProjectState;
 import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Mesh;
 
@@ -13,12 +13,12 @@ import java.io.*;
 
 public class ProjectFileUtils implements FileUtils {
 	
-	private Project project;
+	private ProjectState projectState;
 	private AppConfigReader appConfig;
 	private SettableObservable<VisualProperties> visualProperties;
 
-	public ProjectFileUtils(Project project, AppConfigReader appConfig, SettableObservable<VisualProperties> visualProperties) {
-		this.project = project;
+	public ProjectFileUtils(ProjectState projectState, AppConfigReader appConfig, SettableObservable<VisualProperties> visualProperties) {
+		this.projectState = projectState;
 		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;
 	}
@@ -29,9 +29,9 @@ public class ProjectFileUtils implements FileUtils {
 			location.createNewFile();
 			try(FileOutputStream fileStream = new FileOutputStream(location, false);
 			    ObjectOutputStream objectStream = new ObjectOutputStream(fileStream)) {
-				objectStream.writeObject(project.mesh.get());
+				objectStream.writeObject(projectState.mesh.get());
 				objectStream.writeObject(visualProperties.get());
-				fileStream.write(project.rawImageFile);
+				fileStream.write(projectState.rawImageFile);
 			}
 		} catch (IOException e) {
 			throw new ProjectIOException(e);
@@ -42,7 +42,7 @@ public class ProjectFileUtils implements FileUtils {
 	public void load(File location) throws ProjectIOException {
 		try(FileInputStream fileStream = new FileInputStream(location);
 		    ObjectInputStream objectStream = new ObjectInputStream(fileStream)) {
-			project.mesh.set((Mesh) objectStream.readObject());
+			projectState.mesh.set((Mesh) objectStream.readObject());
 			visualProperties.set((VisualProperties) objectStream.readObject());
 			loadImage(fileStream);
 		} catch (IOException | ClassNotFoundException e) {
@@ -52,9 +52,9 @@ public class ProjectFileUtils implements FileUtils {
 
 	@Override
 	public void loadImage(FileInputStream fileStream) throws ProjectIOException {
-		project.rawImageFile = readFileIntoMemory(fileStream);
-		try(ByteArrayInputStream imageStream = new ByteArrayInputStream(project.rawImageFile)) {
-			project.baseImage.set(new Image(imageStream));
+		projectState.rawImageFile = readFileIntoMemory(fileStream);
+		try(ByteArrayInputStream imageStream = new ByteArrayInputStream(projectState.rawImageFile)) {
+			projectState.baseImage.set(new Image(imageStream));
 		} catch (IOException e) {
 			throw new ProjectIOException(e);
 		}

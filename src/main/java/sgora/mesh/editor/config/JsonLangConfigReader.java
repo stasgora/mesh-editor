@@ -3,8 +3,8 @@ package sgora.mesh.editor.config;
 import javafx.collections.ObservableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import sgora.mesh.editor.interfaces.AppConfigReader;
-import sgora.mesh.editor.interfaces.LangConfigReader;
+import sgora.mesh.editor.interfaces.config.AppConfigReader;
+import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.model.JsonConfig;
 
 import java.nio.file.Paths;

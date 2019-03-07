@@ -3,13 +3,11 @@ package sgora.mesh.editor.ui;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
-import javafx.scene.control.Tooltip;
-import sgora.mesh.editor.interfaces.LangConfigReader;
+import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.enums.MouseTool;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class MainToolbar extends ToolBar {
 

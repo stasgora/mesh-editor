@@ -4,7 +4,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
-import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.model.project.ProjectState;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
@@ -17,7 +17,7 @@ import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
 public class MainView extends AnchorPane {
 	
-	private Project project;
+	private ProjectState projectState;
 
 	private ImageCanvas imageCanvas;
 	private MeshCanvas meshCanvas;
@@ -31,9 +31,9 @@ public class MainView extends AnchorPane {
 
 	private Point lastMouseDragPoint;
 
-	public void init(Project project, ImageCanvas imageCanvas, MeshCanvas meshCanvas, SettableProperty<MouseTool> activeTool,
+	public void init(ProjectState projectState, ImageCanvas imageCanvas, MeshCanvas meshCanvas, SettableProperty<MouseTool> activeTool,
 	                 Point mainViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils, TriangleUtils triangleUtils) {
-		this.project = project;
+		this.projectState = projectState;
 		this.imageCanvas = imageCanvas;
 		this.meshCanvas = meshCanvas;
 		this.activeTool = activeTool;
@@ -58,14 +58,14 @@ public class MainView extends AnchorPane {
 			meshCanvas.setHeight(mainViewSize.y);
 		});
 		mainViewSize.addListener(() -> imageBox.onResizeCanvas());
-		project.baseImage.addListener(() -> imageBox.calcImageBox());
-		project.mesh.addStaticListener(() -> project.stateSaved.set(false));
+		projectState.baseImage.addListener(() -> imageBox.calcImageBox());
+		projectState.mesh.addStaticListener(() -> projectState.stateSaved.set(false));
 
 		mainViewSize.addListener(this::drawBothLayers);
-		project.imageBox.addListener(this::drawBothLayers);
-		project.addListener(this::drawBothLayers);
+		projectState.imageBox.addListener(this::drawBothLayers);
+		projectState.addListener(this::drawBothLayers);
 
-		project.mesh.addStaticListener(this::drawMesh);
+		projectState.mesh.addStaticListener(this::drawMesh);
 	}
 
 	private void setMouseHandlers() {
@@ -86,15 +86,15 @@ public class MainView extends AnchorPane {
 
 	private void drawMesh() {
 		meshCanvas.clear();
-		if(project.loaded.get()) {
+		if(projectState.loaded.get()) {
 			meshCanvas.draw(nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
 	}
 
 	private void drawImage() {
 		imageCanvas.clear();
-		if(project.loaded.get()) {
-			imageCanvas.draw(project.imageBox, project.baseImage.get());
+		if(projectState.loaded.get()) {
+			imageCanvas.draw(projectState.imageBox, projectState.baseImage.get());
 		}
 	}
 
@@ -105,7 +105,7 @@ public class MainView extends AnchorPane {
 
 	private void onMousePress(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
-		if(project.loaded.get()) {
+		if(projectState.loaded.get()) {
 			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onDragStart(mousePos, event.getButton());
 			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
@@ -118,7 +118,7 @@ public class MainView extends AnchorPane {
 	private void onMouseDrag(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
-		if(project.loaded.get()) {
+		if(projectState.loaded.get()) {
 			if (activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
 			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
@@ -131,7 +131,7 @@ public class MainView extends AnchorPane {
 	private void onMouseRelease(MouseEvent event) {
 		lastMouseDragPoint = null;
 		Point mousePos = new Point(event.getX(), event.getY());
-		if(project.loaded.get()) {
+		if(projectState.loaded.get()) {
 			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onDragEnd(new Point(mousePos), event.getButton());
 			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
@@ -141,13 +141,13 @@ public class MainView extends AnchorPane {
 	}
 
 	private void onScroll(ScrollEvent event) {
-		if(project.loaded.get()) {
+		if(projectState.loaded.get()) {
 			imageBox.onZoom(event.getDeltaY(), new Point(event.getX(), event.getY()));
 		}
 	}
 
 	private void onMouseEnter(MouseEvent event) {
-		if(project.loaded.get()) {
+		if(projectState.loaded.get()) {
 			boolean isDragging = lastMouseDragPoint != null;
 			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onMouseEnter(isDragging);
@@ -158,7 +158,7 @@ public class MainView extends AnchorPane {
 	}
 
 	private void onMouseExit(MouseEvent event) {
-		if(project.loaded.get()) {
+		if(projectState.loaded.get()) {
 			boolean isDragging = lastMouseDragPoint != null;
 			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onMouseExit(isDragging);

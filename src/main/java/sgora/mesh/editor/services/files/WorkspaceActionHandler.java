@@ -4,7 +4,7 @@ import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.model.project.ProjectState;
 import sgora.mesh.editor.model.project.VisualProperties;
 
 import java.io.File;
@@ -18,13 +18,13 @@ public class WorkspaceActionHandler {
 	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionHandler.class.getName());
 
 	private FileUtils fileUtils;
-	private Project project;
+	private ProjectState projectState;
 	private TriangulationService triangulationService;
 	private SettableObservable<VisualProperties> visualProperties;
 
-	public WorkspaceActionHandler(FileUtils fileUtils, Project project, TriangulationService triangulationService, SettableObservable<VisualProperties> visualProperties) {
+	public WorkspaceActionHandler(FileUtils fileUtils, ProjectState projectState, TriangulationService triangulationService, SettableObservable<VisualProperties> visualProperties) {
 		this.fileUtils = fileUtils;
-		this.project = project;
+		this.projectState = projectState;
 		this.triangulationService = triangulationService;
 		this.visualProperties = visualProperties;
 	}
@@ -32,10 +32,10 @@ public class WorkspaceActionHandler {
 	public void openProject(File location) {
 		try {
 			fileUtils.load(location);
-			project.loaded.set(true);
-			project.file.set(location);
-			project.stateSaved.set(true);
-			project.notifyListeners();
+			projectState.loaded.set(true);
+			projectState.file.set(location);
+			projectState.stateSaved.set(true);
+			projectState.notifyListeners();
 		} catch (ProjectIOException e) {
 			LOGGER.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
 		}
@@ -45,8 +45,8 @@ public class WorkspaceActionHandler {
 		try {
 			location = fileUtils.getProjectFileWithExtension(location);
 			fileUtils.save(location);
-			project.file.set(location);
-			project.stateSaved.set(true);
+			projectState.file.set(location);
+			projectState.stateSaved.set(true);
 		} catch (ProjectIOException e) {
 			LOGGER.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
 		}
@@ -58,23 +58,23 @@ public class WorkspaceActionHandler {
 			//TODO move this
 			triangulationService.createNewMesh();
 			visualProperties.set(new VisualProperties());
-			project.loaded.set(true);
-			project.file.set(null);
-			project.stateSaved.set(false);
-			project.notifyListeners();
+			projectState.loaded.set(true);
+			projectState.file.set(null);
+			projectState.stateSaved.set(false);
+			projectState.notifyListeners();
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
 	public void closeProject() {
-		project.mesh.set(null);
-		project.baseImage.set(null);
-		project.rawImageFile = null;
+		projectState.mesh.set(null);
+		projectState.baseImage.set(null);
+		projectState.rawImageFile = null;
 
-		project.loaded.set(false);
-		project.file.set(null);
-		project.notifyListeners();
+		projectState.loaded.set(false);
+		projectState.file.set(null);
+		projectState.notifyListeners();
 	}
 
 }

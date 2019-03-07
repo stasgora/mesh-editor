@@ -9,7 +9,7 @@ import sgora.mesh.editor.model.observables.SettableProperty;
 
 import java.io.*;
 
-public class Project extends ComplexObservable implements Serializable {
+public class ProjectState extends ComplexObservable implements Serializable {
 
 	private static final long serialVersionUID = 7L;
 
@@ -23,7 +23,7 @@ public class Project extends ComplexObservable implements Serializable {
 	public final Rectangle imageBox = new Rectangle();
 	public byte[] rawImageFile;
 
-	public Project() {
+	public ProjectState() {
 		// only notify on set
 		addSubObservable(mesh);
 		addSubObservable(baseImage);

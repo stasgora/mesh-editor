@@ -2,7 +2,7 @@ package sgora.mesh.editor.config;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import sgora.mesh.editor.interfaces.AppConfigReader;
+import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.model.JsonConfig;
 
 import java.io.File;

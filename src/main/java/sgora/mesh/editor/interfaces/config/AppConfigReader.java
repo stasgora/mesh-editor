@@ -1,4 +1,4 @@
-package sgora.mesh.editor.interfaces;
+package sgora.mesh.editor.interfaces.config;
 
 import java.util.List;
 

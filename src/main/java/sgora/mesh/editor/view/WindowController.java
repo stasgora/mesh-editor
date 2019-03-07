@@ -12,9 +12,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import sgora.mesh.editor.enums.FileChooserAction;
-import sgora.mesh.editor.interfaces.AppConfigReader;
-import sgora.mesh.editor.interfaces.LangConfigReader;
-import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.interfaces.config.AppConfigReader;
+import sgora.mesh.editor.interfaces.config.LangConfigReader;
+import sgora.mesh.editor.model.project.ProjectState;
 import sgora.mesh.editor.services.UiDialogUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
@@ -28,7 +28,7 @@ import java.util.Optional;
 public class WindowController {
 
 	private AppConfigReader appConfig;
-	private Project project;
+	private ProjectState projectState;
 	private Stage window;
 
 	public SplitPane mainSplitPane;
@@ -46,9 +46,9 @@ public class WindowController {
 	private ObservableMap<String, Object> fxmlNamespace;
 	private LangConfigReader appLang;
 
-	public void init(Project project, Stage window, AppConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler,
+	public void init(ProjectState projectState, Stage window, AppConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler,
 	                 UiDialogUtils dialogUtils, ObservableMap<String, Object> fxmlNamespace, LangConfigReader appLang) {
-		this.project = project;
+		this.projectState = projectState;
 		this.window = window;
 		this.appConfig = appConfig;
 		this.workspaceActionHandler = workspaceActionHandler;
@@ -63,11 +63,11 @@ public class WindowController {
 	}
 
 	private void setListeners() {
-		project.loaded.addListener(() -> fxmlNamespace.put("menu_file_item_disabled", !((boolean) fxmlNamespace.get("menu_file_item_disabled"))));
+		projectState.loaded.addListener(() -> fxmlNamespace.put("menu_file_item_disabled", !((boolean) fxmlNamespace.get("menu_file_item_disabled"))));
 
-		project.file.addListener(this::setWindowTitle);
-		project.stateSaved.addListener(this::setWindowTitle);
-		project.addListener(this::setWindowTitle);
+		projectState.file.addListener(this::setWindowTitle);
+		projectState.stateSaved.addListener(this::setWindowTitle);
+		projectState.addListener(this::setWindowTitle);
 
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 	}
@@ -78,9 +78,9 @@ public class WindowController {
 
 	private void setWindowTitle() {
 		String title = appConfig.getString("appName");
-		if(project.loaded.get()) {
+		if(projectState.loaded.get()) {
 			String projectName = getProjectName();
-			if(!project.stateSaved.get()) {
+			if(!projectState.stateSaved.get()) {
 				projectName += "*";
 			}
 			title = projectName + " - " + title;
@@ -90,10 +90,10 @@ public class WindowController {
 
 	private String getProjectName() {
 		String projectName;
-		if(project.file.get() == null) {
-			projectName = project.loaded.get() ? appLang.getText("defaultProjectName") : null;
+		if(projectState.file.get() == null) {
+			projectName = projectState.loaded.get() ? appLang.getText("defaultProjectName") : null;
 		} else {
-			String fileName = project.file.get().getName();
+			String fileName = projectState.file.get().getName();
 			projectName = fileName.substring(0, fileName.length() - appConfig.getString("extension.project").length() - 1);
 		}
 		return projectName;
@@ -113,13 +113,13 @@ public class WindowController {
 
 	private void saveProject(boolean asNew) {
 		File location;
-		if(asNew || project.file.get() == null) {
+		if(asNew || projectState.file.get() == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if(location == null) {
 				return;
 			}
 		} else {
-			location = project.file.get();
+			location = projectState.file.get();
 		}
 		workspaceActionHandler.saveProject(location);
 	}
@@ -129,7 +129,7 @@ public class WindowController {
 	}
 
 	private boolean confirmWorkspaceAction(String title) {
-		if(project.stateSaved.get()) {
+		if(projectState.stateSaved.get()) {
 			return true;
 		}
 		ButtonType saveButton = new ButtonType(appLang.getText("action.save"));
