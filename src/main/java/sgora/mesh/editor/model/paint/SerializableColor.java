@@ -11,7 +11,7 @@ public class SerializableColor implements Serializable {
 	private double blue;
 	private double alpha;
 
-	private static final long serialVersionUID = 4L;
+	private static final long serialVersionUID = 1L;
 
 	public SerializableColor(Color color) {
 		this.red = color.getRed();

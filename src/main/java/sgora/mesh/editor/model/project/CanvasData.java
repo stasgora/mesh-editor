@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class CanvasData extends ComplexObservable implements Serializable {
 
-	private static final long serialVersionUID = 8L;
+	private static final long serialVersionUID = 1L;
 
 
 

@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class VisualProperties extends ComplexObservable implements Serializable {
 
-	private static final long serialVersionUID = 6L;
+	private static final long serialVersionUID = 1L;
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);

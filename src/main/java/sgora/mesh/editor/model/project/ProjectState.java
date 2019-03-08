@@ -11,7 +11,7 @@ import java.io.*;
 
 public class ProjectState extends ComplexObservable implements Serializable {
 
-	private static final long serialVersionUID = 7L;
+	private static final long serialVersionUID = 1L;
 
 	public SettableProperty<Boolean> stateSaved = new SettableProperty<>(true);
 	public SettableProperty<File> file = new SettableProperty<>();

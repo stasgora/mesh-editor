@@ -11,7 +11,7 @@ public class Rectangle extends ComplexObservable implements Serializable {
 
 	public Point position, size;
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 1L;
 
 	public Rectangle() {
 		position = new Point();
