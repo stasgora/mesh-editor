@@ -4,9 +4,12 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
+import org.w3c.dom.css.Rect;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.model.ImageBoxModel;
-import sgora.mesh.editor.model.project.ProjectState;
+import sgora.mesh.editor.model.geom.Rectangle;
+import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.model.observables.SettableProperty;
@@ -17,15 +20,16 @@ public class ImageBox implements MouseListener {
 	private double zoom = 1;
 
 	private final Point mainViewSize;
-	private final ProjectState projectState;
+	private final SettableObservable<CanvasData> canvasData;
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
 	private ObjectProperty<Cursor> mouseCursor;
 	private ImageBoxModel imageBoxModel;
 
-	public ImageBox(Point mainViewSize, ProjectState projectState, AppConfigReader appConfig, AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
+	public ImageBox(Point mainViewSize, SettableObservable<CanvasData> canvasData, AppConfigReader appConfig,
+	                AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
 		this.mainViewSize = mainViewSize;
-		this.projectState = projectState;
+		this.canvasData = canvasData;
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
 		this.mouseCursor = mouseCursor;
@@ -33,7 +37,8 @@ public class ImageBox implements MouseListener {
 	}
 
 	public void onResizeCanvas() {
-		if(!projectState.loaded.get()) {
+		CanvasData canvasData = this.canvasData.get();
+		if(canvasData.baseImage.get() != null) {
 			return;
 		}
 		if(lastCanvasSize == null) {
@@ -41,15 +46,16 @@ public class ImageBox implements MouseListener {
 			return;
 		}
 		Point sizeDiff = new Point(mainViewSize).subtract(lastCanvasSize);
-		projectState.imageBox.position.add(sizeDiff.divideByScalar(2));
+		canvasData.imageBox.position.add(sizeDiff.divideByScalar(2));
 		lastCanvasSize.set(mainViewSize);
 	}
 
 	public void calcImageBox() {
-		if(projectState.baseImage.get() == null) {
+		CanvasData canvasData = this.canvasData.get();
+		if(canvasData.baseImage.get() == null) {
 			return;
 		}
-		SettableProperty<Image> baseImage = projectState.baseImage;
+		SettableProperty<Image> baseImage = canvasData.baseImage;
 		double imgRatio = baseImage.get().getWidth() / baseImage.get().getHeight();
 
 		Point canvasSize = mainViewSize;
@@ -57,32 +63,33 @@ public class ImageBox implements MouseListener {
 		if(imgRatio > canvasSize.x / canvasSize.y) {
 			double imgWidth = canvasSize.x * (1 - defBorder);
 			double imgHeight = imgWidth / imgRatio;
-			projectState.imageBox.position.set(canvasSize.x * defBorder * 0.5, (canvasSize.y - imgHeight) / 2);
-			projectState.imageBox.size.set(imgWidth, imgHeight);
+			canvasData.imageBox.position.set(canvasSize.x * defBorder * 0.5, (canvasSize.y - imgHeight) / 2);
+			canvasData.imageBox.size.set(imgWidth, imgHeight);
 		} else {
 			double imgHeight = canvasSize.y * (1 - defBorder);
 			double imgWidth = imgRatio * imgHeight;
-			projectState.imageBox.position.set((canvasSize.x - imgWidth) / 2, canvasSize.y * defBorder * 0.5);
-			projectState.imageBox.size.set(imgWidth, imgHeight);
+			canvasData.imageBox.position.set((canvasSize.x - imgWidth) / 2, canvasSize.y * defBorder * 0.5);
+			canvasData.imageBox.size.set(imgWidth, imgHeight);
 		}
-		projectState.imageBox.notifyListeners();
+		canvasData.imageBox.notifyListeners();
 	}
 
 	@Override
 	public void onZoom(double amount, Point mousePos) {
+		CanvasData canvasData = this.canvasData.get();
 		double minZoom = appConfig.getDouble("imageBox.zoom.min");
 		double maxZoom = appConfig.getDouble("imageBox.zoom.max");
 
-		Point baseImageSize = new Point(projectState.baseImage.get().getWidth(), projectState.baseImage.get().getHeight());
+		Point baseImageSize = new Point(canvasData.baseImage.get().getWidth(), canvasData.baseImage.get().getHeight());
 		double zoomFactor = 1 - amount * appSettings.getInt("settings.imageBox.zoom.dir") * appSettings.getDouble("settings.imageBox.zoom.speed");
 		zoom = Math.max(minZoom, Math.min(maxZoom, zoom * zoomFactor));
 
-		double moveFactor = 1 - baseImageSize.x * zoom / projectState.imageBox.size.x;
-		Point zoomPos = new Point(mousePos).subtract(projectState.imageBox.position).multiplyByScalar(moveFactor);
+		double moveFactor = 1 - baseImageSize.x * zoom / canvasData.imageBox.size.x;
+		Point zoomPos = new Point(mousePos).subtract(canvasData.imageBox.position).multiplyByScalar(moveFactor);
 
-		projectState.imageBox.position.add(zoomPos);
-		projectState.imageBox.size.set(new Point(baseImageSize).multiplyByScalar(zoom));
-		projectState.imageBox.notifyListeners();
+		canvasData.imageBox.position.add(zoomPos);
+		canvasData.imageBox.size.set(new Point(baseImageSize).multiplyByScalar(zoom));
+		canvasData.imageBox.notifyListeners();
 	}
 
 	@Override
@@ -97,8 +104,9 @@ public class ImageBox implements MouseListener {
 		if(button != imageBoxModel.dragButton) {
 			return;
 		}
-		projectState.imageBox.position.add(dragAmount).clamp(new Point(projectState.imageBox.size).multiplyByScalar(-1), mainViewSize);
-		projectState.imageBox.notifyListeners();
+		Rectangle imageBox = this.canvasData.get().imageBox;
+		imageBox.position.add(dragAmount).clamp(new Point(imageBox.size).multiplyByScalar(-1), mainViewSize);
+		imageBox.notifyListeners();
 	}
 
 	@Override

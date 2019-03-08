@@ -4,7 +4,8 @@ import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.project.ProjectState;
+import sgora.mesh.editor.model.project.CanvasData;
+import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.VisualProperties;
 
 import java.io.File;
@@ -18,24 +19,30 @@ public class WorkspaceActionHandler {
 	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionHandler.class.getName());
 
 	private FileUtils fileUtils;
-	private ProjectState projectState;
 	private TriangulationService triangulationService;
-	private SettableObservable<VisualProperties> visualProperties;
 
-	public WorkspaceActionHandler(FileUtils fileUtils, ProjectState projectState, TriangulationService triangulationService, SettableObservable<VisualProperties> visualProperties) {
+	private SettableObservable<LoadState> loadState;
+	private SettableObservable<VisualProperties> visualProperties;
+	private SettableObservable<CanvasData> canvasData;
+
+	public WorkspaceActionHandler(FileUtils fileUtils, SettableObservable<LoadState> loadState, TriangulationService triangulationService,
+	                              SettableObservable<VisualProperties> visualProperties, SettableObservable<CanvasData> canvasData) {
 		this.fileUtils = fileUtils;
-		this.projectState = projectState;
+		this.loadState = loadState;
 		this.triangulationService = triangulationService;
 		this.visualProperties = visualProperties;
+		this.canvasData = canvasData;
 	}
 
 	public void openProject(File location) {
+		LoadState state = loadState.get();
 		try {
 			fileUtils.load(location);
-			projectState.loaded.set(true);
-			projectState.file.set(location);
-			projectState.stateSaved.set(true);
-			projectState.notifyListeners();
+			state.loaded.set(true);
+			state.file.set(location);
+			state.stateSaved.set(true);
+			state.notifyListeners();
+			canvasData.get().notifyListeners();
 		} catch (ProjectIOException e) {
 			LOGGER.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
 		}
@@ -45,36 +52,45 @@ public class WorkspaceActionHandler {
 		try {
 			location = fileUtils.getProjectFileWithExtension(location);
 			fileUtils.save(location);
-			projectState.file.set(location);
-			projectState.stateSaved.set(true);
+			loadState.get().file.set(location);
+			loadState.get().stateSaved.set(true);
 		} catch (ProjectIOException e) {
 			LOGGER.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
 	public void createNewProject(File location) {
+		LoadState state = loadState.get();
 		try(FileInputStream fileStream = new FileInputStream(location)) {
 			fileUtils.loadImage(fileStream);
-			//TODO move this
-			triangulationService.createNewMesh();
-			visualProperties.set(new VisualProperties());
-			projectState.loaded.set(true);
-			projectState.file.set(null);
-			projectState.stateSaved.set(false);
-			projectState.notifyListeners();
+			createProjectModel();
+
+			state.loaded.set(true);
+			state.file.set(null);
+			state.stateSaved.set(false);
+			state.notifyListeners();
+			canvasData.get().notifyListeners();
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
 	public void closeProject() {
-		projectState.mesh.set(null);
-		projectState.baseImage.set(null);
-		projectState.rawImageFile = null;
+		LoadState state = loadState.get();
+		CanvasData canvasData = this.canvasData.get();
+		canvasData.mesh.set(null);
+		canvasData.baseImage.set(null);
+		canvasData.rawImageFile = null;
 
-		projectState.loaded.set(false);
-		projectState.file.set(null);
-		projectState.notifyListeners();
+		state.loaded.set(false);
+		state.file.set(null);
+		state.notifyListeners();
+		canvasData.notifyListeners();
+	}
+
+	private void createProjectModel() {
+		triangulationService.createNewMesh();
+		visualProperties.set(new VisualProperties());
 	}
 
 }

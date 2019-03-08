@@ -102,14 +102,4 @@ public class Point extends ControlledObservable implements Serializable {
 		return obj != null && obj.getClass().equals(this.getClass()) && x == ((Point) obj).x && y == ((Point) obj).y;
 	}
 
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.writeDouble(x);
-		out.writeDouble(y);
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		x = in.readDouble();
-		y = in.readDouble();
-	}
-
 }

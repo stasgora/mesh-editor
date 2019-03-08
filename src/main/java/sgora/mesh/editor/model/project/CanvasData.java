@@ -1,13 +1,24 @@
 package sgora.mesh.editor.model.project;
 
+import javafx.scene.image.Image;
+import sgora.mesh.editor.model.geom.Mesh;
+import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.observables.ComplexObservable;
+import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.observables.SettableProperty;
 
-import java.io.Serializable;
+public class CanvasData extends ComplexObservable {
 
-public class CanvasData extends ComplexObservable implements Serializable {
+	public SettableObservable<Mesh> mesh = new SettableObservable<>();
+	public final Rectangle imageBox = new Rectangle();
 
-	private static final long serialVersionUID = 1L;
+	public SettableProperty<Image> baseImage = new SettableProperty<>();
+	public byte[] rawImageFile;
 
-
+	public CanvasData() {
+		// only notify on set
+		addSubObservable(mesh);
+		addSubObservable(baseImage);
+	}
 
 }

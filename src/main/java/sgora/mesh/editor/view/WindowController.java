@@ -14,7 +14,8 @@ import javafx.stage.WindowEvent;
 import sgora.mesh.editor.enums.FileChooserAction;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
-import sgora.mesh.editor.model.project.ProjectState;
+import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.services.UiDialogUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionHandler;
 import sgora.mesh.editor.ui.*;
@@ -28,7 +29,7 @@ import java.util.Optional;
 public class WindowController {
 
 	private AppConfigReader appConfig;
-	private ProjectState projectState;
+	private SettableObservable<LoadState> loadState;
 	private Stage window;
 
 	public SplitPane mainSplitPane;
@@ -46,9 +47,9 @@ public class WindowController {
 	private ObservableMap<String, Object> fxmlNamespace;
 	private LangConfigReader appLang;
 
-	public void init(ProjectState projectState, Stage window, AppConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler,
+	public void init(SettableObservable<LoadState> loadState, Stage window, AppConfigReader appConfig, WorkspaceActionHandler workspaceActionHandler,
 	                 UiDialogUtils dialogUtils, ObservableMap<String, Object> fxmlNamespace, LangConfigReader appLang) {
-		this.projectState = projectState;
+		this.loadState = loadState;
 		this.window = window;
 		this.appConfig = appConfig;
 		this.workspaceActionHandler = workspaceActionHandler;
@@ -63,11 +64,12 @@ public class WindowController {
 	}
 
 	private void setListeners() {
-		projectState.loaded.addListener(() -> fxmlNamespace.put("menu_file_item_disabled", !((boolean) fxmlNamespace.get("menu_file_item_disabled"))));
+		LoadState loadState = this.loadState.get();
+		loadState.loaded.addListener(() -> fxmlNamespace.put("menu_file_item_disabled", !((boolean) fxmlNamespace.get("menu_file_item_disabled"))));
 
-		projectState.file.addListener(this::setWindowTitle);
-		projectState.stateSaved.addListener(this::setWindowTitle);
-		projectState.addListener(this::setWindowTitle);
+		loadState.file.addListener(this::setWindowTitle);
+		loadState.stateSaved.addListener(this::setWindowTitle);
+		loadState.addListener(this::setWindowTitle);
 
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 	}
@@ -78,9 +80,10 @@ public class WindowController {
 
 	private void setWindowTitle() {
 		String title = appConfig.getString("appName");
-		if(projectState.loaded.get()) {
+		LoadState loadState = this.loadState.get();
+		if(loadState.loaded.get()) {
 			String projectName = getProjectName();
-			if(!projectState.stateSaved.get()) {
+			if(!loadState.stateSaved.get()) {
 				projectName += "*";
 			}
 			title = projectName + " - " + title;
@@ -90,10 +93,11 @@ public class WindowController {
 
 	private String getProjectName() {
 		String projectName;
-		if(projectState.file.get() == null) {
-			projectName = projectState.loaded.get() ? appLang.getText("defaultProjectName") : null;
+		LoadState loadState = this.loadState.get();
+		if(loadState.file.get() == null) {
+			projectName = loadState.loaded.get() ? appLang.getText("defaultProjectName") : null;
 		} else {
-			String fileName = projectState.file.get().getName();
+			String fileName = loadState.file.get().getName();
 			projectName = fileName.substring(0, fileName.length() - appConfig.getString("extension.project").length() - 1);
 		}
 		return projectName;
@@ -113,13 +117,14 @@ public class WindowController {
 
 	private void saveProject(boolean asNew) {
 		File location;
-		if(asNew || projectState.file.get() == null) {
+		File file = this.loadState.get().file.get();
+		if(asNew || file == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if(location == null) {
 				return;
 			}
 		} else {
-			location = projectState.file.get();
+			location = file;
 		}
 		workspaceActionHandler.saveProject(location);
 	}
@@ -129,7 +134,7 @@ public class WindowController {
 	}
 
 	private boolean confirmWorkspaceAction(String title) {
-		if(projectState.stateSaved.get()) {
+		if(loadState.get().stateSaved.get()) {
 			return true;
 		}
 		ButtonType saveButton = new ButtonType(appLang.getText("action.save"));

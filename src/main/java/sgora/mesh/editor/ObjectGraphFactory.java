@@ -15,7 +15,8 @@ import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.ImageBoxModel;
 import sgora.mesh.editor.model.MeshBoxModel;
 import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.project.ProjectState;
+import sgora.mesh.editor.model.project.CanvasData;
+import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
@@ -39,8 +40,9 @@ public class ObjectGraphFactory {
 	private final Stage stage;
 	private FXMLLoader loader;
 
-	private ProjectState projectState = new ProjectState();
+	private SettableObservable<LoadState> loadState = new SettableObservable<>(new LoadState());
 	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
+	private SettableObservable<CanvasData> canvasData = new SettableObservable<>(new CanvasData());
 
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
@@ -76,14 +78,14 @@ public class ObjectGraphFactory {
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
 
-		nodeUtils = new NodeUtils(appConfig, projectState.imageBox, projectState.mesh, projectState.baseImage);
-		triangleUtils = new TriangleUtils(projectState.mesh, nodeUtils);
-		flippingUtils = new FlippingUtils(projectState.mesh, triangleUtils);
-		triangulationService = new FlipBasedTriangulationService(projectState.mesh, nodeUtils, triangleUtils, flippingUtils);
+		nodeUtils = new NodeUtils(appConfig, canvasData);
+		triangleUtils = new TriangleUtils(canvasData.get().mesh, nodeUtils);
+		flippingUtils = new FlippingUtils(canvasData.get().mesh, triangleUtils);
+		triangulationService = new FlipBasedTriangulationService(canvasData.get().mesh, nodeUtils, triangleUtils, flippingUtils);
 		colorUtils = new ColorUtils(nodeUtils);
 
-		fileUtils = new ProjectFileUtils(projectState, appConfig, visualProperties);
-		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, projectState, triangulationService, visualProperties);
+		fileUtils = new ProjectFileUtils(canvasData, appConfig, visualProperties);
+		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, loadState, triangulationService, visualProperties, canvasData);
 		dialogUtils = new UiDialogUtils(stage);
 
 		constructScene();
@@ -112,13 +114,14 @@ public class ObjectGraphFactory {
 	}
 
 	public void createObjectGraph() {
-		ImageBox imageBox = new ImageBox(mainViewSize, projectState, appConfig, appSettings, mouseCursor, imageBoxModel);
-		MeshBox meshBox = new MeshBox(projectState, meshBoxModel, mainViewSize, mouseCursor, triangulationService, nodeUtils);
+		ImageBox imageBox = new ImageBox(mainViewSize, canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
+		MeshBox meshBox = new MeshBox(canvasData.get().mesh, meshBoxModel, mainViewSize, mouseCursor, triangulationService, nodeUtils);
 
 		controller.toolBar.init(activeTool, appLang);
-		controller.mainView.init(projectState, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils);
-		controller.init(projectState, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
-		controller.meshCanvas.init(colorUtils, projectState.baseImage, visualProperties);
+		controller.mainView.init(canvasData, controller.imageCanvas, controller.meshCanvas,
+				activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState);
+		controller.init(loadState, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
+		controller.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
 	}
 
 }

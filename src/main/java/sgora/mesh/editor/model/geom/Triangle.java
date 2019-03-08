@@ -1,8 +1,5 @@
 package sgora.mesh.editor.model.geom;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -20,16 +17,6 @@ public class Triangle implements Serializable {
 
 	public Triangle(Point a, Point b, Point c) {
 		this(new Point[]{a, b, c});
-	}
-
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.writeObject(nodes);
-		out.writeObject(triangles);
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		nodes = (Point[]) in.readObject();
-		triangles = (Triangle[]) in.readObject();
 	}
 
 	@Override

@@ -24,14 +24,4 @@ public class Rectangle extends ComplexObservable implements Serializable {
 		return point.x >= position.x && point.x <= position.x + size.x && point.y >= position.y && point.y <= position.y + size.y;
 	}
 
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.writeObject(position);
-		out.writeObject(size);
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		position = (Point) in.readObject();
-		size = (Point) in.readObject();
-	}
-
 }

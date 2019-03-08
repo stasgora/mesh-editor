@@ -4,6 +4,9 @@ import sgora.mesh.editor.model.observables.ComplexObservable;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.paint.SerializableColor;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class VisualProperties extends ComplexObservable implements Serializable {
@@ -14,8 +17,21 @@ public class VisualProperties extends ComplexObservable implements Serializable 
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
 
 	public VisualProperties() {
+		addSubObservables();
+	}
+
+	private void addSubObservables() {
 		addSubObservable(nodeColor);
 		addSubObservable(nodeRadius);
+	}
+
+	private void writeObject(ObjectOutputStream out) throws IOException {
+		out.defaultWriteObject();
+	}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		in.defaultReadObject();
+		addSubObservables();
 	}
 
 }
