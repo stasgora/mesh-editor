@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sgora.mesh.editor.config.JsonAppConfigReader;
 import sgora.mesh.editor.config.JsonLangConfigReader;
@@ -38,7 +37,7 @@ public class ObjectGraphFactory {
 	private final WindowController controller;
 	private final Parent root;
 	private final Stage stage;
-	private FXMLLoader loader;
+	private final FXMLLoader loader;
 
 	private SettableObservable<LoadState> loadState = new SettableObservable<>(new LoadState());
 	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
@@ -48,7 +47,6 @@ public class ObjectGraphFactory {
 	private AppConfigReader appSettings;
 	private LangConfigReader appLang;
 
-	private UiDialogUtils dialogUtils;
 	private WorkspaceActionHandler workspaceActionHandler;
 	private FileUtils fileUtils;
 
@@ -58,12 +56,16 @@ public class ObjectGraphFactory {
 	private FlippingUtils flippingUtils;
 	private ColorUtils colorUtils;
 
+	private UiDialogUtils dialogUtils;
 	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
-	private Point mainViewSize;
+	private Point mainViewSize = new Point();
 
 	private ImageBoxModel imageBoxModel;
 	private MeshBoxModel meshBoxModel;
+
+	private ImageBox imageBox;
+	private MeshBox meshBox;
 
 	public ObjectGraphFactory(WindowController controller, Parent root, Stage stage, FXMLLoader loader) {
 		this.controller = controller;
@@ -72,47 +74,62 @@ public class ObjectGraphFactory {
 		this.loader = loader;
 	}
 
-	public ObjectGraphFactory buildDependencies() {
-		//services
+	public void createProjectModel() {
+		triangulationService.createNewMesh();
+		visualProperties.set(new VisualProperties());
+	}
+
+	public void createObjectGraph() {
+		createConfigServices();
+		createTriangulationServices();
+		createProjectServices();
+		setupVisualObjects();
+		createCanvasBoxServices();
+		initControllerObjects();
+	}
+
+	private void createConfigServices() {
 		appConfig = JsonAppConfigReader.forResource("/app.config");
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
+	}
 
+	private void createTriangulationServices() {
 		nodeUtils = new NodeUtils(appConfig, canvasData);
 		triangleUtils = new TriangleUtils(canvasData.get().mesh, nodeUtils);
 		flippingUtils = new FlippingUtils(canvasData.get().mesh, triangleUtils);
 		triangulationService = new FlipBasedTriangulationService(canvasData.get().mesh, nodeUtils, triangleUtils, flippingUtils);
 		colorUtils = new ColorUtils(nodeUtils);
+	}
 
+	private void createProjectServices() {
 		fileUtils = new ProjectFileUtils(canvasData, appConfig, visualProperties);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, loadState, this, visualProperties, canvasData);
-		dialogUtils = new UiDialogUtils(stage);
+	}
 
+	private void setupVisualObjects() {
+		dialogUtils = new UiDialogUtils(stage);
 		controller.setupWindow(appSettings, stage, root);
 
-		activeTool = new SettableProperty<>(MouseTool.IMAGE_MOVER);
+		activeTool = new SettableProperty<>(MouseTool.MESH_EDITOR);
 		mouseCursor = stage.getScene().cursorProperty();
-		mainViewSize = new Point();
+	}
+
+	private void createCanvasBoxServices() {
 		//temp
 		imageBoxModel = new ImageBoxModel();
 		meshBoxModel = new MeshBoxModel();
-		return this;
+
+		imageBox = new ImageBox(mainViewSize, canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
+		meshBox = new MeshBox(canvasData.get().mesh, meshBoxModel, mainViewSize, mouseCursor, triangulationService, nodeUtils);
 	}
 
-	public void createObjectGraph() {
-		ImageBox imageBox = new ImageBox(mainViewSize, canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
-		MeshBox meshBox = new MeshBox(canvasData.get().mesh, meshBoxModel, mainViewSize, mouseCursor, triangulationService, nodeUtils);
-
+	private void initControllerObjects() {
 		controller.toolBar.init(activeTool, appLang);
 		controller.mainView.init(canvasData, controller.imageCanvas, controller.meshCanvas,
 				activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState);
 		controller.init(loadState, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
 		controller.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
-	}
-
-	public void createProjectModel() {
-		triangulationService.createNewMesh();
-		visualProperties.set(new VisualProperties());
 	}
 
 }

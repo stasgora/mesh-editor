@@ -14,7 +14,7 @@ public class MeshEditor extends Application {
 		Parent root = loader.load();
 		WindowController controller = loader.getController();
 
-		new ObjectGraphFactory(controller, root, stage, loader).buildDependencies().createObjectGraph();
+		new ObjectGraphFactory(controller, root, stage, loader).createObjectGraph();
 		stage.requestFocus();
 		stage.show();
 	}
