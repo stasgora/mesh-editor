@@ -85,10 +85,10 @@ public class ObjectGraphFactory {
 		colorUtils = new ColorUtils(nodeUtils);
 
 		fileUtils = new ProjectFileUtils(canvasData, appConfig, visualProperties);
-		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, loadState, triangulationService, visualProperties, canvasData);
+		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, loadState, this, visualProperties, canvasData);
 		dialogUtils = new UiDialogUtils(stage);
 
-		constructScene();
+		controller.setupWindow(appSettings, stage, root);
 
 		activeTool = new SettableProperty<>(MouseTool.IMAGE_MOVER);
 		mouseCursor = stage.getScene().cursorProperty();
@@ -97,20 +97,6 @@ public class ObjectGraphFactory {
 		imageBoxModel = new ImageBoxModel();
 		meshBoxModel = new MeshBoxModel();
 		return this;
-	}
-
-	private void constructScene() {
-		//FIXME move logic from factory
-		Scene scene;
-		String windowPath = "last.windowPlacement";
-		if(appSettings.containsPath(windowPath)) {
-			scene = new Scene(root, appSettings.getInt(windowPath + ".size.w"), appSettings.getInt(windowPath + ".size.h"));
-			stage.setX(appSettings.getInt(windowPath + ".position.x"));
-			stage.setY(appSettings.getInt(windowPath + ".position.y"));
-		} else {
-			scene = new Scene(root, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
-		}
-		stage.setScene(scene);
 	}
 
 	public void createObjectGraph() {
@@ -122,6 +108,11 @@ public class ObjectGraphFactory {
 				activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState);
 		controller.init(loadState, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
 		controller.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
+	}
+
+	public void createProjectModel() {
+		triangulationService.createNewMesh();
+		visualProperties.set(new VisualProperties());
 	}
 
 }

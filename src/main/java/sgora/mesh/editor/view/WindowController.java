@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
@@ -14,6 +16,7 @@ import javafx.stage.WindowEvent;
 import sgora.mesh.editor.enums.FileChooserAction;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
+import sgora.mesh.editor.model.JsonConfig;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.services.UiDialogUtils;
@@ -203,7 +206,19 @@ public class WindowController {
 		if(!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.quit"))) {
 			Platform.exit();
 		}
+	}
 
+	public void setupWindow(AppConfigReader appSettings, Stage stage, Parent root) {
+		Scene scene;
+		String windowPath = "last.windowPlacement";
+		if(appSettings.containsPath(windowPath)) {
+			scene = new Scene(root, appSettings.getInt(windowPath + ".size.w"), appSettings.getInt(windowPath + ".size.h"));
+			stage.setX(appSettings.getInt(windowPath + ".position.x"));
+			stage.setY(appSettings.getInt(windowPath + ".position.y"));
+		} else {
+			scene = new Scene(root, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
+		}
+		stage.setScene(scene);
 	}
 
 }

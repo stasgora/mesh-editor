@@ -1,8 +1,8 @@
 package sgora.mesh.editor.services.files;
 
+import sgora.mesh.editor.ObjectGraphFactory;
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.FileUtils;
-import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
@@ -19,17 +19,17 @@ public class WorkspaceActionHandler {
 	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionHandler.class.getName());
 
 	private FileUtils fileUtils;
-	private TriangulationService triangulationService;
+	private ObjectGraphFactory objectGraphFactory;
 
 	private SettableObservable<LoadState> loadState;
 	private SettableObservable<VisualProperties> visualProperties;
 	private SettableObservable<CanvasData> canvasData;
 
-	public WorkspaceActionHandler(FileUtils fileUtils, SettableObservable<LoadState> loadState, TriangulationService triangulationService,
+	public WorkspaceActionHandler(FileUtils fileUtils, SettableObservable<LoadState> loadState, ObjectGraphFactory objectGraphFactory,
 	                              SettableObservable<VisualProperties> visualProperties, SettableObservable<CanvasData> canvasData) {
 		this.fileUtils = fileUtils;
 		this.loadState = loadState;
-		this.triangulationService = triangulationService;
+		this.objectGraphFactory = objectGraphFactory;
 		this.visualProperties = visualProperties;
 		this.canvasData = canvasData;
 	}
@@ -63,7 +63,7 @@ public class WorkspaceActionHandler {
 		LoadState state = loadState.get();
 		try(FileInputStream fileStream = new FileInputStream(location)) {
 			fileUtils.loadImage(fileStream);
-			createProjectModel();
+			objectGraphFactory.createProjectModel();
 
 			state.loaded.set(true);
 			state.file.set(null);
@@ -86,11 +86,6 @@ public class WorkspaceActionHandler {
 		state.file.set(null);
 		state.notifyListeners();
 		canvasData.notifyListeners();
-	}
-
-	private void createProjectModel() {
-		triangulationService.createNewMesh();
-		visualProperties.set(new VisualProperties());
 	}
 
 }
