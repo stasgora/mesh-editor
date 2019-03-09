@@ -16,9 +16,9 @@ public class CanvasData extends ComplexObservable {
 	public byte[] rawImageFile;
 
 	public CanvasData() {
-		// only notify on set
 		addSubObservable(mesh);
 		addSubObservable(baseImage);
+		addSubObservable(imageBox);
 	}
 
 }

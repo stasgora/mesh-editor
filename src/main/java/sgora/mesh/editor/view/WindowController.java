@@ -69,11 +69,7 @@ public class WindowController {
 	private void setListeners() {
 		LoadState loadState = this.loadState.get();
 		loadState.loaded.addListener(() -> fxmlNamespace.put("menu_file_item_disabled", !((boolean) fxmlNamespace.get("menu_file_item_disabled"))));
-
-		loadState.file.addListener(this::setWindowTitle);
-		loadState.stateSaved.addListener(this::setWindowTitle);
 		loadState.addListener(this::setWindowTitle);
-
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 	}
 
