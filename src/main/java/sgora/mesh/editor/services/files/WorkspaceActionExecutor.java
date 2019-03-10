@@ -22,15 +22,12 @@ public class WorkspaceActionExecutor {
 	private ObjectGraphFactory objectGraphFactory;
 
 	private SettableObservable<LoadState> loadState;
-	private SettableObservable<VisualProperties> visualProperties;
 	private SettableObservable<CanvasData> canvasData;
 
-	public WorkspaceActionExecutor(FileUtils fileUtils, SettableObservable<LoadState> loadState, ObjectGraphFactory objectGraphFactory,
-	                              SettableObservable<VisualProperties> visualProperties, SettableObservable<CanvasData> canvasData) {
+	public WorkspaceActionExecutor(FileUtils fileUtils, SettableObservable<LoadState> loadState, ObjectGraphFactory objectGraphFactory, SettableObservable<CanvasData> canvasData) {
 		this.fileUtils = fileUtils;
 		this.loadState = loadState;
 		this.objectGraphFactory = objectGraphFactory;
-		this.visualProperties = visualProperties;
 		this.canvasData = canvasData;
 	}
 

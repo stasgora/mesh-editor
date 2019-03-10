@@ -108,7 +108,7 @@ public class ObjectGraphFactory {
 	private void createProjectServices() {
 		fileUtils = new ProjectFileUtils(canvasData, appConfig, visualProperties);
 		dialogUtils = new UiDialogUtils(stage, appLang);
-		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, loadState, this, visualProperties, canvasData);
+		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, loadState, this, canvasData);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, loadState);
 	}
 
