@@ -34,7 +34,7 @@ public class WorkspaceActionExecutor {
 		this.canvasData = canvasData;
 	}
 
-	public void openProject(File location) {
+	void openProject(File location) {
 		LoadState state = loadState.get();
 		try {
 			fileUtils.load(location);
@@ -48,7 +48,7 @@ public class WorkspaceActionExecutor {
 		}
 	}
 
-	public void saveProject(File location) {
+	void saveProject(File location) {
 		LoadState state = loadState.get();
 		try {
 			location = fileUtils.getProjectFileWithExtension(location);
@@ -60,7 +60,7 @@ public class WorkspaceActionExecutor {
 		}
 	}
 
-	public void createNewProject(File location) {
+	void createNewProject(File location) {
 		LoadState state = loadState.get();
 		try(FileInputStream fileStream = new FileInputStream(location)) {
 			fileUtils.loadImage(fileStream);
@@ -76,7 +76,7 @@ public class WorkspaceActionExecutor {
 		}
 	}
 
-	public void closeProject() {
+	void closeProject() {
 		LoadState state = loadState.get();
 		CanvasData canvasData = this.canvasData.get();
 		canvasData.mesh.set(null);
