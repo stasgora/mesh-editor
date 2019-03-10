@@ -67,7 +67,6 @@ public class MainView extends AnchorPane {
 		canvasData.mesh.addStaticListener(() -> loadState.get().stateSaved.set(false));
 
 		mainViewSize.addListener(this::drawBothLayers);
-		canvasData.imageBox.addListener(this::drawBothLayers);//TODO trigger under canvasData
 		canvasData.addListener(this::drawBothLayers);
 		canvasData.mesh.addStaticListener(this::drawMesh);
 	}

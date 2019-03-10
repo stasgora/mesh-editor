@@ -89,7 +89,7 @@ public class ImageBox implements MouseListener {
 
 		canvasData.imageBox.position.add(zoomPos);
 		canvasData.imageBox.size.set(new Point(baseImageSize).multiplyByScalar(zoom));
-		canvasData.imageBox.notifyListeners();
+		canvasData.notifyListeners();
 	}
 
 	@Override
