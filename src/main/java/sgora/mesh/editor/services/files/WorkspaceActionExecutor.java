@@ -1,7 +1,7 @@
 package sgora.mesh.editor.services.files;
 
 import sgora.mesh.editor.exceptions.ProjectIOException;
-import sgora.mesh.editor.interfaces.FileUtils;
+import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.Project;
 
@@ -11,15 +11,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class WorkspaceActionHandler {
+public class WorkspaceActionExecutor {
 
-	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionExecutor.class.getName());
 
 	private FileUtils fileUtils;
 	private Project project;
 	private TriangulationService triangulationService;
 
-	public WorkspaceActionHandler(FileUtils fileUtils, Project project, TriangulationService triangulationService) {
+	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, TriangulationService triangulationService) {
 		this.fileUtils = fileUtils;
 		this.project = project;
 		this.triangulationService = triangulationService;
@@ -68,6 +68,7 @@ public class WorkspaceActionHandler {
 
 		project.loaded.set(false);
 		project.file.set(null);
+		project.stateSaved.set(true);
 		project.notifyListeners();
 	}
 

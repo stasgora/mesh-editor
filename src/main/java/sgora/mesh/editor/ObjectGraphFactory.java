@@ -9,9 +9,10 @@ import javafx.stage.Stage;
 import sgora.mesh.editor.config.JsonAppConfigReader;
 import sgora.mesh.editor.config.JsonLangConfigReader;
 import sgora.mesh.editor.interfaces.AppConfigReader;
-import sgora.mesh.editor.interfaces.FileUtils;
+import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.interfaces.LangConfigReader;
 import sgora.mesh.editor.interfaces.TriangulationService;
+import sgora.mesh.editor.interfaces.files.WorkspaceAction;
 import sgora.mesh.editor.model.containers.ImageBoxModel;
 import sgora.mesh.editor.model.containers.MeshBoxModel;
 import sgora.mesh.editor.model.Project;
@@ -19,12 +20,13 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
+import sgora.mesh.editor.services.files.WorkspaceActionFacade;
 import sgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
 import sgora.mesh.editor.services.triangulation.FlippingUtils;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.services.files.ProjectFileUtils;
-import sgora.mesh.editor.services.files.WorkspaceActionHandler;
+import sgora.mesh.editor.services.files.WorkspaceActionExecutor;
 import sgora.mesh.editor.view.WindowController;
 
 public class ObjectGraphFactory {
@@ -40,9 +42,10 @@ public class ObjectGraphFactory {
 	private AppConfigReader appSettings;
 	private LangConfigReader appLang;
 
-	private UiDialogUtils dialogUtils;
-	private WorkspaceActionHandler workspaceActionHandler;
+	private WorkspaceAction workspaceAction;
+	private WorkspaceActionExecutor workspaceActionExecutor;
 	private FileUtils fileUtils;
+	private UiDialogUtils dialogUtils;
 
 	private TriangulationService triangulationService;
 	private NodeUtils nodeUtils;
@@ -75,8 +78,9 @@ public class ObjectGraphFactory {
 		triangulationService = new FlipBasedTriangulationService(project.mesh, nodeUtils, triangleUtils, flippingUtils);
 
 		fileUtils = new ProjectFileUtils(project, appConfig);
-		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);
 		dialogUtils = new UiDialogUtils(stage, appLang);
+		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, triangulationService);
+		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project);
 
 		constructScene();
 
@@ -109,7 +113,7 @@ public class ObjectGraphFactory {
 
 		controller.toolBar.init(activeTool, appLang);
 		controller.mainView.init(project, controller.imageCanvas, controller.meshCanvas, activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils);
-		controller.init(project, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
+		controller.init(project, stage, appConfig, workspaceAction, loader.getNamespace());
 	}
 
 }
