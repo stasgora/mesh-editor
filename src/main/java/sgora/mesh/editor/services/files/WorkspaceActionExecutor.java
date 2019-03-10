@@ -2,7 +2,7 @@ package sgora.mesh.editor.services.files;
 
 import sgora.mesh.editor.ObjectGraphFactory;
 import sgora.mesh.editor.exceptions.ProjectIOException;
-import sgora.mesh.editor.interfaces.FileUtils;
+import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class WorkspaceActionHandler {
+public class WorkspaceActionExecutor {
 
-	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionExecutor.class.getName());
 
 	private FileUtils fileUtils;
 	private ObjectGraphFactory objectGraphFactory;
@@ -25,7 +25,7 @@ public class WorkspaceActionHandler {
 	private SettableObservable<VisualProperties> visualProperties;
 	private SettableObservable<CanvasData> canvasData;
 
-	public WorkspaceActionHandler(FileUtils fileUtils, SettableObservable<LoadState> loadState, ObjectGraphFactory objectGraphFactory,
+	public WorkspaceActionExecutor(FileUtils fileUtils, SettableObservable<LoadState> loadState, ObjectGraphFactory objectGraphFactory,
 	                              SettableObservable<VisualProperties> visualProperties, SettableObservable<CanvasData> canvasData) {
 		this.fileUtils = fileUtils;
 		this.loadState = loadState;
@@ -49,11 +49,12 @@ public class WorkspaceActionHandler {
 	}
 
 	public void saveProject(File location) {
+		LoadState state = loadState.get();
 		try {
 			location = fileUtils.getProjectFileWithExtension(location);
 			fileUtils.save(location);
-			loadState.get().file.set(location);
-			loadState.get().stateSaved.set(true);
+			state.file.set(location);
+			state.stateSaved.set(true);
 		} catch (ProjectIOException e) {
 			LOGGER.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
 		}
@@ -84,6 +85,7 @@ public class WorkspaceActionHandler {
 
 		state.loaded.set(false);
 		state.file.set(null);
+		state.stateSaved.set(true);
 		state.notifyListeners();
 		canvasData.notifyListeners();
 	}

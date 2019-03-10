@@ -3,7 +3,7 @@ package sgora.mesh.editor.services.files;
 import javafx.scene.image.Image;
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
-import sgora.mesh.editor.interfaces.FileUtils;
+import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.VisualProperties;

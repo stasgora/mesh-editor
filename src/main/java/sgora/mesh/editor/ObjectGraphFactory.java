@@ -7,10 +7,11 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import sgora.mesh.editor.config.JsonAppConfigReader;
 import sgora.mesh.editor.config.JsonLangConfigReader;
+import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
-import sgora.mesh.editor.interfaces.FileUtils;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.interfaces.TriangulationService;
+import sgora.mesh.editor.interfaces.files.WorkspaceAction;
 import sgora.mesh.editor.model.ImageBoxModel;
 import sgora.mesh.editor.model.MeshBoxModel;
 import sgora.mesh.editor.model.observables.SettableObservable;
@@ -24,12 +25,13 @@ import sgora.mesh.editor.services.*;
 import sgora.mesh.editor.services.drawing.ColorUtils;
 import sgora.mesh.editor.services.drawing.ImageBox;
 import sgora.mesh.editor.services.drawing.MeshBox;
+import sgora.mesh.editor.services.files.WorkspaceActionFacade;
 import sgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
 import sgora.mesh.editor.services.triangulation.FlippingUtils;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.services.files.ProjectFileUtils;
-import sgora.mesh.editor.services.files.WorkspaceActionHandler;
+import sgora.mesh.editor.services.files.WorkspaceActionExecutor;
 import sgora.mesh.editor.view.WindowController;
 
 public class ObjectGraphFactory {
@@ -47,7 +49,8 @@ public class ObjectGraphFactory {
 	private AppConfigReader appSettings;
 	private LangConfigReader appLang;
 
-	private WorkspaceActionHandler workspaceActionHandler;
+	private WorkspaceAction workspaceAction;
+	private WorkspaceActionExecutor workspaceActionExecutor;
 	private FileUtils fileUtils;
 
 	private TriangulationService triangulationService;
@@ -104,11 +107,13 @@ public class ObjectGraphFactory {
 
 	private void createProjectServices() {
 		fileUtils = new ProjectFileUtils(canvasData, appConfig, visualProperties);
-		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, loadState, this, visualProperties, canvasData);
+		dialogUtils = new UiDialogUtils(stage, appLang);
+		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, loadState, this, visualProperties, canvasData);
+		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, loadState);
 	}
 
 	private void setupVisualObjects() {
-		dialogUtils = new UiDialogUtils(stage);
+		dialogUtils = new UiDialogUtils(stage, appLang);
 		controller.setupWindow(appSettings, stage, root);
 
 		activeTool = new SettableProperty<>(MouseTool.MESH_EDITOR);
@@ -128,7 +133,7 @@ public class ObjectGraphFactory {
 		controller.toolBar.init(activeTool, appLang);
 		controller.mainView.init(canvasData, controller.imageCanvas, controller.meshCanvas,
 				activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState);
-		controller.init(loadState, stage, appConfig, workspaceActionHandler, dialogUtils, loader.getNamespace(), appLang);
+		controller.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace());
 		controller.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
 	}
 

@@ -37,7 +37,8 @@
 			},
 			"extension": {
 				"project": "Project Files",
-				"image": "Images"
+				"image": "Images",
+				"all": "All Files"
 			}
 		},
 		"warning": {
