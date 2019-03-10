@@ -76,7 +76,7 @@ public class ObjectGraphFactory {
 
 		fileUtils = new ProjectFileUtils(project, appConfig);
 		workspaceActionHandler = new WorkspaceActionHandler(fileUtils, project, triangulationService);
-		dialogUtils = new UiDialogUtils(stage);
+		dialogUtils = new UiDialogUtils(stage, appLang);
 
 		constructScene();
 

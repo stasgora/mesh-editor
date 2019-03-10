@@ -5,6 +5,7 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sgora.mesh.editor.enums.FileChooserAction;
+import sgora.mesh.editor.interfaces.LangConfigReader;
 
 import java.io.File;
 import java.util.Optional;
@@ -12,15 +13,17 @@ import java.util.Optional;
 public class UiDialogUtils {
 
 	private Stage window;
+	private LangConfigReader appLang;
 
-	public UiDialogUtils(Stage window) {
+	public UiDialogUtils(Stage window, LangConfigReader appLang) {
 		this.window = window;
+		this.appLang = appLang;
 	}
 
 	public File showFileChooser(FileChooserAction action, String title, FileChooser.ExtensionFilter extensionFilter) {
 		FileChooser projectFileChooser = new FileChooser();
 		projectFileChooser.setTitle(title);
-		projectFileChooser.getExtensionFilters().add(extensionFilter);
+		projectFileChooser.getExtensionFilters().addAll(extensionFilter, getDefaultFilter());
 		if(action == FileChooserAction.SAVE_DIALOG) {
 			return projectFileChooser.showSaveDialog(window);
 		} else if(action == FileChooserAction.OPEN_DIALOG) {
@@ -34,6 +37,11 @@ public class UiDialogUtils {
 		dialog.setTitle(title);
 		dialog.setHeaderText(header);
 		return dialog.showAndWait();
+	}
+
+	private FileChooser.ExtensionFilter getDefaultFilter() {
+		String extensionTitle = appLang.getText("dialog.fileChooser.extension.all");
+		return new FileChooser.ExtensionFilter(extensionTitle, "*.*");
 	}
 
 }

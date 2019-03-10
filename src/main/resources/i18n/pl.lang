@@ -33,7 +33,8 @@
 			},
 			"extension": {
 				"project": "Pliki Projektu",
-				"image": "Obrazy"
+				"image": "Obrazy",
+				"all": "Wszystkie Pliki"
 			}
 		},
 		"warning": {
