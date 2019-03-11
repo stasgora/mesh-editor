@@ -3,6 +3,7 @@ package sgora.mesh.editor.view;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -10,6 +11,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import sgora.mesh.editor.MeshEditor;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
 import sgora.mesh.editor.model.observables.SettableObservable;
@@ -18,9 +20,10 @@ import sgora.mesh.editor.ui.MainToolbar;
 import sgora.mesh.editor.ui.canvas.ImageCanvas;
 import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
+import java.io.IOException;
+
 public class WindowView {
 
-	public PropertiesView propertiesViewController;
 	public VBox propertiesView;
 
 	public MainView mainViewController;
@@ -46,13 +49,24 @@ public class WindowView {
 
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 
-	public void init(SettableObservable<LoadState> loadState, Stage window, AppConfigReader appConfig, WorkspaceAction workspaceAction, ObservableMap<String, Object> fxmlNamespace) {
+	public void init(SettableObservable<LoadState> loadState, Stage window, AppConfigReader appConfig,
+	                 WorkspaceAction workspaceAction, ObservableMap<String, Object> fxmlNamespace, PropertiesView propertiesView) {
 		this.loadState = loadState;
 		this.window = window;
 		this.appConfig = appConfig;
 		this.workspaceAction = workspaceAction;
 		this.fxmlNamespace = fxmlNamespace;
 		fxmlNamespace.put(MENU_FILE_ITEM_DISABLED, true);
+
+		FXMLLoader loader = new FXMLLoader(MeshEditor.class.getResource("/fxml/PropertiesView.fxml"));
+		loader.setRoot(this.propertiesView);
+		loader.setController(propertiesView);
+		try {
+			loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		propertiesView.init();
 
 		setWindowTitle();
 		setListeners();

@@ -33,6 +33,7 @@ import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.services.files.ProjectFileUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionExecutor;
 import sgora.mesh.editor.view.MainView;
+import sgora.mesh.editor.view.PropertiesView;
 import sgora.mesh.editor.view.WindowView;
 
 public class ObjectGraphFactory {
@@ -41,6 +42,8 @@ public class ObjectGraphFactory {
 	private final Parent root;
 	private final Stage stage;
 	private final FXMLLoader loader;
+
+	private PropertiesView propertiesView;
 
 	private SettableObservable<LoadState> loadState = new SettableObservable<>(new LoadState());
 	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
@@ -132,8 +135,8 @@ public class ObjectGraphFactory {
 
 	private void initControllerObjects() {
 		MainView mainView = controller.mainViewController;
-		controller.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace());
-		controller.propertiesViewController.init(visualProperties);
+		propertiesView = new PropertiesView(visualProperties);
+		controller.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace(), propertiesView);
 
 		mainView.init(canvasData, mainView.imageCanvas, mainView.meshCanvas, activeTool,
 				mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);

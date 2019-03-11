@@ -9,9 +9,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import sgora.mesh.editor.ui.MainToolbar?>
-<?import sgora.mesh.editor.ui.canvas.ImageCanvas?>
-<?import sgora.mesh.editor.ui.canvas.MeshCanvas?>
-<?import sgora.mesh.editor.view.MainView?>
 
 <VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.WindowView">
 	<MenuBar layoutX="185.0" layoutY="-14.0">
@@ -54,7 +51,7 @@
 	<MainToolbar fx:id="toolBar" prefHeight="18.0" prefWidth="808.0" />
 	<SplitPane fx:id="mainSplitPane" dividerPositions="0.25" prefHeight="465.0" prefWidth="808.0" VBox.vgrow="ALWAYS">
 		<AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">
-			<fx:include fx:id="propertiesView" source="PropertiesView.fxml" />
+			<VBox fx:id="propertiesView" />
 		</AnchorPane>
 		<AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">
 			<fx:include fx:id="mainView" source="MainView.fxml" />
