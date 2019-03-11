@@ -32,11 +32,12 @@ import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.services.files.ProjectFileUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionExecutor;
-import sgora.mesh.editor.view.WindowController;
+import sgora.mesh.editor.view.MainView;
+import sgora.mesh.editor.view.WindowView;
 
 public class ObjectGraphFactory {
 
-	private final WindowController controller;
+	private final WindowView controller;
 	private final Parent root;
 	private final Stage stage;
 	private final FXMLLoader loader;
@@ -70,7 +71,7 @@ public class ObjectGraphFactory {
 	private ImageBox imageBox;
 	private MeshBox meshBox;
 
-	public ObjectGraphFactory(WindowController controller, Parent root, Stage stage, FXMLLoader loader) {
+	public ObjectGraphFactory(WindowView controller, Parent root, Stage stage, FXMLLoader loader) {
 		this.controller = controller;
 		this.root = root;
 		this.stage = stage;
@@ -130,12 +131,14 @@ public class ObjectGraphFactory {
 	}
 
 	private void initControllerObjects() {
-		controller.toolBar.init(activeTool, appLang);
-		controller.mainView.init(canvasData, controller.imageCanvas, controller.meshCanvas, activeTool,
-				mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
+		MainView mainView = controller.mainViewController;
 		controller.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace());
-		controller.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
 		controller.propertiesViewController.init(visualProperties);
+
+		mainView.init(canvasData, mainView.imageCanvas, mainView.meshCanvas, activeTool,
+				mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
+		mainView.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
+		controller.toolBar.init(activeTool, appLang);
 	}
 
 }

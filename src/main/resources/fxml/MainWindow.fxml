@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -15,7 +13,7 @@
 <?import sgora.mesh.editor.ui.canvas.MeshCanvas?>
 <?import sgora.mesh.editor.view.MainView?>
 
-<VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.WindowController">
+<VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.WindowView">
 	<MenuBar layoutX="185.0" layoutY="-14.0">
 		<Menu text="${menu_file_title}">
 			<MenuItem fx:id="newProjectMenuItem" text="${menu_file_item_new}">
@@ -58,9 +56,8 @@
 		<AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">
 			<fx:include fx:id="propertiesView" source="PropertiesView.fxml" />
 		</AnchorPane>
-		<MainView fx:id="mainView" minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">
-			<ImageCanvas fx:id="imageCanvas" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-			<MeshCanvas fx:id="meshCanvas" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-		</MainView>
+		<AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">
+			<fx:include fx:id="mainView" source="MainView.fxml" />
+		</AnchorPane>
 	</SplitPane>
 </VBox>

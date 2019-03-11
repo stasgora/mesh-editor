@@ -18,20 +18,19 @@ import sgora.mesh.editor.ui.MainToolbar;
 import sgora.mesh.editor.ui.canvas.ImageCanvas;
 import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
-public class WindowController {
+public class WindowView {
 
 	public PropertiesView propertiesViewController;
 	public VBox propertiesView;
+
+	public MainView mainViewController;
 
 	private AppConfigReader appConfig;
 	private SettableObservable<LoadState> loadState;
 	private Stage window;
 
 	public SplitPane mainSplitPane;
-	public MainView mainView;
 
-	public ImageCanvas imageCanvas;
-	public MeshCanvas meshCanvas;
 	public MainToolbar toolBar;
 
 	public MenuItem newProjectMenuItem;

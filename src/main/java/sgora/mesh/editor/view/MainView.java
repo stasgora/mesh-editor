@@ -18,13 +18,15 @@ import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.ui.canvas.ImageCanvas;
 import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
-public class MainView extends AnchorPane {
-	
-	private SettableObservable<CanvasData> canvasData;
+public class MainView {
 
-	private ImageCanvas imageCanvas;
-	private MeshCanvas meshCanvas;
+	public AnchorPane mainView;
+	public ImageCanvas imageCanvas;
+	public MeshCanvas meshCanvas;
+
+	private SettableObservable<CanvasData> canvasData;
 	private SettableProperty<MouseTool> activeTool;
+
 	private Point mainViewSize;
 
 	private ImageBox imageBox;
@@ -56,8 +58,8 @@ public class MainView extends AnchorPane {
 	}
 
 	private void setListeners() {
-		widthProperty().addListener(this::paneSizeChanged);
-		heightProperty().addListener(this::paneSizeChanged);
+		mainView.widthProperty().addListener(this::paneSizeChanged);
+		mainView.heightProperty().addListener(this::paneSizeChanged);
 
 		mainViewSize.addListener(() -> {
 			imageCanvas.setWidth(mainViewSize.x);
@@ -78,18 +80,18 @@ public class MainView extends AnchorPane {
 	}
 
 	private void setMouseHandlers() {
-		setOnScroll(this::onScroll);
+		mainView.setOnScroll(this::onScroll);
 
-		setOnMousePressed(this::onMousePress);
-		setOnMouseDragged(this::onMouseDrag);
+		mainView.setOnMousePressed(this::onMousePress);
+		mainView.setOnMouseDragged(this::onMouseDrag);
 
-		setOnMouseReleased(this::onMouseRelease);
-		setOnMouseEntered(this::onMouseEnter);
-		setOnMouseExited(this::onMouseExit);
+		mainView.setOnMouseReleased(this::onMouseRelease);
+		mainView.setOnMouseEntered(this::onMouseEnter);
+		mainView.setOnMouseExited(this::onMouseExit);
 	}
 
 	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
-		mainViewSize.set(new Point(getWidth(), getHeight()));
+		mainViewSize.set(new Point(mainView.getWidth(), mainView.getHeight()));
 		mainViewSize.notifyListeners();
 	}
 
