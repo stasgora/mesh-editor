@@ -135,6 +135,7 @@ public class ObjectGraphFactory {
 				mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
 		controller.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace());
 		controller.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
+		controller.propertiesViewController.init(visualProperties);
 	}
 
 }

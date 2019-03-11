@@ -21,6 +21,7 @@ public class VisualProperties extends ComplexObservable implements Serializable 
 
 	public VisualProperties() {
 		addSubObservables();
+		notifyManually = false;
 	}
 
 	private void addSubObservables() {
