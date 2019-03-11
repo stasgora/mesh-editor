@@ -16,6 +16,9 @@ public class VisualProperties extends ComplexObservable implements Serializable 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
 
+	public SettableProperty<Boolean> meshVisible = new SettableProperty<>(true);
+	public SettableProperty<Boolean> imageVisible = new SettableProperty<>(true);
+
 	public VisualProperties() {
 		addSubObservables();
 	}
@@ -23,6 +26,8 @@ public class VisualProperties extends ComplexObservable implements Serializable 
 	private void addSubObservables() {
 		addSubObservable(nodeColor);
 		addSubObservable(nodeRadius);
+		addSubObservable(meshVisible);
+		addSubObservable(imageVisible);
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {

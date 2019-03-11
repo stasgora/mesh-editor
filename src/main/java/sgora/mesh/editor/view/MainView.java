@@ -10,6 +10,7 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.LoadState;
+import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.services.drawing.ImageBox;
 import sgora.mesh.editor.services.drawing.MeshBox;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
@@ -31,11 +32,13 @@ public class MainView extends AnchorPane {
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
 	private SettableObservable<LoadState> loadState;
+	private SettableObservable<VisualProperties> visualProperties;
 
 	private Point lastMouseDragPoint;
 
 	public void init(SettableObservable<CanvasData> canvasData, ImageCanvas imageCanvas, MeshCanvas meshCanvas, SettableProperty<MouseTool> activeTool,
-	                 Point mainViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils, TriangleUtils triangleUtils, SettableObservable<LoadState> loadState) {
+	                 Point mainViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils, TriangleUtils triangleUtils,
+	                 SettableObservable<LoadState> loadState, SettableObservable<VisualProperties> visualProperties) {
 		this.canvasData = canvasData;
 		this.imageCanvas = imageCanvas;
 		this.meshCanvas = meshCanvas;
@@ -46,6 +49,7 @@ public class MainView extends AnchorPane {
 		this.nodeUtils = nodeUtils;
 		this.triangleUtils = triangleUtils;
 		this.loadState = loadState;
+		this.visualProperties = visualProperties;
 
 		setListeners();
 		setMouseHandlers();
@@ -69,6 +73,8 @@ public class MainView extends AnchorPane {
 		mainViewSize.addListener(this::drawBothLayers);
 		canvasData.addListener(this::drawBothLayers);
 		canvasData.mesh.addStaticListener(this::drawMesh);
+
+		visualProperties.addStaticListener(this::drawBothLayers);
 	}
 
 	private void setMouseHandlers() {
@@ -89,15 +95,15 @@ public class MainView extends AnchorPane {
 
 	private void drawMesh() {
 		meshCanvas.clear();
-		if(loadState.get().loaded.get()) {
+		if(loadState.get().loaded.get() && visualProperties.get().meshVisible.get()) {
 			meshCanvas.draw(nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
 	}
 
 	private void drawImage() {
 		imageCanvas.clear();
-		CanvasData canvasData = this.canvasData.get();
-		if(loadState.get().loaded.get()) {
+		if(loadState.get().loaded.get() && visualProperties.get().imageVisible.get()) {
+			CanvasData canvasData = this.canvasData.get();
 			imageCanvas.draw(canvasData.imageBox, canvasData.baseImage.get());
 		}
 	}

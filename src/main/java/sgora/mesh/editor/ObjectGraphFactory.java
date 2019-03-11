@@ -131,8 +131,8 @@ public class ObjectGraphFactory {
 
 	private void initControllerObjects() {
 		controller.toolBar.init(activeTool, appLang);
-		controller.mainView.init(canvasData, controller.imageCanvas, controller.meshCanvas,
-				activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState);
+		controller.mainView.init(canvasData, controller.imageCanvas, controller.meshCanvas, activeTool,
+				mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
 		controller.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace());
 		controller.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
 	}
