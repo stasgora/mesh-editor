@@ -10,7 +10,7 @@ public class MeshEditor extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainWindow.fxml"));
 		Parent root = loader.load();
 		WindowController controller = loader.getController();
 
