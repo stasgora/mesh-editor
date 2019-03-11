@@ -13,7 +13,7 @@ public class PropertiesView {
 
 	public void init(SettableObservable<VisualProperties> visualProperties) {
 		this.visualProperties = visualProperties;
-		meshVisibleCheckBox.selectedProperty().addListener(((observable, oldVal, newVal) -> visualProperties.get().meshVisible.set(newVal)));
+		meshVisibleCheckBox.selectedProperty().addListener((observable, oldVal, newVal) -> visualProperties.get().meshVisible.set(newVal));
 		imageVisibleCheckBox.selectedProperty().addListener(((observable, oldVal, newVal) -> visualProperties.get().imageVisible.set(newVal)));
 	}
 

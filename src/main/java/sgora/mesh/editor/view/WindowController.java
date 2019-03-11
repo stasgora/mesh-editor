@@ -67,6 +67,7 @@ public class WindowController {
 		loadState.file.addListener(this::setWindowTitle);
 		loadState.stateSaved.addListener(this::setWindowTitle);
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
+		loadState.loaded.addListener(() -> propertiesView.setVisible(loadState.loaded.get()));
 
 		newProjectMenuItem.setOnAction(event -> workspaceAction.onNewProject());
 		openProjectMenuItem.setOnAction(event -> workspaceAction.onOpenProject());
