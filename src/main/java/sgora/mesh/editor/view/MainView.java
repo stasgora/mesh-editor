@@ -4,6 +4,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import sgora.mesh.editor.interfaces.SubController;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.geom.Point;
@@ -18,7 +19,7 @@ import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.ui.canvas.ImageCanvas;
 import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
-public class MainView {
+public class MainView implements SubController {
 
 	public AnchorPane mainView;
 	public ImageCanvas imageCanvas;
@@ -38,12 +39,10 @@ public class MainView {
 
 	private Point lastMouseDragPoint;
 
-	public void init(SettableObservable<CanvasData> canvasData, ImageCanvas imageCanvas, MeshCanvas meshCanvas, SettableProperty<MouseTool> activeTool,
+	public MainView(SettableObservable<CanvasData> canvasData, SettableProperty<MouseTool> activeTool,
 	                 Point mainViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils, TriangleUtils triangleUtils,
 	                 SettableObservable<LoadState> loadState, SettableObservable<VisualProperties> visualProperties) {
 		this.canvasData = canvasData;
-		this.imageCanvas = imageCanvas;
-		this.meshCanvas = meshCanvas;
 		this.activeTool = activeTool;
 		this.mainViewSize = mainViewSize;
 		this.imageBox = imageBox;
@@ -52,7 +51,9 @@ public class MainView {
 		this.triangleUtils = triangleUtils;
 		this.loadState = loadState;
 		this.visualProperties = visualProperties;
+	}
 
+	public void init() {
 		setListeners();
 		setMouseHandlers();
 	}

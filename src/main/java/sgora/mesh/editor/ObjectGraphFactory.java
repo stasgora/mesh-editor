@@ -38,12 +38,13 @@ import sgora.mesh.editor.view.WindowView;
 
 public class ObjectGraphFactory {
 
-	private final WindowView controller;
+	private final WindowView windowView;
 	private final Parent root;
 	private final Stage stage;
 	private final FXMLLoader loader;
 
 	private PropertiesView propertiesView;
+	private MainView mainView;
 
 	private SettableObservable<LoadState> loadState = new SettableObservable<>(new LoadState());
 	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
@@ -75,7 +76,7 @@ public class ObjectGraphFactory {
 	private MeshBox meshBox;
 
 	public ObjectGraphFactory(WindowView controller, Parent root, Stage stage, FXMLLoader loader) {
-		this.controller = controller;
+		this.windowView = controller;
 		this.root = root;
 		this.stage = stage;
 		this.loader = loader;
@@ -118,7 +119,7 @@ public class ObjectGraphFactory {
 
 	private void setupVisualObjects() {
 		dialogUtils = new UiDialogUtils(stage, appLang);
-		controller.setupWindow(appSettings, stage, root);
+		windowView.setupWindow(appSettings, stage, root);
 
 		activeTool = new SettableProperty<>(MouseTool.MESH_EDITOR);
 		mouseCursor = stage.getScene().cursorProperty();
@@ -134,14 +135,13 @@ public class ObjectGraphFactory {
 	}
 
 	private void initControllerObjects() {
-		MainView mainView = controller.mainViewController;
+		MainView mainView = windowView.mainViewController;
 		propertiesView = new PropertiesView(visualProperties);
-		controller.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace(), propertiesView);
+		mainView = new MainView(canvasData, activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
+		windowView.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace(), propertiesView, mainView);
 
-		mainView.init(canvasData, mainView.imageCanvas, mainView.meshCanvas, activeTool,
-				mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
 		mainView.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
-		controller.toolBar.init(activeTool, appLang);
+		windowView.toolBar.init(activeTool, appLang);
 	}
 
 }

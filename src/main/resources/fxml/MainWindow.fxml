@@ -50,11 +50,7 @@
 	</MenuBar>
 	<MainToolbar fx:id="toolBar" prefHeight="18.0" prefWidth="808.0" />
 	<SplitPane fx:id="mainSplitPane" dividerPositions="0.25" prefHeight="465.0" prefWidth="808.0" VBox.vgrow="ALWAYS">
-		<AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">
-			<VBox fx:id="propertiesView" />
-		</AnchorPane>
-		<AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0">
-			<fx:include fx:id="mainView" source="MainView.fxml" />
-		</AnchorPane>
+		<AnchorPane fx:id="propertiesViewRoot" minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0" />
+		<AnchorPane fx:id="mainViewRoot" minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0" />
 	</SplitPane>
 </VBox>
