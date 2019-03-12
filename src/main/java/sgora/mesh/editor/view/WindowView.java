@@ -2,34 +2,31 @@ package sgora.mesh.editor.view;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableMap;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sgora.mesh.editor.MeshEditor;
-import sgora.mesh.editor.interfaces.SubController;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.ui.MainToolbar;
-import sgora.mesh.editor.ui.canvas.ImageCanvas;
-import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WindowView {
 
 	public AnchorPane propertiesViewRoot;
-	public AnchorPane mainViewRoot;
-
-	public MainView mainViewController;
+	public AnchorPane canvasViewRoot;
+	public MenuBar menuViewRoot;
 
 	private AppConfigReader appConfig;
 	private SettableObservable<LoadState> loadState;
@@ -39,21 +36,13 @@ public class WindowView {
 
 	public MainToolbar toolBar;
 
-	public MenuItem newProjectMenuItem;
-	public MenuItem openProjectMenuItem;
-	public MenuItem openRecentMenuItem;
-	public MenuItem closeProjectMenuItem;
-	public MenuItem saveProjectMenuItem;
-	public MenuItem saveProjectAsMenuItem;
-	public MenuItem exitAppMenuItem;
-
 	private WorkspaceAction workspaceAction;
 	private ObservableMap<String, Object> fxmlNamespace;
 
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 
 	public void init(SettableObservable<LoadState> loadState, Stage window, AppConfigReader appConfig,
-	                 WorkspaceAction workspaceAction, ObservableMap<String, Object> fxmlNamespace, PropertiesView propertiesView, MainView mainView) {
+	                 WorkspaceAction workspaceAction, ObservableMap<String, Object> fxmlNamespace) {
 		this.loadState = loadState;
 		this.window = window;
 		this.appConfig = appConfig;
@@ -61,24 +50,9 @@ public class WindowView {
 		this.fxmlNamespace = fxmlNamespace;
 		fxmlNamespace.put(MENU_FILE_ITEM_DISABLED, true);
 
-		initSubView(propertiesView, propertiesViewRoot, "PropertiesView");
-		initSubView(mainView, mainViewRoot, "MainView");
-
 		setWindowTitle();
 		setListeners();
 		window.setOnCloseRequest(workspaceAction::onWindowCloseRequest);
-	}
-
-	private void initSubView(SubController controller, Node root, String fxmlFileName) {
-		FXMLLoader loader = new FXMLLoader(MeshEditor.class.getResource("/fxml/" + fxmlFileName + ".fxml"));
-		loader.setRoot(root);
-		loader.setController(controller);
-		try {
-			loader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		controller.init();
 	}
 
 	private void setListeners() {
@@ -89,13 +63,6 @@ public class WindowView {
 		loadState.stateSaved.addListener(this::setWindowTitle);
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 		loadState.loaded.addListener(() -> propertiesViewRoot.setVisible(loadState.loaded.get()));
-
-		newProjectMenuItem.setOnAction(event -> workspaceAction.onNewProject());
-		openProjectMenuItem.setOnAction(event -> workspaceAction.onOpenProject());
-		closeProjectMenuItem.setOnAction(event -> workspaceAction.onCloseProject());
-		saveProjectMenuItem.setOnAction(event -> workspaceAction.onSaveProject());
-		saveProjectAsMenuItem.setOnAction(event -> workspaceAction.onSaveProjectAs());
-		exitAppMenuItem.setOnAction(event -> workspaceAction.onExitApp());
 	}
 
 	private void setWindowTitle() {

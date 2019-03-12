@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import org.w3c.dom.css.Rect;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.model.ImageBoxModel;
 import sgora.mesh.editor.model.geom.Rectangle;
@@ -19,16 +18,16 @@ public class ImageBox implements MouseListener {
 	private Point lastCanvasSize;
 	private double zoom = 1;
 
-	private final Point mainViewSize;
+	private final Point canvasViewSize;
 	private final SettableObservable<CanvasData> canvasData;
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
 	private ObjectProperty<Cursor> mouseCursor;
 	private ImageBoxModel imageBoxModel;
 
-	public ImageBox(Point mainViewSize, SettableObservable<CanvasData> canvasData, AppConfigReader appConfig,
+	public ImageBox(Point canvasViewSize, SettableObservable<CanvasData> canvasData, AppConfigReader appConfig,
 	                AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
-		this.mainViewSize = mainViewSize;
+		this.canvasViewSize = canvasViewSize;
 		this.canvasData = canvasData;
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
@@ -42,12 +41,12 @@ public class ImageBox implements MouseListener {
 			return;
 		}
 		if(lastCanvasSize == null) {
-			lastCanvasSize = new Point(mainViewSize);
+			lastCanvasSize = new Point(canvasViewSize);
 			return;
 		}
-		Point sizeDiff = new Point(mainViewSize).subtract(lastCanvasSize);
+		Point sizeDiff = new Point(canvasViewSize).subtract(lastCanvasSize);
 		canvasData.imageBox.position.add(sizeDiff.divideByScalar(2));
-		lastCanvasSize.set(mainViewSize);
+		lastCanvasSize.set(canvasViewSize);
 	}
 
 	public void calcImageBox() {
@@ -58,7 +57,7 @@ public class ImageBox implements MouseListener {
 		SettableProperty<Image> baseImage = canvasData.baseImage;
 		double imgRatio = baseImage.get().getWidth() / baseImage.get().getHeight();
 
-		Point canvasSize = mainViewSize;
+		Point canvasSize = canvasViewSize;
 		double defBorder = appConfig.getDouble("imageBox.defaultBorder");
 		if(imgRatio > canvasSize.x / canvasSize.y) {
 			double imgWidth = canvasSize.x * (1 - defBorder);
@@ -105,13 +104,13 @@ public class ImageBox implements MouseListener {
 			return;
 		}
 		Rectangle imageBox = this.canvasData.get().imageBox;
-		imageBox.position.add(dragAmount).clamp(new Point(imageBox.size).multiplyByScalar(-1), mainViewSize);
+		imageBox.position.add(dragAmount).clamp(new Point(imageBox.size).multiplyByScalar(-1), canvasViewSize);
 		imageBox.notifyListeners();
 	}
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton button) {
-		mouseCursor.setValue(mousePos.isBetween(new Point(), mainViewSize) ? Cursor.HAND : Cursor.DEFAULT);
+		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
 	}
 
 	@Override

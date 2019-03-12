@@ -3,8 +3,8 @@ package sgora.mesh.editor.view;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.AnchorPane;
-import sgora.mesh.editor.interfaces.SubController;
+import javafx.scene.layout.Region;
+import sgora.mesh.editor.enums.SubView;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.geom.Point;
@@ -19,16 +19,15 @@ import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.ui.canvas.ImageCanvas;
 import sgora.mesh.editor.ui.canvas.MeshCanvas;
 
-public class MainView implements SubController {
+public class CanvasView extends SubController {
 
-	public AnchorPane mainView;
 	public ImageCanvas imageCanvas;
 	public MeshCanvas meshCanvas;
 
 	private SettableObservable<CanvasData> canvasData;
 	private SettableProperty<MouseTool> activeTool;
 
-	private Point mainViewSize;
+	private Point canvasViewSize;
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
@@ -39,18 +38,21 @@ public class MainView implements SubController {
 
 	private Point lastMouseDragPoint;
 
-	public MainView(SettableObservable<CanvasData> canvasData, SettableProperty<MouseTool> activeTool,
-	                 Point mainViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils, TriangleUtils triangleUtils,
-	                 SettableObservable<LoadState> loadState, SettableObservable<VisualProperties> visualProperties) {
+	public CanvasView(Region root, SubView subView, SettableObservable<CanvasData> canvasData, SettableProperty<MouseTool> activeTool,
+	                  Point canvasViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils, TriangleUtils triangleUtils,
+	                  SettableObservable<LoadState> loadState, SettableObservable<VisualProperties> visualProperties) {
+		super(root, subView);
+
 		this.canvasData = canvasData;
 		this.activeTool = activeTool;
-		this.mainViewSize = mainViewSize;
+		this.canvasViewSize = canvasViewSize;
 		this.imageBox = imageBox;
 		this.meshBox = meshBox;
 		this.nodeUtils = nodeUtils;
 		this.triangleUtils = triangleUtils;
 		this.loadState = loadState;
 		this.visualProperties = visualProperties;
+		loadView();
 	}
 
 	public void init() {
@@ -59,21 +61,21 @@ public class MainView implements SubController {
 	}
 
 	private void setListeners() {
-		mainView.widthProperty().addListener(this::paneSizeChanged);
-		mainView.heightProperty().addListener(this::paneSizeChanged);
+		root.widthProperty().addListener(this::paneSizeChanged);
+		root.heightProperty().addListener(this::paneSizeChanged);
 
-		mainViewSize.addListener(() -> {
-			imageCanvas.setWidth(mainViewSize.x);
-			imageCanvas.setHeight(mainViewSize.y);
-			meshCanvas.setWidth(mainViewSize.x);
-			meshCanvas.setHeight(mainViewSize.y);
+		canvasViewSize.addListener(() -> {
+			imageCanvas.setWidth(canvasViewSize.x);
+			imageCanvas.setHeight(canvasViewSize.y);
+			meshCanvas.setWidth(canvasViewSize.x);
+			meshCanvas.setHeight(canvasViewSize.y);
 		});
 		CanvasData canvasData = this.canvasData.get();
-		mainViewSize.addListener(() -> imageBox.onResizeCanvas());
+		canvasViewSize.addListener(() -> imageBox.onResizeCanvas());
 		canvasData.baseImage.addListener(() -> imageBox.calcImageBox());
 		canvasData.mesh.addStaticListener(() -> loadState.get().stateSaved.set(false));
 
-		mainViewSize.addListener(this::drawBothLayers);
+		canvasViewSize.addListener(this::drawBothLayers);
 		canvasData.addListener(this::drawBothLayers);
 		canvasData.mesh.addStaticListener(this::drawMesh);
 
@@ -81,19 +83,19 @@ public class MainView implements SubController {
 	}
 
 	private void setMouseHandlers() {
-		mainView.setOnScroll(this::onScroll);
+		root.setOnScroll(this::onScroll);
 
-		mainView.setOnMousePressed(this::onMousePress);
-		mainView.setOnMouseDragged(this::onMouseDrag);
+		root.setOnMousePressed(this::onMousePress);
+		root.setOnMouseDragged(this::onMouseDrag);
 
-		mainView.setOnMouseReleased(this::onMouseRelease);
-		mainView.setOnMouseEntered(this::onMouseEnter);
-		mainView.setOnMouseExited(this::onMouseExit);
+		root.setOnMouseReleased(this::onMouseRelease);
+		root.setOnMouseEntered(this::onMouseEnter);
+		root.setOnMouseExited(this::onMouseExit);
 	}
 
 	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
-		mainViewSize.set(new Point(mainView.getWidth(), mainView.getHeight()));
-		mainViewSize.notifyListeners();
+		canvasViewSize.set(new Point(root.getWidth(), root.getHeight()));
+		canvasViewSize.notifyListeners();
 	}
 
 	private void drawMesh() {

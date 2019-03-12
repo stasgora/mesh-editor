@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import sgora.mesh.editor.config.JsonAppConfigReader;
 import sgora.mesh.editor.config.JsonLangConfigReader;
+import sgora.mesh.editor.enums.SubView;
 import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
@@ -32,7 +33,8 @@ import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.services.files.ProjectFileUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionExecutor;
-import sgora.mesh.editor.view.MainView;
+import sgora.mesh.editor.view.CanvasView;
+import sgora.mesh.editor.view.MenuView;
 import sgora.mesh.editor.view.PropertiesView;
 import sgora.mesh.editor.view.WindowView;
 
@@ -44,7 +46,8 @@ public class ObjectGraphFactory {
 	private final FXMLLoader loader;
 
 	private PropertiesView propertiesView;
-	private MainView mainView;
+	private CanvasView canvasView;
+	private MenuView menuView;
 
 	private SettableObservable<LoadState> loadState = new SettableObservable<>(new LoadState());
 	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
@@ -67,7 +70,7 @@ public class ObjectGraphFactory {
 	private UiDialogUtils dialogUtils;
 	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
-	private Point mainViewSize = new Point();
+	private Point canvasViewSize = new Point();
 
 	private ImageBoxModel imageBoxModel;
 	private MeshBoxModel meshBoxModel;
@@ -130,17 +133,18 @@ public class ObjectGraphFactory {
 		imageBoxModel = new ImageBoxModel();
 		meshBoxModel = new MeshBoxModel();
 
-		imageBox = new ImageBox(mainViewSize, canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
-		meshBox = new MeshBox(canvasData.get().mesh, meshBoxModel, mainViewSize, mouseCursor, triangulationService, nodeUtils);
+		imageBox = new ImageBox(canvasViewSize, canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
+		meshBox = new MeshBox(canvasData.get().mesh, meshBoxModel, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
 	}
 
 	private void initControllerObjects() {
-		MainView mainView = windowView.mainViewController;
-		propertiesView = new PropertiesView(visualProperties);
-		mainView = new MainView(canvasData, activeTool, mainViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
-		windowView.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace(), propertiesView, mainView);
+		propertiesView = new PropertiesView(windowView.propertiesViewRoot, SubView.PROPERTIES_VIEW, visualProperties);
+		menuView = new MenuView(windowView.menuViewRoot, SubView.MENU_VIEW, workspaceAction);
+		canvasView = new CanvasView(windowView.canvasViewRoot, SubView.CANVAS_VIEW, canvasData, activeTool,
+				canvasViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
+		windowView.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace());
 
-		mainView.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
+		canvasView.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
 		windowView.toolBar.init(activeTool, appLang);
 	}
 

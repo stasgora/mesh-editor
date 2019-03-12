@@ -18,16 +18,16 @@ public class MeshBox implements MouseListener {
 	
 	private final SettableObservable<Mesh> mesh;
 	private final MeshBoxModel meshBoxModel;
-	private final Point mainViewSize;
+	private final Point canvasViewSize;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private TriangulationService triangulationService;
 	private NodeUtils nodeUtils;
 
-	public MeshBox(SettableObservable<Mesh> mesh, MeshBoxModel meshBoxModel, Point mainViewSize, ObjectProperty<Cursor> mouseCursor,
+	public MeshBox(SettableObservable<Mesh> mesh, MeshBoxModel meshBoxModel, Point canvasViewSize, ObjectProperty<Cursor> mouseCursor,
 	               TriangulationService triangulationService, NodeUtils nodeUtils) {
 		this.mesh = mesh;
 		this.meshBoxModel = meshBoxModel;
-		this.mainViewSize = mainViewSize;
+		this.canvasViewSize = canvasViewSize;
 		this.mouseCursor = mouseCursor;
 		this.triangulationService = triangulationService;
 		this.nodeUtils = nodeUtils;
@@ -56,7 +56,7 @@ public class MeshBox implements MouseListener {
 		if(draggedNode == null || button != meshBoxModel.moveNodeButton) {
 			return;
 		}
-		Point newNodePos = clampCanvasSpaceNodePos(mousePos.clamp(mainViewSize));
+		Point newNodePos = clampCanvasSpaceNodePos(mousePos.clamp(canvasViewSize));
 		triangulationService.moveNode(draggedNode, nodeUtils.canvasToProportionalPos(newNodePos));
 		mesh.get().notifyListeners();
 	}
@@ -67,7 +67,7 @@ public class MeshBox implements MouseListener {
 			triangulationService.addNode(nodeUtils.canvasToProportionalPos(mousePos));
 		}
 		draggedNode = null;
-		mouseCursor.setValue(mousePos.isBetween(new Point(), mainViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
+		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
 	}
 
 	@Override
