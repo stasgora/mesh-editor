@@ -1,10 +1,13 @@
 package sgora.mesh.editor.view;
 
+import javafx.collections.ObservableMap;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.SubView;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.VisualProperties;
+
+import java.util.Map;
 
 public class PropertiesView extends SubController {
 
@@ -13,10 +16,10 @@ public class PropertiesView extends SubController {
 
 	private SettableObservable<VisualProperties> visualProperties;
 
-	public PropertiesView(Region root, SubView subView, SettableObservable<VisualProperties> visualProperties) {
-		super(root, subView);
+	public PropertiesView(Region root, SubView subView, Map<SubView, ObservableMap<String, Object>> viewNamespaces, SettableObservable<VisualProperties> visualProperties) {
+		super(root, subView, viewNamespaces);
 		this.visualProperties = visualProperties;
-		loadView();
+		init();
 	}
 
 	public void init() {

@@ -1,6 +1,7 @@
 package sgora.mesh.editor.view;
 
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableMap;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
@@ -18,6 +19,8 @@ import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.ui.canvas.ImageCanvas;
 import sgora.mesh.editor.ui.canvas.MeshCanvas;
+
+import java.util.Map;
 
 public class CanvasView extends SubController {
 
@@ -38,10 +41,10 @@ public class CanvasView extends SubController {
 
 	private Point lastMouseDragPoint;
 
-	public CanvasView(Region root, SubView subView, SettableObservable<CanvasData> canvasData, SettableProperty<MouseTool> activeTool,
-	                  Point canvasViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils, TriangleUtils triangleUtils,
-	                  SettableObservable<LoadState> loadState, SettableObservable<VisualProperties> visualProperties) {
-		super(root, subView);
+	public CanvasView(Region root, SubView subView, Map<SubView, ObservableMap<String, Object>> viewNamespaces, SettableObservable<CanvasData> canvasData,
+	                  SettableProperty<MouseTool> activeTool, Point canvasViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils,
+	                  TriangleUtils triangleUtils, SettableObservable<LoadState> loadState, SettableObservable<VisualProperties> visualProperties) {
+		super(root, subView, viewNamespaces);
 
 		this.canvasData = canvasData;
 		this.activeTool = activeTool;
@@ -52,7 +55,7 @@ public class CanvasView extends SubController {
 		this.triangleUtils = triangleUtils;
 		this.loadState = loadState;
 		this.visualProperties = visualProperties;
-		loadView();
+		init();
 	}
 
 	public void init() {

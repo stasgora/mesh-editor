@@ -1,13 +1,19 @@
 package sgora.mesh.editor.view;
 
+import javafx.collections.ObservableMap;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.SubView;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
+import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.project.LoadState;
+
+import java.util.Map;
 
 public class MenuView extends SubController {
 
 	private WorkspaceAction workspaceAction;
+	private final SettableObservable<LoadState> loadState;
 
 	public MenuItem newProjectMenuItem;
 	public MenuItem openProjectMenuItem;
@@ -17,10 +23,14 @@ public class MenuView extends SubController {
 	public MenuItem saveProjectAsMenuItem;
 	public MenuItem exitAppMenuItem;
 
-	public MenuView(Region root, SubView subView, WorkspaceAction workspaceAction) {
-		super(root, subView);
+	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
+
+	public MenuView(Region root, SubView subView, Map<SubView, ObservableMap<String, Object>> viewNamespaces,
+	                WorkspaceAction workspaceAction, SettableObservable<LoadState> loadState) {
+		super(root, subView, viewNamespaces);
 		this.workspaceAction = workspaceAction;
-		loadView();
+		this.loadState = loadState;
+		init();
 	}
 
 	@Override
@@ -31,6 +41,9 @@ public class MenuView extends SubController {
 		saveProjectMenuItem.setOnAction(event -> workspaceAction.onSaveProject());
 		saveProjectAsMenuItem.setOnAction(event -> workspaceAction.onSaveProjectAs());
 		exitAppMenuItem.setOnAction(event -> workspaceAction.onExitApp());
+
+		namespace.put(MENU_FILE_ITEM_DISABLED, true);
+		loadState.get().loaded.addListener(() -> namespace.put(MENU_FILE_ITEM_DISABLED, !((boolean) namespace.get(MENU_FILE_ITEM_DISABLED))));
 	}
 
 }

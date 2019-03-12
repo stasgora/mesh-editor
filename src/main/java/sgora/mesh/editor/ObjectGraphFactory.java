@@ -1,6 +1,7 @@
 package sgora.mesh.editor;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -38,6 +39,9 @@ import sgora.mesh.editor.view.MenuView;
 import sgora.mesh.editor.view.PropertiesView;
 import sgora.mesh.editor.view.WindowView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ObjectGraphFactory {
 
 	private final WindowView windowView;
@@ -48,6 +52,7 @@ public class ObjectGraphFactory {
 	private PropertiesView propertiesView;
 	private CanvasView canvasView;
 	private MenuView menuView;
+	private Map<SubView, ObservableMap<String, Object>> viewNamespaces = new HashMap<>();
 
 	private SettableObservable<LoadState> loadState = new SettableObservable<>(new LoadState());
 	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
@@ -138,9 +143,9 @@ public class ObjectGraphFactory {
 	}
 
 	private void initControllerObjects() {
-		propertiesView = new PropertiesView(windowView.propertiesViewRoot, SubView.PROPERTIES_VIEW, visualProperties);
-		menuView = new MenuView(windowView.menuViewRoot, SubView.MENU_VIEW, workspaceAction);
-		canvasView = new CanvasView(windowView.canvasViewRoot, SubView.CANVAS_VIEW, canvasData, activeTool,
+		propertiesView = new PropertiesView(windowView.propertiesViewRoot, SubView.PROPERTIES_VIEW, viewNamespaces, visualProperties);
+		menuView = new MenuView(windowView.menuViewRoot, SubView.MENU_VIEW, viewNamespaces, workspaceAction, loadState);
+		canvasView = new CanvasView(windowView.canvasViewRoot, SubView.CANVAS_VIEW, viewNamespaces, canvasData, activeTool,
 				canvasViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
 		windowView.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace());
 

@@ -39,8 +39,6 @@ public class WindowView {
 	private WorkspaceAction workspaceAction;
 	private ObservableMap<String, Object> fxmlNamespace;
 
-	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
-
 	public void init(SettableObservable<LoadState> loadState, Stage window, AppConfigReader appConfig,
 	                 WorkspaceAction workspaceAction, ObservableMap<String, Object> fxmlNamespace) {
 		this.loadState = loadState;
@@ -48,7 +46,6 @@ public class WindowView {
 		this.appConfig = appConfig;
 		this.workspaceAction = workspaceAction;
 		this.fxmlNamespace = fxmlNamespace;
-		fxmlNamespace.put(MENU_FILE_ITEM_DISABLED, true);
 
 		setWindowTitle();
 		setListeners();
@@ -57,7 +54,6 @@ public class WindowView {
 
 	private void setListeners() {
 		LoadState loadState = this.loadState.get();
-		loadState.loaded.addListener(() -> fxmlNamespace.put(MENU_FILE_ITEM_DISABLED, !((boolean) fxmlNamespace.get(MENU_FILE_ITEM_DISABLED))));
 		loadState.loaded.addListener(this::setWindowTitle);
 		loadState.file.addListener(this::setWindowTitle);
 		loadState.stateSaved.addListener(this::setWindowTitle);
