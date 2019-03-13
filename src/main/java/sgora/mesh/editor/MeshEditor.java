@@ -10,11 +10,11 @@ public class MeshEditor extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainWindow.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/WindowView.fxml"));
 		Parent root = loader.load();
 		WindowView controller = loader.getController();
 
-		new ObjectGraphFactory(controller, root, stage, loader).createObjectGraph();
+		new ObjectGraphFactory(controller, root, stage, loader.getNamespace()).createObjectGraph();
 		stage.requestFocus();
 		stage.show();
 	}

@@ -8,7 +8,7 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import sgora.mesh.editor.config.JsonAppConfigReader;
 import sgora.mesh.editor.config.JsonLangConfigReader;
-import sgora.mesh.editor.enums.SubView;
+import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
@@ -47,12 +47,11 @@ public class ObjectGraphFactory {
 	private final WindowView windowView;
 	private final Parent root;
 	private final Stage stage;
-	private final FXMLLoader loader;
 
 	private PropertiesView propertiesView;
 	private CanvasView canvasView;
 	private MenuView menuView;
-	private Map<SubView, ObservableMap<String, Object>> viewNamespaces = new HashMap<>();
+	private Map<String, ObservableMap<String, Object>> viewNamespaces = new HashMap<>();
 
 	private SettableObservable<LoadState> loadState = new SettableObservable<>(new LoadState());
 	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
@@ -83,11 +82,11 @@ public class ObjectGraphFactory {
 	private ImageBox imageBox;
 	private MeshBox meshBox;
 
-	public ObjectGraphFactory(WindowView controller, Parent root, Stage stage, FXMLLoader loader) {
+	public ObjectGraphFactory(WindowView controller, Parent root, Stage stage, ObservableMap<String, Object> windowNamespace) {
 		this.windowView = controller;
 		this.root = root;
 		this.stage = stage;
-		this.loader = loader;
+		viewNamespaces.put(ViewType.WINDOW_VIEW.langPrefix, windowNamespace);
 	}
 
 	public void createProjectModel() {
@@ -102,12 +101,14 @@ public class ObjectGraphFactory {
 		setupVisualObjects();
 		createCanvasBoxServices();
 		initControllerObjects();
+
+		appLang.onSetMainLanguage();
 	}
 
 	private void createConfigServices() {
 		appConfig = JsonAppConfigReader.forResource("/app.config");
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
-		appLang = new JsonLangConfigReader(appConfig, appSettings, loader.getNamespace());
+		appLang = new JsonLangConfigReader(appConfig, appSettings, viewNamespaces);
 	}
 
 	private void createTriangulationServices() {
@@ -126,7 +127,6 @@ public class ObjectGraphFactory {
 	}
 
 	private void setupVisualObjects() {
-		dialogUtils = new UiDialogUtils(stage, appLang);
 		windowView.setupWindow(appSettings, stage, root);
 
 		activeTool = new SettableProperty<>(MouseTool.MESH_EDITOR);
@@ -143,11 +143,11 @@ public class ObjectGraphFactory {
 	}
 
 	private void initControllerObjects() {
-		propertiesView = new PropertiesView(windowView.propertiesViewRoot, SubView.PROPERTIES_VIEW, viewNamespaces, visualProperties);
-		menuView = new MenuView(windowView.menuViewRoot, SubView.MENU_VIEW, viewNamespaces, workspaceAction, loadState);
-		canvasView = new CanvasView(windowView.canvasViewRoot, SubView.CANVAS_VIEW, viewNamespaces, canvasData, activeTool,
+		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW, viewNamespaces, visualProperties);
+		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, loadState);
+		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, canvasData, activeTool,
 				canvasViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
-		windowView.init(loadState, stage, appConfig, workspaceAction, loader.getNamespace());
+		windowView.init(loadState, stage, appConfig, workspaceAction);
 
 		canvasView.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
 		windowView.toolBar.init(activeTool, appLang);

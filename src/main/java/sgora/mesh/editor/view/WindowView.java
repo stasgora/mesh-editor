@@ -37,15 +37,12 @@ public class WindowView {
 	public MainToolbar toolBar;
 
 	private WorkspaceAction workspaceAction;
-	private ObservableMap<String, Object> fxmlNamespace;
 
-	public void init(SettableObservable<LoadState> loadState, Stage window, AppConfigReader appConfig,
-	                 WorkspaceAction workspaceAction, ObservableMap<String, Object> fxmlNamespace) {
+	public void init(SettableObservable<LoadState> loadState, Stage window, AppConfigReader appConfig, WorkspaceAction workspaceAction) {
 		this.loadState = loadState;
 		this.window = window;
 		this.appConfig = appConfig;
 		this.workspaceAction = workspaceAction;
-		this.fxmlNamespace = fxmlNamespace;
 
 		setWindowTitle();
 		setListeners();

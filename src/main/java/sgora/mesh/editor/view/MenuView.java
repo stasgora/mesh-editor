@@ -3,7 +3,7 @@ package sgora.mesh.editor.view;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Region;
-import sgora.mesh.editor.enums.SubView;
+import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.LoadState;
@@ -25,9 +25,9 @@ public class MenuView extends SubController {
 
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 
-	public MenuView(Region root, SubView subView, Map<SubView, ObservableMap<String, Object>> viewNamespaces,
+	public MenuView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,
 	                WorkspaceAction workspaceAction, SettableObservable<LoadState> loadState) {
-		super(root, subView, viewNamespaces);
+		super(root, viewType, viewNamespaces);
 		this.workspaceAction = workspaceAction;
 		this.loadState = loadState;
 		init();

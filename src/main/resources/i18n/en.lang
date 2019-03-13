@@ -14,11 +14,11 @@
 					"quit": "_Quit"
 				}
 			}
-		},
-		"tool": {
-			"meshEditor": "Mesh Editor",
-			"imageMover": "Image Mover"
 		}
+	},
+	"tool": {
+		"meshEditor": "Mesh Editor",
+		"imageMover": "Image Mover"
 	},
 	"action": {
 		"save": "Save",

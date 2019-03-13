@@ -21,7 +21,7 @@ public class MainToolbar extends ToolBar {
 	}
 
 	private void addTool(MouseTool tool) {
-		Button toolButton = new Button(appLang.getText("fxml.tool." + tool.langKey));
+		Button toolButton = new Button(appLang.getText("tool." + tool.langKey));
 		toolButton.setUserData(tool);
 		toolButton.onActionProperty().setValue(this::onToolChosen);
 		getItems().add(toolButton);

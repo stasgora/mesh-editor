@@ -5,7 +5,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
-import sgora.mesh.editor.enums.SubView;
+import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.geom.Point;
@@ -41,10 +41,10 @@ public class CanvasView extends SubController {
 
 	private Point lastMouseDragPoint;
 
-	public CanvasView(Region root, SubView subView, Map<SubView, ObservableMap<String, Object>> viewNamespaces, SettableObservable<CanvasData> canvasData,
+	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, SettableObservable<CanvasData> canvasData,
 	                  SettableProperty<MouseTool> activeTool, Point canvasViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils,
 	                  TriangleUtils triangleUtils, SettableObservable<LoadState> loadState, SettableObservable<VisualProperties> visualProperties) {
-		super(root, subView, viewNamespaces);
+		super(root, viewType, viewNamespaces);
 
 		this.canvasData = canvasData;
 		this.activeTool = activeTool;
