@@ -20,6 +20,10 @@
 				"title": "Visibility",
 				"mesh": "Mesh",
 				"image": "Image"
+			},
+			"transparency": {
+				"title": "Transparency",
+				"mesh": "Mesh"
 			}
 		}
 	},
