@@ -76,7 +76,7 @@ public class WindowView {
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
 	}
 
-	public void setupWindow(AppConfigReader appSettings, Stage stage, Parent root) {
+	public void createWindowScene(AppConfigReader appSettings, Stage stage, Parent root) {
 		Scene scene;
 		String windowPath = "last.windowPlacement";
 		if(appSettings.containsPath(windowPath)) {

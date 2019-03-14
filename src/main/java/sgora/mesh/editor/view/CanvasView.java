@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
+import sgora.mesh.editor.interfaces.CanvasAction;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.geom.Point;
@@ -28,33 +29,29 @@ public class CanvasView extends SubController {
 	public MeshCanvas meshCanvas;
 
 	private SettableObservable<CanvasData> canvasData;
-	private SettableProperty<MouseTool> activeTool;
 
 	private Point canvasViewSize;
 
 	private ImageBox imageBox;
-	private MeshBox meshBox;
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
 	private SettableObservable<LoadState> loadState;
 	private SettableObservable<VisualProperties> visualProperties;
+	private final CanvasAction canvasAction;
 
-	private Point lastMouseDragPoint;
-
-	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, SettableObservable<CanvasData> canvasData,
-	                  SettableProperty<MouseTool> activeTool, Point canvasViewSize, ImageBox imageBox, MeshBox meshBox, NodeUtils nodeUtils,
-	                  TriangleUtils triangleUtils, SettableObservable<LoadState> loadState, SettableObservable<VisualProperties> visualProperties) {
+	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, SettableObservable<CanvasData> canvasData, 
+	                  Point canvasViewSize, ImageBox imageBox, NodeUtils nodeUtils, SettableObservable<LoadState> loadState, 
+	                  TriangleUtils triangleUtils, SettableObservable<VisualProperties> visualProperties, CanvasAction canvasAction) {
 		super(root, viewType, viewNamespaces);
 
 		this.canvasData = canvasData;
-		this.activeTool = activeTool;
 		this.canvasViewSize = canvasViewSize;
 		this.imageBox = imageBox;
-		this.meshBox = meshBox;
 		this.nodeUtils = nodeUtils;
 		this.triangleUtils = triangleUtils;
 		this.loadState = loadState;
 		this.visualProperties = visualProperties;
+		this.canvasAction = canvasAction;
 		init();
 	}
 
@@ -86,14 +83,14 @@ public class CanvasView extends SubController {
 	}
 
 	private void setMouseHandlers() {
-		root.setOnScroll(this::onScroll);
+		root.setOnScroll(canvasAction::onScroll);
 
-		root.setOnMousePressed(this::onMousePress);
-		root.setOnMouseDragged(this::onMouseDrag);
+		root.setOnMousePressed(canvasAction::onMousePress);
+		root.setOnMouseDragged(canvasAction::onMouseDrag);
 
-		root.setOnMouseReleased(this::onMouseRelease);
-		root.setOnMouseEntered(this::onMouseEnter);
-		root.setOnMouseExited(this::onMouseExit);
+		root.setOnMouseReleased(canvasAction::onMouseRelease);
+		root.setOnMouseEntered(canvasAction::onMouseEnter);
+		root.setOnMouseExited(canvasAction::onMouseExit);
 	}
 
 	private void paneSizeChanged(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
@@ -119,71 +116,6 @@ public class CanvasView extends SubController {
 	private void drawBothLayers() {
 		drawImage();
 		drawMesh();
-	}
-
-	private void onMousePress(MouseEvent event) {
-		Point mousePos = new Point(event.getX(), event.getY());
-		if(loadState.get().loaded.get()) {
-			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onDragStart(mousePos, event.getButton());
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onDragStart(mousePos, event.getButton());
-			}
-		}
-		lastMouseDragPoint = mousePos;
-	}
-
-	private void onMouseDrag(MouseEvent event) {
-		Point mousePos = new Point(event.getX(), event.getY());
-		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
-		if(loadState.get().loaded.get()) {
-			if (activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
-			}
-		}
-		lastMouseDragPoint.set(mousePos);
-	}
-
-	private void onMouseRelease(MouseEvent event) {
-		lastMouseDragPoint = null;
-		Point mousePos = new Point(event.getX(), event.getY());
-		if(loadState.get().loaded.get()) {
-			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onDragEnd(new Point(mousePos), event.getButton());
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onDragEnd(new Point(mousePos), event.getButton());
-			}
-		}
-	}
-
-	private void onScroll(ScrollEvent event) {
-		if(loadState.get().loaded.get()) {
-			imageBox.onZoom(event.getDeltaY(), new Point(event.getX(), event.getY()));
-		}
-	}
-
-	private void onMouseEnter(MouseEvent event) {
-		if(loadState.get().loaded.get()) {
-			boolean isDragging = lastMouseDragPoint != null;
-			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onMouseEnter(isDragging);
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onMouseEnter(isDragging);
-			}
-		}
-	}
-
-	private void onMouseExit(MouseEvent event) {
-		if(loadState.get().loaded.get()) {
-			boolean isDragging = lastMouseDragPoint != null;
-			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onMouseExit(isDragging);
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onMouseExit(isDragging);
-			}
-		}
 	}
 
 }

@@ -2,13 +2,13 @@ package sgora.mesh.editor;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableMap;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import sgora.mesh.editor.config.JsonAppConfigReader;
 import sgora.mesh.editor.config.JsonLangConfigReader;
 import sgora.mesh.editor.enums.ViewType;
+import sgora.mesh.editor.interfaces.CanvasAction;
 import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
@@ -24,6 +24,7 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.*;
+import sgora.mesh.editor.services.drawing.CanvasActionFacade;
 import sgora.mesh.editor.services.drawing.ColorUtils;
 import sgora.mesh.editor.services.drawing.ImageBox;
 import sgora.mesh.editor.services.drawing.MeshBox;
@@ -81,6 +82,7 @@ public class ObjectGraphFactory {
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
+	private CanvasAction canvasAction;
 
 	public ObjectGraphFactory(WindowView controller, Parent root, Stage stage, ObservableMap<String, Object> windowNamespace) {
 		this.windowView = controller;
@@ -127,8 +129,7 @@ public class ObjectGraphFactory {
 	}
 
 	private void setupVisualObjects() {
-		windowView.setupWindow(appSettings, stage, root);
-
+		windowView.createWindowScene(appSettings, stage, root);
 		activeTool = new SettableProperty<>(MouseTool.MESH_EDITOR);
 		mouseCursor = stage.getScene().cursorProperty();
 	}
@@ -140,13 +141,14 @@ public class ObjectGraphFactory {
 
 		imageBox = new ImageBox(canvasViewSize, canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
 		meshBox = new MeshBox(canvasData.get().mesh, meshBoxModel, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
+		canvasAction = new CanvasActionFacade(loadState, imageBox, meshBox, activeTool);
 	}
 
 	private void initControllerObjects() {
 		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW, viewNamespaces, visualProperties);
 		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, loadState);
-		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, canvasData, activeTool,
-				canvasViewSize, imageBox, meshBox, nodeUtils, triangleUtils, loadState, visualProperties);
+		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, canvasData,
+				canvasViewSize, imageBox, nodeUtils, loadState, triangleUtils, visualProperties, canvasAction);
 		windowView.init(loadState, stage, appConfig, workspaceAction);
 
 		canvasView.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
