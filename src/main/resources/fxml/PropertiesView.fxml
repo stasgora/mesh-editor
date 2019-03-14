@@ -2,15 +2,17 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root type="javafx.scene.layout.AnchorPane" visible="false" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
 	<VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 		<padding>
-			<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+			<Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
 		</padding>
-		<CheckBox fx:id="meshVisibleCheckBox" mnemonicParsing="false" selected="true" text="CheckBox" />
-		<CheckBox fx:id="imageVisibleCheckBox" mnemonicParsing="false" selected="true" text="CheckBox" />
+		<Label text="${properties_visibility_title}"/>
+		<CheckBox fx:id="meshVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_mesh}"/>
+		<CheckBox fx:id="imageVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_image}"/>
 	</VBox>
 </fx:root>

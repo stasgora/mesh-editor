@@ -5,7 +5,7 @@ public enum ViewType {
 	WINDOW_VIEW("window", "WindowView"),
 	CANVAS_VIEW("canvas", "CanvasView"),
 	MENU_VIEW("menu", "MenuView"),
-	PROPERTIES_VIEW("props", "PropertiesView");
+	PROPERTIES_VIEW("properties", "PropertiesView");
 
 	ViewType(String langPrefix, String fxmlFileName) {
 		this.langPrefix = langPrefix;
