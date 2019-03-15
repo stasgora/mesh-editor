@@ -2,20 +2,15 @@ package sgora.mesh.editor.view;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableMap;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.interfaces.CanvasAction;
+import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
-import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.enums.MouseTool;
-import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.services.drawing.ImageBox;
-import sgora.mesh.editor.services.drawing.MeshBox;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.ui.canvas.ImageCanvas;
@@ -77,7 +72,6 @@ public class CanvasView extends SubController {
 
 		canvasViewSize.addListener(this::drawBothLayers);
 		canvasData.addListener(this::drawBothLayers);
-		canvasData.imageBox.addListener(this::drawBothLayers);
 		canvasData.mesh.addStaticListener(this::drawMesh);
 
 		visualProperties.addStaticListener(this::drawBothLayers);

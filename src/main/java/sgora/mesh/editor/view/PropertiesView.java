@@ -33,12 +33,12 @@ public class PropertiesView extends SubController {
 
 		meshTransparencySlider.valueProperty().addListener((observable, oldVal, newVal) -> meshTransparencyValue.setText(String.valueOf(newVal.intValue())));
 		meshTransparencyValue.textProperty().addListener((observable, oldVal, newVal) -> setMeshTransparency(validateNumericalText(newVal, 0, 100)));
-		meshTransparencyValue.setText("0");
 	}
 
 	private void setMeshTransparency(int value) {
 		meshTransparencyValue.setText(String.valueOf(value));
 		meshTransparencySlider.setValue(value);
+		visualProperties.get().meshTransparency.set(value / 100d);
 	}
 
 	private int validateNumericalText(String value, int minVal, int maxVal) {

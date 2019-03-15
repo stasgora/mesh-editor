@@ -28,10 +28,11 @@ public class MeshCanvas extends Canvas {
 		if(!isVisible()) {
 			return;
 		}
+		VisualProperties properties = this.visualProperties.get();
 		Point pixelImgSize = new Point(baseImage.get().getWidth(), baseImage.get().getHeight());
 		PixelReader pixels = baseImage.get().getPixelReader();
 		for (Point[] triangle : triangles) {
-			context.setFill(colorUtils.getTriangleColor(triangle, pixels, pixelImgSize));
+			context.setFill(colorUtils.getTriangleColor(triangle, pixels, pixelImgSize, properties.meshTransparency.get()));
 			context.beginPath();
 			context.moveTo(triangle[0].x, triangle[0].y);
 			context.lineTo(triangle[1].x, triangle[1].y);
@@ -39,8 +40,8 @@ public class MeshCanvas extends Canvas {
 			context.closePath();
 			context.fill();
 		}
-		context.setFill(visualProperties.get().nodeColor.get().getFXColor());
-		Integer nodeRadius = visualProperties.get().nodeRadius.get();
+		context.setFill(properties.nodeColor.get().getFXColor());
+		Integer nodeRadius = properties.nodeRadius.get();
 		for (Point node : nodes) {
 			context.fillOval(node.x - nodeRadius / 2d, node.y - nodeRadius / 2d, nodeRadius, nodeRadius);
 		}

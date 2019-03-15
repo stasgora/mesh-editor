@@ -17,12 +17,12 @@ public class ColorUtils {
 		this.nodeUtils = nodeUtils;
 	}
 
-	public Color getTriangleColor(Point[] triangle, PixelReader image, Point imageSize) {
+	public Color getTriangleColor(Point[] triangle, PixelReader image, Point imageSize, double transparency) {
 		List<Color> colors = Arrays.stream(triangle).map(node -> getNodeColor(nodeUtils.canvasToPixelPos(node), image, imageSize)).collect(Collectors.toList());
 		double r = colors.stream().mapToDouble(Color::getRed).average().orElse(255);
 		double g = colors.stream().mapToDouble(Color::getGreen).average().orElse(255);
 		double b = colors.stream().mapToDouble(Color::getBlue).average().orElse(255);
-		return new Color(r, g, b, 0.8);
+		return new Color(r, g, b, transparency);
 	}
 
 	private Color getNodeColor(Point node, PixelReader image, Point imageSize) {
