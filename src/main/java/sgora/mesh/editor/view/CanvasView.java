@@ -9,6 +9,7 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
+import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.services.drawing.ImageBox;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
@@ -23,29 +24,23 @@ public class CanvasView extends SubController {
 	public ImageCanvas imageCanvas;
 	public MeshCanvas meshCanvas;
 
-	private SettableObservable<CanvasData> canvasData;
-
+	private final Project project;
 	private Point canvasViewSize;
 
 	private ImageBox imageBox;
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
-	private SettableObservable<LoadState> loadState;
-	private SettableObservable<VisualProperties> visualProperties;
 	private final CanvasAction canvasAction;
 
-	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, SettableObservable<CanvasData> canvasData, 
-	                  Point canvasViewSize, ImageBox imageBox, NodeUtils nodeUtils, SettableObservable<LoadState> loadState, 
-	                  TriangleUtils triangleUtils, SettableObservable<VisualProperties> visualProperties, CanvasAction canvasAction) {
+	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, Project project,
+	                  Point canvasViewSize, ImageBox imageBox, NodeUtils nodeUtils, TriangleUtils triangleUtils, CanvasAction canvasAction) {
 		super(root, viewType, viewNamespaces);
 
-		this.canvasData = canvasData;
+		this.project = project;
 		this.canvasViewSize = canvasViewSize;
 		this.imageBox = imageBox;
 		this.nodeUtils = nodeUtils;
 		this.triangleUtils = triangleUtils;
-		this.loadState = loadState;
-		this.visualProperties = visualProperties;
 		this.canvasAction = canvasAction;
 		init();
 	}
@@ -65,16 +60,15 @@ public class CanvasView extends SubController {
 			meshCanvas.setWidth(canvasViewSize.x);
 			meshCanvas.setHeight(canvasViewSize.y);
 		});
-		CanvasData canvasData = this.canvasData.get();
+		CanvasData canvasData = project.canvasData.get();
 		canvasViewSize.addListener(() -> imageBox.onResizeCanvas());
 		canvasData.baseImage.addListener(() -> imageBox.calcImageBox());
-		canvasData.mesh.addStaticListener(() -> loadState.get().stateSaved.set(false));
+		canvasData.mesh.addStaticListener(() -> project.loadState.get().stateSaved.setAndNotify(false));
 
 		canvasViewSize.addListener(this::drawBothLayers);
 		canvasData.addListener(this::drawBothLayers);
-		canvasData.mesh.addStaticListener(this::drawMesh);
 
-		visualProperties.addStaticListener(this::drawBothLayers);
+		project.visualProperties.addStaticListener(this::drawBothLayers);
 	}
 
 	private void setMouseHandlers() {
@@ -95,15 +89,15 @@ public class CanvasView extends SubController {
 
 	private void drawMesh() {
 		meshCanvas.clear();
-		if(loadState.get().loaded.get() && visualProperties.get().meshVisible.get()) {
+		if(project.loadState.get().loaded.get() && project.visualProperties.get().meshVisible.get()) {
 			meshCanvas.draw(nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
 	}
 
 	private void drawImage() {
 		imageCanvas.clear();
-		if(loadState.get().loaded.get() && visualProperties.get().imageVisible.get()) {
-			CanvasData canvasData = this.canvasData.get();
+		if(project.loadState.get().loaded.get() && project.visualProperties.get().imageVisible.get()) {
+			CanvasData canvasData = project.canvasData.get();
 			imageCanvas.draw(canvasData.imageBox, canvasData.baseImage.get());
 		}
 	}

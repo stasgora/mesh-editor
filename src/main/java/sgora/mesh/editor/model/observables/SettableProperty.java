@@ -6,7 +6,7 @@ import java.util.function.UnaryOperator;
 /**
  * Notifies listeners when model value is set
  */
-public class SettableProperty<T> extends SimpleObservable implements Serializable {
+public class SettableProperty<T> extends Observable implements Serializable {
 
 	protected T modelValue;
 
@@ -19,6 +19,10 @@ public class SettableProperty<T> extends SimpleObservable implements Serializabl
 		this.modelValue = modelValue;
 	}
 
+	public boolean present() {
+		return modelValue != null;
+	}
+
 	public T get() {
 		return modelValue;
 	}
@@ -29,6 +33,11 @@ public class SettableProperty<T> extends SimpleObservable implements Serializabl
 		}
 		this.modelValue = modelValue;
 		onValueChanged();
+	}
+
+	public void setAndNotify(T modelValue) {
+		set(modelValue);
+		notifyListeners();
 	}
 
 	public void modify(UnaryOperator<T> operator) {

@@ -1,13 +1,10 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.observables.ControlledObservable;
+import sgora.mesh.editor.model.observables.Observable;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class Point extends ControlledObservable implements Serializable {
+public class Point extends Observable implements Serializable {
 
 	public double x, y;
 

@@ -1,11 +1,11 @@
 package sgora.mesh.editor.model.project;
 
-import sgora.mesh.editor.model.observables.ComplexObservable;
+import sgora.mesh.editor.model.observables.Observable;
 import sgora.mesh.editor.model.observables.SettableProperty;
 
 import java.io.File;
 
-public class LoadState extends ComplexObservable {
+public class LoadState extends Observable {
 
 	public SettableProperty<Boolean> stateSaved = new SettableProperty<>(true);
 	public SettableProperty<File> file = new SettableProperty<>();

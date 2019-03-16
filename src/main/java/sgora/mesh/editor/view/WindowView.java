@@ -51,9 +51,7 @@ public class WindowView {
 
 	private void setListeners() {
 		LoadState loadState = this.loadState.get();
-		loadState.loaded.addListener(this::setWindowTitle);
-		loadState.file.addListener(this::setWindowTitle);
-		loadState.stateSaved.addListener(this::setWindowTitle);
+		loadState.addListener(this::setWindowTitle);
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 		loadState.loaded.addListener(() -> propertiesViewRoot.setVisible(loadState.loaded.get()));
 	}

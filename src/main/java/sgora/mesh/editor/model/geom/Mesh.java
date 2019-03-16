@@ -1,6 +1,6 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.observables.ComplexObservable;
+import sgora.mesh.editor.model.observables.Observable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Mesh extends ComplexObservable implements Serializable {
+public class Mesh extends Observable implements Serializable {
 
 	private static final Logger LOGGER = Logger.getLogger(Mesh.class.getName());
 	private static final long serialVersionUID = 1L;

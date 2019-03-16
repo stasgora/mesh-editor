@@ -1,6 +1,6 @@
 package sgora.mesh.editor.model.project;
 
-import sgora.mesh.editor.model.observables.ComplexObservable;
+import sgora.mesh.editor.model.observables.Observable;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.paint.SerializableColor;
 
@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class VisualProperties extends ComplexObservable implements Serializable {
+public class VisualProperties extends Observable implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,6 @@ public class VisualProperties extends ComplexObservable implements Serializable 
 
 	public VisualProperties() {
 		addSubObservables();
-		notifyManually = false;
 	}
 
 	private void addSubObservables() {

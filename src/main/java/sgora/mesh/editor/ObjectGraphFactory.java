@@ -19,6 +19,7 @@ import sgora.mesh.editor.model.MeshBoxModel;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
+import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
@@ -54,9 +55,7 @@ public class ObjectGraphFactory {
 	private MenuView menuView;
 	private Map<String, ObservableMap<String, Object>> viewNamespaces = new HashMap<>();
 
-	private SettableObservable<LoadState> loadState = new SettableObservable<>(new LoadState());
-	private SettableObservable<VisualProperties> visualProperties = new SettableObservable<>();
-	private SettableObservable<CanvasData> canvasData = new SettableObservable<>(new CanvasData());
+	private Project project = new Project();
 
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
@@ -93,8 +92,8 @@ public class ObjectGraphFactory {
 
 	public void createProjectModel() {
 		triangulationService.createNewMesh();
-		visualProperties.set(new VisualProperties());
-		visualProperties.get().meshTransparency.set(appConfig.getDouble("default.meshVisibility"));
+		project.visualProperties.set(new VisualProperties());
+		project.visualProperties.get().meshTransparency.set(appConfig.getDouble("default.meshVisibility"));
 	}
 
 	public void createObjectGraph() {
@@ -115,18 +114,18 @@ public class ObjectGraphFactory {
 	}
 
 	private void createTriangulationServices() {
-		nodeUtils = new NodeUtils(appConfig, canvasData);
-		triangleUtils = new TriangleUtils(canvasData.get().mesh, nodeUtils);
-		flippingUtils = new FlippingUtils(canvasData.get().mesh, triangleUtils);
-		triangulationService = new FlipBasedTriangulationService(canvasData.get().mesh, nodeUtils, triangleUtils, flippingUtils);
+		nodeUtils = new NodeUtils(appConfig, project.canvasData);
+		triangleUtils = new TriangleUtils(project.canvasData.get().mesh, nodeUtils);
+		flippingUtils = new FlippingUtils(project.canvasData.get().mesh, triangleUtils);
+		triangulationService = new FlipBasedTriangulationService(project.canvasData.get().mesh, nodeUtils, triangleUtils, flippingUtils);
 		colorUtils = new ColorUtils(nodeUtils);
 	}
 
 	private void createProjectServices() {
-		fileUtils = new ProjectFileUtils(canvasData, appConfig, visualProperties);
+		fileUtils = new ProjectFileUtils(project.canvasData, appConfig, project.visualProperties);
 		dialogUtils = new UiDialogUtils(stage, appLang);
-		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, loadState, this, canvasData);
-		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, loadState);
+		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this);
+		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState);
 	}
 
 	private void setupVisualObjects() {
@@ -140,19 +139,19 @@ public class ObjectGraphFactory {
 		imageBoxModel = new ImageBoxModel();
 		meshBoxModel = new MeshBoxModel();
 
-		imageBox = new ImageBox(canvasViewSize, canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
-		meshBox = new MeshBox(canvasData.get().mesh, meshBoxModel, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
-		canvasAction = new CanvasActionFacade(loadState, imageBox, meshBox, activeTool);
+		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
+		meshBox = new MeshBox(project.canvasData.get().mesh, meshBoxModel, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
+		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, activeTool);
 	}
 
 	private void initControllerObjects() {
-		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW, viewNamespaces, visualProperties);
-		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, loadState);
-		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, canvasData,
-				canvasViewSize, imageBox, nodeUtils, loadState, triangleUtils, visualProperties, canvasAction);
-		windowView.init(loadState, stage, appConfig, workspaceAction);
+		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW, viewNamespaces, project.visualProperties);
+		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState);
+		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, project,
+				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction);
+		windowView.init(project.loadState, stage, appConfig, workspaceAction);
 
-		canvasView.meshCanvas.init(colorUtils, canvasData.get().baseImage, visualProperties);
+		canvasView.meshCanvas.init(colorUtils, project.canvasData.get().baseImage, project.visualProperties);
 		windowView.toolBar.init(activeTool, appLang);
 	}
 
