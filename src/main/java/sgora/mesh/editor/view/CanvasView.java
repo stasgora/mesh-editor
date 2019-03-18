@@ -62,7 +62,6 @@ public class CanvasView extends SubController {
 		});
 		CanvasData canvasData = project.canvasData.get();
 		canvasViewSize.addListener(() -> imageBox.onResizeCanvas());
-		canvasData.baseImage.addListener(() -> imageBox.calcImageBox());
 		canvasData.mesh.addStaticListener(() -> project.loadState.get().stateSaved.setAndNotify(false));
 
 		canvasViewSize.addListener(this::drawBothLayers);
