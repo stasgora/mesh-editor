@@ -93,7 +93,8 @@ public class ObjectGraphFactory {
 	public void createProjectModel() {
 		triangulationService.createNewMesh();
 		project.visualProperties.set(new VisualProperties());
-		project.visualProperties.get().meshTransparency.set(appConfig.getDouble("default.meshVisibility"));
+		//TODO change to model value - visualProperties.meshTransparency
+		propertiesView.meshTransparencyValue.setText(String.valueOf((int) (appConfig.getDouble("default.meshVisibility") * 100)));
 	}
 
 	public void createObjectGraph() {

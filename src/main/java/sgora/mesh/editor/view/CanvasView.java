@@ -67,6 +67,7 @@ public class CanvasView extends SubController {
 
 		canvasViewSize.addListener(this::drawBothLayers);
 		canvasData.addListener(this::drawBothLayers);
+		project.visualProperties.addStaticListener(this::drawMesh);
 
 		project.visualProperties.addStaticListener(this::drawBothLayers);
 	}

@@ -28,17 +28,18 @@ public class PropertiesView extends SubController {
 	}
 
 	public void init() {
-		meshVisibleCheckBox.selectedProperty().addListener((observable, oldVal, newVal) -> visualProperties.get().meshVisible.set(newVal));
-		imageVisibleCheckBox.selectedProperty().addListener(((observable, oldVal, newVal) -> visualProperties.get().imageVisible.set(newVal)));
+		meshVisibleCheckBox.selectedProperty().addListener((observable, oldVal, newVal) -> visualProperties.get().meshVisible.setAndNotify(newVal));
+		imageVisibleCheckBox.selectedProperty().addListener(((observable, oldVal, newVal) -> visualProperties.get().imageVisible.setAndNotify(newVal)));
 
 		meshTransparencySlider.valueProperty().addListener((observable, oldVal, newVal) -> meshTransparencyValue.setText(String.valueOf(newVal.intValue())));
 		meshTransparencyValue.textProperty().addListener((observable, oldVal, newVal) -> setMeshTransparency(validateNumericalText(newVal, 0, 100)));
+
 	}
 
 	private void setMeshTransparency(int value) {
 		meshTransparencyValue.setText(String.valueOf(value));
 		meshTransparencySlider.setValue(value);
-		visualProperties.get().meshTransparency.set(value / 100d);
+		visualProperties.get().meshTransparency.setAndNotify(value / 100d);
 	}
 
 	private int validateNumericalText(String value, int minVal, int maxVal) {
