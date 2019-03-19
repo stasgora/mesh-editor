@@ -30,7 +30,7 @@ public class ProjectFileUtils implements FileUtils {
 			try(FileOutputStream fileStream = new FileOutputStream(location, false);
 			    ObjectOutputStream objectStream = new ObjectOutputStream(fileStream)) {
 				objectStream.writeObject(canvasData.get().mesh.get());
-				objectStream.writeObject(visualProperties.get());
+				visualProperties.get().writeProperties(objectStream);
 				fileStream.write(canvasData.get().rawImageFile);
 			}
 		} catch (IOException e) {
@@ -43,7 +43,7 @@ public class ProjectFileUtils implements FileUtils {
 		try(FileInputStream fileStream = new FileInputStream(location);
 		    ObjectInputStream objectStream = new ObjectInputStream(fileStream)) {
 			canvasData.get().mesh.set((Mesh) objectStream.readObject());
-			visualProperties.set((VisualProperties) objectStream.readObject());
+			visualProperties.get().readProperties(objectStream);
 			loadImage(fileStream);
 		} catch (IOException | ClassNotFoundException e) {
 			throw new ProjectIOException(e);

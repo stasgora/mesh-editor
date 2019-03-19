@@ -1,6 +1,7 @@
 package sgora.mesh.editor.model.project;
 
 import sgora.mesh.editor.model.observables.Observable;
+import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.paint.SerializableColor;
 
@@ -8,8 +9,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-public class VisualProperties extends Observable implements Serializable {
+public class VisualProperties extends Observable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,26 +25,23 @@ public class VisualProperties extends Observable implements Serializable {
 	public SettableProperty<Boolean> imageVisible = new SettableProperty<>(true);
 	public SettableProperty<Double> meshTransparency = new SettableProperty<>();
 
+	private List<SettableProperty> properties = Arrays.asList(nodeColor, nodeRadius, meshVisible, imageVisible, meshTransparency);
+
 	public VisualProperties() {
-		addSubObservables();
+		properties.forEach(this::addSubObservable);
 	}
 
-	private void addSubObservables() {
-		addSubObservable(nodeColor);
-		addSubObservable(nodeRadius);
-
-		addSubObservable(meshVisible);
-		addSubObservable(imageVisible);
-		addSubObservable(meshTransparency);
+	public void writeProperties(ObjectOutputStream out) throws IOException {
+		for (SettableProperty obj : properties) {
+			out.writeObject(obj.get());
+		}
 	}
 
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.defaultWriteObject();
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		in.defaultReadObject();
-		addSubObservables();
+	public void readProperties(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		for (SettableProperty obj : properties) {
+			obj.set(in.readObject());
+		}
+		properties.forEach(this::addSubObservable);
 	}
 
 }

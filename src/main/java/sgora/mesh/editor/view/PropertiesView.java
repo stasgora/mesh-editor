@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.VisualProperties;
 
 import java.util.Map;
@@ -21,9 +22,12 @@ public class PropertiesView extends SubController {
 
 	private SettableObservable<VisualProperties> visualProperties;
 
-	public PropertiesView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, SettableObservable<VisualProperties> visualProperties) {
+	public PropertiesView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,
+	                      SettableObservable<VisualProperties> visualProperties, SettableProperty<Boolean> stateSaved) {
 		super(root, viewType, viewNamespaces);
 		this.visualProperties = visualProperties;
+
+		visualProperties.addStaticListener(() -> stateSaved.setAndNotify(false));
 		init();
 	}
 

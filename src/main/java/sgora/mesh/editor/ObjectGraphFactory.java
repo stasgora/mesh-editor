@@ -150,7 +150,7 @@ public class ObjectGraphFactory {
 	}
 
 	private void initControllerObjects() {
-		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW, viewNamespaces, project.visualProperties);
+		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW, viewNamespaces, project.visualProperties, project.loadState.get().stateSaved);
 		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState);
 		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, project,
 				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction);
