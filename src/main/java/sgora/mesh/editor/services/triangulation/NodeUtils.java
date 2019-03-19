@@ -65,6 +65,11 @@ public class NodeUtils {
 		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
 	}
 
+	public Point canvasToProportionalSize(Point node) {
+		Rectangle imageBox = canvasData.get().imageBox;
+		return new Point(node).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
+	}
+
 	public Point canvasToPixelPos(Point node) {
 		CanvasData data = canvasData.get();
 		return new Point(node).subtract(data.imageBox.position).divideByScalar(data.imageBox.size.x / data.baseImage.get().getWidth());
@@ -82,18 +87,18 @@ public class NodeUtils {
 
 	Point[] getBoundingNodes() {
 		Rectangle boundingBox = getProportionalNodeBoundingBox();
-		double majorLength = Math.max(boundingBox.size.x, boundingBox.size.y) + 1;
+		double majorLength = boundingBox.size.x + boundingBox.size.y;
 		return new Point[] {
-			new Point(boundingBox.size.x / 2, -majorLength),
-			new Point(boundingBox.position.x - majorLength, boundingBox.size.y + 1),
-			new Point(boundingBox.position.x + boundingBox.size.x + majorLength, boundingBox.size.y + 1)
+			new Point(boundingBox.position.x + boundingBox.size.x / 2, -majorLength),
+			new Point(boundingBox.position.x - majorLength, boundingBox.size.y),
+			new Point(boundingBox.position.x + boundingBox.size.x + majorLength, boundingBox.size.y)
 		};
 	}
 
 	private Rectangle getProportionalNodeBoundingBox() {
 		Rectangle canvasSpaceBox = getCanvasSpaceNodeBoundingBox();
 		canvasSpaceBox.position = canvasToProportionalPos(canvasSpaceBox.position);
-		canvasSpaceBox.size = canvasToProportionalPos(canvasSpaceBox.size);
+		canvasSpaceBox.size = canvasToProportionalSize(canvasSpaceBox.size);
 		return canvasSpaceBox;
 	}
 
