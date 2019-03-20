@@ -6,7 +6,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
-import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.VisualProperties;
 
@@ -22,6 +21,8 @@ public class PropertiesView extends SubController {
 
 	private VisualProperties visualProperties;
 
+	private static final int MIN_SLIDER_VAL = 0, MAX_SLIDER_VAL = 100;
+
 	public PropertiesView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,
 	                      VisualProperties visualProperties, SettableProperty<Boolean> stateSaved) {
 		super(root, viewType, viewNamespaces);
@@ -32,12 +33,11 @@ public class PropertiesView extends SubController {
 	}
 
 	public void init() {
-		meshVisibleCheckBox.selectedProperty().addListener((observable, oldVal, newVal) -> visualProperties.meshVisible.setAndNotify(newVal));
-		imageVisibleCheckBox.selectedProperty().addListener(((observable, oldVal, newVal) -> visualProperties.imageVisible.setAndNotify(newVal)));
+		visualProperties.meshVisible.bindWithFxObservable(meshVisibleCheckBox.selectedProperty());
+		visualProperties.imageVisible.bindWithFxObservable(imageVisibleCheckBox.selectedProperty());
 
 		meshTransparencySlider.valueProperty().addListener((observable, oldVal, newVal) -> meshTransparencyValue.setText(String.valueOf(newVal.intValue())));
-		meshTransparencyValue.textProperty().addListener((observable, oldVal, newVal) -> setMeshTransparency(validateNumericalText(newVal, 0, 100)));
-
+		meshTransparencyValue.textProperty().addListener((observable, oldVal, newVal) -> setMeshTransparency(textToRange(newVal)));
 	}
 
 	private void setMeshTransparency(int value) {
@@ -46,12 +46,12 @@ public class PropertiesView extends SubController {
 		visualProperties.meshTransparency.setAndNotify(value / 100d);
 	}
 
-	private int validateNumericalText(String value, int minVal, int maxVal) {
+	private int textToRange(String value) {
 		value = value.replaceAll("[^0-9]", "");
 		if(value.isEmpty()) {
 			return 0;
 		}
-		return Math.max(minVal, Math.min(maxVal, Integer.valueOf(value)));
+		return Math.max(MIN_SLIDER_VAL, Math.min(MAX_SLIDER_VAL, Integer.valueOf(value)));
 	}
 
 }

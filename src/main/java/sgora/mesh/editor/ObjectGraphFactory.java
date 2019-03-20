@@ -94,7 +94,7 @@ public class ObjectGraphFactory {
 		imageBox.calcImageBox();
 		triangulationService.createNewMesh();
 
-		//TODO add two way bindings
+		//TODO refactor as two way binding
 		SettableProperty<Double> meshTransparency = project.visualProperties.meshTransparency;
 		meshTransparency.set(appConfig.getDouble("default.meshVisibility"));
 		propertiesView.meshTransparencyValue.setText(String.valueOf((int) (meshTransparency.get() * 100)));

@@ -1,5 +1,6 @@
 package sgora.mesh.editor.model.project;
 
+import sgora.mesh.editor.model.observables.BindableProperty;
 import sgora.mesh.editor.model.observables.Observable;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.observables.SettableProperty;
@@ -19,9 +20,9 @@ public class VisualProperties extends Observable {
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
 
-	public SettableProperty<Boolean> meshVisible = new SettableProperty<>(true);
-	public SettableProperty<Boolean> imageVisible = new SettableProperty<>(true);
-	public SettableProperty<Double> meshTransparency = new SettableProperty<>();
+	public BindableProperty<Boolean> meshVisible = new BindableProperty<>(true);
+	public BindableProperty<Boolean> imageVisible = new BindableProperty<>(true);
+	public BindableProperty<Double> meshTransparency = new BindableProperty<>();
 
 	private List<SettableProperty> properties = Arrays.asList(nodeColor, nodeRadius, meshVisible, imageVisible, meshTransparency);
 
