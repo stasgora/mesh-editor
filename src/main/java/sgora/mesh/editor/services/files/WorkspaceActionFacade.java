@@ -22,10 +22,10 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	private final LangConfigReader appLang;
 	private UiDialogUtils dialogUtils;
 	private AppConfigReader appConfig;
-	private SettableObservable<LoadState> loadState;
+	private LoadState loadState;
 
 	public WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang,
-	                             UiDialogUtils dialogUtils, AppConfigReader appConfig, SettableObservable<LoadState> loadState) {
+	                             UiDialogUtils dialogUtils, AppConfigReader appConfig, LoadState loadState) {
 		this.workspaceActionExecutor = workspaceActionExecutor;
 		this.appLang = appLang;
 		this.dialogUtils = dialogUtils;
@@ -36,7 +36,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	@Override
 	public String getProjectName() {
 		String projectName;
-		LoadState loadState = this.loadState.get();
+		LoadState loadState = this.loadState;
 		if(loadState.file.get() == null) {
 			projectName = loadState.loaded.get() ? appLang.getText("defaultProjectName") : null;
 		} else {
@@ -119,7 +119,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	private void saveProject(boolean asNew) {
 		File location;
-		LoadState loadState = this.loadState.get();
+		LoadState loadState = this.loadState;
 		if(asNew || loadState.file.get() == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if(location == null) {
@@ -132,7 +132,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	}
 
 	private boolean confirmWorkspaceAction(String title) {
-		if(loadState.get().stateSaved.get()) {
+		if(loadState.stateSaved.get()) {
 			return true;
 		}
 		ButtonType saveButton = new ButtonType(appLang.getText("action.save"));

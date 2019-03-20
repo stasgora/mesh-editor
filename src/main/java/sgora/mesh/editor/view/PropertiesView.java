@@ -20,20 +20,20 @@ public class PropertiesView extends SubController {
 	public TextField meshTransparencyValue;
 	public Slider meshTransparencySlider;
 
-	private SettableObservable<VisualProperties> visualProperties;
+	private VisualProperties visualProperties;
 
 	public PropertiesView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,
-	                      SettableObservable<VisualProperties> visualProperties, SettableProperty<Boolean> stateSaved) {
+	                      VisualProperties visualProperties, SettableProperty<Boolean> stateSaved) {
 		super(root, viewType, viewNamespaces);
 		this.visualProperties = visualProperties;
 
-		visualProperties.addStaticListener(() -> stateSaved.setAndNotify(false));
+		visualProperties.addListener(() -> stateSaved.setAndNotify(false));
 		init();
 	}
 
 	public void init() {
-		meshVisibleCheckBox.selectedProperty().addListener((observable, oldVal, newVal) -> visualProperties.get().meshVisible.setAndNotify(newVal));
-		imageVisibleCheckBox.selectedProperty().addListener(((observable, oldVal, newVal) -> visualProperties.get().imageVisible.setAndNotify(newVal)));
+		meshVisibleCheckBox.selectedProperty().addListener((observable, oldVal, newVal) -> visualProperties.meshVisible.setAndNotify(newVal));
+		imageVisibleCheckBox.selectedProperty().addListener(((observable, oldVal, newVal) -> visualProperties.imageVisible.setAndNotify(newVal)));
 
 		meshTransparencySlider.valueProperty().addListener((observable, oldVal, newVal) -> meshTransparencyValue.setText(String.valueOf(newVal.intValue())));
 		meshTransparencyValue.textProperty().addListener((observable, oldVal, newVal) -> setMeshTransparency(validateNumericalText(newVal, 0, 100)));
@@ -43,7 +43,7 @@ public class PropertiesView extends SubController {
 	private void setMeshTransparency(int value) {
 		meshTransparencyValue.setText(String.valueOf(value));
 		meshTransparencySlider.setValue(value);
-		visualProperties.get().meshTransparency.setAndNotify(value / 100d);
+		visualProperties.meshTransparency.setAndNotify(value / 100d);
 	}
 
 	private int validateNumericalText(String value, int minVal, int maxVal) {

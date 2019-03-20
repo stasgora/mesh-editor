@@ -13,7 +13,7 @@ import java.util.Map;
 public class MenuView extends SubController {
 
 	private WorkspaceAction workspaceAction;
-	private final SettableObservable<LoadState> loadState;
+	private final LoadState loadState;
 
 	public MenuItem newProjectMenuItem;
 	public MenuItem openProjectMenuItem;
@@ -26,7 +26,7 @@ public class MenuView extends SubController {
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 
 	public MenuView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,
-	                WorkspaceAction workspaceAction, SettableObservable<LoadState> loadState) {
+	                WorkspaceAction workspaceAction, LoadState loadState) {
 		super(root, viewType, viewNamespaces);
 		this.workspaceAction = workspaceAction;
 		this.loadState = loadState;
@@ -43,7 +43,7 @@ public class MenuView extends SubController {
 		exitAppMenuItem.setOnAction(event -> workspaceAction.onExitApp());
 
 		namespace.put(MENU_FILE_ITEM_DISABLED, true);
-		loadState.get().loaded.addListener(() -> namespace.put(MENU_FILE_ITEM_DISABLED, !((boolean) namespace.get(MENU_FILE_ITEM_DISABLED))));
+		loadState.loaded.addListener(() -> namespace.put(MENU_FILE_ITEM_DISABLED, !((boolean) namespace.get(MENU_FILE_ITEM_DISABLED))));
 	}
 
 }

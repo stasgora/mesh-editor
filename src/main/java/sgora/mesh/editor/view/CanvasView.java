@@ -60,15 +60,15 @@ public class CanvasView extends SubController {
 			meshCanvas.setWidth(canvasViewSize.x);
 			meshCanvas.setHeight(canvasViewSize.y);
 		});
-		CanvasData canvasData = project.canvasData.get();
+		CanvasData canvasData = project.canvasData;
 		canvasViewSize.addListener(() -> imageBox.onResizeCanvas());
-		canvasData.mesh.addStaticListener(() -> project.loadState.get().stateSaved.setAndNotify(false));
+		canvasData.mesh.addStaticListener(() -> project.loadState.stateSaved.setAndNotify(false));
 
 		canvasViewSize.addListener(this::drawBothLayers);
 		canvasData.addListener(this::drawBothLayers);
-		project.visualProperties.addStaticListener(this::drawMesh);
+		project.visualProperties.addListener(this::drawMesh);
 
-		project.visualProperties.addStaticListener(this::drawBothLayers);
+		project.visualProperties.addListener(this::drawBothLayers);
 	}
 
 	private void setMouseHandlers() {
@@ -89,15 +89,15 @@ public class CanvasView extends SubController {
 
 	private void drawMesh() {
 		meshCanvas.clear();
-		if(project.loadState.get().loaded.get() && project.visualProperties.get().meshVisible.get()) {
+		if(project.loadState.loaded.get() && project.visualProperties.meshVisible.get()) {
 			meshCanvas.draw(nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
 	}
 
 	private void drawImage() {
 		imageCanvas.clear();
-		if(project.loadState.get().loaded.get() && project.visualProperties.get().imageVisible.get()) {
-			CanvasData canvasData = project.canvasData.get();
+		if(project.loadState.loaded.get() && project.visualProperties.imageVisible.get()) {
+			CanvasData canvasData = project.canvasData;
 			imageCanvas.draw(canvasData.imageBox, canvasData.baseImage.get());
 		}
 	}

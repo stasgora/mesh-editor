@@ -16,18 +16,18 @@ public class NodeUtils {
 	private static final Logger LOGGER = Logger.getLogger(NodeUtils.class.getName());
 
 	private final AppConfigReader appConfig;
-	private final SettableObservable<CanvasData> canvasData;
+	private final CanvasData canvasData;
 
 	private final double REL_SPACE_FACTOR;
 
-	public NodeUtils(AppConfigReader appConfig, SettableObservable<CanvasData> canvasData) {
+	public NodeUtils(AppConfigReader appConfig, CanvasData canvasData) {
 		this.appConfig = appConfig;
 		this.canvasData = canvasData;
 		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.proportionalSpaceFactor");
 	}
 
 	Point getClosestNode(Point location, Triangle triangle) {
-		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.get().imageBox.size.x / REL_SPACE_FACTOR);
+		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.imageBox.size.x / REL_SPACE_FACTOR);
 		for (Point node : triangle.nodes) {
 			Point dist = new Point(node).subtract(location).abs();
 			if (dist.x <= nodeBoxRadius && dist.y <= nodeBoxRadius) {
@@ -52,31 +52,30 @@ public class NodeUtils {
 	}
 
 	public Point[] getCanvasSpaceNodes() {
-		return canvasData.get().mesh.get().getNodes().stream().map(this::proportionalToCanvasPos).toArray(Point[]::new);
+		return canvasData.mesh.get().getNodes().stream().map(this::proportionalToCanvasPos).toArray(Point[]::new);
 	}
 
 	public Point proportionalToCanvasPos(Point node) {
-		Rectangle imageBox = canvasData.get().imageBox;
+		Rectangle imageBox = canvasData.imageBox;
 		return new Point(node).multiplyByScalar(imageBox.size.x / REL_SPACE_FACTOR).add(imageBox.position);
 	}
 
 	public Point canvasToProportionalPos(Point node) {
-		Rectangle imageBox = canvasData.get().imageBox;
+		Rectangle imageBox = canvasData.imageBox;
 		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
 	}
 
 	public Point canvasToProportionalSize(Point node) {
-		Rectangle imageBox = canvasData.get().imageBox;
+		Rectangle imageBox = canvasData.imageBox;
 		return new Point(node).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
 	}
 
 	public Point canvasToPixelPos(Point node) {
-		CanvasData data = canvasData.get();
-		return new Point(node).subtract(data.imageBox.position).divideByScalar(data.imageBox.size.x / data.baseImage.get().getWidth());
+		return new Point(node).subtract(canvasData.imageBox.position).divideByScalar(canvasData.imageBox.size.x / canvasData.baseImage.get().getWidth());
 	}
 
 	public Rectangle getCanvasSpaceNodeBoundingBox() {
-		Rectangle imageBox = canvasData.get().imageBox;
+		Rectangle imageBox = canvasData.imageBox;
 		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
 		Rectangle area = new Rectangle();
 		Point boxSize = imageBox.size;

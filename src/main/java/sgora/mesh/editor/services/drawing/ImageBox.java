@@ -19,13 +19,13 @@ public class ImageBox implements MouseListener {
 	private double zoom = 1;
 
 	private final Point canvasViewSize;
-	private final SettableObservable<CanvasData> canvasData;
+	private final CanvasData canvasData;
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
 	private ObjectProperty<Cursor> mouseCursor;
 	private ImageBoxModel imageBoxModel;
 
-	public ImageBox(Point canvasViewSize, SettableObservable<CanvasData> canvasData, AppConfigReader appConfig,
+	public ImageBox(Point canvasViewSize, CanvasData canvasData, AppConfigReader appConfig,
 	                AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
 		this.canvasViewSize = canvasViewSize;
 		this.canvasData = canvasData;
@@ -36,7 +36,6 @@ public class ImageBox implements MouseListener {
 	}
 
 	public void onResizeCanvas() {
-		CanvasData canvasData = this.canvasData.get();
 		if(canvasData.baseImage.get() != null) {
 			return;
 		}
@@ -50,7 +49,6 @@ public class ImageBox implements MouseListener {
 	}
 
 	public void calcImageBox() {
-		CanvasData canvasData = this.canvasData.get();
 		if(canvasData.baseImage.get() == null) {
 			return;
 		}
@@ -75,7 +73,6 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onZoom(double amount, Point mousePos) {
-		CanvasData canvasData = this.canvasData.get();
 		double minZoom = appConfig.getDouble("imageBox.zoom.min");
 		double maxZoom = appConfig.getDouble("imageBox.zoom.max");
 
@@ -103,7 +100,7 @@ public class ImageBox implements MouseListener {
 		if(button != imageBoxModel.dragButton) {
 			return;
 		}
-		Rectangle imageBox = this.canvasData.get().imageBox;
+		Rectangle imageBox = this.canvasData.imageBox;
 		imageBox.position.add(dragAmount).clamp(new Point(imageBox.size).multiplyByScalar(-1), canvasViewSize);
 		imageBox.notifyListeners();
 	}

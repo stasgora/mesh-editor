@@ -16,9 +16,9 @@ public class MeshCanvas extends Canvas {
 
 	private ColorUtils colorUtils;
 	private SettableProperty<Image> baseImage;
-	private SettableObservable<VisualProperties> visualProperties;
+	private VisualProperties visualProperties;
 
-	public void init(ColorUtils colorUtils, SettableProperty<Image> baseImage, SettableObservable<VisualProperties> visualProperties) {
+	public void init(ColorUtils colorUtils, SettableProperty<Image> baseImage, VisualProperties visualProperties) {
 		this.colorUtils = colorUtils;
 		this.baseImage = baseImage;
 		this.visualProperties = visualProperties;
@@ -28,7 +28,7 @@ public class MeshCanvas extends Canvas {
 		if(!isVisible()) {
 			return;
 		}
-		VisualProperties properties = this.visualProperties.get();
+		VisualProperties properties = this.visualProperties;
 		Point pixelImgSize = new Point(baseImage.get().getWidth(), baseImage.get().getHeight());
 		PixelReader pixels = baseImage.get().getPixelReader();
 		for (Point[] triangle : triangles) {

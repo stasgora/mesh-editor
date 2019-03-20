@@ -29,7 +29,7 @@ public class WindowView {
 	public MenuBar menuViewRoot;
 
 	private AppConfigReader appConfig;
-	private SettableObservable<LoadState> loadState;
+	private LoadState loadState;
 	private Stage window;
 
 	public SplitPane mainSplitPane;
@@ -38,7 +38,7 @@ public class WindowView {
 
 	private WorkspaceAction workspaceAction;
 
-	public void init(SettableObservable<LoadState> loadState, Stage window, AppConfigReader appConfig, WorkspaceAction workspaceAction) {
+	public void init(LoadState loadState, Stage window, AppConfigReader appConfig, WorkspaceAction workspaceAction) {
 		this.loadState = loadState;
 		this.window = window;
 		this.appConfig = appConfig;
@@ -50,7 +50,7 @@ public class WindowView {
 	}
 
 	private void setListeners() {
-		LoadState loadState = this.loadState.get();
+		LoadState loadState = this.loadState;
 		loadState.addListener(this::setWindowTitle);
 		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
 		loadState.loaded.addListener(() -> propertiesViewRoot.setVisible(loadState.loaded.get()));
@@ -58,7 +58,7 @@ public class WindowView {
 
 	private void setWindowTitle() {
 		String title = appConfig.getString("appName");
-		LoadState loadState = this.loadState.get();
+		LoadState loadState = this.loadState;
 		if(loadState.loaded.get()) {
 			String projectName = workspaceAction.getProjectName();
 			if(!loadState.stateSaved.get()) {

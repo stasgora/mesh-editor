@@ -13,11 +13,11 @@ import java.io.*;
 
 public class ProjectFileUtils implements FileUtils {
 	
-	private SettableObservable<CanvasData> canvasData;
+	private CanvasData canvasData;
 	private AppConfigReader appConfig;
-	private SettableObservable<VisualProperties> visualProperties;
+	private VisualProperties visualProperties;
 
-	public ProjectFileUtils(SettableObservable<CanvasData> canvasData, AppConfigReader appConfig, SettableObservable<VisualProperties> visualProperties) {
+	public ProjectFileUtils(CanvasData canvasData, AppConfigReader appConfig, VisualProperties visualProperties) {
 		this.canvasData = canvasData;
 		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;
@@ -29,9 +29,9 @@ public class ProjectFileUtils implements FileUtils {
 			location.createNewFile();
 			try(FileOutputStream fileStream = new FileOutputStream(location, false);
 			    ObjectOutputStream objectStream = new ObjectOutputStream(fileStream)) {
-				objectStream.writeObject(canvasData.get().mesh.get());
-				visualProperties.get().writeProperties(objectStream);
-				fileStream.write(canvasData.get().rawImageFile);
+				objectStream.writeObject(canvasData.mesh.get());
+				visualProperties.writeProperties(objectStream);
+				fileStream.write(canvasData.rawImageFile);
 			}
 		} catch (IOException e) {
 			throw new ProjectIOException(e);
@@ -42,8 +42,8 @@ public class ProjectFileUtils implements FileUtils {
 	public void load(File location) throws ProjectIOException {
 		try(FileInputStream fileStream = new FileInputStream(location);
 		    ObjectInputStream objectStream = new ObjectInputStream(fileStream)) {
-			canvasData.get().mesh.set((Mesh) objectStream.readObject());
-			visualProperties.get().readProperties(objectStream);
+			canvasData.mesh.set((Mesh) objectStream.readObject());
+			visualProperties.readProperties(objectStream);
 			loadImage(fileStream);
 		} catch (IOException | ClassNotFoundException e) {
 			throw new ProjectIOException(e);
@@ -52,10 +52,9 @@ public class ProjectFileUtils implements FileUtils {
 
 	@Override
 	public void loadImage(FileInputStream fileStream) throws ProjectIOException {
-		CanvasData canvas = canvasData.get();
-		canvas.rawImageFile = readFileIntoMemory(fileStream);
-		try(ByteArrayInputStream imageStream = new ByteArrayInputStream(canvas.rawImageFile)) {
-			canvas.baseImage.set(new Image(imageStream));
+		canvasData.rawImageFile = readFileIntoMemory(fileStream);
+		try(ByteArrayInputStream imageStream = new ByteArrayInputStream(canvasData.rawImageFile)) {
+			canvasData.baseImage.set(new Image(imageStream));
 		} catch (IOException e) {
 			throw new ProjectIOException(e);
 		}

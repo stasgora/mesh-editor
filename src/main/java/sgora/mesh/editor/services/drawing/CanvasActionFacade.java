@@ -11,14 +11,14 @@ import sgora.mesh.editor.model.project.LoadState;
 
 public class CanvasActionFacade implements CanvasAction {
 
-	private final SettableObservable<LoadState> loadState;
+	private final LoadState loadState;
 	private final ImageBox imageBox;
 	private final MeshBox meshBox;
 	private final SettableProperty<MouseTool> activeTool;
 
 	private Point lastMouseDragPoint;
 
-	public CanvasActionFacade(SettableObservable<LoadState> loadState, ImageBox imageBox, MeshBox meshBox, SettableProperty<MouseTool> activeTool) {
+	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, SettableProperty<MouseTool> activeTool) {
 		this.loadState = loadState;
 		this.imageBox = imageBox;
 		this.meshBox = meshBox;
@@ -28,7 +28,7 @@ public class CanvasActionFacade implements CanvasAction {
 	@Override
 	public void onMousePress(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
-		if(loadState.get().loaded.get()) {
+		if(loadState.loaded.get()) {
 			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onDragStart(mousePos, event.getButton());
 			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
@@ -42,7 +42,7 @@ public class CanvasActionFacade implements CanvasAction {
 	public void onMouseDrag(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
-		if(loadState.get().loaded.get()) {
+		if(loadState.loaded.get()) {
 			if (activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
 			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
@@ -56,7 +56,7 @@ public class CanvasActionFacade implements CanvasAction {
 	public void onMouseRelease(MouseEvent event) {
 		lastMouseDragPoint = null;
 		Point mousePos = new Point(event.getX(), event.getY());
-		if(loadState.get().loaded.get()) {
+		if(loadState.loaded.get()) {
 			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onDragEnd(new Point(mousePos), event.getButton());
 			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
@@ -67,14 +67,14 @@ public class CanvasActionFacade implements CanvasAction {
 
 	@Override
 	public void onScroll(ScrollEvent event) {
-		if(loadState.get().loaded.get()) {
+		if(loadState.loaded.get()) {
 			imageBox.onZoom(event.getDeltaY(), new Point(event.getX(), event.getY()));
 		}
 	}
 
 	@Override
 	public void onMouseEnter(MouseEvent event) {
-		if(loadState.get().loaded.get()) {
+		if(loadState.loaded.get()) {
 			boolean isDragging = lastMouseDragPoint != null;
 			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onMouseEnter(isDragging);
@@ -86,7 +86,7 @@ public class CanvasActionFacade implements CanvasAction {
 
 	@Override
 	public void onMouseExit(MouseEvent event) {
-		if(loadState.get().loaded.get()) {
+		if(loadState.loaded.get()) {
 			boolean isDragging = lastMouseDragPoint != null;
 			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
 				imageBox.onMouseExit(isDragging);
