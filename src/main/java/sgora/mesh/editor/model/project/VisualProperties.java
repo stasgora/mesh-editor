@@ -40,7 +40,7 @@ public class VisualProperties extends Observable {
 		for (SettableProperty obj : properties) {
 			obj.set(in.readObject());
 		}
-		properties.forEach(this::addSubObservable);
+		notifyListeners();
 	}
 
 }
