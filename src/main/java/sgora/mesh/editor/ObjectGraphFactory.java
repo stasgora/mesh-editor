@@ -96,8 +96,7 @@ public class ObjectGraphFactory {
 
 		//TODO refactor as two way binding
 		SettableProperty<Double> meshTransparency = project.visualProperties.meshTransparency;
-		meshTransparency.set(appConfig.getDouble("default.meshVisibility"));
-		propertiesView.meshTransparencyValue.setText(String.valueOf((int) (meshTransparency.get() * 100)));
+		meshTransparency.setAndNotify(appConfig.getDouble("default.meshVisibility"));
 	}
 
 	public void createObjectGraph() {

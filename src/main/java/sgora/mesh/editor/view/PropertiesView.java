@@ -36,6 +36,7 @@ public class PropertiesView extends SubController {
 		visualProperties.meshVisible.bindWithFxObservable(meshVisibleCheckBox.selectedProperty());
 		visualProperties.imageVisible.bindWithFxObservable(imageVisibleCheckBox.selectedProperty());
 
+		visualProperties.meshTransparency.bindWithFxObservable(meshTransparencyValue.textProperty(), val -> String.valueOf((int) (val * 100)), val -> textToRange(val) / 100d);
 		meshTransparencySlider.valueProperty().addListener((observable, oldVal, newVal) -> meshTransparencyValue.setText(String.valueOf(newVal.intValue())));
 		meshTransparencyValue.textProperty().addListener((observable, oldVal, newVal) -> setMeshTransparency(textToRange(newVal)));
 	}
@@ -43,11 +44,10 @@ public class PropertiesView extends SubController {
 	private void setMeshTransparency(int value) {
 		meshTransparencyValue.setText(String.valueOf(value));
 		meshTransparencySlider.setValue(value);
-		visualProperties.meshTransparency.setAndNotify(value / 100d);
 	}
 
 	private int textToRange(String value) {
-		value = value.replaceAll("[^0-9]", "");
+		value = value.replace("\\.[0-9]*", "");
 		if(value.isEmpty()) {
 			return 0;
 		}
