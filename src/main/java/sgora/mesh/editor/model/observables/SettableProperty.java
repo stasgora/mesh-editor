@@ -10,6 +10,8 @@ public class SettableProperty<T> extends Observable implements Serializable {
 
 	protected T modelValue;
 
+	protected T defaultValue;
+
 	private static final long serialVersionUID = 1L;
 
 	public SettableProperty() {
@@ -42,6 +44,20 @@ public class SettableProperty<T> extends Observable implements Serializable {
 
 	public void modify(UnaryOperator<T> operator) {
 		set(operator.apply(modelValue));
+	}
+
+	public void resetToDefaultValue() {
+		if(defaultValue != null) {
+			set(defaultValue);
+		}
+	}
+
+	public T getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(T defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 }
