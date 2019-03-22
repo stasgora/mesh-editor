@@ -1,4 +1,4 @@
-package sgora.mesh.editor.services;
+package sgora.mesh.editor.services.ui;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

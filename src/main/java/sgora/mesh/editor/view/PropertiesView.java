@@ -8,6 +8,7 @@ import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.VisualProperties;
+import sgora.mesh.editor.services.mapping.ConfigModelMapper;
 
 import java.util.Map;
 
@@ -20,13 +21,15 @@ public class PropertiesView extends SubController {
 	public Slider meshTransparencySlider;
 
 	private VisualProperties visualProperties;
+	private final ConfigModelMapper configModelMapper;
 
 	private static final int MIN_SLIDER_VAL = 0, MAX_SLIDER_VAL = 100;
 
 	public PropertiesView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,
-	                      VisualProperties visualProperties, SettableProperty<Boolean> stateSaved) {
+	                      VisualProperties visualProperties, SettableProperty<Boolean> stateSaved, ConfigModelMapper configModelMapper) {
 		super(root, viewType, viewNamespaces);
 		this.visualProperties = visualProperties;
+		this.configModelMapper = configModelMapper;
 
 		visualProperties.addListener(() -> stateSaved.setAndNotify(false));
 		init();

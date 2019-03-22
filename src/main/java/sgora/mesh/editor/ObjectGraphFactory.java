@@ -16,26 +16,23 @@ import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
 import sgora.mesh.editor.model.ImageBoxModel;
 import sgora.mesh.editor.model.MeshBoxModel;
-import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.project.CanvasData;
-import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.Project;
-import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
-import sgora.mesh.editor.services.*;
 import sgora.mesh.editor.services.drawing.CanvasActionFacade;
 import sgora.mesh.editor.services.drawing.ColorUtils;
 import sgora.mesh.editor.services.drawing.ImageBox;
 import sgora.mesh.editor.services.drawing.MeshBox;
 import sgora.mesh.editor.services.files.WorkspaceActionFacade;
+import sgora.mesh.editor.services.mapping.ConfigModelMapper;
 import sgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
 import sgora.mesh.editor.services.triangulation.FlippingUtils;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
 import sgora.mesh.editor.services.triangulation.TriangleUtils;
 import sgora.mesh.editor.services.files.ProjectFileUtils;
 import sgora.mesh.editor.services.files.WorkspaceActionExecutor;
+import sgora.mesh.editor.services.ui.UiDialogUtils;
 import sgora.mesh.editor.view.CanvasView;
 import sgora.mesh.editor.view.MenuView;
 import sgora.mesh.editor.view.PropertiesView;
@@ -76,6 +73,8 @@ public class ObjectGraphFactory {
 	private ObjectProperty<Cursor> mouseCursor;
 	private Point canvasViewSize = new Point();
 
+	private ConfigModelMapper configModelMapper;
+
 	private ImageBoxModel imageBoxModel;
 	private MeshBoxModel meshBoxModel;
 
@@ -94,7 +93,7 @@ public class ObjectGraphFactory {
 		imageBox.calcImageBox();
 		triangulationService.createNewMesh();
 
-		//TODO refactor as two way binding
+		//TODO replace with config mapping
 		SettableProperty<Double> meshTransparency = project.visualProperties.meshTransparency;
 		meshTransparency.setAndNotify(appConfig.getDouble("default.meshVisibility"));
 	}
@@ -129,6 +128,7 @@ public class ObjectGraphFactory {
 		dialogUtils = new UiDialogUtils(stage, appLang);
 		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState);
+		configModelMapper = new ConfigModelMapper(appConfig);
 	}
 
 	private void setupVisualObjects() {
@@ -148,7 +148,8 @@ public class ObjectGraphFactory {
 	}
 
 	private void initControllerObjects() {
-		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW, viewNamespaces, project.visualProperties, project.loadState.stateSaved);
+		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW,
+				viewNamespaces, project.visualProperties, project.loadState.stateSaved, configModelMapper);
 		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState);
 		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, project,
 				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction);

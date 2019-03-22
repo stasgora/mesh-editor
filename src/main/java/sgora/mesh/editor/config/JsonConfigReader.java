@@ -6,8 +6,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import sgora.mesh.editor.model.JsonConfig;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,19 +20,19 @@ public abstract class JsonConfigReader {
 	private static final Logger LOGGER = Logger.getLogger(JsonConfigReader.class.getName());
 
 	protected <T> T getValue(JsonConfig config, String keyPath, BiFunction<JSONObject, String, T> getValue) {
-		JSONObject parent = getParent(config, keyPath);
+		JSONObject parent = getJsonObject(config, keyPath);
 		String lastKey = getLastKey(keyPath);
 		if(!parent.has(lastKey)) {
-			logMissingKey(config.name, lastKey, keyPath);
+			logInvalidKey(config.name, lastKey, keyPath);
 		}
 		return getValue.apply(parent, lastKey);
 	}
 
 	protected <T> List<T> getList(JsonConfig config, String keyPath, BiFunction<JSONArray, Integer, T> getValue) {
-		JSONObject parent = getParent(config, keyPath);
+		JSONObject parent = getJsonObject(config, keyPath);
 		String lastKey = getLastKey(keyPath);
 		if(!parent.has(lastKey)) {
-			logMissingKey(config.name, lastKey, keyPath);
+			logInvalidKey(config.name, lastKey, keyPath);
 			return Collections.emptyList();
 		}
 		JSONArray jsonArray = parent.getJSONArray(lastKey);
@@ -68,7 +66,7 @@ public abstract class JsonConfigReader {
 		return keyPath.split("\\.");
 	}
 
-	private JSONObject getParent(JsonConfig config, String keyPath) {
+	protected JSONObject getJsonObject(JsonConfig config, String keyPath) {
 		String[] path = getKeyChain(keyPath);
 		JSONObject parent = config.config;
 
@@ -76,13 +74,13 @@ public abstract class JsonConfigReader {
 			try {
 				parent = parent.getJSONObject(path[i]);
 			} catch (JSONException e) {
-				logMissingKey(config.name, path[i], keyPath);
+				logInvalidKey(config.name, path[i], keyPath);
 			}
 		}
 		return parent;
 	}
 
-	private void logMissingKey(String configName, String key, String keyPath) {
+	private void logInvalidKey(String configName, String key, String keyPath) {
 		LOGGER.log(Level.SEVERE, "Failed reading '" + configName + "' config property '" + key + "' from path '" + keyPath + "'");
 	}
 

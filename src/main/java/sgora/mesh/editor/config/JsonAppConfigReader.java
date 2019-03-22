@@ -48,6 +48,11 @@ public class JsonAppConfigReader extends JsonConfigReader implements AppConfigRe
 		return this.getList(config, keyPath, JSONArray::getString);
 	}
 
+	@Override
+	public JSONObject getJsonObject(String keyPath) {
+		return getJsonObject(config, keyPath);
+	}
+
 	public static JsonAppConfigReader forResource(String fileName) {
 		return new JsonAppConfigReader(loadJsonConfig(fileName));
 	}

@@ -8,9 +8,8 @@ import sgora.mesh.editor.enums.FileChooserAction;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
-import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.LoadState;
-import sgora.mesh.editor.services.UiDialogUtils;
+import sgora.mesh.editor.services.ui.UiDialogUtils;
 
 import java.io.File;
 import java.util.List;
