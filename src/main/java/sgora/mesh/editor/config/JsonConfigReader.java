@@ -9,6 +9,7 @@ import sgora.mesh.editor.model.JsonConfig;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -20,7 +21,7 @@ public abstract class JsonConfigReader {
 	private static final Logger LOGGER = Logger.getLogger(JsonConfigReader.class.getName());
 
 	protected <T> T getValue(JsonConfig config, String keyPath, BiFunction<JSONObject, String, T> getValue) {
-		JSONObject parent = getJsonObject(config, keyPath);
+		JSONObject parent = getParent(config, keyPath);
 		String lastKey = getLastKey(keyPath);
 		if(!parent.has(lastKey)) {
 			logInvalidKey(config.name, lastKey, keyPath);
@@ -29,7 +30,7 @@ public abstract class JsonConfigReader {
 	}
 
 	protected <T> List<T> getList(JsonConfig config, String keyPath, BiFunction<JSONArray, Integer, T> getValue) {
-		JSONObject parent = getJsonObject(config, keyPath);
+		JSONObject parent = getParent(config, keyPath);
 		String lastKey = getLastKey(keyPath);
 		if(!parent.has(lastKey)) {
 			logInvalidKey(config.name, lastKey, keyPath);
@@ -66,15 +67,23 @@ public abstract class JsonConfigReader {
 		return keyPath.split("\\.");
 	}
 
-	protected JSONObject getJsonObject(JsonConfig config, String keyPath) {
-		String[] path = getKeyChain(keyPath);
+	private JSONObject getParent(JsonConfig config, String keyPath) {
+		List<String> keys = Arrays.asList(getKeyChain(keyPath));
+		if(keys.size() <= 1) {
+			return config.config;
+		}
+		return getJsonObject(config, String.join(".", keys.subList(0, keys.size() - 1)));
+	}
+
+	JSONObject getJsonObject(JsonConfig config, String keyPath) {
+		String[] keys = getKeyChain(keyPath);
 		JSONObject parent = config.config;
 
-		for (int i = 0; i < path.length - 1; i++) {
+		for (String key : keys) {
 			try {
-				parent = parent.getJSONObject(path[i]);
+				parent = parent.getJSONObject(key);
 			} catch (JSONException e) {
-				logInvalidKey(config.name, path[i], keyPath);
+				logInvalidKey(config.name, key, String.join(".", keys));
 			}
 		}
 		return parent;

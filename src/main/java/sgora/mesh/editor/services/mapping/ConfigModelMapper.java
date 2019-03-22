@@ -48,7 +48,7 @@ public class ConfigModelMapper {
 		if(!(modelFieldType instanceof ParameterizedType)) {
 			return null;
 		}
-		String modelValueType = ((ParameterizedType) modelFieldType).getActualTypeArguments()[0].getClass().getCanonicalName();
+		String modelValueType = ((ParameterizedType) modelFieldType).getActualTypeArguments()[0].getTypeName();
 		Object configValue = configPathRoot.get(propertyKey);
 		String configValueType;
 		if (configValue instanceof JSONObject) {

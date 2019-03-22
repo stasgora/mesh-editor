@@ -1,7 +1,6 @@
 package sgora.mesh.editor.interfaces.config;
 
 import org.json.JSONObject;
-import sgora.mesh.editor.model.JsonConfig;
 
 import java.util.List;
 
