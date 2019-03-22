@@ -5,9 +5,7 @@ import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.model.observables.Observable;
 import sgora.mesh.editor.model.observables.SettableProperty;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +15,7 @@ public class ConfigModelMapper {
 
 	private AppConfigReader appConfig;
 
-	private static final String CONFIG_TYPE_FIELD = "type";
+	private static final String CONFIG_TYPE_FIELD = "objectType";
 
 	public ConfigModelMapper(AppConfigReader appConfig) {
 		this.appConfig = appConfig;
@@ -30,34 +28,90 @@ public class ConfigModelMapper {
 			if(modelField == null) {
 				continue;
 			}
-			Object configValue = getConfigFieldValue(configPathRoot, propertyKey, modelField);
+			Type modelFieldType = modelField.getGenericType();
+			if(!(modelFieldType instanceof ParameterizedType)) {
+				continue;
+			}
+			Type modelValueType = ((ParameterizedType) modelFieldType).getActualTypeArguments()[0];
+			Object configValue = getConfigFieldValue(configPathRoot, propertyKey, modelValueType);
 			if(configValue == null) {
 				continue;
 			}
+			SettableProperty modelFieldValue;
 			try {
-				SettableProperty modelFieldValue = (SettableProperty) modelField.get(modelObject);
-				modelFieldValue.set(configValue);
+				modelFieldValue = (SettableProperty) modelField.get(modelObject);
 			} catch (IllegalAccessException e) {
-				LOGGER.log(Level.SEVERE, "Getting model field value failed", e);
+				LOGGER.log(Level.SEVERE, "Getting model container field failed", e);
+				continue;
+			}
+			if (configValue instanceof JSONObject) {
+				Object modelValue = constructModelValueObject(modelValueType, configValue);
+				if(modelValue == null) {
+					continue;
+				}
+				modelFieldValue.set(modelValue);
+			} else {
+				modelFieldValue.set(configValue);
 			}
 		}
 	}
 
-	private Object getConfigFieldValue(JSONObject configPathRoot, String propertyKey, Field modelField) {
-		Type modelFieldType = modelField.getGenericType();
-		if(!(modelFieldType instanceof ParameterizedType)) {
+	private Object constructModelValueObject(Type modelValueType, Object configValue) {
+		Object modelValue = createModelValueObject(modelValueType);
+		if(modelValue == null) {
 			return null;
 		}
-		String modelValueType = ((ParameterizedType) modelFieldType).getActualTypeArguments()[0].getTypeName();
+		Class<?> modelValueClass = modelValue.getClass();
+		JSONObject configParameter = (JSONObject) configValue;
+		for (String modelKey : (configParameter).keySet()) {
+			if(modelKey.equals(CONFIG_TYPE_FIELD)) {
+				continue;
+			}
+			Field field;
+			try {
+				field = modelValueClass.getDeclaredField(modelKey);
+				field.setAccessible(true);
+				field.set(modelValue, configParameter.get(modelKey));
+			} catch (NoSuchFieldException e) {
+				LOGGER.log(Level.SEVERE, "Getting model field failed", e);
+				continue;
+			} catch (IllegalAccessException e) {
+				LOGGER.log(Level.SEVERE, "Setting model field value failed", e);
+				continue;
+			}
+		}
+		return modelValue;
+	}
+
+	private Object createModelValueObject(Type modelValueType) {
+		Object modelValue;
+		try {
+			Constructor<? extends Type> constructor = ((Class) modelValueType).getConstructor();
+			modelValue = constructor.newInstance();
+		} catch (NoSuchMethodException e) {
+			LOGGER.log(Level.SEVERE, "No default constructor found for model class", e);
+			return null;
+		} catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+			LOGGER.log(Level.SEVERE, "Creating model object instance failed", e);
+			return null;
+		}
+		return modelValue;
+	}
+
+	private Object getConfigFieldValue(JSONObject configPathRoot, String propertyKey, Type modelValueType) {
+		String modelValueTypeName = modelValueType.getTypeName();
 		Object configValue = configPathRoot.get(propertyKey);
 		String configValueType;
 		if (configValue instanceof JSONObject) {
 			configValueType = ((JSONObject) configValue).optString(CONFIG_TYPE_FIELD);
+			if(configValueType == null) {
+				return null;
+			}
 		} else {
 			configValueType = configValue.getClass().getCanonicalName();
 		}
-		if(!modelValueType.equals(configValueType)) {
-			LOGGER.log(Level.WARNING, "Model field type " + modelFieldType + " does not match config value type " + configValueType);
+		if(!modelValueTypeName.equals(configValueType)) {
+			LOGGER.log(Level.WARNING, "Model field type " + modelValueType + " does not match config value type " + configValueType);
 			return null;
 		}
 		return configValue;

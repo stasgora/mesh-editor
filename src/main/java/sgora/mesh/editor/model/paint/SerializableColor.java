@@ -13,6 +13,10 @@ public class SerializableColor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public SerializableColor() {
+		this(1, 1, 1, 1);
+	}
+
 	public SerializableColor(Color color) {
 		this.red = color.getRed();
 		this.green = color.getGreen();

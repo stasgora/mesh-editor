@@ -17,7 +17,7 @@ import java.util.List;
 
 public class VisualProperties extends Observable {
 
-	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>(new SerializableColor(0.1, 0.2, 1, 1));
+	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>();
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
 
 	public BindableProperty<Boolean> meshVisible = new BindableProperty<>(true);

@@ -48,6 +48,7 @@ public class PropertiesView extends SubController {
 
 	private void setPropertiesDefaultValues() {
 		configModelMapper.mapConfigPathToModelObject(visualProperties, "default.visualProperties");
+		visualProperties.notifyListeners();
 	}
 
 	private void setMeshTransparency(int value) {

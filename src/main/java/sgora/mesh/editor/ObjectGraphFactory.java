@@ -92,10 +92,6 @@ public class ObjectGraphFactory {
 	public void createProjectModel() {
 		imageBox.calcImageBox();
 		triangulationService.createNewMesh();
-
-		//TODO replace with config mapping
-		SettableProperty<Double> meshTransparency = project.visualProperties.meshTransparency;
-		meshTransparency.setAndNotify(appConfig.getDouble("default.meshVisibility"));
 	}
 
 	public void createObjectGraph() {
