@@ -117,7 +117,7 @@ public class ObjectGraphFactory {
 		triangleUtils = new TriangleUtils(project.canvasData.mesh, nodeUtils);
 		flippingUtils = new FlippingUtils(project.canvasData.mesh, triangleUtils);
 		triangulationService = new FlipBasedTriangulationService(project.canvasData.mesh, nodeUtils, triangleUtils, flippingUtils);
-		colorUtils = new ColorUtils(nodeUtils);
+		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage);
 	}
 
 	private void createProjectServices() {
