@@ -6,10 +6,10 @@ import java.io.Serializable;
 
 public class SerializableColor implements Serializable {
 
-	private double red;
-	private double green;
-	private double blue;
-	private double alpha;
+	public double red;
+	public double green;
+	public double blue;
+	public double alpha;
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,6 +33,26 @@ public class SerializableColor implements Serializable {
 
 	public Color getFXColor() {
 		return new Color(red, green, blue, alpha);
+	}
+
+	public SerializableColor setRed(double red) {
+		this.red = red;
+		return this;
+	}
+
+	public SerializableColor setGreen(double green) {
+		this.green = green;
+		return this;
+	}
+
+	public SerializableColor setBlue(double blue) {
+		this.blue = blue;
+		return this;
+	}
+
+	public SerializableColor setAlpha(double alpha) {
+		this.alpha = alpha;
+		return this;
 	}
 
 }

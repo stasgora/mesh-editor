@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.paint.SerializableColor;
 import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
@@ -29,10 +30,12 @@ public class MeshCanvas extends Canvas {
 			return;
 		}
 		VisualProperties properties = this.visualProperties;
+		double transparency = properties.meshTransparency.get();
+
 		Point pixelImgSize = new Point(baseImage.get().getWidth(), baseImage.get().getHeight());
 		PixelReader pixels = baseImage.get().getPixelReader();
 		for (Point[] triangle : triangles) {
-			context.setFill(colorUtils.getTriangleColor(triangle, pixels, pixelImgSize, properties.meshTransparency.get()));
+			context.setFill(colorUtils.getTriangleColor(triangle, pixels, pixelImgSize).setAlpha(transparency).getFXColor());
 			context.beginPath();
 			context.moveTo(triangle[0].x, triangle[0].y);
 			context.lineTo(triangle[1].x, triangle[1].y);
@@ -40,7 +43,7 @@ public class MeshCanvas extends Canvas {
 			context.closePath();
 			context.fill();
 		}
-		context.setFill(properties.nodeColor.get().getFXColor());
+		context.setFill(properties.nodeColor.get().setAlpha(transparency).getFXColor());
 		Integer nodeRadius = properties.nodeRadius.get();
 		for (Point node : nodes) {
 			context.fillOval(node.x - nodeRadius / 2d, node.y - nodeRadius / 2d, nodeRadius, nodeRadius);
