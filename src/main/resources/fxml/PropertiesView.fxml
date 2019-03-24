@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -23,7 +24,7 @@
 			<CheckBox fx:id="imageVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_image}" />
 		</VBox>
 		<Label text="${properties_transparency_title}" />
-		<VBox spacing="10.0">
+		<FlowPane prefWidth="200.0">
 			<padding>
 				<Insets left="20.0" />
 			</padding>
@@ -31,8 +32,15 @@
 				<Label prefHeight="26.0" text="${properties_transparency_mesh}" />
 				<TextField fx:id="meshTransparencyValue" alignment="CENTER" prefHeight="26.0" prefWidth="44.0" />
 				<Label prefHeight="26.0" text="\%" />
+				<padding>
+					<Insets right="10.0" />
+				</padding>
 			</HBox>
-			<Slider fx:id="meshTransparencySlider" maxWidth="300.0" />
-		</VBox>
+			<Slider fx:id="meshTransparencySlider" maxWidth="300.0">
+				<padding>
+					<Insets bottom="5.0" top="5.0" />
+				</padding>
+			</Slider>
+		</FlowPane>
 	</VBox>
 </fx:root>
