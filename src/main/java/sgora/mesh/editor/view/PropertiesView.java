@@ -42,11 +42,9 @@ public class PropertiesView extends SubController {
 		visualProperties.meshTransparency.bindWithFxObservable(meshTransparencyValue.textProperty(), val -> String.valueOf((int) (val * 100)), val -> textToRange(val) / 100d);
 		meshTransparencySlider.valueProperty().addListener((observable, oldVal, newVal) -> meshTransparencyValue.setText(String.valueOf(newVal.intValue())));
 		meshTransparencyValue.textProperty().addListener((observable, oldVal, newVal) -> setMeshTransparency(textToRange(newVal)));
-
-		setPropertiesDefaultValues();
 	}
 
-	private void setPropertiesDefaultValues() {
+	public void setPropertiesDefaultValues() {
 		configModelMapper.mapConfigPathToModelObject(visualProperties, "default.visualProperties");
 		visualProperties.notifyListeners();
 	}

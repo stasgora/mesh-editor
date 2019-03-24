@@ -92,6 +92,7 @@ public class ObjectGraphFactory {
 	public void createProjectModel() {
 		imageBox.calcImageBox();
 		triangulationService.createNewMesh();
+		propertiesView.setPropertiesDefaultValues();
 	}
 
 	public void createObjectGraph() {

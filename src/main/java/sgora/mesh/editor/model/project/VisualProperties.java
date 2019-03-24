@@ -18,10 +18,10 @@ import java.util.List;
 public class VisualProperties extends Observable {
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>();
-	public SettableProperty<Integer> nodeRadius = new SettableProperty<>(8);
+	public SettableProperty<Integer> nodeRadius = new SettableProperty<>();
 
-	public BindableProperty<Boolean> meshVisible = new BindableProperty<>(true);
-	public BindableProperty<Boolean> imageVisible = new BindableProperty<>(true);
+	public BindableProperty<Boolean> meshVisible = new BindableProperty<>();
+	public BindableProperty<Boolean> imageVisible = new BindableProperty<>();
 	public BindableProperty<Double> meshTransparency = new BindableProperty<>();
 
 	private List<SettableProperty> properties = Arrays.asList(nodeColor, nodeRadius, meshVisible, imageVisible, meshTransparency);
