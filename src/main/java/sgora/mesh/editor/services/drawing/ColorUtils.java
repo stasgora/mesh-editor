@@ -30,6 +30,10 @@ public class ColorUtils {
 		return new SerializableColor(r, g, b, 1);
 	}
 
+	public SerializableColor getEdgeColor(Point first, Point second) {
+		return getNodeColor(first).averageWith(getNodeColor(second));
+	}
+
 	public SerializableColor getNodeColor(Point node) {
 		node = nodeUtils.canvasToPixelPos(node);
 		Point pixelImgSize = new Point(baseImage.get().getWidth(), baseImage.get().getHeight());

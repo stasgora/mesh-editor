@@ -21,7 +21,8 @@
 				"mesh": "Mesh",
 				"image": "Image",
 				"nodes": "Points",
-				"edges": "Lines"
+				"edges": "Lines",
+				"triangles": "Triangles"
 			},
 			"transparency": {
 				"title": "Transparency",

@@ -21,7 +21,8 @@
 				"mesh": "Siatka",
 				"image": "Obraz",
 				"nodes": "Punkty",
-				"edges": "Linie"
+				"edges": "Linie",
+				"triangles": "Trójkąty"
 			},
 			"transparency": {
 				"title": "Przeźroczystość",

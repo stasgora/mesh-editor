@@ -24,9 +24,10 @@ public class VisualProperties extends Observable {
 	public BindableProperty<Boolean> imageVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> nodesVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> edgesVisible = new BindableProperty<>();
+	public BindableProperty<Boolean> trianglesVisible = new BindableProperty<>();
 	public BindableProperty<Double> meshTransparency = new BindableProperty<>();
 
-	private List<SettableProperty> properties = Arrays.asList(nodeColor, nodeRadius, meshVisible, imageVisible, nodesVisible, edgesVisible, meshTransparency);
+	private List<SettableProperty> properties = Arrays.asList(nodeColor, nodeRadius, meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency);
 
 	public VisualProperties() {
 		properties.forEach(this::addSubObservable);

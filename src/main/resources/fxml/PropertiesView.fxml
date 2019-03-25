@@ -24,6 +24,7 @@
 			<CheckBox fx:id="imageVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_image}" />
 			<CheckBox fx:id="nodesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_nodes}" />
 			<CheckBox fx:id="edgesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_edges}" />
+			<CheckBox fx:id="trianglesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_triangles}" />
 		</VBox>
 		<Label text="${properties_transparency_title}" />
 		<FlowPane prefWidth="200.0">

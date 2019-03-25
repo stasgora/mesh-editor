@@ -18,6 +18,7 @@ public class PropertiesView extends SubController {
 	public CheckBox imageVisibleCheckBox;
 	public CheckBox nodesVisibleCheckBox;
 	public CheckBox edgesVisibleCheckBox;
+	public CheckBox trianglesVisibleCheckBox;
 
 	public TextField meshTransparencyValue;
 	public Slider meshTransparencySlider;
@@ -42,6 +43,7 @@ public class PropertiesView extends SubController {
 		visualProperties.imageVisible.bindWithFxObservable(imageVisibleCheckBox.selectedProperty());
 		visualProperties.nodesVisible.bindWithFxObservable(nodesVisibleCheckBox.selectedProperty());
 		visualProperties.edgesVisible.bindWithFxObservable(edgesVisibleCheckBox.selectedProperty());
+		visualProperties.trianglesVisible.bindWithFxObservable(trianglesVisibleCheckBox.selectedProperty());
 
 		visualProperties.meshTransparency.bindWithFxObservable(meshTransparencyValue.textProperty(), val -> String.valueOf((int) (val * 100)), val -> textToRange(val) / 100d);
 		meshTransparencySlider.valueProperty().addListener((observable, oldVal, newVal) -> meshTransparencyValue.setText(String.valueOf(newVal.intValue())));

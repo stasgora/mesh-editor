@@ -34,6 +34,14 @@ public class SerializableColor implements Serializable {
 	public Color getFXColor() {
 		return new Color(red, green, blue, alpha);
 	}
+	
+	public SerializableColor averageWith(SerializableColor color) {
+		red = (red + color.red) / 2;
+		green = (green + color.green) / 2;
+		blue = (blue + color.blue) / 2;
+		alpha = (alpha + color.alpha) / 2;
+		return this;
+	}
 
 	public SerializableColor setRed(double red) {
 		this.red = red;
