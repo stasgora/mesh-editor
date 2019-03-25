@@ -19,7 +19,9 @@
 			"visibility": {
 				"title": "Widoczność",
 				"mesh": "Siatka",
-				"image": "Obraz"
+				"image": "Obraz",
+				"nodes": "Punkty",
+				"edges": "Linie"
 			},
 			"transparency": {
 				"title": "Przeźroczystość",

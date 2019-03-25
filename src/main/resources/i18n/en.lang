@@ -19,7 +19,9 @@
 			"visibility": {
 				"title": "Visibility",
 				"mesh": "Mesh",
-				"image": "Image"
+				"image": "Image",
+				"nodes": "Points",
+				"edges": "Lines"
 			},
 			"transparency": {
 				"title": "Transparency",

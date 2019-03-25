@@ -41,10 +41,12 @@ public class MeshCanvas extends Canvas {
 			context.closePath();
 			context.fill();
 		}
-		Integer nodeRadius = properties.nodeRadius.get();
-		for (Point node : nodes) {
-			context.setFill(colorUtils.getNodeColor(node).setAlpha(transparency).getFXColor());
-			context.fillOval(node.x - nodeRadius / 2d, node.y - nodeRadius / 2d, nodeRadius, nodeRadius);
+		if(visualProperties.nodesVisible.get()) {
+			Integer nodeRadius = properties.nodeRadius.get();
+			for (Point node : nodes) {
+				context.setFill(colorUtils.getNodeColor(node).setAlpha(transparency).getFXColor());
+				context.fillOval(node.x - nodeRadius / 2d, node.y - nodeRadius / 2d, nodeRadius, nodeRadius);
+			}
 		}
 		context.setStroke(Color.gray(0.8));
 		context.setLineDashes(10, 15);

@@ -22,6 +22,8 @@
 			</padding>
 			<CheckBox fx:id="meshVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_mesh}" />
 			<CheckBox fx:id="imageVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_image}" />
+			<CheckBox fx:id="nodesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_nodes}" />
+			<CheckBox fx:id="edgesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_edges}" />
 		</VBox>
 		<Label text="${properties_transparency_title}" />
 		<FlowPane prefWidth="200.0">
