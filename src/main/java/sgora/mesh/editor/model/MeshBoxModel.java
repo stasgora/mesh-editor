@@ -1,4 +1,4 @@
-package sgora.mesh.editor.model.containers;
+package sgora.mesh.editor.model;
 
 import javafx.scene.input.MouseButton;
 

@@ -5,9 +5,7 @@ import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Triangle;
 import sgora.mesh.editor.model.observables.SettableObservable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -56,8 +54,8 @@ public class TriangleUtils {
 		return det + 1e-5 < 0 ? current.triangles[nodeIndex] : null;
 	}
 
-	public List<Point[]> getPixelTriangles() {
-		return mesh.get().getTriangles().stream().filter(this::isTriangleValid).map(this::getPixelTriangle).collect(Collectors.toList());
+	public List<Point[]> getCanvasSpaceTriangles() {
+		return mesh.get().getTriangles().stream().filter(this::isTriangleValid).map(this::getCanvasSpaceTriangle).collect(Collectors.toList());
 	}
 
 	private boolean isTriangleValid(Triangle triangle) {
@@ -70,8 +68,8 @@ public class TriangleUtils {
 		return true;
 	}
 
-	private Point[] getPixelTriangle(Triangle triangle) {
-		return Arrays.stream(triangle.nodes).map(node -> nodeUtils.getNodePixelPos(new Point(node))).toArray(Point[]::new);
+	private Point[] getCanvasSpaceTriangle(Triangle triangle) {
+		return Arrays.stream(triangle.nodes).map(node -> nodeUtils.proportionalToCanvasPos(new Point(node))).toArray(Point[]::new);
 	}
 
 	Point getSeparateNode(Triangle from, Triangle with) {

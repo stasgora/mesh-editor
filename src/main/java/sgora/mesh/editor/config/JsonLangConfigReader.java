@@ -3,16 +3,19 @@ package sgora.mesh.editor.config;
 import javafx.collections.ObservableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import sgora.mesh.editor.interfaces.AppConfigReader;
-import sgora.mesh.editor.interfaces.LangConfigReader;
+import sgora.mesh.editor.enums.ViewType;
+import sgora.mesh.editor.interfaces.config.AppConfigReader;
+import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.model.JsonConfig;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class JsonLangConfigReader extends JsonConfigReader implements LangConfigReader {
 
@@ -20,16 +23,17 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 
 	private final AppConfigReader appConfig;
 	private final AppConfigReader appSettings;
-	private ObservableMap<String, Object> fxmlNamespace;
+	private Map<String, ObservableMap<String, Object>> viewNamespaces;
 
 	private List<JsonConfig> configList = new ArrayList<>();
 
-	public JsonLangConfigReader(AppConfigReader appConfig, AppConfigReader appSettings, ObservableMap<String, Object> fxmlNamespace) {
+	private static final String FXML_TREE_PREFIX = "fxml";
+
+	public JsonLangConfigReader(AppConfigReader appConfig, AppConfigReader appSettings, Map<String, ObservableMap<String, Object>> viewNamespaces) {
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
-		this.fxmlNamespace = fxmlNamespace;
+		this.viewNamespaces = viewNamespaces;
 		configList.add(loadJsonConfig(getLangFileName(appConfig.getString("default.language"))));
-		onSetMainLanguage();
 	}
 
 	@Override
@@ -88,7 +92,7 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 
 	private void populateFXMLNamespace() {
 		//iterate over default language property tree
-		JSONObject root = configList.get(configList.size() - 1).config.getJSONObject("fxml");
+		JSONObject root = configList.get(configList.size() - 1).config.getJSONObject(FXML_TREE_PREFIX);
 		scanChildren("", root);
 	}
 
@@ -99,7 +103,8 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 			if(child instanceof JSONObject) {
 				scanChildren(childKey, (JSONObject) child);
 			} else {
-				fxmlNamespace.put(childKey.replace('.', '_'), getText("fxml." + childKey));
+				String viewName = keyPath.split("\\.")[0];
+				viewNamespaces.get(viewName).put(childKey.replace('.', '_'), getText(FXML_TREE_PREFIX + "." + childKey));
 			}
 		}
 	}

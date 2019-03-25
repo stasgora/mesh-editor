@@ -15,10 +15,24 @@
 				}
 			}
 		},
-		"tool": {
-			"meshEditor": "Mesh Editor",
-			"imageMover": "Image Mover"
+		"properties": {
+			"visibility": {
+				"title": "Visibility",
+				"mesh": "Mesh",
+				"image": "Image",
+				"nodes": "Points",
+				"edges": "Lines",
+				"triangles": "Triangles"
+			},
+			"transparency": {
+				"title": "Transparency",
+				"mesh": "Mesh"
+			}
 		}
+	},
+	"tool": {
+		"meshEditor": "Mesh Editor",
+		"imageMover": "Image Mover"
 	},
 	"action": {
 		"save": "Save",

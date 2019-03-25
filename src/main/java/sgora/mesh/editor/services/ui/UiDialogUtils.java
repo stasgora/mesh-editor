@@ -1,11 +1,11 @@
-package sgora.mesh.editor.services;
+package sgora.mesh.editor.services.ui;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sgora.mesh.editor.enums.FileChooserAction;
-import sgora.mesh.editor.interfaces.LangConfigReader;
+import sgora.mesh.editor.interfaces.config.LangConfigReader;
 
 import java.io.File;
 import java.util.Optional;

@@ -6,11 +6,10 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import sgora.mesh.editor.model.JsonConfig;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -25,7 +24,7 @@ public abstract class JsonConfigReader {
 		JSONObject parent = getParent(config, keyPath);
 		String lastKey = getLastKey(keyPath);
 		if(!parent.has(lastKey)) {
-			logMissingKey(config.name, lastKey, keyPath);
+			logInvalidKey(config.name, lastKey, keyPath);
 		}
 		return getValue.apply(parent, lastKey);
 	}
@@ -34,7 +33,7 @@ public abstract class JsonConfigReader {
 		JSONObject parent = getParent(config, keyPath);
 		String lastKey = getLastKey(keyPath);
 		if(!parent.has(lastKey)) {
-			logMissingKey(config.name, lastKey, keyPath);
+			logInvalidKey(config.name, lastKey, keyPath);
 			return Collections.emptyList();
 		}
 		JSONArray jsonArray = parent.getJSONArray(lastKey);
@@ -69,20 +68,28 @@ public abstract class JsonConfigReader {
 	}
 
 	private JSONObject getParent(JsonConfig config, String keyPath) {
-		String[] path = getKeyChain(keyPath);
+		List<String> keys = Arrays.asList(getKeyChain(keyPath));
+		if(keys.size() <= 1) {
+			return config.config;
+		}
+		return getJsonObject(config, String.join(".", keys.subList(0, keys.size() - 1)));
+	}
+
+	JSONObject getJsonObject(JsonConfig config, String keyPath) {
+		String[] keys = getKeyChain(keyPath);
 		JSONObject parent = config.config;
 
-		for (int i = 0; i < path.length - 1; i++) {
+		for (String key : keys) {
 			try {
-				parent = parent.getJSONObject(path[i]);
+				parent = parent.getJSONObject(key);
 			} catch (JSONException e) {
-				logMissingKey(config.name, path[i], keyPath);
+				logInvalidKey(config.name, key, String.join(".", keys));
 			}
 		}
 		return parent;
 	}
 
-	private void logMissingKey(String configName, String key, String keyPath) {
+	private void logInvalidKey(String configName, String key, String keyPath) {
 		LOGGER.log(Level.SEVERE, "Failed reading '" + configName + "' config property '" + key + "' from path '" + keyPath + "'");
 	}
 

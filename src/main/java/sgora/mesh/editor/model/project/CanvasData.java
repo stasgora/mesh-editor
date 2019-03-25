@@ -1,30 +1,24 @@
-package sgora.mesh.editor.model;
+package sgora.mesh.editor.model.project;
 
 import javafx.scene.image.Image;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Rectangle;
-import sgora.mesh.editor.model.observables.ComplexObservable;
+import sgora.mesh.editor.model.observables.Observable;
 import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.observables.SettableProperty;
 
-import java.io.*;
-
-public class Project extends ComplexObservable {
-
-	public SettableProperty<Boolean> stateSaved = new SettableProperty<>(true);
-	public SettableProperty<File> file = new SettableProperty<>();
-	public SettableProperty<Boolean> loaded = new SettableProperty<>(false);
+public class CanvasData extends Observable {
 
 	public SettableObservable<Mesh> mesh = new SettableObservable<>();
+	public final Rectangle imageBox = new Rectangle();
 
 	public SettableProperty<Image> baseImage = new SettableProperty<>();
-	public final Rectangle imageBox = new Rectangle();
 	public byte[] rawImageFile;
 
-	public Project() {
-		// only notify on set
+	public CanvasData() {
 		addSubObservable(mesh);
 		addSubObservable(baseImage);
+		addSubObservable(imageBox);
 	}
 
 }

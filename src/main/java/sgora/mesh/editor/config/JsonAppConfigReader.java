@@ -2,7 +2,7 @@ package sgora.mesh.editor.config;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import sgora.mesh.editor.interfaces.AppConfigReader;
+import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.model.JsonConfig;
 
 import java.io.File;
@@ -46,6 +46,11 @@ public class JsonAppConfigReader extends JsonConfigReader implements AppConfigRe
 	@Override
 	public List<String> getStringList(String keyPath) {
 		return this.getList(config, keyPath, JSONArray::getString);
+	}
+
+	@Override
+	public JSONObject getJsonObject(String keyPath) {
+		return getJsonObject(config, keyPath);
 	}
 
 	public static JsonAppConfigReader forResource(String fileName) {

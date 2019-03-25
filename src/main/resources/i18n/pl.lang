@@ -14,6 +14,20 @@
 					"quit": "_Wyjdź"
 				}
 			}
+		},
+		"properties": {
+			"visibility": {
+				"title": "Widoczność",
+				"mesh": "Siatka",
+				"image": "Obraz",
+				"nodes": "Punkty",
+				"edges": "Linie",
+				"triangles": "Trójkąty"
+			},
+			"transparency": {
+				"title": "Przeźroczystość",
+				"mesh": "Siatka"
+			}
 		}
 	},
 	"action": {

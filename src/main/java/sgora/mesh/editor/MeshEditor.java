@@ -4,17 +4,17 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-import sgora.mesh.editor.view.WindowController;
+import sgora.mesh.editor.view.WindowView;
 
 public class MeshEditor extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/WindowView.fxml"));
 		Parent root = loader.load();
-		WindowController controller = loader.getController();
+		WindowView controller = loader.getController();
 
-		new ObjectGraphFactory(controller, root, stage, loader).buildDependencies().createObjectGraph();
+		new ObjectGraphFactory(controller, root, stage, loader.getNamespace()).createObjectGraph();
 		stage.requestFocus();
 		stage.show();
 	}

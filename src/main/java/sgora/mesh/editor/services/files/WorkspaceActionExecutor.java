@@ -1,9 +1,13 @@
 package sgora.mesh.editor.services.files;
 
+import sgora.mesh.editor.ObjectGraphFactory;
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.files.FileUtils;
-import sgora.mesh.editor.interfaces.TriangulationService;
-import sgora.mesh.editor.model.Project;
+import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.project.CanvasData;
+import sgora.mesh.editor.model.project.LoadState;
+import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.model.project.VisualProperties;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,59 +20,66 @@ public class WorkspaceActionExecutor {
 	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionExecutor.class.getName());
 
 	private FileUtils fileUtils;
-	private Project project;
-	private TriangulationService triangulationService;
+	private final Project project;
+	private ObjectGraphFactory objectGraphFactory;
 
-	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, TriangulationService triangulationService) {
+	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory) {
 		this.fileUtils = fileUtils;
 		this.project = project;
-		this.triangulationService = triangulationService;
+		this.objectGraphFactory = objectGraphFactory;
 	}
 
-	public void openProject(File location) {
+	void openProject(File location) {
+		LoadState state = project.loadState;
 		try {
 			fileUtils.load(location);
-			project.loaded.set(true);
-			project.file.set(location);
-			project.stateSaved.set(true);
+			state.loaded.set(true);
+			state.file.set(location);
+			state.stateSaved.set(true);
 			project.notifyListeners();
 		} catch (ProjectIOException e) {
 			LOGGER.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
-	public void saveProject(File location) {
+	void saveProject(File location) {
+		LoadState state = project.loadState;
 		try {
 			location = fileUtils.getProjectFileWithExtension(location);
 			fileUtils.save(location);
-			project.file.set(location);
-			project.stateSaved.set(true);
+			state.file.set(location);
+			state.stateSaved.set(true);
+			state.notifyListeners();
 		} catch (ProjectIOException e) {
 			LOGGER.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
-	public void createNewProject(File location) {
+	void createNewProject(File location) {
+		LoadState state = project.loadState;
 		try(FileInputStream fileStream = new FileInputStream(location)) {
 			fileUtils.loadImage(fileStream);
-			triangulationService.createNewMesh();
-			project.loaded.set(true);
-			project.file.set(null);
-			project.stateSaved.set(false);
+			objectGraphFactory.createProjectModel();
+
+			state.loaded.set(true);
+			state.file.set(null);
+			state.stateSaved.set(false);
 			project.notifyListeners();
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 
-	public void closeProject() {
-		project.mesh.set(null);
-		project.baseImage.set(null);
-		project.rawImageFile = null;
+	void closeProject() {
+		LoadState state = project.loadState;
+		CanvasData canvasData = project.canvasData;
+		canvasData.mesh.set(null);
+		canvasData.baseImage.set(null);
+		canvasData.rawImageFile = null;
 
-		project.loaded.set(false);
-		project.file.set(null);
-		project.stateSaved.set(true);
+		state.loaded.set(false);
+		state.file.set(null);
+		state.stateSaved.set(true);
 		project.notifyListeners();
 	}
 

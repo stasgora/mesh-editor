@@ -5,11 +5,11 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import sgora.mesh.editor.enums.FileChooserAction;
-import sgora.mesh.editor.interfaces.AppConfigReader;
-import sgora.mesh.editor.interfaces.LangConfigReader;
+import sgora.mesh.editor.interfaces.config.AppConfigReader;
+import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
-import sgora.mesh.editor.model.Project;
-import sgora.mesh.editor.services.UiDialogUtils;
+import sgora.mesh.editor.model.project.LoadState;
+import sgora.mesh.editor.services.ui.UiDialogUtils;
 
 import java.io.File;
 import java.util.List;
@@ -21,23 +21,25 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	private final LangConfigReader appLang;
 	private UiDialogUtils dialogUtils;
 	private AppConfigReader appConfig;
-	private Project project;
+	private LoadState loadState;
 
-	public WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils, AppConfigReader appConfig, Project project) {
+	public WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang,
+	                             UiDialogUtils dialogUtils, AppConfigReader appConfig, LoadState loadState) {
 		this.workspaceActionExecutor = workspaceActionExecutor;
 		this.appLang = appLang;
 		this.dialogUtils = dialogUtils;
 		this.appConfig = appConfig;
-		this.project = project;
+		this.loadState = loadState;
 	}
 
 	@Override
 	public String getProjectName() {
 		String projectName;
-		if(project.file.get() == null) {
-			projectName = project.loaded.get() ? appLang.getText("defaultProjectName") : null;
+		LoadState loadState = this.loadState;
+		if(loadState.file.get() == null) {
+			projectName = loadState.loaded.get() ? appLang.getText("defaultProjectName") : null;
 		} else {
-			String fileName = project.file.get().getName();
+			String fileName = loadState.file.get().getName();
 			projectName = fileName.substring(0, fileName.length() - appConfig.getString("extension.project").length() - 1);
 		}
 		return projectName;
@@ -116,19 +118,20 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	private void saveProject(boolean asNew) {
 		File location;
-		if(asNew || project.file.get() == null) {
+		LoadState loadState = this.loadState;
+		if(asNew || loadState.file.get() == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if(location == null) {
 				return;
 			}
 		} else {
-			location = project.file.get();
+			location = loadState.file.get();
 		}
 		workspaceActionExecutor.saveProject(location);
 	}
 
 	private boolean confirmWorkspaceAction(String title) {
-		if(project.stateSaved.get()) {
+		if(loadState.stateSaved.get()) {
 			return true;
 		}
 		ButtonType saveButton = new ButtonType(appLang.getText("action.save"));

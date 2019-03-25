@@ -1,17 +1,15 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.observables.ControlledObservable;
+import sgora.mesh.editor.model.observables.Observable;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class Point extends ControlledObservable implements Serializable {
+public class Point extends Observable implements Serializable {
 
 	public double x, y;
 
 	private static final double ROUNDING_MULT = 100;
+	private static final long serialVersionUID = 1L;
 
 	public Point(double x, double y) {
 		this.x = x;
@@ -84,11 +82,12 @@ public class Point extends ControlledObservable implements Serializable {
 	}
 
 	private void setValues(double x, double y) {
-		if(this.x != x || this.y != y) {
-			onValueChanged();
-		}
+		boolean changed = this.x != x || this.y != y;
 		this.x = x;
 		this.y = y;
+		if(changed) {
+			onValueChanged();
+		}
 	}
 
 	@Override
@@ -99,16 +98,6 @@ public class Point extends ControlledObservable implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		return obj != null && obj.getClass().equals(this.getClass()) && x == ((Point) obj).x && y == ((Point) obj).y;
-	}
-
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.writeDouble(x);
-		out.writeDouble(y);
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		x = in.readDouble();
-		y = in.readDouble();
 	}
 
 }

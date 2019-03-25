@@ -1,4 +1,6 @@
-package sgora.mesh.editor.interfaces;
+package sgora.mesh.editor.interfaces.config;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -10,6 +12,8 @@ public interface AppConfigReader {
 	boolean getBool(String keyPath);
 
 	List<String> getStringList(String keyPath);
+
+	JSONObject getJsonObject(String keyPath);
 
 	boolean containsPath(String keyPath);
 

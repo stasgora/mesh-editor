@@ -1,23 +1,28 @@
 package sgora.mesh.editor.model.observables;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.function.UnaryOperator;
 
 /**
  * Notifies listeners when model value is set
  */
-public class SettableProperty<T> extends SimpleObservable implements Serializable {
+public class SettableProperty<T> extends Observable implements Serializable {
 
 	protected T modelValue;
+
+	protected T defaultValue;
+
+	private static final long serialVersionUID = 1L;
 
 	public SettableProperty() {
 	}
 
 	public SettableProperty(T modelValue) {
 		this.modelValue = modelValue;
+	}
+
+	public boolean present() {
+		return modelValue != null;
 	}
 
 	public T get() {
@@ -32,16 +37,27 @@ public class SettableProperty<T> extends SimpleObservable implements Serializabl
 		onValueChanged();
 	}
 
+	public void setAndNotify(T modelValue) {
+		set(modelValue);
+		notifyListeners();
+	}
+
 	public void modify(UnaryOperator<T> operator) {
 		set(operator.apply(modelValue));
 	}
 
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.writeObject(modelValue);
+	public void resetToDefaultValue() {
+		if(defaultValue != null) {
+			set(defaultValue);
+		}
 	}
 
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		modelValue = (T) in.readObject();
+	public T getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(T defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 }
