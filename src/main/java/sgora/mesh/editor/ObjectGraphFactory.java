@@ -152,7 +152,7 @@ public class ObjectGraphFactory {
 				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction);
 		windowView.init(project.loadState, stage, appConfig, workspaceAction);
 
-		canvasView.meshCanvas.init(colorUtils, project.canvasData.baseImage, project.visualProperties);
+		canvasView.meshCanvas.init(colorUtils, project.visualProperties);
 		windowView.toolBar.init(activeTool, appLang);
 	}
 

@@ -1,13 +1,10 @@
 package sgora.mesh.editor.ui.canvas;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import sgora.mesh.editor.model.paint.SerializableColor;
-import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
-import sgora.mesh.editor.model.observables.SettableProperty;
+import sgora.mesh.editor.model.paint.SerializableColor;
+import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.services.drawing.ColorUtils;
 
 import java.util.List;
@@ -15,12 +12,10 @@ import java.util.List;
 public class MeshCanvas extends Canvas {
 
 	private ColorUtils colorUtils;
-	private SettableProperty<Image> baseImage;
 	private VisualProperties visualProperties;
 
-	public void init(ColorUtils colorUtils, SettableProperty<Image> baseImage, VisualProperties visualProperties) {
+	public void init(ColorUtils colorUtils, VisualProperties visualProperties) {
 		this.colorUtils = colorUtils;
-		this.baseImage = baseImage;
 		this.visualProperties = visualProperties;
 	}
 
@@ -36,8 +31,8 @@ public class MeshCanvas extends Canvas {
 
 	private void drawEdges(List<Point[]> triangles) {
 		if(visualProperties.edgesVisible.get()) {
-			context.setLineWidth(5);
 			context.setLineDashes(0);
+			context.setLineWidth(visualProperties.lineWidth.get());
 			double transparency = visualProperties.meshTransparency.get();
 			for (Point[] triangle : triangles) {
 				for (int i = 0; i < 3; i++) {

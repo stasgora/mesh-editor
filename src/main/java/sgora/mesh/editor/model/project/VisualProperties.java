@@ -19,6 +19,7 @@ public class VisualProperties extends Observable {
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>();
 	public SettableProperty<Integer> nodeRadius = new SettableProperty<>();
+	public SettableProperty<Integer> lineWidth = new SettableProperty<>();
 
 	public BindableProperty<Boolean> meshVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> imageVisible = new BindableProperty<>();
@@ -27,7 +28,8 @@ public class VisualProperties extends Observable {
 	public BindableProperty<Boolean> trianglesVisible = new BindableProperty<>();
 	public BindableProperty<Double> meshTransparency = new BindableProperty<>();
 
-	private List<SettableProperty> properties = Arrays.asList(nodeColor, nodeRadius, meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency);
+	private List<SettableProperty> properties = Arrays.asList(nodeColor, lineWidth, nodeRadius,
+			meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency);
 
 	public VisualProperties() {
 		properties.forEach(this::addSubObservable);

@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.AnchorPane" visible="false" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
 	<VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 		<padding>
@@ -20,11 +13,16 @@
 			<padding>
 				<Insets left="20.0" />
 			</padding>
-			<CheckBox fx:id="meshVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_mesh}" />
 			<CheckBox fx:id="imageVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_image}" />
-			<CheckBox fx:id="nodesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_nodes}" />
-			<CheckBox fx:id="edgesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_edges}" />
-			<CheckBox fx:id="trianglesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_triangles}" />
+			<CheckBox fx:id="meshVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_mesh}" />
+			<VBox spacing="10.0">
+				<CheckBox fx:id="nodesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_nodes}" />
+				<CheckBox fx:id="edgesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_edges}" />
+				<CheckBox fx:id="trianglesVisibleCheckBox" mnemonicParsing="false" selected="true" text="${properties_visibility_triangles}" />
+				<padding>
+					<Insets left="20.0" />
+				</padding>
+			</VBox>
 		</VBox>
 		<Label text="${properties_transparency_title}" />
 		<FlowPane prefWidth="200.0">
