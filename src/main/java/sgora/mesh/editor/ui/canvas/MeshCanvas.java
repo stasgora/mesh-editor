@@ -1,6 +1,8 @@
 package sgora.mesh.editor.ui.canvas;
 
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.paint.SerializableColor;
@@ -31,7 +33,7 @@ public class MeshCanvas extends Canvas {
 
 	private void drawEdges(List<Point[]> triangles) {
 		if(visualProperties.edgesVisible.get()) {
-			context.setLineDashes(0);
+			context.setLineCap(StrokeLineCap.ROUND);
 			context.setLineWidth(visualProperties.lineWidth.get());
 			double transparency = visualProperties.meshTransparency.get();
 			for (Point[] triangle : triangles) {
@@ -62,6 +64,7 @@ public class MeshCanvas extends Canvas {
 		context.setStroke(Color.gray(0.8));
 		context.setLineDashes(10, 15);
 		context.strokeRect(boundingBox.position.x, boundingBox.position.y, boundingBox.size.x, boundingBox.size.y);
+		context.setLineDashes(0);
 	}
 
 	private void drawTriangles(List<Point[]> triangles) {
