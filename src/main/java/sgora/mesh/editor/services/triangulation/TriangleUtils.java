@@ -55,7 +55,11 @@ public class TriangleUtils {
 	}
 
 	public List<Point[]> getCanvasSpaceTriangles() {
-		return mesh.get().getTriangles().stream().filter(this::isTriangleValid).map(this::getCanvasSpaceTriangle).collect(Collectors.toList());
+		return getValidTriangles().stream().map(this::getCanvasSpaceTriangle).collect(Collectors.toList());
+	}
+
+	public List<Triangle> getValidTriangles() {
+		return mesh.get().getTriangles().stream().filter(this::isTriangleValid).collect(Collectors.toList());
 	}
 
 	private boolean isTriangleValid(Triangle triangle) {
@@ -68,7 +72,7 @@ public class TriangleUtils {
 		return true;
 	}
 
-	private Point[] getCanvasSpaceTriangle(Triangle triangle) {
+	public Point[] getCanvasSpaceTriangle(Triangle triangle) {
 		return Arrays.stream(triangle.nodes).map(node -> nodeUtils.proportionalToCanvasPos(new Point(node))).toArray(Point[]::new);
 	}
 

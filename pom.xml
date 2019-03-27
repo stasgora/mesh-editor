@@ -77,5 +77,10 @@
 			<artifactId>json</artifactId>
 			<version>20180813</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreesvg</artifactId>
+			<version>3.4</version>
+		</dependency>
 	</dependencies>
 </project>

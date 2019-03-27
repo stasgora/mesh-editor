@@ -19,6 +19,14 @@ public class Triangle implements Serializable {
 		this(new Point[]{a, b, c});
 	}
 
+	public int[] xCoords() {
+		return Arrays.stream(nodes).map(point -> (int) Math.round(point.x)).mapToInt(Integer::intValue).toArray();
+	}
+
+	public int[] yCoords() {
+		return Arrays.stream(nodes).map(point -> (int) Math.round(point.y)).mapToInt(Integer::intValue).toArray();
+	}
+
 	@Override
 	public String toString() {
 		return Arrays.toString(nodes);
