@@ -34,6 +34,8 @@ public class SvgService {
 		Rectangle boundingBox = nodeUtils.getProportionalNodeBoundingBox();
 		SVGGraphics2D svg = new SVGGraphics2D((int) boundingBox.size.x, (int) boundingBox.size.y);
 		svg.setBackground(new Color(1f,1f,1f,0f ));
+		Point marginSize = nodeUtils.getProportionalMarginSize();
+		svg.translate(marginSize.x, marginSize.y);
 
 		List<Point> nodes = canvasData.mesh.get().getNodes();
 		List<Triangle> triangles = triangleUtils.getValidTriangles();
@@ -42,8 +44,6 @@ public class SvgService {
 			svg.setColor(colorUtils.getTriangleColor(triangleUtils.getCanvasSpaceTriangle(triangle)).setAlpha(transparency).toAwtColor());
 			svg.fillPolygon(triangle.xCoords(), triangle.yCoords(), 3);
 		}
-		Point marginSize = nodeUtils.getProportionalMarginSize();
-		svg.translate(marginSize.x, marginSize.y);
 		return svg.getSVGDocument();
 	}
 
