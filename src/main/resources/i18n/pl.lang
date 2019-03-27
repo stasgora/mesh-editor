@@ -11,7 +11,8 @@
 					"close": "Zam_knij",
 					"save": "_Zapisz",
 					"saveAs": "Zapisz _Jako",
-					"quit": "_Wyjdź"
+					"quit": "_Wyjdź",
+					"export": "_Eksportuj"
 				}
 			}
 		},
@@ -42,12 +43,14 @@
 	"dialog": {
 		"fileChooser": {
 			"title": {
-				"project": "Wybierz Projekt",
-				"image": "Wybierz Obraz"
+				"save": "Zapisz",
+				"open": "Otwórz",
+				"export": "Eksportuj"
 			},
 			"extension": {
 				"project": "Pliki Projektu",
 				"image": "Obrazy",
+				"svg": "Obrazy Wektorowe",
 				"all": "Wszystkie Pliki"
 			}
 		},

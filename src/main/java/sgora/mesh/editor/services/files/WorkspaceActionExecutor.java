@@ -8,10 +8,10 @@ import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.project.VisualProperties;
+import sgora.mesh.editor.services.drawing.SvgService;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,11 +22,13 @@ public class WorkspaceActionExecutor {
 	private FileUtils fileUtils;
 	private final Project project;
 	private ObjectGraphFactory objectGraphFactory;
+	private SvgService svgService;
 
-	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory) {
+	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgService svgService) {
 		this.fileUtils = fileUtils;
 		this.project = project;
 		this.objectGraphFactory = objectGraphFactory;
+		this.svgService = svgService;
 	}
 
 	void openProject(File location) {
@@ -67,6 +69,14 @@ public class WorkspaceActionExecutor {
 			project.notifyListeners();
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
+		}
+	}
+
+	void exportProjectAsSvg(File location) {
+		try(FileOutputStream fileStream = new FileOutputStream(location)) {
+			fileStream.write(svgService.createSvg().getBytes(StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "Failed exporting project at '" + location.getAbsolutePath() + "'", e);
 		}
 	}
 

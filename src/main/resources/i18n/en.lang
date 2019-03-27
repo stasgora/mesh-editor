@@ -11,6 +11,7 @@
 					"close": "_Close",
 					"save": "_Save",
 					"saveAs": "Save _As",
+					"export": "_Export",
 					"quit": "_Quit"
 				}
 			}
@@ -46,12 +47,14 @@
 	"dialog": {
 		"fileChooser": {
 			"title": {
-				"project": "Choose Project",
-				"image": "Choose Image"
+				"save": "Save",
+				"open": "Open",
+				"export": "Export"
 			},
 			"extension": {
 				"project": "Project Files",
 				"image": "Images",
+				"svg": "Vector Images",
 				"all": "All Files"
 			}
 		},
