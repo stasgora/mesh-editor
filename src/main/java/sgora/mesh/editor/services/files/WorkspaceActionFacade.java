@@ -36,7 +36,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	public String getProjectName() {
 		String projectName;
 		LoadState loadState = this.loadState;
-		if(loadState.file.get() == null) {
+		if (loadState.file.get() == null) {
 			projectName = loadState.loaded.get() ? appLang.getText("defaultProjectName") : null;
 		} else {
 			String fileName = loadState.file.get().getName();
@@ -47,24 +47,24 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onNewProject() {
-		if(showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.createProject"))) {
+		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.createProject"))) {
 			return;
 		}
 		String[] imageTypes = appConfig.getStringList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.image"), imageTypes);
 		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, appLang.getText("dialog.fileChooser.title.open"), filter);
-		if(location != null) {
+		if (location != null) {
 			workspaceActionExecutor.createNewProject(location);
 		}
 	}
 
 	@Override
 	public void onOpenProject() {
-		if(showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.openProject"))) {
+		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.openProject"))) {
 			return;
 		}
 		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
-		if(location != null) {
+		if (location != null) {
 			workspaceActionExecutor.openProject(location);
 		}
 	}
@@ -76,7 +76,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onCloseProject() {
-		if(!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.closeProject"))) {
+		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.closeProject"))) {
 			workspaceActionExecutor.closeProject();
 		}
 	}
@@ -93,10 +93,10 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onExportProject() {
-		if(!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.closeProject"))) {
+		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.closeProject"))) {
 			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.svg"), "*.svg");
 			File location = dialogUtils.showFileChooser(FileChooserAction.SAVE_DIALOG, appLang.getText("dialog.fileChooser.title.export"), filter);
-			if(location != null) {
+			if (location != null) {
 				workspaceActionExecutor.exportProjectAsSvg(location);
 			}
 		}
@@ -104,14 +104,14 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onWindowCloseRequest(WindowEvent event) {
-		if(showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.quit"))) {
+		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.quit"))) {
 			event.consume();
 		}
 	}
 
 	@Override
 	public void onExitApp() {
-		if(!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.quit"))) {
+		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.quit"))) {
 			Platform.exit();
 		}
 	}
@@ -130,9 +130,9 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	private void saveProject(boolean asNew) {
 		File location;
 		LoadState loadState = this.loadState;
-		if(asNew || loadState.file.get() == null) {
+		if (asNew || loadState.file.get() == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
-			if(location == null) {
+			if (location == null) {
 				return;
 			}
 		} else {
@@ -142,7 +142,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	}
 
 	private boolean confirmWorkspaceAction(String title) {
-		if(loadState.stateSaved.get()) {
+		if (loadState.stateSaved.get()) {
 			return true;
 		}
 		ButtonType saveButton = new ButtonType(appLang.getText("action.save"));
@@ -153,10 +153,10 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 		String contentText = appLang.getText("dialog.warning.content.modified");
 		ButtonType[] buttonTypes = {saveButton, discardButton, cancelButton};
 		Optional<ButtonType> response = dialogUtils.showWarningDialog(title, headerText, contentText, buttonTypes);
-		if(!response.isPresent() || response.get() == cancelButton) {
+		if (!response.isPresent() || response.get() == cancelButton) {
 			return false;
 		}
-		if(response.get() == saveButton) {
+		if (response.get() == saveButton) {
 			onSaveProject();
 		}
 		return true;

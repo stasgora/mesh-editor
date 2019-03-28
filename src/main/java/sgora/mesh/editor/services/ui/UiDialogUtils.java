@@ -1,7 +1,12 @@
 package sgora.mesh.editor.services.ui;
 
+import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sgora.mesh.editor.enums.FileChooserAction;
@@ -15,6 +20,12 @@ public class UiDialogUtils {
 	private Stage window;
 	private LangConfigReader appLang;
 
+	private EventHandler<KeyEvent> pressOnEnter = event -> {
+		if (KeyCode.ENTER.equals(event.getCode()) && event.getTarget() instanceof Button) {
+			((Button) event.getTarget()).fire();
+		}
+	};
+
 	public UiDialogUtils(Stage window, LangConfigReader appLang) {
 		this.window = window;
 		this.appLang = appLang;
@@ -24,9 +35,9 @@ public class UiDialogUtils {
 		FileChooser projectFileChooser = new FileChooser();
 		projectFileChooser.setTitle(title);
 		projectFileChooser.getExtensionFilters().addAll(extensionFilter, getDefaultFilter());
-		if(action == FileChooserAction.SAVE_DIALOG) {
+		if (action == FileChooserAction.SAVE_DIALOG) {
 			return projectFileChooser.showSaveDialog(window);
-		} else if(action == FileChooserAction.OPEN_DIALOG) {
+		} else if (action == FileChooserAction.OPEN_DIALOG) {
 			return projectFileChooser.showOpenDialog(window);
 		}
 		return null;
@@ -34,6 +45,8 @@ public class UiDialogUtils {
 
 	public Optional<ButtonType> showWarningDialog(String title, String header, String content, ButtonType[] buttons) {
 		Alert dialog = new Alert(Alert.AlertType.WARNING, content, buttons);
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button -> button.addEventHandler(KeyEvent.KEY_PRESSED, pressOnEnter));
 		dialog.setTitle(title);
 		dialog.setHeaderText(header);
 		return dialog.showAndWait();
