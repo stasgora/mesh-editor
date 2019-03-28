@@ -96,7 +96,9 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 		if(!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.closeProject"))) {
 			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.svg"), "*.svg");
 			File location = dialogUtils.showFileChooser(FileChooserAction.SAVE_DIALOG, appLang.getText("dialog.fileChooser.title.export"), filter);
-			workspaceActionExecutor.exportProjectAsSvg(location);
+			if(location != null) {
+				workspaceActionExecutor.exportProjectAsSvg(location);
+			}
 		}
 	}
 

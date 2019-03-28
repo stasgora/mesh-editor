@@ -3,12 +3,9 @@ package sgora.mesh.editor.services.files;
 import sgora.mesh.editor.ObjectGraphFactory;
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.files.FileUtils;
-import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.Project;
-import sgora.mesh.editor.model.project.VisualProperties;
-import sgora.mesh.editor.services.drawing.SvgService;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
