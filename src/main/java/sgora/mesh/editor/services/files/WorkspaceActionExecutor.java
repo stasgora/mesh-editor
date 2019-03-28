@@ -73,7 +73,7 @@ public class WorkspaceActionExecutor {
 	}
 
 	void exportProjectAsSvg(File location) {
-		try(FileOutputStream fileStream = new FileOutputStream(location)) {
+		try(FileOutputStream fileStream = new FileOutputStream(fileUtils.getFileWithExtension(location, "svg"))) {
 			fileStream.write(svgService.createSvg().getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed exporting project at '" + location.getAbsolutePath() + "'", e);
