@@ -21,6 +21,7 @@ public class MenuView extends SubController {
 	public MenuItem closeProjectMenuItem;
 	public MenuItem saveProjectMenuItem;
 	public MenuItem saveProjectAsMenuItem;
+	public MenuItem exportProjectMenuItem;
 	public MenuItem exitAppMenuItem;
 
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
@@ -40,6 +41,7 @@ public class MenuView extends SubController {
 		closeProjectMenuItem.setOnAction(event -> workspaceAction.onCloseProject());
 		saveProjectMenuItem.setOnAction(event -> workspaceAction.onSaveProject());
 		saveProjectAsMenuItem.setOnAction(event -> workspaceAction.onSaveProjectAs());
+		exportProjectMenuItem.setOnAction(event -> workspaceAction.onExportProject());
 		exitAppMenuItem.setOnAction(event -> workspaceAction.onExitApp());
 
 		namespace.put(MENU_FILE_ITEM_DISABLED, true);

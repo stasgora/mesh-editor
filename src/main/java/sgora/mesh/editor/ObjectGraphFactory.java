@@ -20,10 +20,8 @@ import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.model.observables.SettableProperty;
-import sgora.mesh.editor.services.drawing.CanvasActionFacade;
-import sgora.mesh.editor.services.drawing.ColorUtils;
-import sgora.mesh.editor.services.drawing.ImageBox;
-import sgora.mesh.editor.services.drawing.MeshBox;
+import sgora.mesh.editor.services.drawing.*;
+import sgora.mesh.editor.services.files.SvgService;
 import sgora.mesh.editor.services.files.WorkspaceActionFacade;
 import sgora.mesh.editor.services.mapping.ConfigModelMapper;
 import sgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
@@ -67,6 +65,7 @@ public class ObjectGraphFactory {
 	private TriangleUtils triangleUtils;
 	private FlippingUtils flippingUtils;
 	private ColorUtils colorUtils;
+	private SvgService svgService;
 
 	private UiDialogUtils dialogUtils;
 	private SettableProperty<MouseTool> activeTool;
@@ -117,13 +116,14 @@ public class ObjectGraphFactory {
 		triangleUtils = new TriangleUtils(project.canvasData.mesh, nodeUtils);
 		flippingUtils = new FlippingUtils(project.canvasData.mesh, triangleUtils);
 		triangulationService = new FlipBasedTriangulationService(project.canvasData.mesh, nodeUtils, triangleUtils, flippingUtils);
-		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage);
+		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
 	}
 
 	private void createProjectServices() {
+		svgService = new SvgService(project.canvasData, project.visualProperties, nodeUtils, triangleUtils, colorUtils);
 		fileUtils = new ProjectFileUtils(project.canvasData, appConfig, project.visualProperties);
 		dialogUtils = new UiDialogUtils(stage, appLang);
-		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this);
+		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState);
 		configModelMapper = new ConfigModelMapper(appConfig);
 	}

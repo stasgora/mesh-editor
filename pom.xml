@@ -6,7 +6,7 @@
 
 	<groupId>sgora.mesh-editor</groupId>
 	<artifactId>mesh-editor</artifactId>
-	<version>0.5</version>
+	<version>0.7</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -76,6 +76,11 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20180813</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreesvg</artifactId>
+			<version>3.4</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -17,4 +17,6 @@ public interface FileUtils {
 
 	File getProjectFileWithExtension(File projectFile);
 
+	File getFileWithExtension(File file, String extension);
+
 }

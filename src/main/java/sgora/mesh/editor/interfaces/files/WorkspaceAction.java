@@ -17,6 +17,8 @@ public interface WorkspaceAction {
 
 	void onSaveProjectAs();
 
+	void onExportProject();
+
 	void onWindowCloseRequest(WindowEvent event);
 
 	void onExitApp();

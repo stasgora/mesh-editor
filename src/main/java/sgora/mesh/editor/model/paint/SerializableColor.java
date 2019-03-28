@@ -31,8 +31,12 @@ public class SerializableColor implements Serializable {
 		this.alpha = alpha;
 	}
 
-	public Color getFXColor() {
+	public Color toFXColor() {
 		return new Color(red, green, blue, alpha);
+	}
+
+	public java.awt.Color toAwtColor() {
+		return new java.awt.Color((float) red, (float) green, (float) blue, (float) alpha);
 	}
 	
 	public SerializableColor averageWith(SerializableColor color) {

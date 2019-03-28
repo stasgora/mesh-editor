@@ -52,7 +52,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 		}
 		String[] imageTypes = appConfig.getStringList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.image"), imageTypes);
-		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, appLang.getText("dialog.fileChooser.title.image"), filter);
+		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, appLang.getText("dialog.fileChooser.title.open"), filter);
 		if(location != null) {
 			workspaceActionExecutor.createNewProject(location);
 		}
@@ -92,6 +92,17 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	}
 
 	@Override
+	public void onExportProject() {
+		if(!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.closeProject"))) {
+			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.svg"), "*.svg");
+			File location = dialogUtils.showFileChooser(FileChooserAction.SAVE_DIALOG, appLang.getText("dialog.fileChooser.title.export"), filter);
+			if(location != null) {
+				workspaceActionExecutor.exportProjectAsSvg(location);
+			}
+		}
+	}
+
+	@Override
 	public void onWindowCloseRequest(WindowEvent event) {
 		if(showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.quit"))) {
 			event.consume();
@@ -113,7 +124,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 		String projectExtension = appConfig.getString("extension.project");
 		String extensionTitle = appLang.getText("dialog.fileChooser.extension.project");
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(extensionTitle, "*." + projectExtension);
-		return dialogUtils.showFileChooser(action, appLang.getText("dialog.fileChooser.title.project"), filter);
+		return dialogUtils.showFileChooser(action, appLang.getText("dialog.fileChooser.title." + action.langKey), filter);
 	}
 
 	private void saveProject(boolean asNew) {
