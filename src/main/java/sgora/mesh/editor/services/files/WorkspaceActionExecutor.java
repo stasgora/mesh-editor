@@ -6,6 +6,7 @@ import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.services.ui.UiDialogUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -20,41 +21,35 @@ public class WorkspaceActionExecutor {
 	private final Project project;
 	private ObjectGraphFactory objectGraphFactory;
 	private SvgService svgService;
+	private UiDialogUtils dialogUtils;
 
-	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgService svgService) {
+	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgService svgService, UiDialogUtils dialogUtils) {
 		this.fileUtils = fileUtils;
 		this.project = project;
 		this.objectGraphFactory = objectGraphFactory;
 		this.svgService = svgService;
+		this.dialogUtils = dialogUtils;
 	}
 
-	void openProject(File location) {
+	void openProject(File location) throws ProjectIOException {
 		LoadState state = project.loadState;
-		try {
-			fileUtils.load(location);
-			state.loaded.set(true);
-			state.file.set(location);
-			state.stateSaved.set(true);
-			project.notifyListeners();
-		} catch (ProjectIOException e) {
-			LOGGER.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
-		}
+		fileUtils.load(location);
+		state.loaded.set(true);
+		state.file.set(location);
+		state.stateSaved.set(true);
+		project.notifyListeners();
 	}
 
-	void saveProject(File location) {
+	void saveProject(File location) throws ProjectIOException {
 		LoadState state = project.loadState;
-		try {
-			location = fileUtils.getProjectFileWithExtension(location);
-			fileUtils.save(location);
-			state.file.set(location);
-			state.stateSaved.set(true);
-			state.notifyListeners();
-		} catch (ProjectIOException e) {
-			LOGGER.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
-		}
+		location = fileUtils.getProjectFileWithExtension(location);
+		fileUtils.save(location);
+		state.file.set(location);
+		state.stateSaved.set(true);
+		state.notifyListeners();
 	}
 
-	void createNewProject(File location) {
+	void createNewProject(File location) throws ProjectIOException {
 		LoadState state = project.loadState;
 		try(FileInputStream fileStream = new FileInputStream(location)) {
 			fileUtils.loadImage(fileStream);
@@ -65,15 +60,15 @@ public class WorkspaceActionExecutor {
 			state.stateSaved.set(false);
 			project.notifyListeners();
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
+			throw new ProjectIOException(e);
 		}
 	}
 
-	void exportProjectAsSvg(File location) {
+	void exportProjectAsSvg(File location) throws ProjectIOException {
 		try(FileOutputStream fileStream = new FileOutputStream(fileUtils.getFileWithExtension(location, "svg"))) {
 			fileStream.write(svgService.createSvg().getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Failed exporting project at '" + location.getAbsolutePath() + "'", e);
+			throw new ProjectIOException(e);
 		}
 	}
 

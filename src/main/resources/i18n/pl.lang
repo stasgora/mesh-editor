@@ -36,17 +36,17 @@
 		"discard": "Odrzuć",
 		"cancel": "Anuluj",
 		"quit": "Wyjdź",
-		"createProject": "Utwórz Projekt",
-		"openProject": "Otwórz Projekt",
-		"closeProject": "Zamknij Projekt"
+		"project": {
+			"create": "Utwórz Projekt",
+			"open": "Otwórz Projekt",
+			"new": "Wybierz Obraz",
+			"close": "Zamknij Projekt",
+			"save": "Zapisz Projekt",
+			"export": "Wyeksportuj Project"
+		}
 	},
 	"dialog": {
 		"fileChooser": {
-			"title": {
-				"save": "Zapisz",
-				"open": "Otwórz",
-				"export": "Eksportuj"
-			},
 			"extension": {
 				"project": "Pliki Projektu",
 				"image": "Obrazy",
@@ -54,15 +54,23 @@
 				"all": "Wszystkie Pliki"
 			}
 		},
-		"warning": {
-			"header": {
+		"header": {
+			"warning": {
 				"modified": [
 					"Otwarty projekt '",
 					"' został zmodyfikowany"
 				]
 			},
-			"content": {
+			"error": {
+				"workspaceAction": "Operacja zakończona niepowodzeniem"
+			}
+		},
+		"content": {
+			"warning": {
 				"modified": "Chcesz zapisać czy odrzucić swoje zmiany?"
+			},
+			"error": {
+				"workspaceAction": "Wystąpił nieoczekiwany błąd"
 			}
 		}
 	}

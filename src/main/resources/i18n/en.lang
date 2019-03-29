@@ -40,17 +40,17 @@
 		"discard": "Discard",
 		"cancel": "Cancel",
 		"quit": "Quit",
-		"createProject": "Create Project",
-		"openProject": "Open Project",
-		"closeProject": "Close Project"
+		"project": {
+			"create": "Create Project",
+			"open": "Open Project",
+			"new": "Choose Image",
+			"close": "Close Project",
+			"save": "Save Project",
+			"export": "Export Project"
+		}
 	},
 	"dialog": {
 		"fileChooser": {
-			"title": {
-				"save": "Save",
-				"open": "Open",
-				"export": "Export"
-			},
 			"extension": {
 				"project": "Project Files",
 				"image": "Images",
@@ -58,15 +58,23 @@
 				"all": "All Files"
 			}
 		},
-		"warning": {
-			"header": {
+		"header": {
+			"warning": {
 				"modified": [
 					"Currently open project '",
 					"' has been modified"
 				]
 			},
-			"content": {
+			"error": {
+				"workspaceAction": "Operation unsuccessful"
+			}
+		},
+		"content": {
+			"warning": {
 				"modified": "Do you want to save your changes or discard them?"
+			},
+			"error": {
+				"workspaceAction": "Unexpected error occurred"
 			}
 		}
 	}
