@@ -40,16 +40,12 @@
 			"create": "Utwórz Projekt",
 			"open": "Otwórz Projekt",
 			"close": "Zamknij Projekt",
+			"save": "Zapisz Projekt",
 			"export": "Wyeksportuj Project"
 		}
 	},
 	"dialog": {
 		"fileChooser": {
-			"title": {
-				"save": "Zapisz",
-				"open": "Otwórz",
-				"export": "Eksportuj"
-			},
 			"extension": {
 				"project": "Pliki Projektu",
 				"image": "Obrazy",

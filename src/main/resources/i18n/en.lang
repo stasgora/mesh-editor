@@ -44,16 +44,12 @@
 			"create": "Create Project",
 			"open": "Open Project",
 			"close": "Close Project",
+			"save": "Save Project",
 			"export": "Export Project"
 		}
 	},
 	"dialog": {
 		"fileChooser": {
-			"title": {
-				"save": "Save",
-				"open": "Open",
-				"export": "Export"
-			},
 			"extension": {
 				"project": "Project Files",
 				"image": "Images",
