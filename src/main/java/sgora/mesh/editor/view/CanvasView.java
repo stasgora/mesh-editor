@@ -7,6 +7,7 @@ import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.interfaces.CanvasAction;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.observables.SettableObservable;
+import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.Project;
@@ -31,9 +32,10 @@ public class CanvasView extends SubController {
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
 	private final CanvasAction canvasAction;
+	private final SettableProperty<Boolean> loaded;
 
-	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, Project project,
-	                  Point canvasViewSize, ImageBox imageBox, NodeUtils nodeUtils, TriangleUtils triangleUtils, CanvasAction canvasAction) {
+	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, Project project, Point canvasViewSize,
+	                  ImageBox imageBox, NodeUtils nodeUtils, TriangleUtils triangleUtils, CanvasAction canvasAction, SettableProperty<Boolean> loaded) {
 		super(root, viewType, viewNamespaces);
 
 		this.project = project;
@@ -42,6 +44,7 @@ public class CanvasView extends SubController {
 		this.nodeUtils = nodeUtils;
 		this.triangleUtils = triangleUtils;
 		this.canvasAction = canvasAction;
+		this.loaded = loaded;
 		init();
 	}
 
@@ -69,6 +72,9 @@ public class CanvasView extends SubController {
 		project.visualProperties.addListener(this::drawMesh);
 
 		project.visualProperties.addListener(this::drawBothLayers);
+		loaded.addListener(() -> {
+			if(loaded.get()) imageBox.calcImageBox();
+		});
 	}
 
 	private void setMouseHandlers() {

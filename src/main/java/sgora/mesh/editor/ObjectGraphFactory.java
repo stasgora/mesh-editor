@@ -89,7 +89,6 @@ public class ObjectGraphFactory {
 	}
 
 	public void createProjectModel() {
-		imageBox.calcImageBox();
 		triangulationService.createNewMesh();
 		propertiesView.setPropertiesDefaultValues();
 	}
@@ -149,7 +148,7 @@ public class ObjectGraphFactory {
 				viewNamespaces, project.visualProperties, project.loadState.stateSaved, configModelMapper);
 		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState);
 		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, project,
-				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction);
+				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction, project.loadState.loaded);
 		windowView.init(project.loadState, stage, appConfig, workspaceAction);
 
 		canvasView.meshCanvas.init(colorUtils, project.visualProperties);
