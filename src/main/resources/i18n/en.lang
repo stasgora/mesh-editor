@@ -57,15 +57,17 @@
 				"all": "All Files"
 			}
 		},
-		"warning": {
-			"header": {
+		"header": {
+			"warning": {
 				"modified": [
 					"Currently open project '",
 					"' has been modified"
 				],
-				"project": ""
-			},
-			"content": {
+				"workspaceAction": "Unexpected error"
+			}
+		},
+		"content": {
+			"warning": {
 				"modified": "Do you want to save your changes or discard them?"
 			}
 		}

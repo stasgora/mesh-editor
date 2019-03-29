@@ -148,9 +148,9 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 		ButtonType saveButton = new ButtonType(appLang.getText("action.save"));
 		ButtonType discardButton = new ButtonType(appLang.getText("action.discard"));
 		ButtonType cancelButton = new ButtonType(appLang.getText("action.cancel"));
-		List<String> headerParts = appLang.getMultipartText("dialog.warning.header.modified");
+		List<String> headerParts = appLang.getMultipartText("dialog.header.warning.modified");
 		String headerText = headerParts.get(0) + getProjectName() + headerParts.get(1);
-		String contentText = appLang.getText("dialog.warning.content.modified");
+		String contentText = appLang.getText("dialog.content.warning.modified");
 		ButtonType[] buttonTypes = {saveButton, discardButton, cancelButton};
 		Optional<ButtonType> response = dialogUtils.showWarningDialog(title, headerText, contentText, buttonTypes);
 		if (!response.isPresent() || response.get() == cancelButton) {

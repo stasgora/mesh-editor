@@ -53,14 +53,17 @@
 				"all": "Wszystkie Pliki"
 			}
 		},
-		"warning": {
-			"header": {
+		"header": {
+			"warning": {
 				"modified": [
 					"Otwarty projekt '",
 					"' został zmodyfikowany"
-				]
-			},
-			"content": {
+				],
+				"workspaceAction": "Unexpected error"
+			}
+		},
+		"content": {
+			"warning": {
 				"modified": "Chcesz zapisać czy odrzucić swoje zmiany?"
 			}
 		}
