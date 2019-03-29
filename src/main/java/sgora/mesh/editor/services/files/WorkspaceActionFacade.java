@@ -47,7 +47,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onNewProject() {
-		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.createProject"))) {
+		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.project.create"))) {
 			return;
 		}
 		String[] imageTypes = appConfig.getStringList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
@@ -60,7 +60,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onOpenProject() {
-		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.openProject"))) {
+		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.project.open"))) {
 			return;
 		}
 		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
@@ -76,7 +76,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onCloseProject() {
-		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.closeProject"))) {
+		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.project.close"))) {
 			workspaceActionExecutor.closeProject();
 		}
 	}
@@ -93,7 +93,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onExportProject() {
-		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.closeProject"))) {
+		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.project.export"))) {
 			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.svg"), "*.svg");
 			File location = dialogUtils.showFileChooser(FileChooserAction.SAVE_DIALOG, appLang.getText("dialog.fileChooser.title.export"), filter);
 			if (location != null) {

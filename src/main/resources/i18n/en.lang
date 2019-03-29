@@ -40,9 +40,12 @@
 		"discard": "Discard",
 		"cancel": "Cancel",
 		"quit": "Quit",
-		"createProject": "Create Project",
-		"openProject": "Open Project",
-		"closeProject": "Close Project"
+		"project": {
+			"create": "Create Project",
+			"open": "Open Project",
+			"close": "Close Project",
+			"export": "Export Project"
+		}
 	},
 	"dialog": {
 		"fileChooser": {
@@ -63,7 +66,8 @@
 				"modified": [
 					"Currently open project '",
 					"' has been modified"
-				]
+				],
+				"project": ""
 			},
 			"content": {
 				"modified": "Do you want to save your changes or discard them?"

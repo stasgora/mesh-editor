@@ -36,9 +36,12 @@
 		"discard": "Odrzuć",
 		"cancel": "Anuluj",
 		"quit": "Wyjdź",
-		"createProject": "Utwórz Projekt",
-		"openProject": "Otwórz Projekt",
-		"closeProject": "Zamknij Projekt"
+		"project": {
+			"create": "Utwórz Projekt",
+			"open": "Otwórz Projekt",
+			"close": "Zamknij Projekt",
+			"export": "Wyeksportuj Project"
+		}
 	},
 	"dialog": {
 		"fileChooser": {

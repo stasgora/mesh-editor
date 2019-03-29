@@ -6,6 +6,7 @@ import sgora.mesh.editor.interfaces.files.FileUtils;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.model.project.Project;
+import sgora.mesh.editor.services.ui.UiDialogUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -20,12 +21,14 @@ public class WorkspaceActionExecutor {
 	private final Project project;
 	private ObjectGraphFactory objectGraphFactory;
 	private SvgService svgService;
+	private UiDialogUtils dialogUtils;
 
-	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgService svgService) {
+	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgService svgService, UiDialogUtils dialogUtils) {
 		this.fileUtils = fileUtils;
 		this.project = project;
 		this.objectGraphFactory = objectGraphFactory;
 		this.svgService = svgService;
+		this.dialogUtils = dialogUtils;
 	}
 
 	void openProject(File location) {
