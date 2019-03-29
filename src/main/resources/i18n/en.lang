@@ -43,6 +43,7 @@
 		"project": {
 			"create": "Create Project",
 			"open": "Open Project",
+			"new": "Choose Image",
 			"close": "Close Project",
 			"save": "Save Project",
 			"export": "Export Project"
@@ -62,13 +63,18 @@
 				"modified": [
 					"Currently open project '",
 					"' has been modified"
-				],
-				"workspaceAction": "Unexpected error"
+				]
+			},
+			"error": {
+				"workspaceAction": "Operation unsuccessful"
 			}
 		},
 		"content": {
 			"warning": {
 				"modified": "Do you want to save your changes or discard them?"
+			},
+			"error": {
+				"workspaceAction": "Unexpected error occurred"
 			}
 		}
 	}

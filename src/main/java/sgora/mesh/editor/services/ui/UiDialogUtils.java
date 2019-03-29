@@ -47,12 +47,17 @@ public class UiDialogUtils {
 		return showDialog(Alert.AlertType.WARNING, title, header, content, buttons);
 	}
 
-	public Optional<ButtonType> showErrorDialog(String title, String header, String content, ButtonType[] buttons) {
-		return showDialog(Alert.AlertType.ERROR, title, header, content, buttons);
+	public Optional<ButtonType> showErrorDialog(String title, String header, String content) {
+		return showDialog(Alert.AlertType.ERROR, title, header, content, null);
 	}
 
 	private Optional<ButtonType> showDialog(Alert.AlertType type, String title, String header, String content, ButtonType[] buttons) {
-		Alert dialog = new Alert(type, content, buttons);
+		Alert dialog;
+		if(buttons != null) {
+			dialog = new Alert(type, content, buttons);
+		} else {
+			dialog = new Alert(type, content);
+		}
 		DialogPane dialogPane = dialog.getDialogPane();
 		dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button -> button.addEventHandler(KeyEvent.KEY_PRESSED, pressOnEnter));
 		dialog.setTitle(title);

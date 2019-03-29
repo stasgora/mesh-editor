@@ -39,6 +39,7 @@
 		"project": {
 			"create": "Utwórz Projekt",
 			"open": "Otwórz Projekt",
+			"new": "Wybierz Obraz",
 			"close": "Zamknij Projekt",
 			"save": "Zapisz Projekt",
 			"export": "Wyeksportuj Project"
@@ -58,13 +59,18 @@
 				"modified": [
 					"Otwarty projekt '",
 					"' został zmodyfikowany"
-				],
-				"workspaceAction": "Unexpected error"
+				]
+			},
+			"error": {
+				"workspaceAction": "Operacja zakończona niepowodzeniem"
 			}
 		},
 		"content": {
 			"warning": {
 				"modified": "Chcesz zapisać czy odrzucić swoje zmiany?"
+			},
+			"error": {
+				"workspaceAction": "Wystąpił nieoczekiwany błąd"
 			}
 		}
 	}

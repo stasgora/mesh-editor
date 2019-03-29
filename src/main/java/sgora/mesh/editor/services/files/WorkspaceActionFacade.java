@@ -5,6 +5,7 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import sgora.mesh.editor.enums.FileChooserAction;
+import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
@@ -14,8 +15,12 @@ import sgora.mesh.editor.services.ui.UiDialogUtils;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WorkspaceActionFacade implements WorkspaceAction {
+
+	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionFacade.class.getName());
 
 	private final WorkspaceActionExecutor workspaceActionExecutor;
 	private final LangConfigReader appLang;
@@ -47,25 +52,37 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onNewProject() {
-		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.project.create"))) {
+		String title = appLang.getText("action.project.create");
+		if (showConfirmDialog() && !confirmWorkspaceAction(title)) {
 			return;
 		}
 		String[] imageTypes = appConfig.getStringList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.image"), imageTypes);
-		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, appLang.getText("action.project.open"), filter);
+		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, appLang.getText("action.project.new"), filter);
 		if (location != null) {
-			workspaceActionExecutor.createNewProject(location);
+			try {
+				workspaceActionExecutor.createNewProject(location);
+			} catch (ProjectIOException e) {
+				LOGGER.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
+				showErrorDialog(title);
+			}
 		}
 	}
 
 	@Override
 	public void onOpenProject() {
-		if (showConfirmDialog() && !confirmWorkspaceAction(appLang.getText("action.project.open"))) {
+		String title = appLang.getText("action.project.open");
+		if (showConfirmDialog() && !confirmWorkspaceAction(title)) {
 			return;
 		}
 		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
 		if (location != null) {
-			workspaceActionExecutor.openProject(location);
+			try {
+				workspaceActionExecutor.openProject(location);
+			} catch (ProjectIOException e) {
+				LOGGER.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
+				showErrorDialog(title);
+			}
 		}
 	}
 
@@ -93,11 +110,15 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onExportProject() {
-		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.project.export"))) {
-			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.svg"), "*.svg");
-			File location = dialogUtils.showFileChooser(FileChooserAction.SAVE_DIALOG, appLang.getText("action.project.export"), filter);
-			if (location != null) {
+		String title = appLang.getText("action.project.export");
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.svg"), "*.svg");
+		File location = dialogUtils.showFileChooser(FileChooserAction.SAVE_DIALOG, title, filter);
+		if (location != null) {
+			try {
 				workspaceActionExecutor.exportProjectAsSvg(location);
+			} catch (ProjectIOException e) {
+				LOGGER.log(Level.SEVERE, "Failed exporting project at '" + location.getAbsolutePath() + "'", e);
+				showErrorDialog(title);
 			}
 		}
 	}
@@ -138,7 +159,12 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 		} else {
 			location = loadState.file.get();
 		}
-		workspaceActionExecutor.saveProject(location);
+		try {
+			workspaceActionExecutor.saveProject(location);
+		} catch (ProjectIOException e) {
+			LOGGER.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
+			showErrorDialog(appLang.getText("action.project.save"));
+		}
 	}
 
 	private boolean confirmWorkspaceAction(String title) {
@@ -160,6 +186,10 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 			onSaveProject();
 		}
 		return true;
+	}
+
+	private void showErrorDialog(String titleText) {
+		dialogUtils.showErrorDialog(titleText, appLang.getText("dialog.header.error.workspaceAction"), appLang.getText("dialog.content.error.workspaceAction"));
 	}
 
 }
