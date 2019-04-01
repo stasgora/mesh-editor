@@ -77,8 +77,16 @@ public class Point extends Observable implements Serializable {
 		return this;
 	}
 
+	public Point makeUnit() {
+		return divideByScalar(Math.sqrt(x * x + y * y));
+	}
+
 	public boolean isBetween(Point min, Point max) {
 		return x >= min.x && x < max.x && y >= min.y && y < max.y;
+	}
+	
+	public double distanceSquared(Point point) {
+		return (point.x - x) * (point.x - x) + (point.y - y) * (point.y - y);
 	}
 
 	private void setValues(double x, double y) {

@@ -26,6 +26,25 @@ public class NodeUtils {
 		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.proportionalSpaceFactor");
 	}
 
+	void correctNodeDistance(Point node, List<Point> neighbours) {
+		if(neighbours.isEmpty()) {
+			return;
+		}
+		double minDistance = 500 / REL_SPACE_FACTOR;
+		Point closest = neighbours.get(0);
+		double smallestDistance = node.distanceSquared(closest);
+		for (int i = 1; i < neighbours.size(); i++) {
+			double distance = node.distanceSquared(neighbours.get(i));
+			if(distance < smallestDistance) {
+				smallestDistance = distance;
+				closest = neighbours.get(i);
+			}
+		}
+		if(smallestDistance < minDistance) {
+			node.set(new Point(node).subtract(closest).makeUnit().multiplyByScalar(minDistance).add(closest));
+		}
+	}
+
 	Point getClosestNode(Point location, Triangle triangle) {
 		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.imageBox.size.x / REL_SPACE_FACTOR);
 		for (Point node : triangle.nodes) {

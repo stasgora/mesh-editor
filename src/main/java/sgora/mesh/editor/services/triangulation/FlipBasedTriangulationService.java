@@ -32,9 +32,7 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	public void addNode(Point location) {
 		Mesh mesh = this.mesh.get();
 		Triangle triangle = triangleUtils.findTriangleByLocation(location);
-		if(nodeUtils.getClosestNode(location, triangle) != null) {
-			return;
-		}
+		nodeUtils.correctNodeDistance(location, Arrays.asList(triangle.nodes));
 		mesh.removeTriangle(triangle);
 		Triangle[] newTriangles = new Triangle[3];
 		for (int i = 0; i < 3; i++) {
@@ -76,10 +74,13 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	@Override
 	public void moveNode(Point node, Point position) {
 		Triangle triangle = triangleUtils.findTriangleByLocation(node);
-		List<Point> points = new ArrayList<>();
+		if(!Arrays.asList(triangle.nodes).contains(node)) {
+			return;
+		}
+		List<Point> nodes = new ArrayList<>();
 		List<Triangle> triangles = new ArrayList<>();
-		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
-
+		nodeUtils.getNodeNeighbours(node, triangle, nodes, triangles);
+		nodeUtils.correctNodeDistance(position, nodes);
 		node.set(position);
 		Stack<Triangle> trianglesToCheck = new Stack<>();
 		trianglesToCheck.addAll(triangles);
