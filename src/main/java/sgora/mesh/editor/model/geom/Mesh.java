@@ -73,12 +73,25 @@ public class Mesh extends Observable implements Serializable {
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {
+		for (int i = 0; i < triangles.size(); i++) {
+			triangles.get(i).triangleId = i;
+		}
 		out.defaultWriteObject();
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
 		nodes.forEach(this::addSubObservable);
+		triangles.forEach(this::assignTriangleNeighbours);
+	}
+
+	private void assignTriangleNeighbours(Triangle triangle) {
+		triangle.triangles = new Triangle[3];
+		for (int i = 0; i < 3; i++) {
+			if(triangle.triangleIds[i] >= 0) {
+				triangle.triangles[i] = triangles.get(triangle.triangleIds[i]);
+			}
+		}
 	}
 
 }
