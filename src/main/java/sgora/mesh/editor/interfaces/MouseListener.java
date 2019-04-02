@@ -5,13 +5,13 @@ import sgora.mesh.editor.model.geom.Point;
 
 public interface MouseListener {
 
-	void onDragStart(Point mousePos, MouseButton button);
-	void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button);
-	void onDragEnd(Point mousePos, MouseButton button);
+	boolean onDragStart(Point mousePos, MouseButton button);
+	boolean onMouseDrag(Point dragAmount, Point mousePos, MouseButton button);
+	boolean onDragEnd(Point mousePos, MouseButton button);
 
-	void onZoom(double amount, Point mousePos);
+	boolean onZoom(double amount, Point mousePos);
 
-	void onMouseEnter(boolean isDragging);
-	void onMouseExit(boolean isDragging);
+	boolean onMouseEnter(boolean isDragging);
+	boolean onMouseExit(boolean isDragging);
 
 }

@@ -39,54 +39,61 @@ public class MeshBox implements MouseListener {
 	}
 
 	@Override
-	public void onDragStart(Point mousePos, MouseButton mouseButton) {
+	public boolean onDragStart(Point mousePos, MouseButton mouseButton) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
 		if(mouseButton == meshBoxModel.removeNodeButton) {
 			triangulationService.removeNode(proportionalPos);
+			return true;
 		} else if(mouseButton == meshBoxModel.moveNodeButton) {
 			draggedNode = triangulationService.findNodeByLocation(proportionalPos);
 			if(draggedNode != null) {
 				mouseCursor.setValue(Cursor.CLOSED_HAND);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@Override
-	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
+	public boolean onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
 		if(draggedNode == null || button != meshBoxModel.moveNodeButton) {
-			return;
+			return false;
 		}
 		Point newNodePos = clampCanvasSpaceNodePos(mousePos.clamp(canvasViewSize));
 		triangulationService.moveNode(draggedNode, nodeUtils.canvasToProportionalPos(newNodePos));
 		mesh.get().notifyListeners();
+		return true;
 	}
 
 	@Override
-	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
+	public boolean onDragEnd(Point mousePos, MouseButton mouseButton) {
 		if(draggedNode == null && mouseButton == meshBoxModel.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
 			triangulationService.addNode(nodeUtils.canvasToProportionalPos(mousePos));
 		}
 		draggedNode = null;
 		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
+		return true;
 	}
 
 	@Override
-	public void onZoom(double amount, Point mousePos) {
-
+	public boolean onZoom(double amount, Point mousePos) {
+		return false;
 	}
 
 	@Override
-	public void onMouseEnter(boolean isDragging) {
+	public boolean onMouseEnter(boolean isDragging) {
 		if(!isDragging) {
 			mouseCursor.setValue(Cursor.CROSSHAIR);
 		}
+		return true;
 	}
 
 	@Override
-	public void onMouseExit(boolean isDragging) {
+	public boolean onMouseExit(boolean isDragging) {
 		if(!isDragging) {
 			mouseCursor.setValue(Cursor.DEFAULT);
 		}
+		return true;
 	}
 
 }

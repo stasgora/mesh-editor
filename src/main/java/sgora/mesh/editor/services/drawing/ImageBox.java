@@ -72,7 +72,7 @@ public class ImageBox implements MouseListener {
 	}
 
 	@Override
-	public void onZoom(double amount, Point mousePos) {
+	public boolean onZoom(double amount, Point mousePos) {
 		double minZoom = appConfig.getDouble("imageBox.zoom.min");
 		double maxZoom = appConfig.getDouble("imageBox.zoom.max");
 
@@ -86,42 +86,49 @@ public class ImageBox implements MouseListener {
 		canvasData.imageBox.position.add(zoomPos);
 		canvasData.imageBox.size.set(new Point(baseImageSize).multiplyByScalar(zoom));
 		canvasData.notifyListeners();
+		return true;
 	}
 
 	@Override
-	public void onDragStart(Point mousePos, MouseButton button) {
+	public boolean onDragStart(Point mousePos, MouseButton button) {
 		if(button == imageBoxModel.dragButton) {
 			mouseCursor.setValue(Cursor.CLOSED_HAND);
+			return true;
 		}
+		return false;
 	}
 
 	@Override
-	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
+	public boolean onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
 		if(button != imageBoxModel.dragButton) {
-			return;
+			return false;
 		}
 		Rectangle imageBox = this.canvasData.imageBox;
 		imageBox.position.add(dragAmount).clamp(new Point(imageBox.size).multiplyByScalar(-1), canvasViewSize);
 		imageBox.notifyListeners();
+		return true;
 	}
 
 	@Override
-	public void onDragEnd(Point mousePos, MouseButton button) {
+	public boolean onDragEnd(Point mousePos, MouseButton button) {
 		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
+		return true;
 	}
 
 	@Override
-	public void onMouseEnter(boolean isDragging) {
+	public boolean onMouseEnter(boolean isDragging) {
 		if(!isDragging) {
 			mouseCursor.setValue(Cursor.HAND);
 		}
+		return true;
 	}
 
 	@Override
-	public void onMouseExit(boolean isDragging) {
+	public boolean onMouseExit(boolean isDragging) {
 		if(!isDragging) {
 			mouseCursor.setValue(Cursor.DEFAULT);
 		}
+		return true;
 	}
 
 }
