@@ -14,8 +14,7 @@ import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
-import sgora.mesh.editor.model.ImageBoxModel;
-import sgora.mesh.editor.model.MeshBoxModel;
+import sgora.mesh.editor.model.KeysConfig;
 import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.enums.MouseTool;
@@ -74,8 +73,7 @@ public class ObjectGraphFactory {
 
 	private ConfigModelMapper configModelMapper;
 
-	private ImageBoxModel imageBoxModel;
-	private MeshBoxModel meshBoxModel;
+	private KeysConfig keysConfig;
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
@@ -135,12 +133,9 @@ public class ObjectGraphFactory {
 	}
 
 	private void createCanvasBoxServices() {
-		//temp
-		imageBoxModel = new ImageBoxModel();
-		meshBoxModel = new MeshBoxModel();
-
-		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
-		meshBox = new MeshBox(project.canvasData.mesh, meshBoxModel, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
+		keysConfig = new KeysConfig();
+		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, keysConfig);
+		meshBox = new MeshBox(project.canvasData.mesh, keysConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
 		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, activeTool);
 	}
 

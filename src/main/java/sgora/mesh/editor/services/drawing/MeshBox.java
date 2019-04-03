@@ -7,7 +7,7 @@ import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.MeshBoxModel;
+import sgora.mesh.editor.model.KeysConfig;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
@@ -17,16 +17,16 @@ public class MeshBox implements MouseListener {
 	private Point draggedNode;
 	
 	private final SettableObservable<Mesh> mesh;
-	private final MeshBoxModel meshBoxModel;
+	private final KeysConfig keysConfig;
 	private final Point canvasViewSize;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private TriangulationService triangulationService;
 	private NodeUtils nodeUtils;
 
-	public MeshBox(SettableObservable<Mesh> mesh, MeshBoxModel meshBoxModel, Point canvasViewSize, ObjectProperty<Cursor> mouseCursor,
+	public MeshBox(SettableObservable<Mesh> mesh, KeysConfig keysConfig, Point canvasViewSize, ObjectProperty<Cursor> mouseCursor,
 	               TriangulationService triangulationService, NodeUtils nodeUtils) {
 		this.mesh = mesh;
-		this.meshBoxModel = meshBoxModel;
+		this.keysConfig = keysConfig;
 		this.canvasViewSize = canvasViewSize;
 		this.mouseCursor = mouseCursor;
 		this.triangulationService = triangulationService;
@@ -41,10 +41,10 @@ public class MeshBox implements MouseListener {
 	@Override
 	public boolean onDragStart(Point mousePos, MouseButton mouseButton) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
-		if(mouseButton == meshBoxModel.removeNodeButton) {
+		if(mouseButton == keysConfig.removeNodeButton) {
 			triangulationService.removeNode(proportionalPos);
 			return true;
-		} else if(mouseButton == meshBoxModel.moveNodeButton) {
+		} else if(mouseButton == keysConfig.moveNodeButton) {
 			draggedNode = triangulationService.findNodeByLocation(proportionalPos);
 			if(draggedNode != null) {
 				mouseCursor.setValue(Cursor.CLOSED_HAND);
@@ -56,7 +56,7 @@ public class MeshBox implements MouseListener {
 
 	@Override
 	public boolean onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
-		if(draggedNode == null || button != meshBoxModel.moveNodeButton) {
+		if(draggedNode == null || button != keysConfig.moveNodeButton) {
 			return false;
 		}
 		Point newNodePos = clampCanvasSpaceNodePos(mousePos.clamp(canvasViewSize));
@@ -67,7 +67,7 @@ public class MeshBox implements MouseListener {
 
 	@Override
 	public boolean onDragEnd(Point mousePos, MouseButton mouseButton) {
-		if(draggedNode == null && mouseButton == meshBoxModel.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
+		if(draggedNode == null && mouseButton == keysConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
 			triangulationService.addNode(nodeUtils.canvasToProportionalPos(mousePos));
 		}
 		draggedNode = null;
