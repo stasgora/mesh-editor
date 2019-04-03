@@ -17,8 +17,6 @@ import sgora.mesh.editor.interfaces.files.WorkspaceAction;
 import sgora.mesh.editor.model.KeysConfig;
 import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.enums.MouseTool;
-import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.drawing.*;
 import sgora.mesh.editor.services.files.SvgService;
 import sgora.mesh.editor.services.files.WorkspaceActionFacade;
@@ -67,7 +65,6 @@ public class ObjectGraphFactory {
 	private SvgService svgService;
 
 	private UiDialogUtils dialogUtils;
-	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
 	private Point canvasViewSize = new Point();
 
@@ -128,7 +125,6 @@ public class ObjectGraphFactory {
 
 	private void setupVisualObjects() {
 		windowView.createWindowScene(appSettings, stage, root);
-		activeTool = new SettableProperty<>(MouseTool.MESH_EDITOR);
 		mouseCursor = stage.getScene().cursorProperty();
 	}
 
@@ -136,7 +132,7 @@ public class ObjectGraphFactory {
 		keysConfig = new KeysConfig();
 		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, keysConfig);
 		meshBox = new MeshBox(project.canvasData.mesh, keysConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
-		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, activeTool);
+		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox);
 	}
 
 	private void initControllerObjects() {
@@ -148,7 +144,6 @@ public class ObjectGraphFactory {
 		windowView.init(project.loadState, stage, appConfig, workspaceAction);
 
 		canvasView.meshCanvas.init(colorUtils, project.visualProperties);
-		windowView.toolBar.init(activeTool, appLang);
 	}
 
 }

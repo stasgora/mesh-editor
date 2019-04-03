@@ -2,26 +2,21 @@ package sgora.mesh.editor.services.drawing;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.interfaces.CanvasAction;
 import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.LoadState;
 
 public class CanvasActionFacade implements CanvasAction {
 
 	private MouseListener[] eventConsumers;
 	private final LoadState loadState;
-	private final SettableProperty<MouseTool> activeTool;
 
 	private Point lastMouseDragPoint;
 
-	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, SettableProperty<MouseTool> activeTool) {
+	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox) {
 		eventConsumers = new MouseListener[] {meshBox, imageBox};
 		this.loadState = loadState;
-		this.activeTool = activeTool;
 	}
 
 	@Override

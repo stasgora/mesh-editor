@@ -31,10 +31,6 @@
 			}
 		}
 	},
-	"tool": {
-		"meshEditor": "Mesh Editor",
-		"imageMover": "Image Mover"
-	},
 	"action": {
 		"save": "Save",
 		"discard": "Discard",
