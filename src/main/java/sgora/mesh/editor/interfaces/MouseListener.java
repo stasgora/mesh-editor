@@ -11,6 +11,4 @@ public interface MouseListener {
 
 	boolean onZoom(double amount, Point mousePos);
 
-	boolean onMouseEnter(boolean isDragging);
-
 }

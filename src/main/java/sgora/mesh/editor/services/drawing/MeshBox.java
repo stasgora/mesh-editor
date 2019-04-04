@@ -80,12 +80,4 @@ public class MeshBox implements MouseListener {
 		return false;
 	}
 
-	@Override
-	public boolean onMouseEnter(boolean isDragging) {
-		if(!isDragging) {
-			mouseCursor.setValue(Cursor.CROSSHAIR);
-		}
-		return true;
-	}
-
 }

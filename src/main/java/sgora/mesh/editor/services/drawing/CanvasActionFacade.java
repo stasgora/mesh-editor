@@ -76,13 +76,8 @@ public class CanvasActionFacade implements CanvasAction {
 
 	@Override
 	public void onMouseEnter(MouseEvent event) {
-		if(loadState.loaded.get()) {
-			boolean isDragging = lastMouseDragPoint != null;
-			for (MouseListener consumer : eventConsumers) {
-				if(consumer.onMouseEnter(isDragging)) {
-					break;
-				}
-			}
+		if(loadState.loaded.get() && lastMouseDragPoint == null) {
+			mouseCursor.setValue(Cursor.CROSSHAIR);
 		}
 	}
 

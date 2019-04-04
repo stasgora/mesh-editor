@@ -114,12 +114,4 @@ public class ImageBox implements MouseListener {
 		return true;
 	}
 
-	@Override
-	public boolean onMouseEnter(boolean isDragging) {
-		if(!isDragging) {
-			mouseCursor.setValue(Cursor.HAND);
-		}
-		return true;
-	}
-
 }
