@@ -70,7 +70,6 @@ public class ImageBox implements MouseListener {
 		canvasData.imageBox.notifyListeners();
 	}
 
-	@Override
 	public boolean onZoom(double amount, Point mousePos) {
 		double minZoom = appConfig.getDouble("imageBox.zoom.min");
 		double maxZoom = appConfig.getDouble("imageBox.zoom.max");

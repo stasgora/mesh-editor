@@ -9,6 +9,4 @@ public interface MouseListener {
 	boolean onMouseDrag(Point dragAmount, Point mousePos, MouseButton button);
 	boolean onDragEnd(Point mousePos, MouseButton button);
 
-	boolean onZoom(double amount, Point mousePos);
-
 }

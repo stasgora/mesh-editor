@@ -11,23 +11,27 @@ import sgora.mesh.editor.model.project.LoadState;
 
 public class CanvasActionFacade implements CanvasAction {
 
-	private MouseListener[] eventConsumers;
+	private MouseListener[] eventConsumersQueue;
 	private final LoadState loadState;
 
 	private Point lastMouseDragPoint;
+	private ImageBox imageBox;
+	private MeshBox meshBox;
 	private ObjectProperty<Cursor> mouseCursor;
 
 	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, ObjectProperty<Cursor> mouseCursor) {
+		this.imageBox = imageBox;
+		this.meshBox = meshBox;
 		this.mouseCursor = mouseCursor;
-		eventConsumers = new MouseListener[] {meshBox, imageBox};
 		this.loadState = loadState;
+		eventConsumersQueue = new MouseListener[] {meshBox, imageBox};
 	}
 
 	@Override
 	public void onMousePress(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		if(loadState.loaded.get()) {
-			for (MouseListener consumer : eventConsumers) {
+			for (MouseListener consumer : eventConsumersQueue) {
 				if(consumer.onDragStart(mousePos, event.getButton())) {
 					break;
 				}
@@ -41,7 +45,7 @@ public class CanvasActionFacade implements CanvasAction {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
 		if(loadState.loaded.get()) {
-			for (MouseListener consumer : eventConsumers) {
+			for (MouseListener consumer : eventConsumersQueue) {
 				if(consumer.onMouseDrag(new Point(dragAmount), mousePos, event.getButton())) {
 					break;
 				}
@@ -55,7 +59,7 @@ public class CanvasActionFacade implements CanvasAction {
 		lastMouseDragPoint = null;
 		Point mousePos = new Point(event.getX(), event.getY());
 		if(loadState.loaded.get()) {
-			for (MouseListener consumer : eventConsumers) {
+			for (MouseListener consumer : eventConsumersQueue) {
 				if(consumer.onDragEnd(new Point(mousePos), event.getButton())) {
 					break;
 				}
@@ -66,11 +70,7 @@ public class CanvasActionFacade implements CanvasAction {
 	@Override
 	public void onScroll(ScrollEvent event) {
 		if(loadState.loaded.get()) {
-			for (MouseListener consumer : eventConsumers) {
-				if(consumer.onZoom(event.getDeltaY(), new Point(event.getX(), event.getY()))) {
-					break;
-				}
-			}
+			imageBox.onZoom(event.getDeltaY(), new Point(event.getX(), event.getY()));
 		}
 	}
 

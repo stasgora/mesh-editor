@@ -75,9 +75,4 @@ public class MeshBox implements MouseListener {
 		return true;
 	}
 
-	@Override
-	public boolean onZoom(double amount, Point mousePos) {
-		return false;
-	}
-
 }
