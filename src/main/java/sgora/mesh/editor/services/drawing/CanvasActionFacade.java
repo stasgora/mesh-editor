@@ -1,5 +1,7 @@
 package sgora.mesh.editor.services.drawing;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import sgora.mesh.editor.interfaces.CanvasAction;
@@ -13,8 +15,10 @@ public class CanvasActionFacade implements CanvasAction {
 	private final LoadState loadState;
 
 	private Point lastMouseDragPoint;
+	private ObjectProperty<Cursor> mouseCursor;
 
-	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox) {
+	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, ObjectProperty<Cursor> mouseCursor) {
+		this.mouseCursor = mouseCursor;
 		eventConsumers = new MouseListener[] {meshBox, imageBox};
 		this.loadState = loadState;
 	}
@@ -84,13 +88,8 @@ public class CanvasActionFacade implements CanvasAction {
 
 	@Override
 	public void onMouseExit(MouseEvent event) {
-		if(loadState.loaded.get()) {
-			boolean isDragging = lastMouseDragPoint != null;
-			for (MouseListener consumer : eventConsumers) {
-				if(consumer.onMouseExit(isDragging)) {
-					break;
-				}
-			}
+		if(loadState.loaded.get() && lastMouseDragPoint == null) {
+			mouseCursor.setValue(Cursor.DEFAULT);
 		}
 	}
 

@@ -88,12 +88,4 @@ public class MeshBox implements MouseListener {
 		return true;
 	}
 
-	@Override
-	public boolean onMouseExit(boolean isDragging) {
-		if(!isDragging) {
-			mouseCursor.setValue(Cursor.DEFAULT);
-		}
-		return true;
-	}
-
 }

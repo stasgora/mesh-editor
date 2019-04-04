@@ -132,7 +132,7 @@ public class ObjectGraphFactory {
 		keysConfig = new KeysConfig();
 		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, keysConfig);
 		meshBox = new MeshBox(project.canvasData.mesh, keysConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
-		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox);
+		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor);
 	}
 
 	private void initControllerObjects() {
