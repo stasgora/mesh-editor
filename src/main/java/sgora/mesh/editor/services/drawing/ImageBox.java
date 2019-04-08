@@ -97,20 +97,18 @@ public class ImageBox implements MouseListener {
 	}
 
 	@Override
-	public boolean onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
+	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
 		if(button != keysConfig.dragImageButton) {
-			return false;
+			return;
 		}
 		Rectangle imageBox = this.canvasData.imageBox;
 		imageBox.position.add(dragAmount).clamp(new Point(imageBox.size).multiplyByScalar(-1), canvasViewSize);
 		imageBox.notifyListeners();
-		return true;
 	}
 
 	@Override
-	public boolean onDragEnd(Point mousePos, MouseButton button) {
+	public void onDragEnd(Point mousePos, MouseButton button) {
 		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
-		return true;
 	}
 
 }

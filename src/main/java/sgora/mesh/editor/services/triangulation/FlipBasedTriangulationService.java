@@ -60,17 +60,18 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	}
 
 	@Override
-	public void removeNode(Point location) {
+	public boolean removeNode(Point location) {
 		Triangle triangle = triangleUtils.findTriangleByLocation(location);
 		Point node = nodeUtils.getClosestNode(location, triangle);
 		if(node == null) {
-			return;
+			return false;
 		}
 		List<Point> points = new ArrayList<>();
 		List<Triangle> triangles = new ArrayList<>();
 		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
 		retriangulateNodeHole(node, points, triangles);
 		mesh.get().notifyListeners();
+		return true;
 	}
 
 	@Override

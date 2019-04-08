@@ -41,38 +41,39 @@ public class MeshBox implements MouseListener {
 	@Override
 	public boolean onDragStart(Point mousePos, MouseButton mouseButton) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
-		if(mouseButton == keysConfig.removeNodeButton) {
-			triangulationService.removeNode(proportionalPos);
+		if(mouseButton == keysConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
 			return true;
-		} else if(mouseButton == keysConfig.moveNodeButton) {
+		}
+		if(mouseButton == keysConfig.moveNodeButton) {
 			draggedNode = triangulationService.findNodeByLocation(proportionalPos);
 			if(draggedNode != null) {
 				mouseCursor.setValue(Cursor.CLOSED_HAND);
 				return true;
 			}
 		}
+		if(mouseButton == keysConfig.placeNodeButton) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
-	public boolean onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
+	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
 		if(draggedNode == null || button != keysConfig.moveNodeButton) {
-			return false;
+			return;
 		}
 		Point newNodePos = clampCanvasSpaceNodePos(mousePos.clamp(canvasViewSize));
 		triangulationService.moveNode(draggedNode, nodeUtils.canvasToProportionalPos(newNodePos));
 		mesh.get().notifyListeners();
-		return true;
 	}
 
 	@Override
-	public boolean onDragEnd(Point mousePos, MouseButton mouseButton) {
+	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
 		if(draggedNode == null && mouseButton == keysConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
 			triangulationService.addNode(nodeUtils.canvasToProportionalPos(mousePos));
 		}
 		draggedNode = null;
 		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
-		return true;
 	}
 
 }

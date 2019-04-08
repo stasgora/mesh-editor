@@ -16,12 +16,11 @@ public class CanvasActionFacade implements CanvasAction {
 
 	private Point lastMouseDragPoint;
 	private ImageBox imageBox;
-	private MeshBox meshBox;
+	private MouseListener activeConsumer;
 	private ObjectProperty<Cursor> mouseCursor;
 
 	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, ObjectProperty<Cursor> mouseCursor) {
 		this.imageBox = imageBox;
-		this.meshBox = meshBox;
 		this.mouseCursor = mouseCursor;
 		this.loadState = loadState;
 		eventConsumersQueue = new MouseListener[] {meshBox, imageBox};
@@ -33,6 +32,7 @@ public class CanvasActionFacade implements CanvasAction {
 		if(loadState.loaded.get()) {
 			for (MouseListener consumer : eventConsumersQueue) {
 				if(consumer.onDragStart(mousePos, event.getButton())) {
+					activeConsumer = consumer;
 					break;
 				}
 			}
@@ -44,12 +44,8 @@ public class CanvasActionFacade implements CanvasAction {
 	public void onMouseDrag(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
-		if(loadState.loaded.get()) {
-			for (MouseListener consumer : eventConsumersQueue) {
-				if(consumer.onMouseDrag(new Point(dragAmount), mousePos, event.getButton())) {
-					break;
-				}
-			}
+		if(loadState.loaded.get() && activeConsumer != null) {
+			activeConsumer.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
 		}
 		lastMouseDragPoint.set(mousePos);
 	}
@@ -58,12 +54,8 @@ public class CanvasActionFacade implements CanvasAction {
 	public void onMouseRelease(MouseEvent event) {
 		lastMouseDragPoint = null;
 		Point mousePos = new Point(event.getX(), event.getY());
-		if(loadState.loaded.get()) {
-			for (MouseListener consumer : eventConsumersQueue) {
-				if(consumer.onDragEnd(new Point(mousePos), event.getButton())) {
-					break;
-				}
-			}
+		if(loadState.loaded.get() && activeConsumer != null) {
+			activeConsumer.onDragEnd(new Point(mousePos), event.getButton());
 		}
 	}
 
