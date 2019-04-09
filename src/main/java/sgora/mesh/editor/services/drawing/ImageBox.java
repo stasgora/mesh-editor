@@ -5,7 +5,7 @@ import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
-import sgora.mesh.editor.model.KeysConfig;
+import sgora.mesh.editor.model.MouseConfig;
 import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.geom.Point;
@@ -22,16 +22,16 @@ public class ImageBox implements MouseListener {
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
 	private ObjectProperty<Cursor> mouseCursor;
-	private KeysConfig keysConfig;
+	private MouseConfig mouseConfig;
 
 	public ImageBox(Point canvasViewSize, CanvasData canvasData, AppConfigReader appConfig,
-	                AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, KeysConfig keysConfig) {
+	                AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, MouseConfig mouseConfig) {
 		this.canvasViewSize = canvasViewSize;
 		this.canvasData = canvasData;
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
 		this.mouseCursor = mouseCursor;
-		this.keysConfig = keysConfig;
+		this.mouseConfig = mouseConfig;
 	}
 
 	public void onResizeCanvas() {
@@ -89,7 +89,7 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public boolean onDragStart(Point mousePos, MouseButton button) {
-		if(button == keysConfig.dragImageButton) {
+		if(button == mouseConfig.dragImageButton) {
 			mouseCursor.setValue(Cursor.CLOSED_HAND);
 			return true;
 		}
@@ -98,7 +98,7 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
-		if(button != keysConfig.dragImageButton) {
+		if(button != mouseConfig.dragImageButton) {
 			return;
 		}
 		Rectangle imageBox = this.canvasData.imageBox;

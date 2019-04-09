@@ -17,10 +17,12 @@ public class CanvasActionFacade implements CanvasAction {
 	private Point lastMouseDragPoint;
 	private ImageBox imageBox;
 	private MouseListener activeConsumer;
+	private MeshBox meshBox;
 	private ObjectProperty<Cursor> mouseCursor;
 
 	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, ObjectProperty<Cursor> mouseCursor) {
 		this.imageBox = imageBox;
+		this.meshBox = meshBox;
 		this.mouseCursor = mouseCursor;
 		this.loadState = loadState;
 		eventConsumersQueue = new MouseListener[] {meshBox, imageBox};
@@ -77,6 +79,14 @@ public class CanvasActionFacade implements CanvasAction {
 	public void onMouseExit(MouseEvent event) {
 		if(loadState.loaded.get() && lastMouseDragPoint == null) {
 			mouseCursor.setValue(Cursor.DEFAULT);
+		}
+	}
+
+	@Override
+	public void onMouseMove(MouseEvent event) {
+		Point mousePos = new Point(event.getX(), event.getY());
+		if(loadState.loaded.get()) {
+			meshBox.onMouseMove(mousePos);
 		}
 	}
 

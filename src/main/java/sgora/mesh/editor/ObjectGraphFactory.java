@@ -14,7 +14,7 @@ import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
-import sgora.mesh.editor.model.KeysConfig;
+import sgora.mesh.editor.model.MouseConfig;
 import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.services.drawing.*;
@@ -70,7 +70,7 @@ public class ObjectGraphFactory {
 
 	private ConfigModelMapper configModelMapper;
 
-	private KeysConfig keysConfig;
+	private MouseConfig mouseConfig;
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
@@ -129,9 +129,9 @@ public class ObjectGraphFactory {
 	}
 
 	private void createCanvasBoxServices() {
-		keysConfig = new KeysConfig();
-		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, keysConfig);
-		meshBox = new MeshBox(project.canvasData.mesh, keysConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
+		mouseConfig = new MouseConfig();
+		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig);
+		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
 		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor);
 	}
 

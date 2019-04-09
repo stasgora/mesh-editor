@@ -76,6 +76,7 @@ public class CanvasView extends SubController {
 
 	private void setMouseHandlers() {
 		root.setOnScroll(canvasAction::onScroll);
+		root.setOnMouseMoved(canvasAction::onMouseMove);
 
 		root.setOnMousePressed(canvasAction::onMousePress);
 		root.setOnMouseDragged(canvasAction::onMouseDrag);
