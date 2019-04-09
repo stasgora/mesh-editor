@@ -1,6 +1,8 @@
 package sgora.mesh.editor.services.files;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
@@ -9,6 +11,7 @@ import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
+import sgora.mesh.editor.model.MouseConfig;
 import sgora.mesh.editor.model.project.LoadState;
 import sgora.mesh.editor.services.ui.UiDialogUtils;
 
@@ -27,14 +30,16 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	private UiDialogUtils dialogUtils;
 	private AppConfigReader appConfig;
 	private LoadState loadState;
+	private final ObjectProperty<Cursor> mouseCursor;
 
-	public WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang,
-	                             UiDialogUtils dialogUtils, AppConfigReader appConfig, LoadState loadState) {
+	public WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils,
+	                             AppConfigReader appConfig, LoadState loadState, ObjectProperty<Cursor> mouseCursor) {
 		this.workspaceActionExecutor = workspaceActionExecutor;
 		this.appLang = appLang;
 		this.dialogUtils = dialogUtils;
 		this.appConfig = appConfig;
 		this.loadState = loadState;
+		this.mouseCursor = mouseCursor;
 	}
 
 	@Override
@@ -95,6 +100,7 @@ public class WorkspaceActionFacade implements WorkspaceAction {
 	public void onCloseProject() {
 		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.project.close"))) {
 			workspaceActionExecutor.closeProject();
+			mouseCursor.setValue(Cursor.DEFAULT);
 		}
 	}
 

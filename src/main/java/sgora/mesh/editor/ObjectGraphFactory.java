@@ -92,8 +92,8 @@ public class ObjectGraphFactory {
 	public void createObjectGraph() {
 		createConfigServices();
 		createTriangulationServices();
-		createProjectServices();
 		setupVisualObjects();
+		createProjectServices();
 		createCanvasBoxServices();
 		initControllerObjects();
 
@@ -114,24 +114,24 @@ public class ObjectGraphFactory {
 		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
 	}
 
-	private void createProjectServices() {
-		svgService = new SvgService(project.canvasData, project.visualProperties, nodeUtils, triangleUtils, colorUtils);
-		fileUtils = new ProjectFileUtils(project.canvasData, appConfig, project.visualProperties);
-		dialogUtils = new UiDialogUtils(stage, appLang);
-		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService, dialogUtils);
-		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState);
-		configModelMapper = new ConfigModelMapper(appConfig);
-	}
-
 	private void setupVisualObjects() {
 		windowView.createWindowScene(appSettings, stage, root);
 		mouseCursor = stage.getScene().cursorProperty();
 	}
 
+	private void createProjectServices() {
+		svgService = new SvgService(project.canvasData, project.visualProperties, nodeUtils, triangleUtils, colorUtils);
+		fileUtils = new ProjectFileUtils(project.canvasData, appConfig, project.visualProperties);
+		dialogUtils = new UiDialogUtils(stage, appLang);
+		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService, dialogUtils);
+		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState, mouseCursor);
+		configModelMapper = new ConfigModelMapper(appConfig);
+	}
+
 	private void createCanvasBoxServices() {
 		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig);
 		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
-		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor);
+		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor, mouseConfig);
 	}
 
 	private void initControllerObjects() {
