@@ -2,6 +2,7 @@ package sgora.mesh.editor.model.observables;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Holds a list of listeners which can be notified immediately or manually. Can be part of a tree structure.
@@ -12,12 +13,30 @@ public abstract class Observable {
 	public transient boolean notifyManually = true;
 	private transient boolean wasValueChanged = false;
 
-	private transient Set<ChangeListener> listeners = new HashSet<>();
+	private transient Set<ChangeListener> listeners = new TreeSet<>();
 
 	private transient Set<Observable> parents = new HashSet<>();
 	private transient Set<Observable> children = new HashSet<>();
 
+	private class ListenerEntry {
+		public ChangeListener listener;
+		public int priority;
+
+		public ListenerEntry(ChangeListener listener, int priority) {
+			this.listener = listener;
+			this.priority = priority;
+		}
+	}
+
 	public void addListener(ChangeListener callback) {
+		addListener(callback, ListenerPriority.NORMAL);
+	}
+
+	public void addListener(ChangeListener callback, ListenerPriority priority) {
+		addListener(callback, priority.value);
+	}
+
+	public void addListener(ChangeListener callback, int priority) {
 		listeners.add(callback);
 	}
 
