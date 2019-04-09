@@ -108,7 +108,7 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton button) {
-		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
+		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? mouseConfig.defaultCanvasCursor : Cursor.DEFAULT);
 	}
 
 }

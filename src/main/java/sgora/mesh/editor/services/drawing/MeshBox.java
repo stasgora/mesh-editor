@@ -39,7 +39,9 @@ public class MeshBox implements MouseListener {
 	}
 
 	public void onMouseMove(Point mousePos) {
-
+		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
+		draggedNode = triangulationService.findNodeByLocation(proportionalPos);
+		mouseCursor.setValue(draggedNode != null ? Cursor.HAND : mouseConfig.defaultCanvasCursor);
 	}
 
 	@Override
@@ -48,12 +50,9 @@ public class MeshBox implements MouseListener {
 		if(mouseButton == mouseConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
 			return true;
 		}
-		if(mouseButton == mouseConfig.moveNodeButton) {
-			draggedNode = triangulationService.findNodeByLocation(proportionalPos);
-			if(draggedNode != null) {
-				mouseCursor.setValue(Cursor.CLOSED_HAND);
-				return true;
-			}
+		if(mouseButton == mouseConfig.moveNodeButton && draggedNode != null) {
+			mouseCursor.setValue(Cursor.CLOSED_HAND);
+			return true;
 		}
 		if(mouseButton == mouseConfig.placeNodeButton) {
 			return true;
@@ -77,7 +76,7 @@ public class MeshBox implements MouseListener {
 			triangulationService.addNode(nodeUtils.canvasToProportionalPos(mousePos));
 		}
 		draggedNode = null;
-		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
+		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
 	}
 
 }

@@ -70,7 +70,7 @@ public class ObjectGraphFactory {
 
 	private ConfigModelMapper configModelMapper;
 
-	private MouseConfig mouseConfig;
+	private MouseConfig mouseConfig = new MouseConfig();
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
@@ -129,7 +129,6 @@ public class ObjectGraphFactory {
 	}
 
 	private void createCanvasBoxServices() {
-		mouseConfig = new MouseConfig();
 		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig);
 		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
 		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor);

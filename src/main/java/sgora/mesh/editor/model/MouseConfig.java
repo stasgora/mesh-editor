@@ -10,6 +10,6 @@ public class MouseConfig {
 	public MouseButton moveNodeButton = MouseButton.PRIMARY;
 	public MouseButton dragImageButton = MouseButton.MIDDLE;
 
-	public Cursor defaultCursor;
+	public Cursor defaultCanvasCursor = Cursor.CROSSHAIR;
 
 }
