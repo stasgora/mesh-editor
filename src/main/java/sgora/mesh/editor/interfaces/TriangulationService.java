@@ -10,7 +10,7 @@ public interface TriangulationService {
 
 	Point findNodeByLocation(Point location);
 
-	void removeNode(Point location);
+	boolean removeNode(Point location);
 
 	void moveNode(Point node, Point position);
 

@@ -15,4 +15,6 @@ public interface CanvasAction {
 	void onMouseEnter(MouseEvent event);
 
 	void onMouseExit(MouseEvent event);
+
+	void onMouseMove(MouseEvent event);
 }

@@ -5,9 +5,8 @@ import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
-import sgora.mesh.editor.model.ImageBoxModel;
+import sgora.mesh.editor.model.MouseConfig;
 import sgora.mesh.editor.model.geom.Rectangle;
-import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.interfaces.MouseListener;
@@ -23,16 +22,16 @@ public class ImageBox implements MouseListener {
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
 	private ObjectProperty<Cursor> mouseCursor;
-	private ImageBoxModel imageBoxModel;
+	private MouseConfig mouseConfig;
 
 	public ImageBox(Point canvasViewSize, CanvasData canvasData, AppConfigReader appConfig,
-	                AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, ImageBoxModel imageBoxModel) {
+	                AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, MouseConfig mouseConfig) {
 		this.canvasViewSize = canvasViewSize;
 		this.canvasData = canvasData;
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
 		this.mouseCursor = mouseCursor;
-		this.imageBoxModel = imageBoxModel;
+		this.mouseConfig = mouseConfig;
 	}
 
 	public void onResizeCanvas() {
@@ -71,8 +70,7 @@ public class ImageBox implements MouseListener {
 		canvasData.imageBox.notifyListeners();
 	}
 
-	@Override
-	public void onZoom(double amount, Point mousePos) {
+	public boolean onZoom(double amount, Point mousePos) {
 		double minZoom = appConfig.getDouble("imageBox.zoom.min");
 		double maxZoom = appConfig.getDouble("imageBox.zoom.max");
 
@@ -86,18 +84,21 @@ public class ImageBox implements MouseListener {
 		canvasData.imageBox.position.add(zoomPos);
 		canvasData.imageBox.size.set(new Point(baseImageSize).multiplyByScalar(zoom));
 		canvasData.notifyListeners();
+		return true;
 	}
 
 	@Override
-	public void onDragStart(Point mousePos, MouseButton button) {
-		if(button == imageBoxModel.dragButton) {
+	public boolean onDragStart(Point mousePos, MouseButton button) {
+		if(button == mouseConfig.dragImageButton) {
 			mouseCursor.setValue(Cursor.CLOSED_HAND);
+			return true;
 		}
+		return false;
 	}
 
 	@Override
 	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
-		if(button != imageBoxModel.dragButton) {
+		if(button != mouseConfig.dragImageButton) {
 			return;
 		}
 		Rectangle imageBox = this.canvasData.imageBox;
@@ -107,21 +108,7 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton button) {
-		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
-	}
-
-	@Override
-	public void onMouseEnter(boolean isDragging) {
-		if(!isDragging) {
-			mouseCursor.setValue(Cursor.HAND);
-		}
-	}
-
-	@Override
-	public void onMouseExit(boolean isDragging) {
-		if(!isDragging) {
-			mouseCursor.setValue(Cursor.DEFAULT);
-		}
+		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? mouseConfig.defaultCanvasCursor : Cursor.DEFAULT);
 	}
 
 }

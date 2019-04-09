@@ -7,7 +7,7 @@ import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.MeshBoxModel;
+import sgora.mesh.editor.model.MouseConfig;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
@@ -17,16 +17,16 @@ public class MeshBox implements MouseListener {
 	private Point draggedNode;
 	
 	private final SettableObservable<Mesh> mesh;
-	private final MeshBoxModel meshBoxModel;
+	private final MouseConfig mouseConfig;
 	private final Point canvasViewSize;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private TriangulationService triangulationService;
 	private NodeUtils nodeUtils;
 
-	public MeshBox(SettableObservable<Mesh> mesh, MeshBoxModel meshBoxModel, Point canvasViewSize, ObjectProperty<Cursor> mouseCursor,
+	public MeshBox(SettableObservable<Mesh> mesh, MouseConfig mouseConfig, Point canvasViewSize, ObjectProperty<Cursor> mouseCursor,
 	               TriangulationService triangulationService, NodeUtils nodeUtils) {
 		this.mesh = mesh;
-		this.meshBoxModel = meshBoxModel;
+		this.mouseConfig = mouseConfig;
 		this.canvasViewSize = canvasViewSize;
 		this.mouseCursor = mouseCursor;
 		this.triangulationService = triangulationService;
@@ -38,22 +38,31 @@ public class MeshBox implements MouseListener {
 		return node.clamp(box.position, new Point(box.position).add(box.size));
 	}
 
-	@Override
-	public void onDragStart(Point mousePos, MouseButton mouseButton) {
+	public void onMouseMove(Point mousePos) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
-		if(mouseButton == meshBoxModel.removeNodeButton) {
-			triangulationService.removeNode(proportionalPos);
-		} else if(mouseButton == meshBoxModel.moveNodeButton) {
-			draggedNode = triangulationService.findNodeByLocation(proportionalPos);
-			if(draggedNode != null) {
-				mouseCursor.setValue(Cursor.CLOSED_HAND);
-			}
+		draggedNode = triangulationService.findNodeByLocation(proportionalPos);
+		mouseCursor.setValue(draggedNode != null ? Cursor.HAND : mouseConfig.defaultCanvasCursor);
+	}
+
+	@Override
+	public boolean onDragStart(Point mousePos, MouseButton mouseButton) {
+		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
+		if(mouseButton == mouseConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
+			return true;
 		}
+		if(mouseButton == mouseConfig.moveNodeButton && draggedNode != null) {
+			mouseCursor.setValue(Cursor.CLOSED_HAND);
+			return true;
+		}
+		if(mouseButton == mouseConfig.placeNodeButton) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
-		if(draggedNode == null || button != meshBoxModel.moveNodeButton) {
+		if(draggedNode == null || button != mouseConfig.moveNodeButton) {
 			return;
 		}
 		Point newNodePos = clampCanvasSpaceNodePos(mousePos.clamp(canvasViewSize));
@@ -63,30 +72,11 @@ public class MeshBox implements MouseListener {
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
-		if(draggedNode == null && mouseButton == meshBoxModel.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
+		if(draggedNode == null && mouseButton == mouseConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
 			triangulationService.addNode(nodeUtils.canvasToProportionalPos(mousePos));
 		}
 		draggedNode = null;
-		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.CROSSHAIR : Cursor.DEFAULT);
-	}
-
-	@Override
-	public void onZoom(double amount, Point mousePos) {
-
-	}
-
-	@Override
-	public void onMouseEnter(boolean isDragging) {
-		if(!isDragging) {
-			mouseCursor.setValue(Cursor.CROSSHAIR);
-		}
-	}
-
-	@Override
-	public void onMouseExit(boolean isDragging) {
-		if(!isDragging) {
-			mouseCursor.setValue(Cursor.DEFAULT);
-		}
+		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
 	}
 
 }

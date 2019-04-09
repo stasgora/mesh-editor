@@ -1,38 +1,45 @@
 package sgora.mesh.editor.services.drawing;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import sgora.mesh.editor.enums.MouseTool;
 import sgora.mesh.editor.interfaces.CanvasAction;
+import sgora.mesh.editor.interfaces.MouseListener;
+import sgora.mesh.editor.model.MouseConfig;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.LoadState;
 
 public class CanvasActionFacade implements CanvasAction {
 
+	private MouseListener[] eventConsumersQueue;
 	private final LoadState loadState;
-	private final ImageBox imageBox;
-	private final MeshBox meshBox;
-	private final SettableProperty<MouseTool> activeTool;
+	private MouseConfig mouseConfig;
 
 	private Point lastMouseDragPoint;
+	private ImageBox imageBox;
+	private MouseListener activeConsumer;
+	private MeshBox meshBox;
+	private ObjectProperty<Cursor> mouseCursor;
 
-	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, SettableProperty<MouseTool> activeTool) {
-		this.loadState = loadState;
+	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, ObjectProperty<Cursor> mouseCursor, MouseConfig mouseConfig) {
 		this.imageBox = imageBox;
 		this.meshBox = meshBox;
-		this.activeTool = activeTool;
+		this.mouseCursor = mouseCursor;
+		this.loadState = loadState;
+		this.mouseConfig = mouseConfig;
+		eventConsumersQueue = new MouseListener[] {meshBox, imageBox};
 	}
 
 	@Override
 	public void onMousePress(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		if(loadState.loaded.get()) {
-			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onDragStart(mousePos, event.getButton());
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onDragStart(mousePos, event.getButton());
+			for (MouseListener consumer : eventConsumersQueue) {
+				if(consumer.onDragStart(mousePos, event.getButton())) {
+					activeConsumer = consumer;
+					break;
+				}
 			}
 		}
 		lastMouseDragPoint = mousePos;
@@ -42,12 +49,8 @@ public class CanvasActionFacade implements CanvasAction {
 	public void onMouseDrag(MouseEvent event) {
 		Point mousePos = new Point(event.getX(), event.getY());
 		Point dragAmount = new Point(mousePos).subtract(lastMouseDragPoint);
-		if(loadState.loaded.get()) {
-			if (activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
-			}
+		if(loadState.loaded.get() && activeConsumer != null) {
+			activeConsumer.onMouseDrag(new Point(dragAmount), mousePos, event.getButton());
 		}
 		lastMouseDragPoint.set(mousePos);
 	}
@@ -56,12 +59,8 @@ public class CanvasActionFacade implements CanvasAction {
 	public void onMouseRelease(MouseEvent event) {
 		lastMouseDragPoint = null;
 		Point mousePos = new Point(event.getX(), event.getY());
-		if(loadState.loaded.get()) {
-			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onDragEnd(new Point(mousePos), event.getButton());
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onDragEnd(new Point(mousePos), event.getButton());
-			}
+		if(loadState.loaded.get() && activeConsumer != null) {
+			activeConsumer.onDragEnd(new Point(mousePos), event.getButton());
 		}
 	}
 
@@ -74,25 +73,23 @@ public class CanvasActionFacade implements CanvasAction {
 
 	@Override
 	public void onMouseEnter(MouseEvent event) {
-		if(loadState.loaded.get()) {
-			boolean isDragging = lastMouseDragPoint != null;
-			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onMouseEnter(isDragging);
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onMouseEnter(isDragging);
-			}
+		if(loadState.loaded.get() && lastMouseDragPoint == null) {
+			mouseCursor.setValue(mouseConfig.defaultCanvasCursor);
 		}
 	}
 
 	@Override
 	public void onMouseExit(MouseEvent event) {
+		if(loadState.loaded.get() && lastMouseDragPoint == null) {
+			mouseCursor.setValue(Cursor.DEFAULT);
+		}
+	}
+
+	@Override
+	public void onMouseMove(MouseEvent event) {
+		Point mousePos = new Point(event.getX(), event.getY());
 		if(loadState.loaded.get()) {
-			boolean isDragging = lastMouseDragPoint != null;
-			if(activeTool.get() == MouseTool.IMAGE_MOVER) {
-				imageBox.onMouseExit(isDragging);
-			} else if(activeTool.get() == MouseTool.MESH_EDITOR) {
-				meshBox.onMouseExit(isDragging);
-			}
+			meshBox.onMouseMove(mousePos);
 		}
 	}
 

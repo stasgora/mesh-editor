@@ -14,12 +14,9 @@ import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.config.LangConfigReader;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
-import sgora.mesh.editor.model.ImageBoxModel;
-import sgora.mesh.editor.model.MeshBoxModel;
+import sgora.mesh.editor.model.MouseConfig;
 import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.enums.MouseTool;
-import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.services.drawing.*;
 import sgora.mesh.editor.services.files.SvgService;
 import sgora.mesh.editor.services.files.WorkspaceActionFacade;
@@ -68,14 +65,12 @@ public class ObjectGraphFactory {
 	private SvgService svgService;
 
 	private UiDialogUtils dialogUtils;
-	private SettableProperty<MouseTool> activeTool;
 	private ObjectProperty<Cursor> mouseCursor;
 	private Point canvasViewSize = new Point();
 
 	private ConfigModelMapper configModelMapper;
 
-	private ImageBoxModel imageBoxModel;
-	private MeshBoxModel meshBoxModel;
+	private MouseConfig mouseConfig = new MouseConfig();
 
 	private ImageBox imageBox;
 	private MeshBox meshBox;
@@ -97,8 +92,8 @@ public class ObjectGraphFactory {
 	public void createObjectGraph() {
 		createConfigServices();
 		createTriangulationServices();
-		createProjectServices();
 		setupVisualObjects();
+		createProjectServices();
 		createCanvasBoxServices();
 		initControllerObjects();
 
@@ -119,29 +114,24 @@ public class ObjectGraphFactory {
 		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
 	}
 
+	private void setupVisualObjects() {
+		windowView.createWindowScene(appSettings, stage, root);
+		mouseCursor = stage.getScene().cursorProperty();
+	}
+
 	private void createProjectServices() {
 		svgService = new SvgService(project.canvasData, project.visualProperties, nodeUtils, triangleUtils, colorUtils);
 		fileUtils = new ProjectFileUtils(project.canvasData, appConfig, project.visualProperties);
 		dialogUtils = new UiDialogUtils(stage, appLang);
 		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService, dialogUtils);
-		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState);
+		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState, mouseCursor);
 		configModelMapper = new ConfigModelMapper(appConfig);
 	}
 
-	private void setupVisualObjects() {
-		windowView.createWindowScene(appSettings, stage, root);
-		activeTool = new SettableProperty<>(MouseTool.MESH_EDITOR);
-		mouseCursor = stage.getScene().cursorProperty();
-	}
-
 	private void createCanvasBoxServices() {
-		//temp
-		imageBoxModel = new ImageBoxModel();
-		meshBoxModel = new MeshBoxModel();
-
-		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, imageBoxModel);
-		meshBox = new MeshBox(project.canvasData.mesh, meshBoxModel, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
-		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, activeTool);
+		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig);
+		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
+		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor, mouseConfig);
 	}
 
 	private void initControllerObjects() {
@@ -153,7 +143,6 @@ public class ObjectGraphFactory {
 		windowView.init(project.loadState, stage, appConfig, workspaceAction);
 
 		canvasView.meshCanvas.init(colorUtils, project.visualProperties);
-		windowView.toolBar.init(activeTool, appLang);
 	}
 
 }

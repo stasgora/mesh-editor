@@ -1,26 +1,15 @@
 package sgora.mesh.editor.view;
 
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableMap;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import sgora.mesh.editor.MeshEditor;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
-import sgora.mesh.editor.model.observables.SettableObservable;
 import sgora.mesh.editor.model.project.LoadState;
-import sgora.mesh.editor.ui.MainToolbar;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class WindowView {
 
@@ -33,8 +22,6 @@ public class WindowView {
 	private Stage window;
 
 	public SplitPane mainSplitPane;
-
-	public MainToolbar toolBar;
 
 	private WorkspaceAction workspaceAction;
 
