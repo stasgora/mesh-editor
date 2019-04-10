@@ -21,14 +21,12 @@ public class WorkspaceActionExecutor {
 	private final Project project;
 	private ObjectGraphFactory objectGraphFactory;
 	private SvgService svgService;
-	private UiDialogUtils dialogUtils;
 
-	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgService svgService, UiDialogUtils dialogUtils) {
+	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgService svgService) {
 		this.fileUtils = fileUtils;
 		this.project = project;
 		this.objectGraphFactory = objectGraphFactory;
 		this.svgService = svgService;
-		this.dialogUtils = dialogUtils;
 	}
 
 	void openProject(File location) throws ProjectIOException {

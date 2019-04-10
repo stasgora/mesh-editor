@@ -13,20 +13,10 @@ public abstract class Observable {
 	public transient boolean notifyManually = true;
 	private transient boolean wasValueChanged = false;
 
-	private transient Set<ChangeListener> listeners = new TreeSet<>();
+	private transient Set<ListenerEntry> listeners = new TreeSet<>();
 
 	private transient Set<Observable> parents = new HashSet<>();
 	private transient Set<Observable> children = new HashSet<>();
-
-	private class ListenerEntry {
-		public ChangeListener listener;
-		public int priority;
-
-		public ListenerEntry(ChangeListener listener, int priority) {
-			this.listener = listener;
-			this.priority = priority;
-		}
-	}
 
 	public void addListener(ChangeListener callback) {
 		addListener(callback, ListenerPriority.NORMAL);
@@ -37,7 +27,7 @@ public abstract class Observable {
 	}
 
 	public void addListener(ChangeListener callback, int priority) {
-		listeners.add(callback);
+		listeners.add(new ListenerEntry(callback, priority));
 	}
 
 	protected void addParent(Observable observable) {
@@ -81,34 +71,29 @@ public abstract class Observable {
 		parents.forEach(Observable::onValueChanged);
 		wasValueChanged = true;
 		if (!notifyManually) {
-			listeners.forEach(ChangeListener::call);
+			listeners.forEach(entry -> entry.listener.call());
 		}
 	}
 
-	protected void callListeners() {
+	private Set<ListenerEntry> collectListeners(boolean upDir) {
+		Set<ListenerEntry> treeListeners = new TreeSet<>();
 		if(wasValueChanged && notifyManually) {
 			wasValueChanged = false;
-			listeners.forEach(ChangeListener::call);
+			treeListeners.addAll(listeners);
 		}
-	}
-
-	private void notifyParents() {
-		callListeners();
-		parents.forEach(Observable::notifyParents);
-	}
-
-	private void notifyChildren() {
-		callListeners();
-		children.forEach(Observable::notifyChildren);
+		Set<Observable> relatives = upDir ? parents : children;
+		relatives.forEach(observable -> treeListeners.addAll(observable.collectListeners(upDir)));
+		return treeListeners;
 	}
 
 	public void notifyListeners() {
-		notifyParents();
-		notifyChildren();
+		Set<ListenerEntry> treeListeners = collectListeners(true);
+		treeListeners.addAll(collectListeners(false));
+		treeListeners.forEach(entry -> entry.listener.call());
 	}
 
 	public void copyListeners(Observable observable) {
-		listeners.forEach(observable::addListener);
+		listeners.forEach(listener -> observable.addListener(listener.listener, listener.priority));
 	}
 
 	public void clearListeners() {
