@@ -1,5 +1,9 @@
 package sgora.mesh.editor.model.observables;
 
+import sgora.mesh.editor.model.observables.listeners.ChangeListener;
+import sgora.mesh.editor.model.observables.listeners.ListenerEntry;
+import sgora.mesh.editor.model.observables.listeners.ListenerPriority;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -101,7 +105,14 @@ public abstract class Observable {
 	}
 
 	public void setUnchanged() {
+		setUnchanged(true);
+		setUnchanged(false);
+	}
+
+	private void setUnchanged(boolean upDir) {
 		wasValueChanged = false;
+		Set<Observable> relatives = upDir ? parents : children;
+		relatives.forEach(relative -> relative.setUnchanged(upDir));
 	}
 
 }

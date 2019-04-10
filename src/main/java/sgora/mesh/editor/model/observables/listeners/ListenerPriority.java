@@ -1,4 +1,4 @@
-package sgora.mesh.editor.model.observables;
+package sgora.mesh.editor.model.observables.listeners;
 
 public enum ListenerPriority {
 

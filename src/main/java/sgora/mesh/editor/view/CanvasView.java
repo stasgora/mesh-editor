@@ -6,7 +6,7 @@ import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.interfaces.CanvasAction;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.observables.ListenerPriority;
+import sgora.mesh.editor.model.observables.listeners.ListenerPriority;
 import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.Project;

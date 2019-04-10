@@ -1,8 +1,8 @@
-package sgora.mesh.editor.model.observables;
+package sgora.mesh.editor.model.observables.listeners;
 
 import java.util.Objects;
 
-class ListenerEntry implements Comparable<ListenerEntry> {
+public class ListenerEntry implements Comparable<ListenerEntry> {
 
 	public ChangeListener listener;
 	public int priority;

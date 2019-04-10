@@ -60,4 +60,8 @@ public class SettableProperty<T> extends Observable implements Serializable {
 		this.defaultValue = defaultValue;
 	}
 
+	public void saveAsDefaultValue() {
+		this.defaultValue = modelValue;
+	}
+
 }

@@ -22,6 +22,10 @@ public class ConfigModelMapper {
 	}
 
 	public void mapConfigPathToModelObject(Observable modelObject, String configPath) {
+		mapConfigPathToModelObject(modelObject, configPath, false);
+	}
+
+	public void mapConfigPathToModelObject(Observable modelObject, String configPath, boolean asDefaultValue) {
 		JSONObject configPathRoot = appConfig.getJsonObject(configPath);
 		for (String propertyKey : configPathRoot.keySet()) {
 			Field modelField = getModelField(modelObject, propertyKey);
@@ -45,13 +49,15 @@ public class ConfigModelMapper {
 				continue;
 			}
 			if (configValue instanceof JSONObject) {
-				Object modelValue = constructModelValueObject(modelValueType, configValue);
-				if(modelValue == null) {
+				configValue = constructModelValueObject(modelValueType, configValue);
+				if(configValue == null) {
 					continue;
 				}
-				modelFieldValue.set(modelValue);
-			} else {
+			}
+			if(!asDefaultValue) {
 				modelFieldValue.set(configValue);
+			} else {
+				modelFieldValue.setDefaultValue(configValue);
 			}
 		}
 	}
