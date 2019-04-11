@@ -79,20 +79,19 @@ public abstract class Observable {
 		}
 	}
 
-	private Set<ListenerEntry> collectListeners(TreeTraverseDirection direction) {
-		Set<ListenerEntry> treeListeners = new TreeSet<>();
+	private void collectListeners(TreeTraverseDirection direction, Set<ListenerEntry> treeListeners) {
 		if(wasValueChanged && notifyManually) {
 			wasValueChanged = false;
 			treeListeners.addAll(listeners);
 		}
 		Set<Observable> relatives = direction == TreeTraverseDirection.UP ? parents : children;
-		relatives.forEach(observable -> treeListeners.addAll(observable.collectListeners(direction)));
-		return treeListeners;
+		relatives.forEach(observable -> observable.collectListeners(direction, treeListeners));
 	}
 
 	public void notifyListeners() {
-		Set<ListenerEntry> treeListeners = collectListeners(TreeTraverseDirection.UP);
-		treeListeners.addAll(collectListeners(TreeTraverseDirection.DOWN));
+		Set<ListenerEntry> treeListeners = new TreeSet<>();
+		collectListeners(TreeTraverseDirection.UP, treeListeners);
+		collectListeners(TreeTraverseDirection.DOWN, treeListeners);
 		treeListeners.forEach(entry -> entry.listener.call());
 	}
 
