@@ -79,20 +79,20 @@ public abstract class Observable {
 		}
 	}
 
-	private Set<ListenerEntry> collectListeners(boolean upDir) {
+	private Set<ListenerEntry> collectListeners(TreeTraverseDirection direction) {
 		Set<ListenerEntry> treeListeners = new TreeSet<>();
 		if(wasValueChanged && notifyManually) {
 			wasValueChanged = false;
 			treeListeners.addAll(listeners);
 		}
-		Set<Observable> relatives = upDir ? parents : children;
-		relatives.forEach(observable -> treeListeners.addAll(observable.collectListeners(upDir)));
+		Set<Observable> relatives = direction == TreeTraverseDirection.UP ? parents : children;
+		relatives.forEach(observable -> treeListeners.addAll(observable.collectListeners(direction)));
 		return treeListeners;
 	}
 
 	public void notifyListeners() {
-		Set<ListenerEntry> treeListeners = collectListeners(true);
-		treeListeners.addAll(collectListeners(false));
+		Set<ListenerEntry> treeListeners = collectListeners(TreeTraverseDirection.UP);
+		treeListeners.addAll(collectListeners(TreeTraverseDirection.DOWN));
 		treeListeners.forEach(entry -> entry.listener.call());
 	}
 
@@ -105,14 +105,18 @@ public abstract class Observable {
 	}
 
 	public void setUnchanged() {
-		setUnchanged(true);
-		setUnchanged(false);
+		setUnchanged(TreeTraverseDirection.UP);
+		setUnchanged(TreeTraverseDirection.DOWN);
 	}
 
-	private void setUnchanged(boolean upDir) {
+	private void setUnchanged(TreeTraverseDirection direction) {
 		wasValueChanged = false;
-		Set<Observable> relatives = upDir ? parents : children;
-		relatives.forEach(relative -> relative.setUnchanged(upDir));
+		Set<Observable> relatives = direction == TreeTraverseDirection.UP ? parents : children;
+		relatives.forEach(relative -> relative.setUnchanged(direction));
+	}
+
+	private enum TreeTraverseDirection {
+		UP, DOWN
 	}
 
 }

@@ -2,11 +2,11 @@ package sgora.mesh.editor.model.observables.listeners;
 
 public enum ListenerPriority {
 
-	VERY_HIGH(4),
-	HIGH(3),
-	NORMAL(2),
-	LOW(1),
-	VERY_LOW(0);
+	VERY_HIGH(2),
+	HIGH(1),
+	NORMAL(0),
+	LOW(-1),
+	VERY_LOW(-2);
 
 	public int value;
 
