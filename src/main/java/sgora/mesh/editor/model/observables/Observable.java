@@ -1,7 +1,12 @@
 package sgora.mesh.editor.model.observables;
 
+import sgora.mesh.editor.model.observables.listeners.ChangeListener;
+import sgora.mesh.editor.model.observables.listeners.ListenerEntry;
+import sgora.mesh.editor.model.observables.listeners.ListenerPriority;
+
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Holds a list of listeners which can be notified immediately or manually. Can be part of a tree structure.
@@ -12,13 +17,21 @@ public abstract class Observable {
 	public transient boolean notifyManually = true;
 	private transient boolean wasValueChanged = false;
 
-	private transient Set<ChangeListener> listeners = new HashSet<>();
+	private transient Set<ListenerEntry> listeners = new TreeSet<>();
 
 	private transient Set<Observable> parents = new HashSet<>();
 	private transient Set<Observable> children = new HashSet<>();
 
 	public void addListener(ChangeListener callback) {
-		listeners.add(callback);
+		addListener(callback, ListenerPriority.NORMAL);
+	}
+
+	public void addListener(ChangeListener callback, ListenerPriority priority) {
+		addListener(callback, priority.value);
+	}
+
+	public void addListener(ChangeListener callback, int priority) {
+		listeners.add(new ListenerEntry(callback, priority));
 	}
 
 	protected void addParent(Observable observable) {
@@ -62,34 +75,28 @@ public abstract class Observable {
 		parents.forEach(Observable::onValueChanged);
 		wasValueChanged = true;
 		if (!notifyManually) {
-			listeners.forEach(ChangeListener::call);
+			listeners.forEach(entry -> entry.listener.call());
 		}
 	}
 
-	protected void callListeners() {
+	private void collectListeners(TreeTraverseDirection direction, Set<ListenerEntry> treeListeners) {
 		if(wasValueChanged && notifyManually) {
 			wasValueChanged = false;
-			listeners.forEach(ChangeListener::call);
+			treeListeners.addAll(listeners);
 		}
-	}
-
-	private void notifyParents() {
-		callListeners();
-		parents.forEach(Observable::notifyParents);
-	}
-
-	private void notifyChildren() {
-		callListeners();
-		children.forEach(Observable::notifyChildren);
+		Set<Observable> relatives = direction == TreeTraverseDirection.UP ? parents : children;
+		relatives.forEach(observable -> observable.collectListeners(direction, treeListeners));
 	}
 
 	public void notifyListeners() {
-		notifyParents();
-		notifyChildren();
+		Set<ListenerEntry> treeListeners = new TreeSet<>();
+		collectListeners(TreeTraverseDirection.UP, treeListeners);
+		collectListeners(TreeTraverseDirection.DOWN, treeListeners);
+		treeListeners.forEach(entry -> entry.listener.call());
 	}
 
 	public void copyListeners(Observable observable) {
-		listeners.forEach(observable::addListener);
+		listeners.forEach(listener -> observable.addListener(listener.listener, listener.priority));
 	}
 
 	public void clearListeners() {
@@ -97,7 +104,18 @@ public abstract class Observable {
 	}
 
 	public void setUnchanged() {
+		setUnchanged(TreeTraverseDirection.UP);
+		setUnchanged(TreeTraverseDirection.DOWN);
+	}
+
+	private void setUnchanged(TreeTraverseDirection direction) {
 		wasValueChanged = false;
+		Set<Observable> relatives = direction == TreeTraverseDirection.UP ? parents : children;
+		relatives.forEach(relative -> relative.setUnchanged(direction));
+	}
+
+	private enum TreeTraverseDirection {
+		UP, DOWN
 	}
 
 }

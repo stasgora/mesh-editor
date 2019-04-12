@@ -48,4 +48,12 @@ public class VisualProperties extends Observable {
 		notifyListeners();
 	}
 
+	public void saveDefaultValues() {
+		properties.forEach(SettableProperty::saveAsDefaultValue);
+	}
+
+	public void restoreDefaultValues() {
+		properties.forEach(SettableProperty::resetToDefaultValue);
+	}
+
 }

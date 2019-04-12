@@ -3,6 +3,7 @@ package sgora.mesh.editor.model.geom;
 import sgora.mesh.editor.model.observables.Observable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Point extends Observable implements Serializable {
 
@@ -96,8 +97,16 @@ public class Point extends Observable implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return obj != null && obj.getClass().equals(this.getClass()) && x == ((Point) obj).x && y == ((Point) obj).y;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Point point = (Point) o;
+		return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
 	}
 
 }

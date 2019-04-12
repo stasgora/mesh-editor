@@ -1,5 +1,7 @@
 package sgora.mesh.editor.model.observables;
 
+import sgora.mesh.editor.model.observables.listeners.ChangeListener;
+
 import java.util.HashSet;
 import java.util.Set;
 

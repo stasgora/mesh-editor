@@ -86,7 +86,7 @@ public class ObjectGraphFactory {
 	public void createProjectModel() {
 		imageBox.calcImageBox();
 		triangulationService.createNewMesh();
-		propertiesView.setPropertiesDefaultValues();
+		project.visualProperties.restoreDefaultValues();
 	}
 
 	public void createObjectGraph() {
@@ -123,7 +123,7 @@ public class ObjectGraphFactory {
 		svgService = new SvgService(project.canvasData, project.visualProperties, nodeUtils, triangleUtils, colorUtils);
 		fileUtils = new ProjectFileUtils(project.canvasData, appConfig, project.visualProperties);
 		dialogUtils = new UiDialogUtils(stage, appLang);
-		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService, dialogUtils);
+		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState, mouseCursor);
 		configModelMapper = new ConfigModelMapper(appConfig);
 	}
