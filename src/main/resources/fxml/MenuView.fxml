@@ -17,7 +17,7 @@
 				<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 			</accelerator>
 		</MenuItem>
-		<Menu fx:id="openRecentMenuItem" disable="true" text="${menu_file_item_openRecent}" />
+		<Menu fx:id="openRecentMenuItem" visible="false" disable="true" text="${menu_file_item_openRecent}" />
 		<MenuItem fx:id="closeProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_close}">
 			<accelerator>
 				<KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
