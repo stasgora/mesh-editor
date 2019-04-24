@@ -3,7 +3,7 @@ package sgora.mesh.editor.services.triangulation;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Triangle;
-import sgora.mesh.editor.model.observables.SettableObservable;
+import io.github.stasgora.observetree.SettableObservable;
 
 import java.util.Arrays;
 import java.util.List;

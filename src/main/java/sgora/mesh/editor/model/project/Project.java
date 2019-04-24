@@ -1,7 +1,6 @@
 package sgora.mesh.editor.model.project;
 
-import sgora.mesh.editor.model.observables.Observable;
-import sgora.mesh.editor.model.observables.SettableObservable;
+import io.github.stasgora.observetree.Observable;
 
 public class Project extends Observable {
 

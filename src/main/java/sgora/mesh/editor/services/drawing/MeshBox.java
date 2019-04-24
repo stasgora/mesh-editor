@@ -6,7 +6,7 @@ import javafx.scene.input.MouseButton;
 import sgora.mesh.editor.interfaces.MouseListener;
 import sgora.mesh.editor.interfaces.TriangulationService;
 import sgora.mesh.editor.model.geom.Mesh;
-import sgora.mesh.editor.model.observables.SettableObservable;
+import io.github.stasgora.observetree.SettableObservable;
 import sgora.mesh.editor.model.MouseConfig;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;

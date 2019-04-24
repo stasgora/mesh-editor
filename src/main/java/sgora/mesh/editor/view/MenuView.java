@@ -5,7 +5,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.interfaces.files.WorkspaceAction;
-import sgora.mesh.editor.model.observables.SettableObservable;
+import io.github.stasgora.observetree.SettableObservable;
 import sgora.mesh.editor.model.project.LoadState;
 
 import java.util.Map;

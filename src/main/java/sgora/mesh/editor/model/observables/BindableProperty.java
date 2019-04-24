@@ -1,5 +1,6 @@
 package sgora.mesh.editor.model.observables;
 
+import io.github.stasgora.observetree.SettableProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableValue;
 

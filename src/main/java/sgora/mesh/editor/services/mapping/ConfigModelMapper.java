@@ -1,9 +1,9 @@
 package sgora.mesh.editor.services.mapping;
 
+import io.github.stasgora.observetree.Observable;
 import org.json.JSONObject;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
-import sgora.mesh.editor.model.observables.Observable;
-import sgora.mesh.editor.model.observables.SettableProperty;
+import io.github.stasgora.observetree.SettableProperty;
 
 import java.lang.reflect.*;
 import java.util.logging.Level;

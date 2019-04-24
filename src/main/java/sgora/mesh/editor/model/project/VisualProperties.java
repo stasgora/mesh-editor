@@ -1,18 +1,14 @@
 package sgora.mesh.editor.model.project;
 
+import io.github.stasgora.observetree.Observable;
+import io.github.stasgora.observetree.SettableProperty;
 import sgora.mesh.editor.model.observables.BindableProperty;
-import sgora.mesh.editor.model.observables.Observable;
-import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.observables.SettableProperty;
 import sgora.mesh.editor.model.paint.SerializableColor;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class VisualProperties extends Observable {

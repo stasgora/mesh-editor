@@ -1,6 +1,6 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.observables.Observable;
+import io.github.stasgora.observetree.Observable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import sgora.mesh.editor.exceptions.ProjectIOException;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.interfaces.files.FileUtils;
-import sgora.mesh.editor.model.observables.SettableObservable;
+import io.github.stasgora.observetree.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.model.geom.Mesh;

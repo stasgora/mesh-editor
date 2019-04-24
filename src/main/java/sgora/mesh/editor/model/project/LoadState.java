@@ -1,7 +1,7 @@
 package sgora.mesh.editor.model.project;
 
-import sgora.mesh.editor.model.observables.Observable;
-import sgora.mesh.editor.model.observables.SettableProperty;
+import io.github.stasgora.observetree.Observable;
+import io.github.stasgora.observetree.SettableProperty;
 
 import java.io.File;
 

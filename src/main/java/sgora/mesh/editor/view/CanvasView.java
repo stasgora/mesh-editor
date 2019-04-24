@@ -1,13 +1,13 @@
 package sgora.mesh.editor.view;
 
+import io.github.stasgora.observetree.enums.ListenerPriority;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableMap;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
 import sgora.mesh.editor.interfaces.CanvasAction;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.observables.listeners.ListenerPriority;
-import sgora.mesh.editor.model.observables.SettableProperty;
+import io.github.stasgora.observetree.SettableProperty;
 import sgora.mesh.editor.model.project.CanvasData;
 import sgora.mesh.editor.model.project.Project;
 import sgora.mesh.editor.services.drawing.ImageBox;

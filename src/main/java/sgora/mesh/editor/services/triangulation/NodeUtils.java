@@ -4,7 +4,7 @@ import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.model.geom.Point;
 import sgora.mesh.editor.model.geom.Rectangle;
 import sgora.mesh.editor.model.geom.Triangle;
-import sgora.mesh.editor.model.observables.SettableObservable;
+import io.github.stasgora.observetree.SettableObservable;
 import sgora.mesh.editor.model.project.CanvasData;
 
 import java.util.Arrays;

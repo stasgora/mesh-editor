@@ -5,6 +5,7 @@ module mesh.editor {
 	requires org.json;
 	requires org.jfree.jfreesvg;
 	requires java.desktop;
+	requires stasgora.observetree;
 
 	opens sgora.mesh.editor to javafx.fxml;
 	exports sgora.mesh.editor;

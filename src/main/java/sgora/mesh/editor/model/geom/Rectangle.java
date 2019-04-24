@@ -1,10 +1,7 @@
 package sgora.mesh.editor.model.geom;
 
-import sgora.mesh.editor.model.observables.Observable;
+import io.github.stasgora.observetree.Observable;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Rectangle extends Observable implements Serializable {

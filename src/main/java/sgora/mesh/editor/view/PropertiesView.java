@@ -6,7 +6,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import sgora.mesh.editor.enums.ViewType;
-import sgora.mesh.editor.model.observables.SettableProperty;
+import io.github.stasgora.observetree.SettableProperty;
 import sgora.mesh.editor.model.project.VisualProperties;
 import sgora.mesh.editor.services.mapping.ConfigModelMapper;
 

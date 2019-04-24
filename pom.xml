@@ -53,6 +53,11 @@
 	</build>
 	<dependencies>
 		<dependency>
+			<groupId>io.github.stasgora</groupId>
+			<artifactId>observetree</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>12</version>

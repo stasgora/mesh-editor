@@ -5,7 +5,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 import sgora.mesh.editor.interfaces.config.AppConfigReader;
 import sgora.mesh.editor.model.geom.Point;
-import sgora.mesh.editor.model.observables.SettableProperty;
+import io.github.stasgora.observetree.SettableProperty;
 import sgora.mesh.editor.model.paint.SerializableColor;
 import sgora.mesh.editor.services.triangulation.NodeUtils;
 

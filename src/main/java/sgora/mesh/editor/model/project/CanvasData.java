@@ -1,11 +1,11 @@
 package sgora.mesh.editor.model.project;
 
+import io.github.stasgora.observetree.Observable;
 import javafx.scene.image.Image;
 import sgora.mesh.editor.model.geom.Mesh;
 import sgora.mesh.editor.model.geom.Rectangle;
-import sgora.mesh.editor.model.observables.Observable;
-import sgora.mesh.editor.model.observables.SettableObservable;
-import sgora.mesh.editor.model.observables.SettableProperty;
+import io.github.stasgora.observetree.SettableObservable;
+import io.github.stasgora.observetree.SettableProperty;
 
 public class CanvasData extends Observable {
 
