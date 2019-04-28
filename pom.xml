@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>sgora.mesh-editor</groupId>
+	<groupId>stasgora.mesh-editor</groupId>
 	<artifactId>mesh-editor</artifactId>
 	<version>0.8</version>
 	<properties>
@@ -30,7 +30,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>sgora.mesh.editor.Main</mainClass>
+							<mainClass>stasgora.mesh.editor.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -40,7 +40,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>sgora.mesh.editor.Main</mainClass>
+							<mainClass>stasgora.mesh.editor.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -69,7 +69,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>sgora.mesh.editor.Main</mainClass>
+					<mainClass>stasgora.mesh.editor.Main</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

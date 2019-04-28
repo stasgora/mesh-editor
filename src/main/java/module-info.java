@@ -7,6 +7,6 @@ module mesh.editor {
 	requires java.desktop;
 	requires stasgora.observetree;
 
-	opens sgora.mesh.editor to javafx.fxml;
-	exports sgora.mesh.editor;
+	opens stasgora.mesh.editor to javafx.fxml;
+	exports stasgora.mesh.editor;
 }

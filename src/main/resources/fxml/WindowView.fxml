@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sgora.mesh.editor.view.WindowView">
+<VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="stasgora.mesh.editor.view.WindowView">
 	<MenuBar fx:id="menuViewRoot" layoutX="185.0" layoutY="-14.0" />
 	<SplitPane fx:id="mainSplitPane" dividerPositions="0.25" prefHeight="465.0" prefWidth="808.0" VBox.vgrow="ALWAYS">
 		<AnchorPane fx:id="propertiesViewRoot" minHeight="0.0" minWidth="200.0" prefHeight="160.0" prefWidth="100.0" />
