@@ -3,7 +3,16 @@ Simple desktop application for creating vector low poly art from raster images
 
 ![Screenshot_20190402_205226](https://user-images.githubusercontent.com/8643919/55430423-5d448780-558e-11e9-9461-6ffd15f42d33.png)
 
-### Features:
+## Getting started
+### Build & Run - Maven
+- Clone project and run in root directory:
+
+```mvn clean compile package exec:java```
+
+### Latest builds
+[Releases page](https://github.com/stasgora/mesh-editor/releases)
+
+## Features:
 - Dynamic & Kinetic Delaunay Triangulation Implementation
 - Project Saving & Loading
 - Export to SVG
@@ -18,5 +27,8 @@ Simple desktop application for creating vector low poly art from raster images
 
 ![Screenshot_20190402_210126](https://user-images.githubusercontent.com/8643919/55430614-d8a63900-558e-11e9-93d5-ffd71a4e5690.png)
 
-#### Current state of development: 
-- [GitHub Project Board](https://github.com/stasgora/mesh-editor/projects/1)
+### Author
+Stanisław Góra
+
+### License
+[MIT License](http://www.opensource.org/licenses/mit-license.php)
