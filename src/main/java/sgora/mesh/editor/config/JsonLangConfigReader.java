@@ -115,7 +115,7 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 	}
 
 	private String getLangFileName(String lang) {
-		return Paths.get("/i18n", lang + '.' + appConfig.getString("extension.localization")).toString();
+		return "/i18n/" + lang + '.' + appConfig.getString("extension.localization");
 	}
 
 }
