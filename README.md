@@ -27,6 +27,9 @@ Simple desktop application for creating vector low poly art from raster images
 
 ![Screenshot_20190402_210126](https://user-images.githubusercontent.com/8643919/55430614-d8a63900-558e-11e9-93d5-ffd71a4e5690.png)
 
+### Other examples:
+![gitara](https://user-images.githubusercontent.com/8643919/57648388-ad6b2c80-75c5-11e9-9e76-8a9d2710894d.png)
+
 ### Author
 Stanisław Góra
 
