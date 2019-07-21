@@ -8,7 +8,6 @@ import stasgora.mesh.editor.interfaces.config.LangConfigReader;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.ui.properties.PropertyItemType;
 import stasgora.mesh.editor.ui.properties.SliderTreeItem;
-import stasgora.mesh.editor.view.PropertiesView;
 
 public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeCell<String>> {
 
@@ -52,8 +51,9 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				HBox vBox = new HBox(checkBox);
 				vBox.setSpacing(5);
 				if(itemType.showSlider) {
-					Slider slider = new Slider();
-					slider.setTooltip(new Tooltip(appLang.getText(itemType.sliderTooltip)));
+					Slider slider = new Slider(itemType.minSliderVal, itemType.maxSliderVal, itemType.minSliderVal);
+					slider.setTooltip(new Tooltip(appLang.getText(itemType.sliderTooltipKey)));
+					visualProperties.propertyTypeToSliderValue.get(itemType).bindWithFxObservable(slider.valueProperty());
 					vBox.getChildren().add(slider);
 				}
 				setGraphic(vBox);

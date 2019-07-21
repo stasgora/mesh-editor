@@ -150,6 +150,7 @@ public class ObjectGraphFactory {
 		windowView.init(project.loadState, stage, appConfig, workspaceAction);
 
 		canvasView.meshCanvas.init(colorUtils, project.visualProperties);
+		canvasView.imageCanvas.init(project.visualProperties);
 	}
 
 }

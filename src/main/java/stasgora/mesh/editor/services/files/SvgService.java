@@ -46,7 +46,7 @@ public class SvgService {
 		if(visualProperties.edgesVisible.get()) {
 			List<Triangle> triangles = triangleUtils.getValidTriangles();
 			double transparency = visualProperties.meshTransparency.get();
-			svg.setStroke(new BasicStroke(visualProperties.lineWidth.get()));
+			svg.setStroke(new BasicStroke(visualProperties.lineWidth.get().floatValue()));
 			for (int i = 0; i < triangles.size(); i++) {
 				Triangle triangle = triangles.get(i);
 				for (int j = 0; j < 3; j++) {
@@ -65,10 +65,10 @@ public class SvgService {
 		if(visualProperties.nodesVisible.get()) {
 			List<Point> nodes = canvasData.mesh.get().getNodes();
 			double transparency = visualProperties.meshTransparency.get();
-			int nodeRadius = visualProperties.nodeRadius.get();
+			double nodeRadius = visualProperties.nodeRadius.get();
 			for (Point node : nodes) {
 				svg.setColor(colorUtils.getNodeColor(node).setAlpha(transparency).toAwtColor());
-				svg.fillOval((int) node.x - nodeRadius / 2, (int) node.y - nodeRadius / 2, nodeRadius, nodeRadius);
+				svg.fillOval((int) (node.x - nodeRadius / 2), (int) (node.y - nodeRadius / 2), (int) nodeRadius, (int) nodeRadius);
 			}
 		}
 	}

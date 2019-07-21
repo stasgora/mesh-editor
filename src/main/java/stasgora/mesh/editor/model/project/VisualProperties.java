@@ -16,15 +16,17 @@ import java.util.Map;
 public class VisualProperties extends Observable {
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>();
-	public SettableProperty<Integer> nodeRadius = new SettableProperty<>();
-	public SettableProperty<Integer> lineWidth = new SettableProperty<>();
+	public BindableProperty<Double> nodeRadius = new BindableProperty<>();
+	public BindableProperty<Double> lineWidth = new BindableProperty<>();
 
 	public BindableProperty<Boolean> meshVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> imageVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> nodesVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> edgesVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> trianglesVisible = new BindableProperty<>();
+
 	public BindableProperty<Double> meshTransparency = new BindableProperty<>();
+	public BindableProperty<Double> imageTransparency = new BindableProperty<>();
 
 	public Map<PropertyItemType, BindableProperty> propertyTypeToVisibleProperty = Map.of(
 			PropertyItemType.IMAGE, imageVisible,
@@ -34,8 +36,15 @@ public class VisualProperties extends Observable {
 			PropertyItemType.EDGES, edgesVisible
 	);
 
+	public Map<PropertyItemType, BindableProperty> propertyTypeToSliderValue = Map.of(
+			PropertyItemType.IMAGE, imageTransparency,
+			PropertyItemType.MESH, meshTransparency,
+			PropertyItemType.NODES, nodeRadius,
+			PropertyItemType.EDGES, lineWidth
+	);
+
 	private List<SettableProperty> properties = Arrays.asList(nodeColor, lineWidth, nodeRadius,
-			meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency);
+			meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency, imageTransparency);
 
 	public VisualProperties() {
 		properties.forEach(this::addSubObservable);
