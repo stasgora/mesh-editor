@@ -17,17 +17,21 @@
 			}
 		},
 		"properties": {
-			"visibility": {
-				"title": "Widoczność",
-				"mesh": "Siatka",
+			"title": "Ustawienia",
+			"tree": {
 				"image": "Obraz",
-				"nodes": "Punkty",
-				"edges": "Linie",
-				"triangles": "Trójkąty"
+				"mesh": {
+					"title": "Siatka",
+					"nodes": "Punkty",
+					"edges": "Linie",
+					"triangles": "Trójkąty"
+				}
 			},
-			"transparency": {
-				"title": "Przeźroczystość",
-				"mesh": "Siatka"
+			"tooltips": {
+				"transparency": "Przeźroczystość",
+				"visibility": "Widoczność",
+				"edgeThickness": "Grubość",
+				"nodeSize": "Rozmiar"
 			}
 		}
 	},

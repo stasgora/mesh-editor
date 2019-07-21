@@ -4,12 +4,14 @@ import io.github.stasgora.observetree.Observable;
 import io.github.stasgora.observetree.SettableProperty;
 import stasgora.mesh.editor.model.observables.BindableProperty;
 import stasgora.mesh.editor.model.paint.SerializableColor;
+import stasgora.mesh.editor.ui.properties.PropertyItemType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class VisualProperties extends Observable {
 
@@ -23,6 +25,14 @@ public class VisualProperties extends Observable {
 	public BindableProperty<Boolean> edgesVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> trianglesVisible = new BindableProperty<>();
 	public BindableProperty<Double> meshTransparency = new BindableProperty<>();
+
+	public Map<PropertyItemType, BindableProperty> propertyTypeToVisibleProperty = Map.of(
+			PropertyItemType.IMAGE, imageVisible,
+			PropertyItemType.MESH, meshVisible,
+			PropertyItemType.TRIANGLES, trianglesVisible,
+			PropertyItemType.NODES, nodesVisible,
+			PropertyItemType.EDGES, edgesVisible
+	);
 
 	private List<SettableProperty> properties = Arrays.asList(nodeColor, lineWidth, nodeRadius,
 			meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency);

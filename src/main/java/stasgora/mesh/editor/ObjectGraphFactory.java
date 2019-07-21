@@ -27,6 +27,7 @@ import stasgora.mesh.editor.services.triangulation.TriangleUtils;
 import stasgora.mesh.editor.services.files.ProjectFileUtils;
 import stasgora.mesh.editor.services.files.WorkspaceActionExecutor;
 import stasgora.mesh.editor.services.ui.UiDialogUtils;
+import stasgora.mesh.editor.services.ui.PropertyTreeCellFactory;
 import stasgora.mesh.editor.view.CanvasView;
 import stasgora.mesh.editor.view.MenuView;
 import stasgora.mesh.editor.view.PropertiesView;
@@ -48,6 +49,7 @@ public class ObjectGraphFactory {
 	private PropertiesView propertiesView;
 	private CanvasView canvasView;
 	private MenuView menuView;
+
 	private Map<String, ObservableMap<String, Object>> viewNamespaces = new HashMap<>();
 
 	private Project project = new Project();
@@ -70,6 +72,7 @@ public class ObjectGraphFactory {
 	private UiDialogUtils dialogUtils;
 	private ObjectProperty<Cursor> mouseCursor;
 	private Point canvasViewSize = new Point();
+	private PropertyTreeCellFactory propertyTreeCellFactory;
 
 	private ConfigModelMapper configModelMapper;
 
@@ -129,6 +132,7 @@ public class ObjectGraphFactory {
 		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState, mouseCursor);
 		configModelMapper = new ConfigModelMapper(appConfig);
+		propertyTreeCellFactory = new PropertyTreeCellFactory(appLang, project.visualProperties);
 	}
 
 	private void createCanvasBoxServices() {
@@ -139,7 +143,7 @@ public class ObjectGraphFactory {
 
 	private void initControllerObjects() {
 		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW,
-				viewNamespaces, project.visualProperties, project.loadState.stateSaved, configModelMapper);
+				viewNamespaces, project.visualProperties, project.loadState.stateSaved, configModelMapper, propertyTreeCellFactory);
 		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState);
 		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, project,
 				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction, project.loadState.loaded);

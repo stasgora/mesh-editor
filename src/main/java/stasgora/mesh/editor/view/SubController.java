@@ -32,7 +32,7 @@ public abstract class SubController {
 		try {
 			loader.load();
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Loading " + viewType.fxmlFileName + " component failed");
+			LOGGER.log(Level.SEVERE, "Loading " + viewType.fxmlFileName + " component failed", e);
 		}
 		namespace = loader.getNamespace();
 		viewNamespaces.put(viewType.langPrefix, namespace);

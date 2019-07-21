@@ -3,6 +3,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import stasgora.mesh.editor.ui.properties.SliderTreeItem?>
+
 <fx:root type="javafx.scene.layout.AnchorPane" visible="false" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
 	<VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 		<padding>
@@ -44,4 +46,18 @@
 			</Slider>
 		</FlowPane>
 	</VBox>
+	<TreeView fx:id="propertyTree" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+		<TreeItem value="${properties_title}">
+			<children>
+				<SliderTreeItem value="${properties_tree_image}" itemType="IMAGE"/>
+				<SliderTreeItem value="${properties_tree_mesh_title}" itemType="MESH">
+					<children>
+						<SliderTreeItem value="${properties_tree_mesh_triangles}" itemType="TRIANGLES" />
+						<SliderTreeItem value="${properties_tree_mesh_edges}" itemType="EDGES"/>
+						<SliderTreeItem value="${properties_tree_mesh_nodes}" itemType="NODES"/>
+					</children>
+				</SliderTreeItem>
+			</children>
+		</TreeItem>
+	</TreeView>
 </fx:root>
