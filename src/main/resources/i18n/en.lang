@@ -17,17 +17,21 @@
 			}
 		},
 		"properties": {
-			"visibility": {
-				"title": "Visibility",
-				"mesh": "Mesh",
+			"title": "Properties",
+			"tree": {
 				"image": "Image",
-				"nodes": "Points",
-				"edges": "Lines",
-				"triangles": "Triangles"
+				"mesh": {
+					"title": "Mesh",
+					"nodes": "Points",
+					"edges": "Lines",
+					"triangles": "Triangles"
+				}
 			},
-			"transparency": {
-				"title": "Transparency",
-				"mesh": "Mesh"
+			"tooltips": {
+				"transparency": "Transparency",
+				"visibility": "Visibility",
+				"edgeThickness": "Thickness",
+				"nodeRadius": "Size"
 			}
 		}
 	},

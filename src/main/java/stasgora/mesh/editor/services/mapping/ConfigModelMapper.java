@@ -116,6 +116,9 @@ public class ConfigModelMapper {
 		} else {
 			configValueType = configValue.getClass().getCanonicalName();
 		}
+		if(modelValueType.equals(Double.class) && configValue.getClass().equals(Integer.class)) {
+			return ((Integer) configValue).doubleValue();
+		}
 		if(!modelValueTypeName.equals(configValueType)) {
 			LOGGER.log(Level.WARNING, "Model field type " + modelValueType + " does not match config value type " + configValueType);
 			return null;
