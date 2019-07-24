@@ -17,7 +17,7 @@ public class VisualProperties extends Observable {
 
 	public SettableProperty<SerializableColor> nodeColor = new SettableProperty<>();
 	public BindableProperty<Double> nodeRadius = new BindableProperty<>();
-	public BindableProperty<Double> lineWidth = new BindableProperty<>();
+	public BindableProperty<Double> edgeThickness = new BindableProperty<>();
 
 	public BindableProperty<Boolean> meshVisible = new BindableProperty<>();
 	public BindableProperty<Boolean> imageVisible = new BindableProperty<>();
@@ -40,10 +40,10 @@ public class VisualProperties extends Observable {
 			PropertyItemType.IMAGE, imageTransparency,
 			PropertyItemType.MESH, meshTransparency,
 			PropertyItemType.NODES, nodeRadius,
-			PropertyItemType.EDGES, lineWidth
+			PropertyItemType.EDGES, edgeThickness
 	);
 
-	private List<SettableProperty> properties = Arrays.asList(nodeColor, lineWidth, nodeRadius,
+	private List<SettableProperty> properties = Arrays.asList(nodeColor, edgeThickness, nodeRadius,
 			meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency, imageTransparency);
 
 	public VisualProperties() {

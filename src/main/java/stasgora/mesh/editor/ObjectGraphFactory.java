@@ -132,7 +132,7 @@ public class ObjectGraphFactory {
 		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState, mouseCursor);
 		configModelMapper = new ConfigModelMapper(appConfig);
-		propertyTreeCellFactory = new PropertyTreeCellFactory(appLang, project.visualProperties);
+		propertyTreeCellFactory = new PropertyTreeCellFactory(appLang, appConfig, project.visualProperties);
 	}
 
 	private void createCanvasBoxServices() {

@@ -4,6 +4,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+import stasgora.mesh.editor.interfaces.config.AppConfigReader;
 import stasgora.mesh.editor.interfaces.config.LangConfigReader;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.ui.properties.PropertyItemType;
@@ -12,10 +13,12 @@ import stasgora.mesh.editor.ui.properties.SliderTreeItem;
 public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeCell<String>> {
 
 	private LangConfigReader appLang;
+	private AppConfigReader appConfig;
 	private VisualProperties visualProperties;
 
-	public PropertyTreeCellFactory(LangConfigReader appLang, VisualProperties visualProperties) {
+	public PropertyTreeCellFactory(LangConfigReader appLang, AppConfigReader appConfig, VisualProperties visualProperties) {
 		this.appLang = appLang;
+		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;
 	}
 
@@ -51,12 +54,17 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				HBox vBox = new HBox(checkBox);
 				vBox.setSpacing(5);
 				if(itemType.showSlider) {
-					Slider slider = new Slider(itemType.minSliderVal, itemType.maxSliderVal, itemType.minSliderVal);
-					slider.setTooltip(new Tooltip(appLang.getText(itemType.sliderTooltipKey)));
+					double minValue = getSliderConfigValue(itemType.getMinValueKey(), 0);
+					Slider slider = new Slider(minValue, getSliderConfigValue(itemType.getMaxValueKey(), 1), minValue);
+					slider.setTooltip(new Tooltip(appLang.getText(itemType.getSliderKey())));
 					visualProperties.propertyTypeToSliderValue.get(itemType).bindWithFxObservable(slider.valueProperty());
 					vBox.getChildren().add(slider);
 				}
 				setGraphic(vBox);
+			}
+
+			private double getSliderConfigValue(String key, double defaultValue) {
+				return key != null ? appConfig.getDouble(key) : defaultValue;
 			}
 		};
 	}

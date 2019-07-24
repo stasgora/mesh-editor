@@ -31,7 +31,7 @@
 				"transparency": "Przeźroczystość",
 				"visibility": "Widoczność",
 				"edgeThickness": "Grubość",
-				"nodeSize": "Rozmiar"
+				"nodeRadius": "Rozmiar"
 			}
 		}
 	},

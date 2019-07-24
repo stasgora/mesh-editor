@@ -46,7 +46,7 @@ public class SvgService {
 		if(visualProperties.edgesVisible.get()) {
 			List<Triangle> triangles = triangleUtils.getValidTriangles();
 			double transparency = visualProperties.meshTransparency.get();
-			svg.setStroke(new BasicStroke(visualProperties.lineWidth.get().floatValue()));
+			svg.setStroke(new BasicStroke(visualProperties.edgeThickness.get().floatValue()));
 			for (int i = 0; i < triangles.size(); i++) {
 				Triangle triangle = triangles.get(i);
 				for (int j = 0; j < 3; j++) {

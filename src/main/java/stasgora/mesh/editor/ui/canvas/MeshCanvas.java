@@ -33,7 +33,7 @@ public class MeshCanvas extends Canvas {
 	private void drawEdges(List<Point[]> triangles) {
 		if(visualProperties.edgesVisible.get()) {
 			context.setLineCap(StrokeLineCap.ROUND);
-			context.setLineWidth(visualProperties.lineWidth.get());
+			context.setLineWidth(visualProperties.edgeThickness.get());
 			double transparency = visualProperties.meshTransparency.get();
 			for (Point[] triangle : triangles) {
 				for (int i = 0; i < 3; i++) {

@@ -2,27 +2,41 @@ package stasgora.mesh.editor.ui.properties;
 
 public enum PropertyItemType {
 
-	IMAGE("fxml.properties.tooltips.transparency"),
-	MESH("fxml.properties.tooltips.transparency"),
-	EDGES("fxml.properties.tooltips.edgeThickness", 1, 10),
-	NODES("fxml.properties.tooltips.nodeSize", 2, 20),
+	IMAGE("transparency"),
+	MESH("transparency"),
+	EDGES("edgeThickness", "meshBox.edgeThickness"),
+	NODES("nodeRadius", "meshBox.nodeRadius"),
 	TRIANGLES;
 
-	public String sliderTooltipKey;
-	public boolean showSlider = true;
-	public double minSliderVal = 0, maxSliderVal = 1;
+	private static final String SLIDER_KEY_PREFIX = "fxml.properties.tooltips.";
 
-	PropertyItemType(String sliderTooltipKey, double minSliderVal, double maxSliderVal) {
-		this.sliderTooltipKey = sliderTooltipKey;
-		this.minSliderVal = minSliderVal;
-		this.maxSliderVal = maxSliderVal;
+	private String tooltipKey, valueKey;
+	public boolean showSlider = true;
+
+	PropertyItemType(String tooltipKey) {
+		this.tooltipKey = tooltipKey;
 	}
 
-	PropertyItemType(String sliderTooltipKey) {
-		this.sliderTooltipKey = sliderTooltipKey;
+	PropertyItemType(String tooltipKey, String valueKey) {
+		this.tooltipKey = tooltipKey;
+		this.valueKey = valueKey;
 	}
 
 	PropertyItemType() {
 		this.showSlider = false;
+	}
+
+	public String getSliderKey() {
+		return SLIDER_KEY_PREFIX + tooltipKey;
+	}
+
+	public String getMinValueKey() {
+		if(valueKey == null) return null;
+		return valueKey + ".min";
+	}
+
+	public String getMaxValueKey() {
+		if(valueKey == null) return null;
+		return valueKey + ".max";
 	}
 }
