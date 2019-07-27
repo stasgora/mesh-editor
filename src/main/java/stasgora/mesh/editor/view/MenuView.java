@@ -23,6 +23,9 @@ public class MenuView extends SubController {
 	public MenuItem exportProjectMenuItem;
 	public MenuItem exitAppMenuItem;
 
+	public MenuItem undoMenuItem;
+	public MenuItem redoMenuItem;
+
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 
 	public MenuView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,

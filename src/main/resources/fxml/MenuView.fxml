@@ -2,48 +2,23 @@
 
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 
 <fx:root type="javafx.scene.control.MenuBar" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
 	<Menu text="${menu_file_title}">
-		<MenuItem fx:id="newProjectMenuItem" text="${menu_file_item_new}">
-			<accelerator>
-				<KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-			</accelerator>
-		</MenuItem>
-		<MenuItem fx:id="openProjectMenuItem" text="${menu_file_item_open}">
-			<accelerator>
-				<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-			</accelerator>
-		</MenuItem>
+		<MenuItem fx:id="newProjectMenuItem" text="${menu_file_item_new}" accelerator="Ctrl+N" />
+		<MenuItem fx:id="openProjectMenuItem" text="${menu_file_item_open}" accelerator="Ctrl+O" />
 		<Menu fx:id="openRecentMenuItem" visible="false" disable="true" text="${menu_file_item_openRecent}" />
-		<MenuItem fx:id="closeProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_close}">
-			<accelerator>
-				<KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-			</accelerator>
-		</MenuItem>
+		<MenuItem fx:id="closeProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_close}" accelerator="Ctrl+C" />
 		<SeparatorMenuItem mnemonicParsing="false" />
-		<MenuItem fx:id="saveProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_save}">
-			<accelerator>
-				<KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-			</accelerator>
-		</MenuItem>
-		<MenuItem fx:id="saveProjectAsMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_saveAs}">
-			<accelerator>
-				<KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-			</accelerator>
-		</MenuItem>
-		<MenuItem fx:id="exportProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_export}">
-			<accelerator>
-				<KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-			</accelerator>
-		</MenuItem>
+		<MenuItem fx:id="saveProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_save}" accelerator="Ctrl+S" />
+		<MenuItem fx:id="saveProjectAsMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_saveAs}" accelerator="Ctrl+Shift+S" />
+		<MenuItem fx:id="exportProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_export}" accelerator="Ctrl+E" />
 		<SeparatorMenuItem mnemonicParsing="false" />
-		<MenuItem fx:id="exitAppMenuItem" text="${menu_file_item_quit}">
-			<accelerator>
-				<KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-			</accelerator>
-		</MenuItem>
+		<MenuItem fx:id="exitAppMenuItem" text="${menu_file_item_quit}" accelerator="Ctrl+Q" />
+	</Menu>
+	<Menu text="${menu_edit_title}">
+		<MenuItem fx:id="undoMenuItem" text="${menu_edit_item_undo}" accelerator="Ctrl+Z" />
+		<MenuItem fx:id="redoMenuItem" text="${menu_edit_item_redo}" accelerator="Ctrl+Shift+Z" />
 	</Menu>
 </fx:root>
