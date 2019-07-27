@@ -21,6 +21,8 @@ import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.services.files.SvgService;
 import stasgora.mesh.editor.services.files.WorkspaceActionFacade;
 import stasgora.mesh.editor.services.history.CommandActionHistoryService;
+import stasgora.mesh.editor.services.history.actions.MovePointUserAction;
+import stasgora.mesh.editor.services.history.actions.PointArrayModifiedUserAction;
 import stasgora.mesh.editor.services.mapping.ConfigModelMapper;
 import stasgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
 import stasgora.mesh.editor.services.triangulation.FlippingUtils;
@@ -134,14 +136,21 @@ public class ObjectGraphFactory {
 		dialogUtils = new UiDialogUtils(stage, appLang);
 		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState, mouseCursor);
-		actionHistoryService = new CommandActionHistoryService();
 		configModelMapper = new ConfigModelMapper(appConfig);
 		propertyTreeCellFactory = new PropertyTreeCellFactory(appLang, appConfig, project.visualProperties);
+
+		createActionHistoryService();
+	}
+
+	private void createActionHistoryService() {
+		actionHistoryService = new CommandActionHistoryService();
+		MovePointUserAction.setMovePoint(triangulationService::moveNode);
+		PointArrayModifiedUserAction.setPointMethodReferences(triangulationService::addNode, triangulationService::removeNode);
 	}
 
 	private void createCanvasBoxServices() {
 		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig);
-		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils);
+		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils, actionHistoryService);
 		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor, mouseConfig);
 	}
 
