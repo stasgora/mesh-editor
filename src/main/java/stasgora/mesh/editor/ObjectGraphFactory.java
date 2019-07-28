@@ -21,8 +21,8 @@ import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.services.files.SvgService;
 import stasgora.mesh.editor.services.files.WorkspaceActionFacade;
 import stasgora.mesh.editor.services.history.CommandActionHistoryService;
-import stasgora.mesh.editor.services.history.actions.MovePointUserAction;
-import stasgora.mesh.editor.services.history.actions.PointArrayModifiedUserAction;
+import stasgora.mesh.editor.services.history.actions.node.MoveNodeAction;
+import stasgora.mesh.editor.services.history.actions.node.NodeArrayModifiedAction;
 import stasgora.mesh.editor.services.mapping.ConfigModelMapper;
 import stasgora.mesh.editor.services.triangulation.FlipBasedTriangulationService;
 import stasgora.mesh.editor.services.triangulation.FlippingUtils;
@@ -144,8 +144,8 @@ public class ObjectGraphFactory {
 
 	private void createActionHistoryService() {
 		actionHistoryService = new CommandActionHistoryService();
-		MovePointUserAction.setMovePoint(triangulationService::moveNode);
-		PointArrayModifiedUserAction.setPointMethodReferences(triangulationService::addNode, triangulationService::removeNode);
+		MoveNodeAction.setMoveNode(triangulationService::moveNode);
+		NodeArrayModifiedAction.setNodeMethodReferences(triangulationService::addNode, triangulationService::removeNode);
 	}
 
 	private void createCanvasBoxServices() {

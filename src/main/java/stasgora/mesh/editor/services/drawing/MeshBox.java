@@ -11,13 +11,10 @@ import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.Rectangle;
-import stasgora.mesh.editor.services.history.actions.AddPointUserAction;
-import stasgora.mesh.editor.services.history.actions.MovePointUserAction;
-import stasgora.mesh.editor.services.history.actions.PointArrayModifiedUserAction;
-import stasgora.mesh.editor.services.history.actions.RemovePointUserAction;
+import stasgora.mesh.editor.services.history.actions.node.AddNodeAction;
+import stasgora.mesh.editor.services.history.actions.node.MoveNodeAction;
+import stasgora.mesh.editor.services.history.actions.node.RemoveNodeAction;
 import stasgora.mesh.editor.services.triangulation.NodeUtils;
-
-import java.util.function.Consumer;
 
 public class MeshBox implements MouseListener {
 
@@ -58,7 +55,7 @@ public class MeshBox implements MouseListener {
 	public boolean onDragStart(Point mousePos, MouseButton mouseButton) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
 		if(mouseButton == mouseConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
-			actionHistoryService.registerAction(new RemovePointUserAction(proportionalPos.x, proportionalPos.y));
+			actionHistoryService.registerAction(new RemoveNodeAction(proportionalPos.x, proportionalPos.y));
 			return true;
 		}
 		if(mouseButton == mouseConfig.moveNodeButton && draggedNode != null) {
@@ -83,7 +80,7 @@ public class MeshBox implements MouseListener {
 		if(draggedNode == null && mouseButton == mouseConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
 			Point point = nodeUtils.canvasToProportionalPos(mousePos);
 			if(triangulationService.addNode(point))
-				actionHistoryService.registerAction(new AddPointUserAction(point.x, point.y));
+				actionHistoryService.registerAction(new AddNodeAction(point.x, point.y));
 		}
 		draggedNode = null;
 		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
@@ -96,7 +93,7 @@ public class MeshBox implements MouseListener {
 		Point targetPos = nodeUtils.canvasToProportionalPos(clampCanvasSpaceNodePos(mousePos.clamp(canvasViewSize)));
 		Point newPos = triangulationService.moveNode(draggedNode, targetPos);
 		if(dragFinished)
-			actionHistoryService.registerAction(new MovePointUserAction(newPos, draggedNodeStartPosition));
+			actionHistoryService.registerAction(new MoveNodeAction(newPos, draggedNodeStartPosition));
 		mesh.get().notifyListeners();
 	}
 
