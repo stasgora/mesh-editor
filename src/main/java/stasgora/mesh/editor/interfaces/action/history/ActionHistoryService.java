@@ -4,4 +4,5 @@ public interface ActionHistoryService {
 	void undo();
 	void redo();
 	void registerAction(UserAction action);
+	void clearActionHistory();
 }

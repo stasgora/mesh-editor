@@ -144,7 +144,7 @@ public class ObjectGraphFactory {
 	}
 
 	private void createActionHistoryService() {
-		actionHistoryService = new CommandActionHistoryService();
+		actionHistoryService = new CommandActionHistoryService(project.loadState);
 		MoveNodeAction.setMoveNode(triangulationService::moveNode);
 		NodeArrayModifiedAction.setNodeMethodReferences(triangulationService::addNode, triangulationService::removeNode);
 	}
