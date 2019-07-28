@@ -4,9 +4,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+import stasgora.mesh.editor.interfaces.action.history.ActionHistoryService;
 import stasgora.mesh.editor.interfaces.config.AppConfigReader;
 import stasgora.mesh.editor.interfaces.config.LangConfigReader;
 import stasgora.mesh.editor.model.project.VisualProperties;
+import stasgora.mesh.editor.services.history.actions.property.LayerSliderChangeAction;
+import stasgora.mesh.editor.services.history.actions.property.LayerVisibilityChangeAction;
 import stasgora.mesh.editor.ui.properties.PropertyItemType;
 import stasgora.mesh.editor.ui.properties.SliderTreeItem;
 
@@ -15,11 +18,13 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 	private LangConfigReader appLang;
 	private AppConfigReader appConfig;
 	private VisualProperties visualProperties;
+	private ActionHistoryService actionHistoryService;
 
-	public PropertyTreeCellFactory(LangConfigReader appLang, AppConfigReader appConfig, VisualProperties visualProperties) {
+	public PropertyTreeCellFactory(LangConfigReader appLang, AppConfigReader appConfig, VisualProperties visualProperties, ActionHistoryService actionHistoryService) {
 		this.appLang = appLang;
 		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;
+		this.actionHistoryService = actionHistoryService;
 	}
 
 	@Override
@@ -36,6 +41,8 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 						setGraphic(null);
 						return;
 					}
+					CheckBox itemCheckBox = (CheckBox) getGraphic();
+					itemCheckBox.setOnAction(event -> actionHistoryService.registerAction(new LayerVisibilityChangeAction(itemCheckBox.isSelected(), itemCheckBox::setSelected)));
 					if(getTreeItem() instanceof SliderTreeItem) {
 						prepareSliderItem((SliderTreeItem) getTreeItem());
 					}
@@ -58,6 +65,13 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 					Slider slider = new Slider(minValue, getSliderConfigValue(itemType.getMaxValueKey(), 1), minValue);
 					slider.setTooltip(new Tooltip(appLang.getText(itemType.getSliderKey())));
 					visualProperties.propertyTypeToSliderValue.get(itemType).bindWithFxObservable(slider.valueProperty());
+
+					slider.valueChangingProperty().addListener((observable, oldChanging, changing) -> {
+						if(changing)
+							item.sliderChangeStartValue = slider.getValue();
+						else
+							actionHistoryService.registerAction(new LayerSliderChangeAction(slider.getValue(), item.sliderChangeStartValue, slider::setValue));
+					});
 					vBox.getChildren().add(slider);
 				}
 				setGraphic(vBox);

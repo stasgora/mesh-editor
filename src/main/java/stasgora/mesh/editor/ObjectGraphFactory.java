@@ -104,7 +104,10 @@ public class ObjectGraphFactory {
 		createConfigServices();
 		createTriangulationServices();
 		setupVisualObjects();
+
+		createActionHistoryService();
 		createProjectServices();
+
 		createCanvasBoxServices();
 		initControllerObjects();
 
@@ -137,9 +140,7 @@ public class ObjectGraphFactory {
 		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState, mouseCursor);
 		configModelMapper = new ConfigModelMapper(appConfig);
-		propertyTreeCellFactory = new PropertyTreeCellFactory(appLang, appConfig, project.visualProperties);
-
-		createActionHistoryService();
+		propertyTreeCellFactory = new PropertyTreeCellFactory(appLang, appConfig, project.visualProperties, actionHistoryService);
 	}
 
 	private void createActionHistoryService() {
