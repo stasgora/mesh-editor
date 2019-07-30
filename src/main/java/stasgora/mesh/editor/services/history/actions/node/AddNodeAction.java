@@ -2,7 +2,7 @@ package stasgora.mesh.editor.services.history.actions.node;
 
 import stasgora.mesh.editor.model.geom.Point;
 
-public class AddNodeAction extends NodeArrayModifiedAction {
+public class AddNodeAction extends NodeModifiedAction {
 
 	public AddNodeAction(double x, double y) {
 		super(x, y);
