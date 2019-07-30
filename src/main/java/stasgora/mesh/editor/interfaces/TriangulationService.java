@@ -6,12 +6,12 @@ public interface TriangulationService {
 
 	void createNewMesh();
 
-	void addNode(Point location);
-
-	Point findNodeByLocation(Point location);
+	boolean addNode(Point location);
 
 	boolean removeNode(Point location);
 
-	void moveNode(Point node, Point position);
+	Point moveNode(Point node, Point position);
+
+	Point findNodeByLocation(Point location);
 
 }

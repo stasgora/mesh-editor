@@ -29,11 +29,11 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	}
 
 	@Override
-	public void addNode(Point location) {
+	public boolean addNode(Point location) {
 		Mesh mesh = this.mesh.get();
 		Triangle triangle = triangleUtils.findTriangleByLocation(location);
 		if(nodeUtils.getClosestNode(location, triangle) != null) {
-			return;
+			return false;
 		}
 		mesh.removeTriangle(triangle);
 		Triangle[] newTriangles = new Triangle[3];
@@ -51,6 +51,7 @@ public class FlipBasedTriangulationService implements TriangulationService {
 		flippingUtils.flipInvalidTriangles(trianglesToCheck);
 		mesh.addNode(location);
 		mesh.notifyListeners();
+		return true;
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	}
 
 	@Override
-	public void moveNode(Point node, Point position) {
+	public Point moveNode(Point node, Point position) {
 		Triangle triangle = triangleUtils.findTriangleByLocation(node);
 		List<Point> points = new ArrayList<>();
 		List<Triangle> triangles = new ArrayList<>();
@@ -86,6 +87,7 @@ public class FlipBasedTriangulationService implements TriangulationService {
 		trianglesToCheck.addAll(triangles);
 		flippingUtils.flipInvalidTriangles(trianglesToCheck);
 		mesh.get().notifyListeners();
+		return node;
 	}
 
 	private void retriangulateNodeHole(Point node, List<Point> nodes, List<Triangle> triangles) {

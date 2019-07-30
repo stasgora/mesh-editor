@@ -14,6 +14,13 @@
 					"quit": "_Wyjdź",
 					"export": "_Eksportuj"
 				}
+			},
+			"edit": {
+				"title": "_Edycja",
+				"item": {
+					"undo": "_Cofnij",
+					"redo": "_Ponów"
+				}
 			}
 		},
 		"properties": {
