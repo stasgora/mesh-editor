@@ -1,4 +1,4 @@
-package stasgora.mesh.editor.interfaces;
+package stasgora.mesh.editor.services.drawing;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;

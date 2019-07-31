@@ -2,7 +2,7 @@ package stasgora.mesh.editor.services.drawing;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import stasgora.mesh.editor.interfaces.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.geom.Point;
 import io.github.stasgora.observetree.SettableProperty;
 import stasgora.mesh.editor.model.paint.SerializableColor;

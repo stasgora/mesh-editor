@@ -4,8 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import stasgora.mesh.editor.interfaces.CanvasAction;
-import stasgora.mesh.editor.interfaces.MouseListener;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.project.LoadState;

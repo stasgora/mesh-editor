@@ -1,4 +1,4 @@
-package stasgora.mesh.editor.enums;
+package stasgora.mesh.editor.services.files.workspace;
 
 public enum FileChooserAction {
 	OPEN_DIALOG("open"),

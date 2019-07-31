@@ -1,10 +1,8 @@
-package stasgora.mesh.editor.config;
+package stasgora.mesh.editor.services.config;
 
 import javafx.collections.ObservableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import stasgora.mesh.editor.interfaces.config.AppConfigReader;
-import stasgora.mesh.editor.interfaces.config.LangConfigReader;
 import stasgora.mesh.editor.model.JsonConfig;
 
 import java.util.ArrayList;

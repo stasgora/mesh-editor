@@ -1,6 +1,5 @@
 package stasgora.mesh.editor.services.triangulation;
 
-import stasgora.mesh.editor.interfaces.TriangulationService;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.Triangle;

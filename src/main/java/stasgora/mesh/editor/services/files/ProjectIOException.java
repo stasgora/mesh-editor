@@ -1,4 +1,4 @@
-package stasgora.mesh.editor.exceptions;
+package stasgora.mesh.editor.services.files;
 
 import java.io.IOException;
 

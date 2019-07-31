@@ -4,7 +4,6 @@ import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Region;
 import stasgora.mesh.editor.MeshEditor;
-import stasgora.mesh.editor.enums.ViewType;
 
 import java.io.IOException;
 import java.util.Map;

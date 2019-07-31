@@ -3,9 +3,8 @@ package stasgora.mesh.editor.view;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Region;
-import stasgora.mesh.editor.enums.ViewType;
-import stasgora.mesh.editor.interfaces.action.history.ActionHistoryService;
-import stasgora.mesh.editor.interfaces.files.WorkspaceAction;
+import stasgora.mesh.editor.services.history.ActionHistoryService;
+import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
 import stasgora.mesh.editor.model.project.LoadState;
 
 import java.util.Map;

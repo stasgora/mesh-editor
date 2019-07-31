@@ -4,12 +4,11 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import stasgora.mesh.editor.interfaces.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Rectangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.interfaces.MouseListener;
 import io.github.stasgora.observetree.SettableProperty;
 
 public class ImageBox implements MouseListener {

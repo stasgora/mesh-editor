@@ -1,9 +1,7 @@
 package stasgora.mesh.editor.services.files;
 
 import javafx.scene.image.Image;
-import stasgora.mesh.editor.exceptions.ProjectIOException;
-import stasgora.mesh.editor.interfaces.config.AppConfigReader;
-import stasgora.mesh.editor.interfaces.files.FileUtils;
+import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.model.geom.Mesh;

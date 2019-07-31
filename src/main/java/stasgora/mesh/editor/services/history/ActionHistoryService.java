@@ -1,4 +1,6 @@
-package stasgora.mesh.editor.interfaces.action.history;
+package stasgora.mesh.editor.services.history;
+
+import stasgora.mesh.editor.services.history.actions.UserAction;
 
 public interface ActionHistoryService {
 	void undo();

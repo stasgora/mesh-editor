@@ -9,8 +9,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import stasgora.mesh.editor.enums.FileChooserAction;
-import stasgora.mesh.editor.interfaces.config.LangConfigReader;
+import stasgora.mesh.editor.services.files.workspace.FileChooserAction;
+import stasgora.mesh.editor.services.config.LangConfigReader;
 
 import java.io.File;
 import java.util.Optional;

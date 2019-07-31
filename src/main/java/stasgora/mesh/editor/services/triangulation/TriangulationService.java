@@ -1,4 +1,4 @@
-package stasgora.mesh.editor.interfaces;
+package stasgora.mesh.editor.services.triangulation;
 
 import stasgora.mesh.editor.model.geom.Point;
 

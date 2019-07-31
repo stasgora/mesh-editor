@@ -7,8 +7,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import stasgora.mesh.editor.interfaces.config.AppConfigReader;
-import stasgora.mesh.editor.interfaces.files.WorkspaceAction;
+import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
 import stasgora.mesh.editor.model.project.LoadState;
 
 public class WindowView {

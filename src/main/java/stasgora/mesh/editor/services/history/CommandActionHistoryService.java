@@ -1,7 +1,6 @@
 package stasgora.mesh.editor.services.history;
 
-import stasgora.mesh.editor.interfaces.action.history.ActionHistoryService;
-import stasgora.mesh.editor.interfaces.action.history.UserAction;
+import stasgora.mesh.editor.services.history.actions.UserAction;
 import stasgora.mesh.editor.model.project.LoadState;
 
 import java.util.Stack;

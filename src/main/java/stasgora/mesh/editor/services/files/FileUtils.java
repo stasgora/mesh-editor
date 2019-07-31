@@ -1,6 +1,4 @@
-package stasgora.mesh.editor.interfaces.files;
-
-import stasgora.mesh.editor.exceptions.ProjectIOException;
+package stasgora.mesh.editor.services.files;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -2,7 +2,7 @@ package stasgora.mesh.editor.services.mapping;
 
 import io.github.stasgora.observetree.Observable;
 import org.json.JSONObject;
-import stasgora.mesh.editor.interfaces.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.AppConfigReader;
 import io.github.stasgora.observetree.SettableProperty;
 
 import java.lang.reflect.*;
