@@ -2,6 +2,7 @@ package stasgora.mesh.editor.services.mapping;
 
 import io.github.stasgora.observetree.Observable;
 import org.json.JSONObject;
+import stasgora.mesh.editor.model.project.MeshType;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import io.github.stasgora.observetree.SettableProperty;
 
@@ -69,7 +70,7 @@ public class ConfigModelMapper {
 		}
 		Class<?> modelValueClass = modelValue.getClass();
 		JSONObject configParameter = (JSONObject) configValue;
-		for (String modelKey : (configParameter).keySet()) {
+		for (String modelKey : configParameter.keySet()) {
 			if(modelKey.equals(CONFIG_TYPE_FIELD)) {
 				continue;
 			}
@@ -77,7 +78,7 @@ public class ConfigModelMapper {
 			try {
 				field = modelValueClass.getDeclaredField(modelKey);
 				field.setAccessible(true);
-				field.set(modelValue, configParameter.get(modelKey));
+				field.set(modelValue, configParameter.get(modelKey)); // TODO Do some type checks / isolate set field method & call it twice
 			} catch (NoSuchFieldException e) {
 				LOGGER.log(Level.SEVERE, "Getting model field failed", e);
 				continue;
@@ -118,6 +119,9 @@ public class ConfigModelMapper {
 		}
 		if(modelValueType.equals(Double.class) && configValue.getClass().equals(Integer.class)) {
 			return ((Integer) configValue).doubleValue();
+		}
+		if(modelValueType instanceof Class && ((Class<?>) modelValueType).isEnum() && configValue.getClass().equals(String.class)) {
+			return Enum.valueOf((Class) modelValueType, (String) configValue);
 		}
 		if(!modelValueTypeName.equals(configValueType)) {
 			LOGGER.log(Level.WARNING, "Model field type " + modelValueType + " does not match config value type " + configValueType);
