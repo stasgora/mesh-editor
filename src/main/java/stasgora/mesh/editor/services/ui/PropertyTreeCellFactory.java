@@ -1,16 +1,21 @@
 package stasgora.mesh.editor.services.ui;
 
+import javafx.collections.FXCollections;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
+import stasgora.mesh.editor.model.project.MeshType;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.history.actions.property.LayerSliderChangeAction;
 import stasgora.mesh.editor.services.history.actions.property.LayerVisibilityChangeAction;
-import stasgora.mesh.editor.ui.properties.PropertyItemType;
 import stasgora.mesh.editor.ui.properties.PropertyTreeItem;
+
+import java.util.Arrays;
 
 public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeCell<String>> {
 
@@ -45,6 +50,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				HBox body = new HBox(new Label(appLang.getText(treeItem.getItemType().getTextKey())));
 				setText(null);
 				body.setSpacing(5);
+				body.setAlignment(Pos.CENTER_LEFT);
 
 				if(treeItem.hasCheckBox)
 					addCheckBox(treeItem, body);
@@ -79,7 +85,21 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 			}
 
 			private void addComboBox(PropertyTreeItem treeItem, HBox body) {
+				ComboBox<MeshType> comboBox = new ComboBox<>();
+				comboBox.setItems(FXCollections.observableArrayList(MeshType.values()));
+				comboBox.setConverter(new StringConverter<>() {
+					@Override
+					public String toString(MeshType meshType) {
+						return appLang.getText(meshType.getTextKey());
+					}
 
+					@Override
+					public MeshType fromString(String s) {
+						return Arrays.stream(MeshType.values()).filter(type -> type.name().equals(s)).findFirst().orElse(null);
+					}
+				});
+				comboBox.setValue(MeshType.TRIANGULATION);
+				body.getChildren().add(comboBox);
 			}
 
 			private double getSliderConfigValue(String key, double defaultValue) {

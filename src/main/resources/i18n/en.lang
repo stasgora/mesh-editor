@@ -32,7 +32,11 @@
 					"nodes": "Points",
 					"edges": "Lines",
 					"triangles": "Triangles",
-					"type": "Type"
+					"type": {
+						"title": "Type",
+						"triangulation": "Triangulation",
+						"voronoiDiagram": "Voronoi diagram"
+					}
 				}
 			},
 			"tooltips": {

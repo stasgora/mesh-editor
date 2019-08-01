@@ -7,7 +7,7 @@ public enum PropertyItemType {
 	EDGES("mesh.edges", "edgeThickness", "meshBox.edgeThickness"),
 	NODES("mesh.nodes", "nodeRadius", "meshBox.nodeRadius"),
 	TRIANGLES("mesh.triangles"),
-	MESH_TYPE("mesh.type", "mesh.type");
+	MESH_TYPE("mesh.type.title", "mesh.type");
 
 	private static final String KEY_PREFIX = "fxml.properties.";
 	private static final String TEXT_KEY_PREFIX = KEY_PREFIX + "tree.";
