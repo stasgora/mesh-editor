@@ -2,28 +2,36 @@ package stasgora.mesh.editor.ui.properties;
 
 public enum PropertyItemType {
 
-	IMAGE("transparency"),
-	MESH("transparency"),
-	EDGES("edgeThickness", "meshBox.edgeThickness"),
-	NODES("nodeRadius", "meshBox.nodeRadius"),
-	TRIANGLES;
+	IMAGE("image", "transparency"),
+	MESH("mesh.title", "transparency"),
+	EDGES("mesh.edges", "edgeThickness", "meshBox.edgeThickness"),
+	NODES("mesh.nodes", "nodeRadius", "meshBox.nodeRadius"),
+	TRIANGLES("mesh.triangles"),
+	MESH_TYPE("mesh.type", "mesh.type");
 
-	private static final String SLIDER_KEY_PREFIX = "fxml.properties.tooltips.";
+	private static final String KEY_PREFIX = "fxml.properties.";
+	private static final String TEXT_KEY_PREFIX = KEY_PREFIX + "tree.";
+	private static final String SLIDER_KEY_PREFIX = KEY_PREFIX + "tooltips.";
 
-	private String tooltipKey, valueKey;
-	public boolean showSlider = true;
+	private String textKey, tooltipKey, valueKey;
 
-	PropertyItemType(String tooltipKey) {
+	PropertyItemType(String textKey, String tooltipKey) {
+		this.textKey = textKey;
 		this.tooltipKey = tooltipKey;
 	}
 
-	PropertyItemType(String tooltipKey, String valueKey) {
+	PropertyItemType(String textKey, String tooltipKey, String valueKey) {
+		this.textKey = textKey;
 		this.tooltipKey = tooltipKey;
 		this.valueKey = valueKey;
 	}
 
-	PropertyItemType() {
-		this.showSlider = false;
+	PropertyItemType(String textKey) {
+		this.textKey = textKey;
+	}
+
+	public String getTextKey() {
+		return TEXT_KEY_PREFIX + textKey;
 	}
 
 	public String getSliderKey() {

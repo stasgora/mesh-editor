@@ -31,7 +31,8 @@
 					"title": "Mesh",
 					"nodes": "Points",
 					"edges": "Lines",
-					"triangles": "Triangles"
+					"triangles": "Triangles",
+					"type": "Type"
 				}
 			},
 			"tooltips": {

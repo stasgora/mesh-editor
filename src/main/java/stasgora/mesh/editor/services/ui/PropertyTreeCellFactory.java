@@ -1,7 +1,6 @@
 package stasgora.mesh.editor.services.ui;
 
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
@@ -11,7 +10,7 @@ import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.history.actions.property.LayerSliderChangeAction;
 import stasgora.mesh.editor.services.history.actions.property.LayerVisibilityChangeAction;
 import stasgora.mesh.editor.ui.properties.PropertyItemType;
-import stasgora.mesh.editor.ui.properties.SliderTreeItem;
+import stasgora.mesh.editor.ui.properties.PropertyTreeItem;
 
 public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeCell<String>> {
 
@@ -29,52 +28,58 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 
 	@Override
 	public TreeCell<String> call(TreeView<String> param) {
-		return new CheckBoxTreeCell<>() {
+		return new TreeCell<>() {
 			@Override
-			public void updateItem(String item, boolean empty) {
-				super.updateItem(item, empty);
+			public void updateItem(String value, boolean empty) {
+				super.updateItem(value, empty);
 				if (empty) {
 					setGraphic(null);
 					setText(null);
-				} else {
-					if (!(getTreeItem() instanceof CheckBoxTreeItem)) {
-						setGraphic(null);
-						return;
-					}
-					CheckBox itemCheckBox = (CheckBox) getGraphic();
-					itemCheckBox.setOnAction(event -> actionHistoryService.registerAction(new LayerVisibilityChangeAction(itemCheckBox.isSelected(), itemCheckBox::setSelected)));
-					if(getTreeItem() instanceof SliderTreeItem) {
-						prepareSliderItem((SliderTreeItem) getTreeItem());
-					}
+					return;
 				}
+				if (!(getTreeItem() instanceof PropertyTreeItem)) {
+					setText(value);
+					return;
+				}
+				PropertyTreeItem treeItem = (PropertyTreeItem) getTreeItem();
+				HBox body = new HBox(new Label(appLang.getText(treeItem.getItemType().getTextKey())));
+				setText(null);
+				body.setSpacing(5);
+
+				if(treeItem.hasCheckBox)
+					addCheckBox(treeItem, body);
+				if(treeItem.hasSlider)
+					addSlider(treeItem, body);
+				if(treeItem.hasComboBox)
+					addComboBox(treeItem, body);
+				setGraphic(body);
 			}
 
-			private void prepareSliderItem(SliderTreeItem item) {
-				PropertyItemType itemType = item.getItemType();
-
-				CheckBox checkBox = (CheckBox) getGraphic();
+			private void addCheckBox(PropertyTreeItem treeItem, HBox body) {
+				CheckBox checkBox = new CheckBox();
+				checkBox.setOnAction(event -> actionHistoryService.registerAction(new LayerVisibilityChangeAction(checkBox.isSelected(), checkBox::setSelected)));
 				checkBox.setTooltip(new Tooltip(appLang.getText("fxml.properties.tooltips.visibility")));
-				visualProperties.propertyTypeToVisibleProperty.get(itemType).bindWithFxObservable(checkBox.selectedProperty());
-				checkBox.setText(getText());
-				setText(null);
+				visualProperties.propertyTypeToVisibleProperty.get(treeItem.itemType).bindWithFxObservable(checkBox.selectedProperty());
+				body.getChildren().add(0, checkBox);
+			}
 
-				HBox vBox = new HBox(checkBox);
-				vBox.setSpacing(5);
-				if(itemType.showSlider) {
-					double minValue = getSliderConfigValue(itemType.getMinValueKey(), 0);
-					Slider slider = new Slider(minValue, getSliderConfigValue(itemType.getMaxValueKey(), 1), minValue);
-					slider.setTooltip(new Tooltip(appLang.getText(itemType.getSliderKey())));
-					visualProperties.propertyTypeToSliderValue.get(itemType).bindWithFxObservable(slider.valueProperty());
+			private void addSlider(PropertyTreeItem treeItem, HBox body) {
+				double minValue = getSliderConfigValue(treeItem.itemType.getMinValueKey(), 0);
+				Slider slider = new Slider(minValue, getSliderConfigValue(treeItem.itemType.getMaxValueKey(), 1), minValue);
+				slider.setTooltip(new Tooltip(appLang.getText(treeItem.itemType.getSliderKey())));
+				visualProperties.propertyTypeToSliderValue.get(treeItem.itemType).bindWithFxObservable(slider.valueProperty());
 
-					slider.valueChangingProperty().addListener((observable, oldChanging, changing) -> {
-						if(changing)
-							item.sliderChangeStartValue = slider.getValue();
-						else
-							actionHistoryService.registerAction(new LayerSliderChangeAction(slider.getValue(), item.sliderChangeStartValue, slider::setValue));
-					});
-					vBox.getChildren().add(slider);
-				}
-				setGraphic(vBox);
+				slider.valueChangingProperty().addListener((observable, oldChanging, changing) -> {
+					if(changing)
+						treeItem.sliderChangeStartValue = slider.getValue();
+					else
+						actionHistoryService.registerAction(new LayerSliderChangeAction(slider.getValue(), treeItem.sliderChangeStartValue, slider::setValue));
+				});
+				body.getChildren().add(slider);
+			}
+
+			private void addComboBox(PropertyTreeItem treeItem, HBox body) {
+
 			}
 
 			private double getSliderConfigValue(String key, double defaultValue) {

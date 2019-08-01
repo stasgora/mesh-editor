@@ -31,7 +31,8 @@
 					"title": "Siatka",
 					"nodes": "Punkty",
 					"edges": "Linie",
-					"triangles": "Trójkąty"
+					"triangles": "Trójkąty",
+					"type": "Typ"
 				}
 			},
 			"tooltips": {
