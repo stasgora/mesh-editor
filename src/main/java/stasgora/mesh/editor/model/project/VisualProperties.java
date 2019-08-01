@@ -28,6 +28,8 @@ public class VisualProperties extends Observable {
 	public BindableProperty<Double> meshTransparency = new BindableProperty<>();
 	public BindableProperty<Double> imageTransparency = new BindableProperty<>();
 
+	public BindableProperty<MeshType> meshType = new BindableProperty<>();
+
 	public Map<PropertyItemType, BindableProperty> propertyTypeToVisibleProperty = Map.of(
 			PropertyItemType.IMAGE, imageVisible,
 			PropertyItemType.MESH, meshVisible,
@@ -43,7 +45,7 @@ public class VisualProperties extends Observable {
 			PropertyItemType.EDGES, edgeThickness
 	);
 
-	private List<SettableProperty> properties = Arrays.asList(nodeColor, edgeThickness, nodeRadius,
+	private List<SettableProperty> properties = Arrays.asList(nodeColor, edgeThickness, nodeRadius, meshType,
 			meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency, imageTransparency);
 
 	public VisualProperties() {

@@ -31,7 +31,12 @@
 					"title": "Siatka",
 					"nodes": "Punkty",
 					"edges": "Linie",
-					"triangles": "Trójkąty"
+					"triangles": "Trójkąty",
+					"type": {
+						"title": "Typ",
+						"triangulation": "Triangulacja",
+						"voronoiDiagram": "Diagram Voronoi"
+					}
 				}
 			},
 			"tooltips": {
