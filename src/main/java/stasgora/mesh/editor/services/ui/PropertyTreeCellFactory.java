@@ -7,12 +7,12 @@ import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import stasgora.mesh.editor.model.project.MeshType;
-import stasgora.mesh.editor.services.history.ActionHistoryService;
+import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
-import stasgora.mesh.editor.model.project.VisualProperties;
-import stasgora.mesh.editor.services.history.actions.property.LayerSliderChangeAction;
-import stasgora.mesh.editor.services.history.actions.property.LayerVisibilityChangeAction;
+import stasgora.mesh.editor.services.history.ActionHistoryService;
+import stasgora.mesh.editor.services.history.actions.property.CheckBoxChangeAction;
+import stasgora.mesh.editor.services.history.actions.property.PropertyChangeAction;
 import stasgora.mesh.editor.ui.properties.PropertyTreeItem;
 
 import java.util.Arrays;
@@ -63,9 +63,9 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 
 			private void addCheckBox(PropertyTreeItem treeItem, HBox body) {
 				CheckBox checkBox = new CheckBox();
-				checkBox.setOnAction(event -> actionHistoryService.registerAction(new LayerVisibilityChangeAction(checkBox.isSelected(), checkBox::setSelected)));
+				checkBox.setOnAction(event -> actionHistoryService.registerAction(new CheckBoxChangeAction(checkBox.isSelected(), checkBox::setSelected)));
 				checkBox.setTooltip(new Tooltip(appLang.getText("fxml.properties.tooltips.visibility")));
-				visualProperties.propertyTypeToVisibleProperty.get(treeItem.itemType).bindWithFxObservable(checkBox.selectedProperty());
+				visualProperties.propertyTypeToVisibleValue.get(treeItem.itemType).bindWithFxObservable(checkBox.selectedProperty());
 				body.getChildren().add(0, checkBox);
 			}
 
@@ -79,7 +79,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 					if(changing)
 						treeItem.sliderChangeStartValue = slider.getValue();
 					else
-						actionHistoryService.registerAction(new LayerSliderChangeAction(slider.getValue(), treeItem.sliderChangeStartValue, slider::setValue));
+						actionHistoryService.registerAction(new PropertyChangeAction<>(slider.getValue(), treeItem.sliderChangeStartValue, slider::setValue));
 				});
 				body.getChildren().add(slider);
 			}
@@ -99,6 +99,10 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 					}
 				});
 				comboBox.setValue(MeshType.TRIANGULATION);
+				visualProperties.propertyTypeToComboBoxValue.get(treeItem.itemType).bindWithFxObservable(comboBox.valueProperty());
+
+				//comboBox.valueProperty().addListener((observable, oldVal, newVal) -> actionHistoryService.registerAction(
+				//		new PropertyChangeAction<>(newVal, oldVal, comboBox::setValue))); // TODO register mesh type changes in action history (currently self recursive)
 				body.getChildren().add(comboBox);
 			}
 
