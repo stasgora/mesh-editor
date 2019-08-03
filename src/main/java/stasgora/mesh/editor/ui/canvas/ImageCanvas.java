@@ -1,7 +1,7 @@
 package stasgora.mesh.editor.ui.canvas;
 
 import javafx.scene.image.Image;
-import stasgora.mesh.editor.model.geom.Rectangle;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.project.VisualProperties;
 
 public class ImageCanvas extends Canvas {

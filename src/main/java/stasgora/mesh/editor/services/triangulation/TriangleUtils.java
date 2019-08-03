@@ -2,7 +2,7 @@ package stasgora.mesh.editor.services.triangulation;
 
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.Triangle;
+import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import io.github.stasgora.observetree.SettableObservable;
 
 import java.util.Arrays;

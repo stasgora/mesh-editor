@@ -1,23 +1,24 @@
 package stasgora.mesh.editor.model.geom;
 
 import io.github.stasgora.observetree.Observable;
+import stasgora.mesh.editor.model.geom.polygons.Triangle;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Mesh extends Observable implements Serializable {
 
 	private static final Logger LOGGER = Logger.getLogger(Mesh.class.getName());
 	private static final long serialVersionUID = 1L;
 
-	private List<Point> nodes = new ArrayList<>();
+	private List<PointPolygon> nodes = new ArrayList<>();
 	private List<Triangle> triangles = new ArrayList<>();
 
 	public List<Point> boundingNodes;
@@ -31,27 +32,23 @@ public class Mesh extends Observable implements Serializable {
 	}
 
 	public void addNode(Point node) {
-		nodes.add(node);
+		nodes.add(new PointPolygon(node, null));
 		addSubObservable(node);
 		onValueChanged();
 	}
 
-	public void removeNode(int nodeIndex) {
-		nodes.remove(nodeIndex);
-		onValueChanged();
-	}
-
 	public void removeNode(Point node) {
-		nodes.remove(node);
+		for (int i = 0; i < nodes.size(); i++) {
+			if(nodes.get(i).node == node) {
+				nodes.remove(i);
+				break;
+			}
+		}
 		onValueChanged();
-	}
-
-	public Point getNode(int index) {
-		return nodes.get(index);
 	}
 
 	public List<Point> getNodes() {
-		return Collections.unmodifiableList(nodes);
+		return nodes.stream().map(pointPolygon -> pointPolygon.node).collect(Collectors.toUnmodifiableList());
 	}
 
 	public void addTriangle(Triangle triangle) {
@@ -81,7 +78,7 @@ public class Mesh extends Observable implements Serializable {
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
-		nodes.forEach(this::addSubObservable);
+		nodes.forEach(pointPolygon -> addSubObservable(pointPolygon.node));
 		triangles.forEach(this::assignTriangleNeighbours);
 	}
 

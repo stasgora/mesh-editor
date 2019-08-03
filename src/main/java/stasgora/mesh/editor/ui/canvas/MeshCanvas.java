@@ -3,7 +3,7 @@ package stasgora.mesh.editor.ui.canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.Rectangle;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.paint.SerializableColor;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.drawing.ColorUtils;

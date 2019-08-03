@@ -9,7 +9,7 @@ import stasgora.mesh.editor.model.geom.Mesh;
 import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.Rectangle;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.services.history.actions.node.AddNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.MoveNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.RemoveNodeAction;
@@ -62,10 +62,7 @@ public class MeshBox implements MouseListener {
 			draggedNodeStartPosition = new Point(draggedNode);
 			return true;
 		}
-		if(mouseButton == mouseConfig.placeNodeButton) {
-			return true;
-		}
-		return false;
+		return mouseButton == mouseConfig.placeNodeButton;
 	}
 
 	@Override

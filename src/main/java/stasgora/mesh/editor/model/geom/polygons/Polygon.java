@@ -1,4 +1,6 @@
-package stasgora.mesh.editor.model.geom;
+package stasgora.mesh.editor.model.geom.polygons;
+
+import stasgora.mesh.editor.model.geom.Point;
 
 import java.io.Serializable;
 import java.util.Arrays;

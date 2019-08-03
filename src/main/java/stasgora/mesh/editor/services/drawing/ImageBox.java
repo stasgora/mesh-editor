@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.MouseConfig;
-import stasgora.mesh.editor.model.geom.Rectangle;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.geom.Point;
 import io.github.stasgora.observetree.SettableProperty;

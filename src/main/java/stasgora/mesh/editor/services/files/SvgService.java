@@ -2,8 +2,8 @@ package stasgora.mesh.editor.services.files;
 
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.Rectangle;
-import stasgora.mesh.editor.model.geom.Triangle;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
+import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.drawing.ColorUtils;

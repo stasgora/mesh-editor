@@ -1,10 +1,10 @@
-package stasgora.mesh.editor.model.geom;
+package stasgora.mesh.editor.model.geom.polygons;
+
+import stasgora.mesh.editor.model.geom.Point;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class Triangle extends Polygon {
