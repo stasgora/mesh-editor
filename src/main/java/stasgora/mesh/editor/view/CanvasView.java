@@ -96,7 +96,8 @@ public class CanvasView extends SubController {
 	private void drawMesh() {
 		meshCanvas.clear();
 		if(project.loadState.loaded.get() && project.visualProperties.meshVisible.get()) {
-			meshCanvas.draw(nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
+			meshCanvas.draw(nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(),
+					triangleUtils.getCanvasSpaceVoronoiRegions(), nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
 	}
 

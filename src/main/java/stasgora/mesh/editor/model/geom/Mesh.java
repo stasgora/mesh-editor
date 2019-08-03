@@ -1,6 +1,7 @@
 package stasgora.mesh.editor.model.geom;
 
 import io.github.stasgora.observetree.Observable;
+import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class Mesh extends Observable implements Serializable {
 	private static final Logger LOGGER = Logger.getLogger(Mesh.class.getName());
 	private static final long serialVersionUID = 1L;
 
-	private List<PointPolygon> nodes = new ArrayList<>();
+	private List<PointRegion> nodeRegions = new ArrayList<>();
 	private List<Triangle> triangles = new ArrayList<>();
 
 	public List<Point> boundingNodes;
@@ -32,23 +33,23 @@ public class Mesh extends Observable implements Serializable {
 	}
 
 	public void addNode(Point node) {
-		nodes.add(new PointPolygon(node));
+		nodeRegions.add(new PointRegion(node));
 		addSubObservable(node);
 		onValueChanged();
 	}
 
-	public PointPolygon getPointPolygon(Point node) {
-		for (PointPolygon pointPolygon : nodes) {
-			if (pointPolygon.node == node)
-				return pointPolygon;
+	public Polygon getPointRegion(Point node) {
+		for (PointRegion pointRegion : nodeRegions) {
+			if (pointRegion.node == node)
+				return pointRegion.region;
 		}
 		return null;
 	}
 
 	public void removeNode(Point node) {
-		for (int i = 0; i < nodes.size(); i++) {
-			if(nodes.get(i).node == node) {
-				nodes.remove(i);
+		for (int i = 0; i < nodeRegions.size(); i++) {
+			if(nodeRegions.get(i).node == node) {
+				nodeRegions.remove(i);
 				break;
 			}
 		}
@@ -56,8 +57,13 @@ public class Mesh extends Observable implements Serializable {
 	}
 
 	public List<Point> getNodes() {
-		return nodes.stream().map(pointPolygon -> pointPolygon.node).collect(Collectors.toUnmodifiableList());
+		return nodeRegions.stream().map(pointRegion -> pointRegion.node).collect(Collectors.toUnmodifiableList());
 	}
+
+	public List<Polygon> getRegions() {
+		return nodeRegions.stream().map(nodes -> nodes.region).collect(Collectors.toUnmodifiableList());
+	}
+
 
 	public void addTriangle(Triangle triangle) {
 		triangles.add(triangle);
@@ -86,7 +92,7 @@ public class Mesh extends Observable implements Serializable {
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
-		nodes.forEach(pointPolygon -> addSubObservable(pointPolygon.node));
+		nodeRegions.forEach(pointRegion -> addSubObservable(pointRegion.node));
 		triangles.forEach(this::assignTriangleNeighbours);
 	}
 

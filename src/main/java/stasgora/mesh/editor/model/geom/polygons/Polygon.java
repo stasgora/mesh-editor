@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class Polygon implements Serializable {
-	public Point[] nodes;
+	public Point[] nodes = new Point[0];
 
 	protected static final long serialVersionUID = 1L;
 

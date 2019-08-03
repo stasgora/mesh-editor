@@ -1,10 +1,10 @@
 package stasgora.mesh.editor.services.mesh.voronoi;
 
 import io.github.stasgora.observetree.SettableObservable;
-import stasgora.mesh.editor.model.geom.Line;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.PointPolygon;
+import stasgora.mesh.editor.model.geom.PointRegion;
+import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.MeshType;
 import stasgora.mesh.editor.model.project.VisualProperties;
@@ -31,8 +31,8 @@ public class VoronoiDiagramService {
 	public void generateDiagram(List<Point> nodes) {
 		Map<Triangle, Point> triangleCircumcenterMap = new HashMap<>();
 		for (Point node : nodes) {
-			PointPolygon pointPolygon = mesh.get().getPointPolygon(node);
-			if(pointPolygon == null) {
+			Polygon pointRegion = mesh.get().getPointRegion(node);
+			if(pointRegion == null) {
 				LOGGER.warning("Mesh does not contain given node");
 				continue;
 			}
@@ -47,8 +47,7 @@ public class VoronoiDiagramService {
 					vertices.add(triangleCircumcenterMap.get(triangle));
 				}
 			}
-			if(vertices.size() >= 3) //temp
-				pointPolygon.polygon.nodes = vertices.toArray(Point[]::new);
+			pointRegion.nodes = vertices.toArray(Point[]::new);
 		}
 	}
 

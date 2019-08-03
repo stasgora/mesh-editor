@@ -24,8 +24,8 @@ public class ColorUtils {
 		this.appConfig = appConfig;
 	}
 
-	public SerializableColor getTriangleColor(Point[] triangle) {
-		return getAverageNodeColor(getTriangleSamplePoints(triangle));
+	public SerializableColor getPolygonColor(Point[] polygon) {
+		return getAverageNodeColor(getPolygonSamplePoints(polygon));
 	}
 
 	public SerializableColor getEdgeColor(Point first, Point second) {
@@ -53,9 +53,9 @@ public class ColorUtils {
 		return new SerializableColor(r, g, b, 1);
 	}
 
-	private List<Point> getTriangleSamplePoints(Point[] triangle) {
-		Point[] vectors = new Point[] {new Point(triangle[1]).subtract(triangle[0]), new Point(triangle[2]).subtract(triangle[1])};
+	private List<Point> getPolygonSamplePoints(Point[] triangle) {
 		List<Point> points = new ArrayList<>();
+		Point[] vectors = new Point[] {new Point(triangle[1]).subtract(triangle[0]), new Point(triangle[2]).subtract(triangle[1])};
 		int subdivisions = appConfig.getInt("meshBox.edgeColorSamples");
 		for (int i = 0; i <= subdivisions; i++) {
 			Point baseVector = new Point(triangle[0]).add(new Point(vectors[0]).multiplyByScalar(i / (double) subdivisions));

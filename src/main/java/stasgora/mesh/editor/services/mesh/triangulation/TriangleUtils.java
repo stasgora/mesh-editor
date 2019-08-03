@@ -2,6 +2,7 @@ package stasgora.mesh.editor.services.mesh.triangulation;
 
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
+import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import io.github.stasgora.observetree.SettableObservable;
 
@@ -55,7 +56,11 @@ public class TriangleUtils {
 	}
 
 	public List<Point[]> getCanvasSpaceTriangles() {
-		return getValidTriangles().stream().map(this::getCanvasSpaceTriangle).collect(Collectors.toList());
+		return getValidTriangles().stream().map(this::getCanvasSpacePolygon).collect(Collectors.toList());
+	}
+
+	public List<Point[]> getCanvasSpaceVoronoiRegions() {
+		return mesh.get().getRegions().stream().map(this::getCanvasSpacePolygon).collect(Collectors.toList());
 	}
 
 	public List<Triangle> getValidTriangles() {
@@ -72,8 +77,8 @@ public class TriangleUtils {
 		return true;
 	}
 
-	public Point[] getCanvasSpaceTriangle(Triangle triangle) {
-		return Arrays.stream(triangle.nodes).map(node -> nodeUtils.proportionalToCanvasPos(new Point(node))).toArray(Point[]::new);
+	public Point[] getCanvasSpacePolygon(Polygon polygon) {
+		return Arrays.stream(polygon.nodes).map(node -> nodeUtils.proportionalToCanvasPos(new Point(node))).toArray(Point[]::new);
 	}
 
 	Point getSeparateNode(Triangle from, Triangle with) {

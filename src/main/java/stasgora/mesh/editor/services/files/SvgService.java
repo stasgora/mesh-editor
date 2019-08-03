@@ -78,7 +78,7 @@ public class SvgService {
 			List<Triangle> triangles = triangleUtils.getValidTriangles();
 			double transparency = visualProperties.meshTransparency.get();
 			for (Triangle triangle : triangles) {
-				svg.setColor(colorUtils.getTriangleColor(triangleUtils.getCanvasSpaceTriangle(triangle)).setAlpha(transparency).toAwtColor());
+				svg.setColor(colorUtils.getPolygonColor(triangleUtils.getCanvasSpacePolygon(triangle)).setAlpha(transparency).toAwtColor());
 				svg.fillPolygon(triangle.xCoords(), triangle.yCoords(), 3);
 			}
 		}
