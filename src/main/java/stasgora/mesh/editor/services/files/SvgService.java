@@ -7,8 +7,8 @@ import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.drawing.ColorUtils;
-import stasgora.mesh.editor.services.triangulation.NodeUtils;
-import stasgora.mesh.editor.services.triangulation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
 
 import java.awt.*;
 import java.util.List;

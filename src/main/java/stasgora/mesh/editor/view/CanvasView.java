@@ -10,8 +10,8 @@ import io.github.stasgora.observetree.SettableProperty;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.Project;
 import stasgora.mesh.editor.services.drawing.ImageBox;
-import stasgora.mesh.editor.services.triangulation.NodeUtils;
-import stasgora.mesh.editor.services.triangulation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
 import stasgora.mesh.editor.ui.canvas.ImageCanvas;
 import stasgora.mesh.editor.ui.canvas.MeshCanvas;
 

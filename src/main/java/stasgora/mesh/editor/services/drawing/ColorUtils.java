@@ -6,7 +6,7 @@ import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.geom.Point;
 import io.github.stasgora.observetree.SettableProperty;
 import stasgora.mesh.editor.model.paint.SerializableColor;
-import stasgora.mesh.editor.services.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
