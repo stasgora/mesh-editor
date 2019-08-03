@@ -1,5 +1,6 @@
 package stasgora.mesh.editor.model.geom.polygons;
 
+import stasgora.mesh.editor.model.geom.Line;
 import stasgora.mesh.editor.model.geom.Point;
 
 import java.io.IOException;
@@ -23,6 +24,10 @@ public class Triangle extends Polygon {
 
 	public Triangle(Point a, Point b, Point c) {
 		super(new Point[]{a, b, c});
+	}
+
+	public Point circumcenter() {
+		return Line.bisectionOf(nodes[0], nodes[1]).intersectWith(Line.bisectionOf(nodes[1], nodes[2]));
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {

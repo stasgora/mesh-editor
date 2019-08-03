@@ -6,10 +6,9 @@ import java.io.Serializable;
 
 public class PointPolygon implements Serializable {
 	public Point node;
-	public Polygon polygon;
+	public Polygon polygon = new Polygon();
 
-	public PointPolygon(Point node, Polygon polygon) {
+	public PointPolygon(Point node) {
 		this.node = node;
-		this.polygon = polygon;
 	}
 }

@@ -32,9 +32,17 @@ public class Mesh extends Observable implements Serializable {
 	}
 
 	public void addNode(Point node) {
-		nodes.add(new PointPolygon(node, null));
+		nodes.add(new PointPolygon(node));
 		addSubObservable(node);
 		onValueChanged();
+	}
+
+	public PointPolygon getPointPolygon(Point node) {
+		for (PointPolygon pointPolygon : nodes) {
+			if (pointPolygon.node == node)
+				return pointPolygon;
+		}
+		return null;
 	}
 
 	public void removeNode(Point node) {

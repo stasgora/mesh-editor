@@ -25,6 +25,10 @@ public class NodeUtils {
 		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.proportionalSpaceFactor");
 	}
 
+	public Triangle findNodeTriangle(Point node) {
+		return canvasData.mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.nodes).anyMatch(vertex -> vertex == node)).findFirst().orElse(null);
+	}
+
 	Point getClosestNode(Point location, Triangle triangle) {
 		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.imageBox.size.x / REL_SPACE_FACTOR);
 		for (Point node : triangle.nodes) {
@@ -36,7 +40,7 @@ public class NodeUtils {
 		return null;
 	}
 
-	void getNodeNeighbours(Point node, Triangle firstTriangle, List<Point> outPoints, List<Triangle> outTriangles) {
+	public void getNodeNeighbours(Point node, Triangle firstTriangle, List<Point> outPoints, List<Triangle> outTriangles) {
 		Triangle currentTriangle = firstTriangle;
 		do {
 			int nodeIndex = Arrays.asList(currentTriangle.nodes).indexOf(node);
@@ -44,9 +48,11 @@ public class NodeUtils {
 				LOGGER.warning("triangle " + currentTriangle + " does not contain given node " + node);
 			}
 			nodeIndex = (nodeIndex + 2) % 3;
-			outPoints.add(currentTriangle.nodes[nodeIndex]);
+			if(outPoints != null)
+				outPoints.add(currentTriangle.nodes[nodeIndex]);
 			currentTriangle = currentTriangle.triangles[nodeIndex];
-			outTriangles.add(currentTriangle);
+			if(outTriangles != null)
+				outTriangles.add(currentTriangle);
 		} while (currentTriangle != firstTriangle);
 	}
 

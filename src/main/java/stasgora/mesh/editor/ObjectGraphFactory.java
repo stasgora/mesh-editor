@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.services.config.JsonAppConfigReader;
 import stasgora.mesh.editor.services.config.JsonLangConfigReader;
+import stasgora.mesh.editor.services.mesh.voronoi.VoronoiDiagramService;
 import stasgora.mesh.editor.view.ViewType;
 import stasgora.mesh.editor.services.drawing.CanvasAction;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
@@ -67,6 +68,7 @@ public class ObjectGraphFactory {
 	private FileUtils fileUtils;
 
 	private TriangulationService triangulationService;
+	private VoronoiDiagramService voronoiDiagramService;
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
 	private FlippingUtils flippingUtils;
@@ -124,6 +126,7 @@ public class ObjectGraphFactory {
 		triangleUtils = new TriangleUtils(project.canvasData.mesh, nodeUtils);
 		flippingUtils = new FlippingUtils(project.canvasData.mesh, triangleUtils);
 		triangulationService = new FlipBasedTriangulationService(project.canvasData.mesh, nodeUtils, triangleUtils, flippingUtils);
+		voronoiDiagramService = new VoronoiDiagramService(project.canvasData.mesh, nodeUtils, project.visualProperties);
 		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
 	}
 
