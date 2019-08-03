@@ -26,7 +26,7 @@ public class Mesh extends Observable implements Serializable {
 		if(boundingNodes.length != 3) {
 			LOGGER.warning("Mesh bounding nodes number wrong");
 		}
-		this.boundingNodes = Collections.unmodifiableList(Arrays.asList(boundingNodes));
+		this.boundingNodes = List.of(boundingNodes);
 		addTriangle(new Triangle(boundingNodes[0], boundingNodes[1], boundingNodes[2]));
 	}
 
