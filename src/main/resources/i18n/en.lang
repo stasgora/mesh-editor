@@ -24,7 +24,7 @@
 			}
 		},
 		"properties": {
-			"title": "Properties",
+			"title": "Layers",
 			"tree": {
 				"image": "Image",
 				"mesh": {

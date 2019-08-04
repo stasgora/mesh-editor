@@ -25,7 +25,7 @@ public class MeshCanvas extends Canvas {
 		if(!isVisible()) {
 			return;
 		}
-		if(visualProperties.trianglesVisible.get() && visualProperties.meshType.get() == MeshType.TRIANGULATION)
+		if(visualProperties.triangulationVisible.get() && visualProperties.meshType.get() == MeshType.TRIANGULATION)
 			drawPolygons(triangles, visualProperties.meshTransparency.get());
 		if(visualProperties.meshType.get() == MeshType.VORONOI_DIAGRAM)
 			drawPolygons(voronoiRegions, visualProperties.meshTransparency.get());

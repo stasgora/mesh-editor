@@ -24,7 +24,7 @@
 			}
 		},
 		"properties": {
-			"title": "Ustawienia",
+			"title": "Warstwy",
 			"tree": {
 				"image": "Obraz",
 				"mesh": {

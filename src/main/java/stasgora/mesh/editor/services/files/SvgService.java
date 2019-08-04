@@ -74,7 +74,7 @@ public class SvgService {
 	}
 
 	private void drawTriangles(SVGGraphics2D svg) {
-		if(visualProperties.trianglesVisible.get()) {
+		if(visualProperties.triangulationVisible.get()) {
 			List<Triangle> triangles = triangleUtils.getValidTriangles();
 			double transparency = visualProperties.meshTransparency.get();
 			for (Triangle triangle : triangles) {

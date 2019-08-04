@@ -42,7 +42,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 		propertyTypeToVisibleValue = Map.of(
 				PropertyItemType.IMAGE, visualProperties.imageVisible,
 				PropertyItemType.MESH, visualProperties.meshVisible,
-				PropertyItemType.TRIANGLES, visualProperties.trianglesVisible,
+				PropertyItemType.TRIANGLES, visualProperties.triangulationVisible,
 				PropertyItemType.NODES, visualProperties.nodesVisible,
 				PropertyItemType.EDGES, visualProperties.edgesVisible
 		);
