@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import stasgora.mesh.editor.model.observables.BindableProperty;
 import stasgora.mesh.editor.model.project.MeshType;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.config.AppConfigReader;
@@ -13,9 +14,11 @@ import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.services.history.actions.property.CheckBoxChangeAction;
 import stasgora.mesh.editor.services.history.actions.property.PropertyChangeAction;
+import stasgora.mesh.editor.ui.properties.PropertyItemType;
 import stasgora.mesh.editor.ui.properties.PropertyTreeItem;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeCell<String>> {
 
@@ -24,11 +27,32 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 	private VisualProperties visualProperties;
 	private ActionHistoryService actionHistoryService;
 
+	private Map<PropertyItemType, BindableProperty> propertyTypeToVisibleValue, propertyTypeToSliderValue, propertyTypeToComboBoxValue;
+
 	public PropertyTreeCellFactory(LangConfigReader appLang, AppConfigReader appConfig, VisualProperties visualProperties, ActionHistoryService actionHistoryService) {
 		this.appLang = appLang;
 		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;
 		this.actionHistoryService = actionHistoryService;
+		
+		initPropertyMaps();
+	}
+	
+	private void initPropertyMaps() {
+		propertyTypeToVisibleValue = Map.of(
+				PropertyItemType.IMAGE, visualProperties.imageVisible,
+				PropertyItemType.MESH, visualProperties.meshVisible,
+				PropertyItemType.TRIANGLES, visualProperties.trianglesVisible,
+				PropertyItemType.NODES, visualProperties.nodesVisible,
+				PropertyItemType.EDGES, visualProperties.edgesVisible
+		);
+		propertyTypeToSliderValue = Map.of(
+				PropertyItemType.IMAGE, visualProperties.imageTransparency,
+				PropertyItemType.MESH, visualProperties.meshTransparency,
+				PropertyItemType.NODES, visualProperties.nodeRadius,
+				PropertyItemType.EDGES, visualProperties.edgeThickness
+		);
+		propertyTypeToComboBoxValue = Map.of(PropertyItemType.MESH_TYPE, visualProperties.meshType);
 	}
 
 	@Override
@@ -65,7 +89,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				CheckBox checkBox = new CheckBox();
 				checkBox.setOnAction(event -> actionHistoryService.registerAction(new CheckBoxChangeAction(checkBox.isSelected(), checkBox::setSelected)));
 				checkBox.setTooltip(new Tooltip(appLang.getText("fxml.properties.tooltips.visibility")));
-				visualProperties.propertyTypeToVisibleValue.get(treeItem.itemType).bindWithFxObservable(checkBox.selectedProperty());
+				propertyTypeToVisibleValue.get(treeItem.itemType).bindWithFxObservable(checkBox.selectedProperty());
 				body.getChildren().add(0, checkBox);
 			}
 
@@ -73,7 +97,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				double minValue = getSliderConfigValue(treeItem.itemType.getMinValueKey(), 0);
 				Slider slider = new Slider(minValue, getSliderConfigValue(treeItem.itemType.getMaxValueKey(), 1), minValue);
 				slider.setTooltip(new Tooltip(appLang.getText(treeItem.itemType.getSliderKey())));
-				visualProperties.propertyTypeToSliderValue.get(treeItem.itemType).bindWithFxObservable(slider.valueProperty());
+				propertyTypeToSliderValue.get(treeItem.itemType).bindWithFxObservable(slider.valueProperty());
 
 				slider.valueChangingProperty().addListener((observable, oldChanging, changing) -> {
 					if(changing)
@@ -99,7 +123,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 					}
 				});
 				comboBox.setValue(MeshType.TRIANGULATION);
-				visualProperties.propertyTypeToComboBoxValue.get(treeItem.itemType).bindWithFxObservable(comboBox.valueProperty());
+				propertyTypeToComboBoxValue.get(treeItem.itemType).bindWithFxObservable(comboBox.valueProperty());
 
 				//comboBox.valueProperty().addListener((observable, oldVal, newVal) -> actionHistoryService.registerAction(
 				//		new PropertyChangeAction<>(newVal, oldVal, comboBox::setValue))); // TODO register mesh type changes in action history (currently self recursive)

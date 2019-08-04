@@ -30,21 +30,6 @@ public class VisualProperties extends Observable {
 
 	public BindableProperty<MeshType> meshType = new BindableProperty<>();
 
-	public Map<PropertyItemType, BindableProperty> propertyTypeToVisibleValue = Map.of(
-			PropertyItemType.IMAGE, imageVisible,
-			PropertyItemType.MESH, meshVisible,
-			PropertyItemType.TRIANGLES, trianglesVisible,
-			PropertyItemType.NODES, nodesVisible,
-			PropertyItemType.EDGES, edgesVisible
-	);
-	public Map<PropertyItemType, BindableProperty> propertyTypeToSliderValue = Map.of(
-			PropertyItemType.IMAGE, imageTransparency,
-			PropertyItemType.MESH, meshTransparency,
-			PropertyItemType.NODES, nodeRadius,
-			PropertyItemType.EDGES, edgeThickness
-	);
-	public Map<PropertyItemType, BindableProperty> propertyTypeToComboBoxValue = Map.of(PropertyItemType.MESH_TYPE, meshType);
-
 	private List<SettableProperty> properties = Arrays.asList(nodeColor, edgeThickness, nodeRadius, meshType,
 			meshVisible, imageVisible, nodesVisible, edgesVisible, trianglesVisible, meshTransparency, imageTransparency);
 
