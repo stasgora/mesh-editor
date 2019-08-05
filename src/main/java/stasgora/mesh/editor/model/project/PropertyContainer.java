@@ -18,7 +18,7 @@ public class PropertyContainer extends Observable {
 
 	private List<SettableProperty> properties;
 
-	public PropertyContainer() {
+	public void scan() {
 		this.properties = scanFields();
 		properties.forEach(this::addSubObservable);
 	}
@@ -35,7 +35,7 @@ public class PropertyContainer extends Observable {
 	}
 
 	public void writeProperties(ObjectOutputStream out) throws IOException, ClassNotFoundException {
-		iterateProperties((property, stream) -> stream.writeObject(property), out);
+		iterateProperties((property, stream) -> stream.writeObject(property.get()), out);
 	}
 
 	public void readProperties(ObjectInputStream in) throws IOException, ClassNotFoundException {

@@ -31,9 +31,8 @@
 					"title": "Mesh",
 					"nodes": "Points",
 					"edges": "Lines",
-					"triangles": "Triangles",
-					"type": {
-						"title": "Type",
+					"polygons": "Content",
+					"layer": {
 						"triangulation": "Triangulation",
 						"voronoiDiagram": "Voronoi diagram"
 					}

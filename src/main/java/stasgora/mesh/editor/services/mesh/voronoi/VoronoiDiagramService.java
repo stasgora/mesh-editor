@@ -22,10 +22,10 @@ public class VoronoiDiagramService {
 	public VoronoiDiagramService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils, VisualProperties visualProperties) {
 		this.mesh = mesh;
 		this.nodeUtils = nodeUtils;
-		visualProperties.meshType.addListener(() -> {
-			if(visualProperties.meshType.get() == MeshType.VORONOI_DIAGRAM)
-				generateDiagram(mesh.get().getNodes());
-		});
+		//visualProperties.meshType.addListener(() -> {
+		//	if(visualProperties.meshType.get() == MeshType.VORONOI_DIAGRAM)
+		//		generateDiagram(mesh.get().getNodes());
+		//});
 	}
 
 	public void generateDiagram(List<Point> nodes) {

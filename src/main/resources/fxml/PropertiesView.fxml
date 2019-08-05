@@ -8,13 +8,23 @@
 	<TreeView fx:id="propertyTree" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 		<TreeItem value="${properties_title}" expanded="true">
 			<children>
-				<PropertyTreeItem itemType="IMAGE" hasCheckBox="true" hasSlider="true"/>
-				<PropertyTreeItem itemType="MESH" expanded="true" hasCheckBox="true" hasSlider="true">
+				<PropertyTreeItem itemType="IMAGE" hasSlider="true"/>
+				<PropertyTreeItem itemType="MESH" expanded="true" hasSlider="true">
 					<children>
-						<PropertyTreeItem itemType="TRIANGLES" hasCheckBox="true" />
-						<PropertyTreeItem itemType="EDGES" hasCheckBox="true" hasSlider="true"/>
-						<PropertyTreeItem itemType="NODES" hasCheckBox="true" hasSlider="true"/>
-						<PropertyTreeItem itemType="MESH_TYPE" hasComboBox="true" />
+						<PropertyTreeItem itemType="TRIANGULATION" expanded="true" hasSlider="true">
+							<children>
+								<PropertyTreeItem itemType="POLYGONS" />
+								<PropertyTreeItem itemType="EDGES" hasSlider="true"/>
+								<PropertyTreeItem itemType="NODES" hasSlider="true"/>
+							</children>
+						</PropertyTreeItem>
+						<PropertyTreeItem itemType="VORONOI_DIAGRAM" expanded="true" hasSlider="true">
+							<children>
+								<PropertyTreeItem itemType="POLYGONS" />
+								<PropertyTreeItem itemType="EDGES" hasSlider="true"/>
+								<PropertyTreeItem itemType="NODES" hasSlider="true"/>
+							</children>
+						</PropertyTreeItem>
 					</children>
 				</PropertyTreeItem>
 			</children>

@@ -5,10 +5,11 @@ import javafx.scene.shape.StrokeLineCap;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.paint.SerializableColor;
-import stasgora.mesh.editor.model.project.MeshType;
+import stasgora.mesh.editor.model.project.MeshLayer;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.drawing.ColorUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MeshCanvas extends Canvas {
@@ -21,43 +22,55 @@ public class MeshCanvas extends Canvas {
 		this.visualProperties = visualProperties;
 	}
 
-	public void draw(Point[] nodes, List<Point[]> triangles, List<Point[]> voronoiRegions, Rectangle boundingBox) {
+	public void draw(List<Point[]> triangles, List<Point[]> regions, Rectangle boundingBox) {
 		if(!isVisible()) {
 			return;
 		}
-		if(visualProperties.triangulationVisible.get() && visualProperties.meshType.get() == MeshType.TRIANGULATION)
-			drawPolygons(triangles, visualProperties.meshTransparency.get());
-		if(visualProperties.meshType.get() == MeshType.VORONOI_DIAGRAM)
-			drawPolygons(voronoiRegions, visualProperties.meshTransparency.get());
-		if(visualProperties.edgesVisible.get())
-			drawEdges(triangles);
-		if(visualProperties.nodesVisible.get())
-			drawNodes(nodes);
+		drawLayer(visualProperties.triangulationLayer, triangles);
+		drawLayer(visualProperties.voronoiDiagramLayer, regions);
 		drawBoundingBox(boundingBox);
 	}
 
-	private void drawEdges(List<Point[]> triangles) {
+	private void drawLayer(MeshLayer layer, List<Point[]> polygons) {
+		if(!layer.layerVisible.get())
+			return;
+		if(layer.polygonsVisible.get())
+			drawPolygons(polygons, visualProperties.meshTransparency.get());
+		if(layer.edgesVisible.get())
+			drawEdges(polygons, layer);
+		if(layer.nodesVisible.get())
+			drawNodes(polygons, layer);
+	}
+
+	private void drawEdges(List<Point[]> polygons, MeshLayer layer) {
 		context.setLineCap(StrokeLineCap.ROUND);
-		context.setLineWidth(visualProperties.edgeThickness.get());
-		double transparency = visualProperties.meshTransparency.get();
-		for (Point[] triangle : triangles) {
-			for (int i = 0; i < 3; i++) {
-				context.setStroke(colorUtils.getEdgeColor(triangle[i], triangle[(i + 1) % 3]).setAlpha(transparency).toFXColor());
+		context.setLineWidth(layer.edgeThickness.get());
+		double transparency = layer.layerTransparency.get();
+		for (Point[] polygon : polygons) { // FIXME drawing twice most lines
+			for (int i = 0; i < polygon.length - 1; i++) {
+				int nextIndex = (i + 1) % polygon.length;
+				context.setStroke(colorUtils.getEdgeColor(polygon[i], polygon[nextIndex]).setAlpha(transparency).toFXColor());
 				context.beginPath();
-				context.moveTo(triangle[i].x, triangle[i].y);
-				context.lineTo(triangle[(i + 1) % 3].x, triangle[(i + 1) % 3].y);
+				context.moveTo(polygon[i].x, polygon[i].y);
+				context.lineTo(polygon[nextIndex].x, polygon[nextIndex].y);
 				context.closePath();
 				context.stroke();
 			}
 		}
 	}
 
-	private void drawNodes(Point[] nodes) {
-		double transparency = visualProperties.meshTransparency.get();
-		double nodeRadius = visualProperties.nodeRadius.get();
-		for (Point node : nodes) {
-			context.setFill(colorUtils.getNodeColor(node).setAlpha(transparency).toFXColor());
-			context.fillOval(node.x - nodeRadius / 2d, node.y - nodeRadius / 2d, nodeRadius, nodeRadius);
+	private void drawNodes(List<Point[]> polygons, MeshLayer layer) {
+		double transparency = layer.layerTransparency.get();
+		double nodeRadius = layer.nodeRadius.get();
+		List<Point> drawnPoints = new ArrayList<>();
+		for (Point[] polygon : polygons) {
+			for (Point vertex : polygon) {
+				if(drawnPoints.contains(vertex))
+					continue;
+				context.setFill(colorUtils.getNodeColor(vertex).setAlpha(transparency).toFXColor());
+				context.fillOval(vertex.x - nodeRadius / 2d, vertex.y - nodeRadius / 2d, nodeRadius, nodeRadius);
+				drawnPoints.add(vertex);
+			}
 		}
 	}
 
