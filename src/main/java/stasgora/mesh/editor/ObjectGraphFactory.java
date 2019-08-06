@@ -125,8 +125,8 @@ public class ObjectGraphFactory {
 		nodeUtils = new NodeUtils(appConfig, project.canvasData);
 		triangleUtils = new TriangleUtils(project.canvasData.mesh, nodeUtils);
 		flippingUtils = new FlippingUtils(project.canvasData.mesh, triangleUtils);
-		triangulationService = new FlipBasedTriangulationService(project.canvasData.mesh, nodeUtils, triangleUtils, flippingUtils);
-		voronoiDiagramService = new VoronoiDiagramService(project.canvasData.mesh, nodeUtils, project.visualProperties);
+		voronoiDiagramService = new VoronoiDiagramService(project.canvasData.mesh, nodeUtils);
+		triangulationService = new FlipBasedTriangulationService(project.canvasData.mesh, nodeUtils, triangleUtils, flippingUtils, voronoiDiagramService);
 		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
 	}
 

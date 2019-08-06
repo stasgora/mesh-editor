@@ -4,6 +4,7 @@ import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import io.github.stasgora.observetree.SettableObservable;
+import stasgora.mesh.editor.services.mesh.voronoi.VoronoiDiagramService;
 
 import java.util.*;
 
@@ -13,12 +14,15 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
 	private FlippingUtils flippingUtils;
+	private VoronoiDiagramService voronoiDiagramService;
 
-	public FlipBasedTriangulationService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils, TriangleUtils triangleUtils, FlippingUtils flippingUtils) {
+	public FlipBasedTriangulationService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils, TriangleUtils triangleUtils,
+	                                     FlippingUtils flippingUtils, VoronoiDiagramService voronoiDiagramService) {
 		this.mesh = mesh;
 		this.nodeUtils = nodeUtils;
 		this.triangleUtils = triangleUtils;
 		this.flippingUtils = flippingUtils;
+		this.voronoiDiagramService = voronoiDiagramService;
 	}
 
 	@Override
@@ -49,6 +53,8 @@ public class FlipBasedTriangulationService implements TriangulationService {
 		}
 		flippingUtils.flipInvalidTriangles(trianglesToCheck);
 		mesh.addNode(location);
+
+		voronoiDiagramService.generateDiagram(mesh.getNodes());
 		mesh.notifyListeners();
 		return true;
 	}

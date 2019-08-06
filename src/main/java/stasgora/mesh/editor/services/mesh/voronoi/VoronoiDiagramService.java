@@ -19,13 +19,9 @@ public class VoronoiDiagramService {
 	private SettableObservable<Mesh> mesh;
 	private NodeUtils nodeUtils;
 
-	public VoronoiDiagramService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils, VisualProperties visualProperties) {
+	public VoronoiDiagramService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils) {
 		this.mesh = mesh;
 		this.nodeUtils = nodeUtils;
-		//visualProperties.meshType.addListener(() -> {
-		//	if(visualProperties.meshType.get() == MeshType.VORONOI_DIAGRAM)
-		//		generateDiagram(mesh.get().getNodes());
-		//});
 	}
 
 	public void generateDiagram(List<Point> nodes) {
