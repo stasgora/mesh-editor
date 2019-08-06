@@ -64,7 +64,7 @@ public class ConfigModelMapper {
 
 	private void callSettableOnValueChanged(SettableProperty object) {
 		try {
-			Method method = object.getClass().getDeclaredMethod("onValueChanged");
+			Method method = Observable.class.getDeclaredMethod("onValueChanged");
 			method.setAccessible(true);
 			method.invoke(object);
 		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {

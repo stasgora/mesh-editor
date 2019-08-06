@@ -45,8 +45,8 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 		propertyTypeToVisibleValue = Map.of(
 				PropertyItemType.IMAGE, item -> visualProperties.imageVisible,
 				PropertyItemType.MESH, item -> visualProperties.meshVisible,
-				PropertyItemType.TRIANGULATION, item -> visualProperties.triangulationLayer.layerVisible,
-				PropertyItemType.VORONOI_DIAGRAM, item -> visualProperties.voronoiDiagramLayer.layerVisible,
+				PropertyItemType.TRIANGULATION, item -> visualProperties.triangulationLayer.get().layerVisible,
+				PropertyItemType.VORONOI_DIAGRAM, item -> visualProperties.voronoiDiagramLayer.get().layerVisible,
 				PropertyItemType.POLYGONS, item -> getPropertyLayer(item).polygonsVisible,
 				PropertyItemType.NODES, item -> getPropertyLayer(item).nodesVisible,
 				PropertyItemType.EDGES, item -> getPropertyLayer(item).edgesVisible
@@ -54,8 +54,8 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 		propertyTypeToSliderValue = Map.of(
 				PropertyItemType.IMAGE, item -> visualProperties.imageTransparency,
 				PropertyItemType.MESH, item -> visualProperties.meshTransparency,
-				PropertyItemType.TRIANGULATION, item -> visualProperties.triangulationLayer.layerTransparency,
-				PropertyItemType.VORONOI_DIAGRAM, item -> visualProperties.voronoiDiagramLayer.layerTransparency,
+				PropertyItemType.TRIANGULATION, item -> visualProperties.triangulationLayer.get().layerTransparency,
+				PropertyItemType.VORONOI_DIAGRAM, item -> visualProperties.voronoiDiagramLayer.get().layerTransparency,
 				PropertyItemType.NODES, item -> getPropertyLayer(item).nodeRadius,
 				PropertyItemType.EDGES, item -> getPropertyLayer(item).edgeThickness
 		);
@@ -64,7 +64,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 
 	private MeshLayer getPropertyLayer(PropertyTreeItem item) {
 		return ((PropertyTreeItem) item.getParent()).itemType == PropertyItemType.TRIANGULATION ?
-				visualProperties.triangulationLayer : visualProperties.voronoiDiagramLayer;
+				visualProperties.triangulationLayer.get() : visualProperties.voronoiDiagramLayer.get();
 	}
 
 	@Override

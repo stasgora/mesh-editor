@@ -26,8 +26,8 @@ public class MeshCanvas extends Canvas {
 		if(!isVisible()) {
 			return;
 		}
-		drawLayer(visualProperties.triangulationLayer, triangles);
-		drawLayer(visualProperties.voronoiDiagramLayer, regions);
+		drawLayer(visualProperties.triangulationLayer.get(), triangles);
+		drawLayer(visualProperties.voronoiDiagramLayer.get(), regions);
 		drawBoundingBox(boundingBox);
 	}
 

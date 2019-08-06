@@ -37,8 +37,8 @@ public class SvgService {
 		Point marginSize = nodeUtils.getProportionalMarginSize();
 		svg.translate(marginSize.x, marginSize.y);
 
-		drawLayer(visualProperties.triangulationLayer, svg);
-		drawLayer(visualProperties.voronoiDiagramLayer, svg);
+		drawLayer(visualProperties.triangulationLayer.get(), svg);
+		drawLayer(visualProperties.voronoiDiagramLayer.get(), svg);
 		return svg.getSVGDocument();
 	}
 
