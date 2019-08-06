@@ -1,10 +1,9 @@
 package stasgora.mesh.editor.services.mapping;
 
 import io.github.stasgora.observetree.Observable;
-import org.json.JSONObject;
-import stasgora.mesh.editor.model.project.MeshType;
-import stasgora.mesh.editor.services.config.AppConfigReader;
 import io.github.stasgora.observetree.SettableProperty;
+import org.json.JSONObject;
+import stasgora.mesh.editor.services.config.AppConfigReader;
 
 import java.lang.reflect.*;
 import java.util.logging.Level;
@@ -13,135 +12,92 @@ import java.util.logging.Logger;
 public class ConfigModelMapper {
 
 	private static final Logger LOGGER = Logger.getLogger(ConfigModelMapper.class.getName());
+	private static final String CONFIG_TYPE_FIELD = "objectType";
 
 	private AppConfigReader appConfig;
-
-	private static final String CONFIG_TYPE_FIELD = "objectType";
 
 	public ConfigModelMapper(AppConfigReader appConfig) {
 		this.appConfig = appConfig;
 	}
 
-	public void mapConfigPathToModelObject(Observable modelObject, String configPath) {
-		mapConfigPathToModelObject(modelObject, configPath, false);
-	}
-
-	public void mapConfigPathToModelObject(Observable modelObject, String configPath, boolean asDefaultValue) {
+	public void map(Object model, String configPath) {
 		JSONObject configPathRoot = appConfig.getJsonObject(configPath);
 		for (String propertyKey : configPathRoot.keySet()) {
-			Field modelField = getModelField(modelObject, propertyKey);
-			if(modelField == null) {
+			Field modelField = getModelField(model, propertyKey);
+			if (modelField == null)
 				continue;
-			}
-			Type modelFieldType = modelField.getGenericType();
-			if(!(modelFieldType instanceof ParameterizedType)) {
+			Class modelFieldType = modelField.getType();
+			boolean isFieldSettable = SettableProperty.class.isAssignableFrom(modelFieldType);
+			Object modelFieldValue = getModelFieldValue(model, modelField);
+			if (modelFieldValue == null)
 				continue;
+			SettableProperty modelSettableField = null;
+			if (isFieldSettable) {
+				modelSettableField = (SettableProperty) modelFieldValue;
+				modelFieldValue = modelSettableField.get();
+				modelFieldType = (Class) ((ParameterizedType) modelField.getGenericType()).getActualTypeArguments()[0];
 			}
-			Type modelValueType = ((ParameterizedType) modelFieldType).getActualTypeArguments()[0];
-			Object configValue = getConfigFieldValue(configPathRoot, propertyKey, modelValueType);
-			if(configValue == null) {
-				continue;
-			}
-			SettableProperty modelFieldValue;
-			try {
-				modelFieldValue = (SettableProperty) modelField.get(modelObject);
-			} catch (IllegalAccessException e) {
-				LOGGER.log(Level.SEVERE, "Getting model container field failed", e);
-				continue;
-			}
-			if (configValue instanceof JSONObject) {
-				configValue = constructModelValueObject(modelValueType, configValue);
-				if(configValue == null) {
-					continue;
-				}
-			}
-			if(!asDefaultValue) {
-				modelFieldValue.set(configValue);
+			Object configFieldValue = configPathRoot.get(propertyKey);
+			if (configFieldValue instanceof JSONObject) {
+				map(modelFieldValue, configPath + "." + propertyKey);
+				if(isFieldSettable)
+					callSettableOnValueChanged(modelSettableField);
 			} else {
-				modelFieldValue.setDefaultValue(configValue);
+				Object fieldValue = getPrimitiveConfigFieldValue(configFieldValue, modelFieldType);
+				if(isFieldSettable)
+					modelSettableField.set(fieldValue);
+				else
+					setModelField(modelField, model, fieldValue);
 			}
 		}
 	}
 
-	private Object constructModelValueObject(Type modelValueType, Object configValue) {
-		Object modelValue = createModelValueObject(modelValueType);
-		if(modelValue == null) {
-			return null;
+	private Object getPrimitiveConfigFieldValue(Object configFieldValue, Class modelFieldType) {
+		if (modelFieldType.equals(Double.class) && configFieldValue.getClass().equals(Integer.class)) {
+			return ((Integer) configFieldValue).doubleValue();
 		}
-		Class<?> modelValueClass = modelValue.getClass();
-		JSONObject configParameter = (JSONObject) configValue;
-		for (String modelKey : configParameter.keySet()) {
-			if(modelKey.equals(CONFIG_TYPE_FIELD)) {
-				continue;
-			}
-			Field field;
-			try {
-				field = modelValueClass.getDeclaredField(modelKey);
-				field.setAccessible(true);
-				field.set(modelValue, configParameter.get(modelKey)); // TODO Do some type checks / isolate set field method & call it twice
-			} catch (NoSuchFieldException e) {
-				LOGGER.log(Level.SEVERE, "Getting model field failed", e);
-				continue;
-			} catch (IllegalAccessException e) {
-				LOGGER.log(Level.SEVERE, "Setting model field value failed", e);
-				continue;
-			}
+		if (modelFieldType.isEnum() && configFieldValue.getClass().equals(String.class)) {
+			return Enum.valueOf(modelFieldType, (String) configFieldValue);
 		}
-		return modelValue;
+		return configFieldValue;
 	}
 
-	private Object createModelValueObject(Type modelValueType) {
-		Object modelValue;
+	private void callSettableOnValueChanged(SettableProperty object) {
 		try {
-			Constructor<? extends Type> constructor = ((Class) modelValueType).getConstructor();
-			modelValue = constructor.newInstance();
-		} catch (NoSuchMethodException e) {
-			LOGGER.log(Level.SEVERE, "No default constructor found for model class", e);
-			return null;
-		} catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-			LOGGER.log(Level.SEVERE, "Creating model object instance failed", e);
-			return null;
+			Method method = object.getClass().getDeclaredMethod("onValueChanged");
+			method.setAccessible(true);
+			method.invoke(object);
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			LOGGER.log(Level.WARNING, "Calling settable onValueChanged failed ", e);
 		}
-		return modelValue;
 	}
 
-	private Object getConfigFieldValue(JSONObject configPathRoot, String propertyKey, Type modelValueType) {
-		String modelValueTypeName = modelValueType.getTypeName();
-		Object configValue = configPathRoot.get(propertyKey);
-		String configValueType;
-		if (configValue instanceof JSONObject) {
-			configValueType = ((JSONObject) configValue).optString(CONFIG_TYPE_FIELD);
-			if(configValueType == null) {
-				return null;
-			}
-		} else {
-			configValueType = configValue.getClass().getCanonicalName();
-		}
-		if(modelValueType.equals(Double.class) && configValue.getClass().equals(Integer.class)) {
-			return ((Integer) configValue).doubleValue();
-		}
-		if(modelValueType instanceof Class && ((Class<?>) modelValueType).isEnum() && configValue.getClass().equals(String.class)) {
-			return Enum.valueOf((Class) modelValueType, (String) configValue);
-		}
-		if(!modelValueTypeName.equals(configValueType)) {
-			LOGGER.log(Level.WARNING, "Model field type " + modelValueType + " does not match config value type " + configValueType);
-			return null;
-		}
-		return configValue;
-	}
-
-	private Field getModelField(Observable modelObject, String fieldName) {
-		Field modelField;
+	private Field getModelField(Object modelObject, String fieldName) {
 		try {
-			modelField = modelObject.getClass().getDeclaredField(fieldName);
+			return modelObject.getClass().getDeclaredField(fieldName);
 		} catch (NoSuchFieldException e) {
-			LOGGER.log(Level.WARNING, "Unmappable config field " + fieldName);
+			LOGGER.log(Level.WARNING, "Unmappable config field " + fieldName, e);
 			return null;
 		}
-		if(!SettableProperty.class.isAssignableFrom(modelField.getType())) {
+	}
+
+	private void setModelField(Field modelField, Object model, Object fieldValue) {
+		try {
+			modelField.set(model, fieldValue);
+		} catch (IllegalAccessException e) {
+			LOGGER.log(Level.WARNING, "Setting model field value failed", e);
+		}
+	}
+
+	private Object getModelFieldValue(Object model, Field modelField) {
+		Object modelFieldValue;
+		try {
+			modelFieldValue = modelField.get(model);
+		} catch (IllegalAccessException e) {
+			LOGGER.log(Level.SEVERE, "Getting model field failed", e);
 			return null;
 		}
-		return modelField;
+		return modelFieldValue;
 	}
 
 }
