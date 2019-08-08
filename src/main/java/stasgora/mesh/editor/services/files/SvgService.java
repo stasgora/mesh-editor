@@ -83,7 +83,7 @@ public class SvgService {
 	private void drawTriangles(SVGGraphics2D svg, double transparency) {
 		List<Triangle> triangles = triangleUtils.getValidTriangles();
 		for (Triangle triangle : triangles) {
-			svg.setColor(colorUtils.getPolygonColor(triangleUtils.getCanvasSpacePolygon(triangle)).setAlpha(transparency).toAwtColor());
+			//svg.setColor(colorUtils.getPolygonColor(triangleUtils.convertToCanvasSpace(triangle)).setAlpha(transparency).toAwtColor());
 			svg.fillPolygon(triangle.xCoords(), triangle.yCoords(), 3);
 		}
 	}

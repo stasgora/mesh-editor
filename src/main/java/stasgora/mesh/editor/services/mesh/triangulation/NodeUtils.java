@@ -56,10 +56,6 @@ public class NodeUtils {
 		} while (currentTriangle != firstTriangle);
 	}
 
-	public Point[] getCanvasSpaceNodes() {
-		return canvasData.mesh.get().getNodes().stream().map(this::proportionalToCanvasPos).toArray(Point[]::new);
-	}
-
 	public Point proportionalToCanvasPos(Point node) {
 		Rectangle imageBox = canvasData.imageBox;
 		return new Point(node).multiplyByScalar(imageBox.size.x / REL_SPACE_FACTOR).add(imageBox.position);
@@ -75,9 +71,8 @@ public class NodeUtils {
 		return new Point(node).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
 	}
 
-	public Point canvasToPixelPos(Point node) {
-		Rectangle imageBox = canvasData.imageBox;
-		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / canvasData.baseImage.get().getWidth());
+	public Point proportionalToPixelPos(Point node) {
+		return new Point(node).multiplyByScalar(canvasData.baseImage.get().getWidth() / REL_SPACE_FACTOR);
 	}
 
 	public Point getProportionalMarginSize() {

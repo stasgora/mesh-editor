@@ -7,9 +7,12 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.services.config.JsonAppConfigReader;
 import stasgora.mesh.editor.services.config.JsonLangConfigReader;
+import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
+import stasgora.mesh.editor.services.mesh.rendering.MeshRenderer;
+import stasgora.mesh.editor.services.mesh.rendering.SvgMeshRenderer;
 import stasgora.mesh.editor.services.mesh.voronoi.VoronoiDiagramService;
 import stasgora.mesh.editor.view.ViewType;
-import stasgora.mesh.editor.services.drawing.CanvasAction;
+import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.services.files.FileUtils;
 import stasgora.mesh.editor.services.config.AppConfigReader;
@@ -36,7 +39,7 @@ import stasgora.mesh.editor.view.CanvasView;
 import stasgora.mesh.editor.view.MenuView;
 import stasgora.mesh.editor.view.PropertiesView;
 import stasgora.mesh.editor.view.WindowView;
-import stasgora.mesh.editor.services.drawing.CanvasActionFacade;
+import stasgora.mesh.editor.services.input.CanvasActionFacade;
 import stasgora.mesh.editor.services.drawing.ColorUtils;
 import stasgora.mesh.editor.services.drawing.ImageBox;
 import stasgora.mesh.editor.services.drawing.MeshBox;
@@ -72,8 +75,10 @@ public class ObjectGraphFactory {
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
 	private FlippingUtils flippingUtils;
+
 	private ColorUtils colorUtils;
-	private SvgService svgService;
+	private CanvasMeshRenderer canvasMeshRenderer;
+	private SvgMeshRenderer svgMeshRenderer;
 
 	private UiDialogUtils dialogUtils;
 	private ObjectProperty<Cursor> mouseCursor;
@@ -105,6 +110,7 @@ public class ObjectGraphFactory {
 		createConfigServices();
 		createTriangulationServices();
 		setupVisualObjects();
+		createRenderingServices();
 
 		createActionHistoryService();
 		createProjectServices();
@@ -127,7 +133,6 @@ public class ObjectGraphFactory {
 		flippingUtils = new FlippingUtils(project.canvasData.mesh, triangleUtils);
 		voronoiDiagramService = new VoronoiDiagramService(project.canvasData.mesh, nodeUtils);
 		triangulationService = new FlipBasedTriangulationService(project.canvasData.mesh, nodeUtils, triangleUtils, flippingUtils, voronoiDiagramService);
-		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
 	}
 
 	private void setupVisualObjects() {
@@ -135,11 +140,17 @@ public class ObjectGraphFactory {
 		mouseCursor = stage.getScene().cursorProperty();
 	}
 
+	private void createRenderingServices() {
+		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
+
+		canvasMeshRenderer = new CanvasMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
+		svgMeshRenderer = new SvgMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
+	}
+
 	private void createProjectServices() {
-		svgService = new SvgService(project.canvasData, project.visualProperties, nodeUtils, triangleUtils, colorUtils);
 		fileUtils = new ProjectFileUtils(project.canvasData, appConfig, project.visualProperties);
 		dialogUtils = new UiDialogUtils(stage, appLang);
-		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgService);
+		workspaceActionExecutor = new WorkspaceActionExecutor(fileUtils, project, this, svgMeshRenderer);
 		workspaceAction = new WorkspaceActionFacade(workspaceActionExecutor, appLang, dialogUtils, appConfig, project.loadState, mouseCursor);
 		configModelMapper = new ConfigModelMapper(appConfig);
 		propertyTreeCellFactory = new PropertyTreeCellFactory(appLang, appConfig, project.visualProperties, actionHistoryService);
@@ -161,11 +172,11 @@ public class ObjectGraphFactory {
 				viewNamespaces, project.visualProperties, project.loadState.stateSaved, configModelMapper, propertyTreeCellFactory);
 		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState, actionHistoryService);
 		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, project,
-				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction, project.loadState.loaded);
+				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction, project.loadState.loaded, canvasMeshRenderer);
 		windowView.init(project.loadState, stage, appConfig, workspaceAction);
 
 		canvasView.meshCanvas.init(colorUtils, project.visualProperties);
-		canvasView.imageCanvas.init(project.visualProperties.imageTransparency);
+		canvasView.imageCanvas.init(project.canvasData, project.visualProperties.imageTransparency);
 	}
 
 }

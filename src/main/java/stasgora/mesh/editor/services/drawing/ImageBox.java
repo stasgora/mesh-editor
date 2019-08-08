@@ -10,6 +10,7 @@ import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.geom.Point;
 import io.github.stasgora.observetree.SettableProperty;
+import stasgora.mesh.editor.services.input.MouseListener;
 
 public class ImageBox implements MouseListener {
 

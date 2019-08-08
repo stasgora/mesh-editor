@@ -40,7 +40,7 @@ public class ColorUtils {
 	}
 
 	public SerializableColor getNodeColor(Point node) {
-		node = nodeUtils.canvasToPixelPos(node);
+		node = nodeUtils.proportionalToPixelPos(node);
 		Point pixelImgSize = new Point(baseImage.get().getWidth(), baseImage.get().getHeight());
 		Color color = node.isBetween(new Point(), pixelImgSize) ? baseImage.get().getPixelReader().getColor((int) node.x, (int) node.y) : Color.WHITE;
 		return new SerializableColor(color);

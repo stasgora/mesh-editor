@@ -55,12 +55,8 @@ public class TriangleUtils {
 		return det + 1e-5 < 0 ? current.triangles[nodeIndex] : null;
 	}
 
-	public List<Point[]> getCanvasSpaceTriangles() {
-		return getValidTriangles().stream().map(this::getCanvasSpacePolygon).collect(Collectors.toList());
-	}
-
-	public List<Point[]> getCanvasSpaceVoronoiRegions() {
-		return mesh.get().getRegions().stream().map(this::getCanvasSpacePolygon).collect(Collectors.toList());
+	public List<Polygon> getValidVoronoiRegions() {
+		return mesh.get().getRegions();
 	}
 
 	public List<Triangle> getValidTriangles() {
@@ -75,10 +71,6 @@ public class TriangleUtils {
 			}
 		}
 		return true;
-	}
-
-	public Point[] getCanvasSpacePolygon(Polygon polygon) {
-		return Arrays.stream(polygon.nodes).map(node -> nodeUtils.proportionalToCanvasPos(new Point(node))).toArray(Point[]::new);
 	}
 
 	Point getSeparateNode(Triangle from, Triangle with) {

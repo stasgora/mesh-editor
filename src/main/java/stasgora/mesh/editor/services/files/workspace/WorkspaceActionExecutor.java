@@ -7,6 +7,8 @@ import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.model.project.Project;
 import stasgora.mesh.editor.services.files.SvgService;
+import stasgora.mesh.editor.services.mesh.rendering.MeshRenderer;
+import stasgora.mesh.editor.services.mesh.rendering.SvgMeshRenderer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -19,13 +21,13 @@ public class WorkspaceActionExecutor {
 	private FileUtils fileUtils;
 	private final Project project;
 	private ObjectGraphFactory objectGraphFactory;
-	private SvgService svgService;
+	private SvgMeshRenderer svgMeshRenderer;
 
-	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgService svgService) {
+	public WorkspaceActionExecutor(FileUtils fileUtils, Project project, ObjectGraphFactory objectGraphFactory, SvgMeshRenderer svgMeshRenderer) {
 		this.fileUtils = fileUtils;
 		this.project = project;
 		this.objectGraphFactory = objectGraphFactory;
-		this.svgService = svgService;
+		this.svgMeshRenderer = svgMeshRenderer;
 	}
 
 	void openProject(File location) throws ProjectIOException {
@@ -63,7 +65,7 @@ public class WorkspaceActionExecutor {
 
 	void exportProjectAsSvg(File location) throws ProjectIOException {
 		try(FileOutputStream fileStream = new FileOutputStream(fileUtils.getFileWithExtension(location, "svg"))) {
-			fileStream.write(svgService.createSvg().getBytes(StandardCharsets.UTF_8));
+			fileStream.write(svgMeshRenderer.renderAsString().getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new ProjectIOException(e);
 		}

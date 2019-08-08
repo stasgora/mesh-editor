@@ -3,6 +3,7 @@ package stasgora.mesh.editor.services.drawing;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
+import stasgora.mesh.editor.services.input.MouseListener;
 import stasgora.mesh.editor.services.mesh.triangulation.TriangulationService;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.model.geom.Mesh;
