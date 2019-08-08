@@ -11,18 +11,17 @@ import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.Project;
 import stasgora.mesh.editor.services.drawing.ImageBox;
 import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
-import stasgora.mesh.editor.services.mesh.rendering.MeshRenderer;
 import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
 import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
+import stasgora.mesh.editor.ui.canvas.Canvas;
 import stasgora.mesh.editor.ui.canvas.ImageCanvas;
-import stasgora.mesh.editor.ui.canvas.MeshCanvas;
 
 import java.util.Map;
 
 public class CanvasView extends SubController {
 
 	public ImageCanvas imageCanvas;
-	public MeshCanvas meshCanvas;
+	public Canvas meshCanvas;
 
 	private final Project project;
 	private Point canvasViewSize;

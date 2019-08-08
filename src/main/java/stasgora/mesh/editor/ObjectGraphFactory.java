@@ -175,7 +175,6 @@ public class ObjectGraphFactory {
 				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction, project.loadState.loaded, canvasMeshRenderer);
 		windowView.init(project.loadState, stage, appConfig, workspaceAction);
 
-		canvasView.meshCanvas.init(colorUtils, project.visualProperties);
 		canvasView.imageCanvas.init(project.canvasData, project.visualProperties.imageTransparency);
 	}
 
