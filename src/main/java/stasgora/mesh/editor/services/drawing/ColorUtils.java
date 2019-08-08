@@ -19,6 +19,8 @@ public class ColorUtils {
 	private SettableProperty<Image> baseImage;
 	private AppConfigReader appConfig;
 
+	private static final Color OUTSIDE_IMAGE_COLOR = Color.BLACK;
+
 	public ColorUtils(NodeUtils nodeUtils, SettableProperty<Image> baseImage, AppConfigReader appConfig) {
 		this.nodeUtils = nodeUtils;
 		this.baseImage = baseImage;
@@ -42,7 +44,7 @@ public class ColorUtils {
 	public SerializableColor getNodeColor(Point node) {
 		node = nodeUtils.proportionalToPixelPos(node);
 		Point pixelImgSize = new Point(baseImage.get().getWidth(), baseImage.get().getHeight());
-		Color color = node.isBetween(new Point(), pixelImgSize) ? baseImage.get().getPixelReader().getColor((int) node.x, (int) node.y) : Color.WHITE;
+		Color color = node.isBetween(new Point(), pixelImgSize) ? baseImage.get().getPixelReader().getColor((int) node.x, (int) node.y) : OUTSIDE_IMAGE_COLOR;
 		return new SerializableColor(color);
 	}
 
