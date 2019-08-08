@@ -60,10 +60,9 @@ public class Mesh extends Observable implements Serializable {
 		return nodeRegions.stream().map(pointRegion -> pointRegion.node).collect(Collectors.toUnmodifiableList());
 	}
 
-	public List<Polygon> getRegions() {
-		return nodeRegions.stream().map(nodes -> nodes.region).collect(Collectors.toUnmodifiableList());
+	public List<PointRegion> getNodeRegions() {
+		return Collections.unmodifiableList(nodeRegions);
 	}
-
 
 	public void addTriangle(Triangle triangle) {
 		triangles.add(triangle);

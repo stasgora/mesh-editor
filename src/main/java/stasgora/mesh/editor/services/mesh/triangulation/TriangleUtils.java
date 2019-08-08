@@ -2,14 +2,18 @@ package stasgora.mesh.editor.services.mesh.triangulation;
 
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
+import stasgora.mesh.editor.model.geom.PointRegion;
 import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import io.github.stasgora.observetree.SettableObservable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TriangleUtils {
 
@@ -56,7 +60,9 @@ public class TriangleUtils {
 	}
 
 	public List<Polygon> getValidVoronoiRegions() {
-		return mesh.get().getRegions();
+		Stream<Triangle> boundingTriangleStream = mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.nodes).anyMatch(mesh.get().boundingNodes::contains));
+		Set<Point> boundingNodes = boundingTriangleStream.flatMap(triangle -> Arrays.stream(triangle.nodes)).collect(Collectors.toSet());
+		return mesh.get().getNodeRegions().stream().filter(region -> !boundingNodes.contains(region.node)).map(pointRegion -> pointRegion.region).collect(Collectors.toList());
 	}
 
 	public List<Triangle> getValidTriangles() {
@@ -65,12 +71,11 @@ public class TriangleUtils {
 
 	private boolean isTriangleValid(Triangle triangle) {
 		List<Point> boundingNodes = mesh.get().boundingNodes;
-		for (Point node : triangle.nodes) {
-			if (boundingNodes.contains(node)) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays.stream(triangle.nodes).noneMatch(boundingNodes::contains);
+	}
+
+	private boolean isNodeRegionValid(PointRegion region) {
+		return !mesh.get().boundingNodes.contains(region.node);
 	}
 
 	Point getSeparateNode(Triangle from, Triangle with) {
