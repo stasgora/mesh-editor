@@ -3,14 +3,14 @@ package stasgora.mesh.editor.services.mesh.voronoi;
 import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.PointRegion;
 import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
-import stasgora.mesh.editor.model.project.MeshType;
-import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class VoronoiDiagramService {

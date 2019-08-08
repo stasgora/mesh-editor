@@ -1,12 +1,14 @@
 package stasgora.mesh.editor.services.mesh.triangulation;
 
+import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
-import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.services.mesh.voronoi.VoronoiDiagramService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class FlipBasedTriangulationService implements TriangulationService {
 
@@ -75,7 +77,11 @@ public class FlipBasedTriangulationService implements TriangulationService {
 		List<Point> points = new ArrayList<>();
 		List<Triangle> triangles = new ArrayList<>();
 		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
+		List<Point> neighbourPoints = new ArrayList<>(points);
 		retriangulateNodeHole(node, points, triangles);
+		mesh.get().removeNode(node);
+
+		voronoiDiagramService.generateDiagram(neighbourPoints);
 		mesh.get().notifyListeners();
 		return true;
 	}
@@ -91,12 +97,14 @@ public class FlipBasedTriangulationService implements TriangulationService {
 		Stack<Triangle> trianglesToCheck = new Stack<>();
 		trianglesToCheck.addAll(triangles);
 		flippingUtils.flipInvalidTriangles(trianglesToCheck);
+
+		points.add(node);
+		voronoiDiagramService.generateDiagram(points);
 		mesh.get().notifyListeners();
 		return node;
 	}
 
 	private void retriangulateNodeHole(Point node, List<Point> nodes, List<Triangle> triangles) {
-		Mesh mesh = this.mesh.get();
 		Point[] currentNodes = new Point[3];
 		currentNodes[0] = nodes.get(0);
 		while (nodes.size() > 3) {
@@ -112,7 +120,6 @@ public class FlipBasedTriangulationService implements TriangulationService {
 			}
 		}
 		triangleUtils.mergeTrianglesIntoOne(nodes, triangles);
-		mesh.removeNode(node);
 	}
 
 	private boolean checkTriangleAgainstNodes(List<Point> nodes, Point[] currentNodes, int currentId) {
