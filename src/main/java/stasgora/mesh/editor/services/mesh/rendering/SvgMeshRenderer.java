@@ -50,7 +50,7 @@ public class SvgMeshRenderer extends MeshRenderer {
 	@Override
 	protected void drawPolygon(Polygon polygon, SerializableColor color) {
 		graphics.setColor(color.toAwtColor());
-		graphics.fillPolygon(polygon.xCoords(), polygon.yCoords(), 3);
+		graphics.fillPolygon(polygon.xCoords(), polygon.yCoords(), polygon.nodes.length);
 	}
 
 	@Override
