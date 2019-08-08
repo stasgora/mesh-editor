@@ -6,8 +6,6 @@ import stasgora.mesh.editor.services.files.FileUtils;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.model.project.Project;
-import stasgora.mesh.editor.services.files.SvgService;
-import stasgora.mesh.editor.services.mesh.rendering.MeshRenderer;
 import stasgora.mesh.editor.services.mesh.rendering.SvgMeshRenderer;
 
 import java.io.*;
