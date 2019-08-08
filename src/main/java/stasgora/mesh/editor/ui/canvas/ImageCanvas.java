@@ -1,7 +1,6 @@
 package stasgora.mesh.editor.ui.canvas;
 
 import io.github.stasgora.observetree.SettableProperty;
-import javafx.scene.image.Image;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 
