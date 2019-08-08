@@ -62,8 +62,6 @@ public class CanvasMeshRenderer extends MeshRenderer {
 	}
 
 	private void createPath(Point[] vertices) {
-		if(vertices.length < 3)
-			return;
 		vertices = Arrays.stream(vertices).map(nodeUtils::proportionalToCanvasPos).toArray(Point[]::new);
 		context.beginPath();
 		context.moveTo(vertices[0].x, vertices[0].y);

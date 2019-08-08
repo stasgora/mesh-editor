@@ -83,7 +83,7 @@ public abstract class MeshRenderer {
 		double transparency = visualProperties.meshTransparency.get() * layer.layerTransparency.get();
 		for (Polygon polygon : polygons) { // FIXME drawing twice most lines
 			Point[] nodes = polygon.nodes;
-			for (int i = 0; i < nodes.length - 1; i++) {
+			for (int i = 0; i < nodes.length; i++) {
 				int nextIndex = (i + 1) % nodes.length;
 				drawEdge(nodes[i], nodes[nextIndex], colorUtils.getEdgeColor(nodes[i], nodes[nextIndex]).setAlpha(transparency));
 			}
