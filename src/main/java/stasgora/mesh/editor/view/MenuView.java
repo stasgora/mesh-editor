@@ -13,6 +13,7 @@ public class MenuView extends SubController {
 
 	private WorkspaceAction workspaceAction;
 	private final ActionHistoryService actionHistoryService;
+	private final AboutWindow aboutWindow;
 	private final LoadState loadState;
 
 	public MenuItem newProjectMenuItem;
@@ -27,14 +28,17 @@ public class MenuView extends SubController {
 	public MenuItem undoMenuItem;
 	public MenuItem redoMenuItem;
 
+	public MenuItem aboutMenuItem;
+
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 
 	public MenuView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,
-	                WorkspaceAction workspaceAction, LoadState loadState, ActionHistoryService actionHistoryService) {
+	                WorkspaceAction workspaceAction, LoadState loadState, ActionHistoryService actionHistoryService, AboutWindow aboutWindow) {
 		super(root, viewType, viewNamespaces);
 		this.workspaceAction = workspaceAction;
 		this.loadState = loadState;
 		this.actionHistoryService = actionHistoryService;
+		this.aboutWindow = aboutWindow;
 		init();
 	}
 
@@ -50,6 +54,8 @@ public class MenuView extends SubController {
 
 		undoMenuItem.setOnAction(event -> actionHistoryService.undo());
 		redoMenuItem.setOnAction(event -> actionHistoryService.redo());
+
+		aboutMenuItem.setOnAction(event -> aboutWindow.show());
 
 		namespace.put(MENU_FILE_ITEM_DISABLED, true);
 		loadState.loaded.addListener(() -> namespace.put(MENU_FILE_ITEM_DISABLED, !((boolean) namespace.get(MENU_FILE_ITEM_DISABLED))));

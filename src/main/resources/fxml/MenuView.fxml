@@ -18,7 +18,10 @@
 		<MenuItem fx:id="exitAppMenuItem" text="${menu_file_item_quit}" accelerator="Ctrl+Q" />
 	</Menu>
 	<Menu text="${menu_edit_title}">
-		<MenuItem fx:id="undoMenuItem" text="${menu_edit_item_undo}" accelerator="Ctrl+Z" />
-		<MenuItem fx:id="redoMenuItem" text="${menu_edit_item_redo}" accelerator="Ctrl+Shift+Z" />
+		<MenuItem fx:id="undoMenuItem" disable="${menu_file_item_disabled}" text="${menu_edit_item_undo}" accelerator="Ctrl+Z" />
+		<MenuItem fx:id="redoMenuItem" disable="${menu_file_item_disabled}" text="${menu_edit_item_redo}" accelerator="Ctrl+Shift+Z" />
+	</Menu>
+	<Menu text="${menu_help_title}">
+		<MenuItem fx:id="aboutMenuItem" text="${menu_help_item_about}" />
 	</Menu>
 </fx:root>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import stasgora.mesh.editor.ui.CopyableLabel?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #222d32;">
+	<VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
+		<padding>
+			<Insets topRightBottomLeft="40" />
+		</padding>
+		<fx:define>
+			<CopyableLabel fx:id="label" textFill="#aaaaaa">
+				<font>
+					<Font size="12.0" />
+				</font>
+			</CopyableLabel>
+		</fx:define>
+		<HBox spacing="10">
+			<ImageView fx:id="logo" fitHeight="60" fitWidth="60"/>
+			<VBox alignment="CENTER_RIGHT">
+				<Label text="${app_name}" textFill="white">
+					<font>
+						<Font size="50.0" />
+					</font>
+				</Label>
+				<fx:copy source="label" text="${app_version}" />
+			</VBox>
+			<padding>
+				<Insets bottom="20" />
+			</padding>
+		</HBox>
+		<VBox VBox.vgrow="ALWAYS" alignment="BOTTOM_CENTER">
+			<fx:copy source="label" textAlignment="CENTER" text="Copyright © 2019 Stanisław Góra" />
+		</VBox>
+	</VBox>
+</AnchorPane>

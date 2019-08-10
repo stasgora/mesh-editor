@@ -21,6 +21,12 @@
 					"undo": "_Undo",
 					"redo": "_Redo"
 				}
+			},
+			"help": {
+				"title": "_Help",
+				"item": {
+					"about": "_About"
+				}
 			}
 		},
 		"properties": {
