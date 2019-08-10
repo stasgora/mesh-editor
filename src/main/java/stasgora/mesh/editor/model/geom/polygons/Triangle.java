@@ -1,39 +1,33 @@
-package stasgora.mesh.editor.model.geom;
+package stasgora.mesh.editor.model.geom.polygons;
+
+import stasgora.mesh.editor.model.geom.Line;
+import stasgora.mesh.editor.model.geom.Point;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Arrays;
+import java.util.logging.Logger;
 
-public class Triangle implements Serializable {
+public class Triangle extends Polygon {
+	private static final Logger LOGGER = Logger.getLogger(Triangle.class.getName());
 
-	public Point[] nodes;
 	public transient Triangle[] triangles = new Triangle[3];
 
-	private static final long serialVersionUID = 1L;
 	public transient int triangleId;
 	public int[] triangleIds = new int[3];
 
 	public Triangle(Point[] nodes) {
-		this.nodes = nodes;
+		super(nodes);
+		if(nodes.length != 3)
+			LOGGER.warning("Triangle initialized with " + nodes.length + " points");
 	}
 
 	public Triangle(Point a, Point b, Point c) {
-		this(new Point[]{a, b, c});
+		super(new Point[]{a, b, c});
 	}
 
-	public int[] xCoords() {
-		return Arrays.stream(nodes).map(point -> (int) Math.round(point.x)).mapToInt(Integer::intValue).toArray();
-	}
-
-	public int[] yCoords() {
-		return Arrays.stream(nodes).map(point -> (int) Math.round(point.y)).mapToInt(Integer::intValue).toArray();
-	}
-
-	@Override
-	public String toString() {
-		return Arrays.toString(nodes);
+	public Point circumcenter() {
+		return Line.bisectionOf(nodes[0], nodes[1]).intersectWith(Line.bisectionOf(nodes[1], nodes[2]));
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {

@@ -6,11 +6,12 @@ import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.geom.Point;
 import io.github.stasgora.observetree.SettableProperty;
 import stasgora.mesh.editor.model.paint.SerializableColor;
-import stasgora.mesh.editor.services.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ColorUtils {
 
@@ -18,14 +19,16 @@ public class ColorUtils {
 	private SettableProperty<Image> baseImage;
 	private AppConfigReader appConfig;
 
+	private static final Color OUTSIDE_IMAGE_COLOR = Color.BLACK;
+
 	public ColorUtils(NodeUtils nodeUtils, SettableProperty<Image> baseImage, AppConfigReader appConfig) {
 		this.nodeUtils = nodeUtils;
 		this.baseImage = baseImage;
 		this.appConfig = appConfig;
 	}
 
-	public SerializableColor getTriangleColor(Point[] triangle) {
-		return getAverageNodeColor(getTriangleSamplePoints(triangle));
+	public SerializableColor getPolygonColor(Point[] polygon) {
+		return getAverageNodeColor(getPolygonSamplePoints(polygon));
 	}
 
 	public SerializableColor getEdgeColor(Point first, Point second) {
@@ -39,9 +42,9 @@ public class ColorUtils {
 	}
 
 	public SerializableColor getNodeColor(Point node) {
-		node = nodeUtils.canvasToPixelPos(node);
+		node = nodeUtils.proportionalToPixelPos(node);
 		Point pixelImgSize = new Point(baseImage.get().getWidth(), baseImage.get().getHeight());
-		Color color = node.isBetween(new Point(), pixelImgSize) ? baseImage.get().getPixelReader().getColor((int) node.x, (int) node.y) : Color.WHITE;
+		Color color = node.isBetween(new Point(), pixelImgSize) ? baseImage.get().getPixelReader().getColor((int) node.x, (int) node.y) : OUTSIDE_IMAGE_COLOR;
 		return new SerializableColor(color);
 	}
 
@@ -53,17 +56,22 @@ public class ColorUtils {
 		return new SerializableColor(r, g, b, 1);
 	}
 
-	private List<Point> getTriangleSamplePoints(Point[] triangle) {
-		Point[] vectors = new Point[] {new Point(triangle[1]).subtract(triangle[0]), new Point(triangle[2]).subtract(triangle[1])};
+	private List<Point> getPolygonSamplePoints(Point[] vertices) {
 		List<Point> points = new ArrayList<>();
 		int subdivisions = appConfig.getInt("meshBox.edgeColorSamples");
-		for (int i = 0; i <= subdivisions; i++) {
-			Point baseVector = new Point(triangle[0]).add(new Point(vectors[0]).multiplyByScalar(i / (double) subdivisions));
-			for (int j = 0; j <= i; j++) {
-				points.add(new Point(baseVector).add(new Point(vectors[1]).multiplyByScalar(j / (double) subdivisions)));
-			}
+		for (int i = 0; i < vertices.length; i++) {
+			points.add(new Point(vertices[i]));
+			points.addAll(subdivideSegment(vertices[(i + 1) % vertices.length], vertices[i], subdivisions));
 		}
+		int margin = subdivisions + 2;
+		for (int i = points.size() - margin; i >= margin; i--)
+			points.addAll(subdivideSegment(points.get(0), points.get(i), subdivisions));
 		return points;
+	}
+
+	private List<Point> subdivideSegment(Point a, Point b, int subdivisions) {
+		Point baseVector = new Point(b).subtract(a);
+		return IntStream.rangeClosed(1, subdivisions).mapToObj(i -> new Point(baseVector).multiplyByScalar(i / (double) (subdivisions + 1)).add(a)).collect(Collectors.toList());
 	}
 
 }

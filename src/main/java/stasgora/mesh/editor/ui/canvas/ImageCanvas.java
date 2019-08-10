@@ -1,24 +1,27 @@
 package stasgora.mesh.editor.ui.canvas;
 
-import javafx.scene.image.Image;
-import stasgora.mesh.editor.model.geom.Rectangle;
-import stasgora.mesh.editor.model.project.VisualProperties;
+import io.github.stasgora.observetree.SettableProperty;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
+import stasgora.mesh.editor.model.project.CanvasData;
 
 public class ImageCanvas extends Canvas {
 
-	private VisualProperties visualProperties;
+	private CanvasData canvasData;
+	private SettableProperty<Double> imageTransparency;
 
-	public void init(VisualProperties visualProperties) {
-		this.visualProperties = visualProperties;
+	public void init(CanvasData canvasData, SettableProperty<Double> imageTransparency) {
+		this.canvasData = canvasData;
+		this.imageTransparency = imageTransparency;
 	}
 
-	public void draw(Rectangle imageBox, Image baseImage) {
+	public void draw() {
 		if(!isVisible()) {
 			return;
 		}
-		double alpha = visualProperties.imageTransparency.get();
+		double alpha = imageTransparency.get();
 		context.setGlobalAlpha(alpha);
-		context.drawImage(baseImage, imageBox.position.x, imageBox.position.y, imageBox.size.x,  imageBox.size.y);
+		Rectangle imageBox = canvasData.imageBox;
+		context.drawImage(canvasData.baseImage.get(), imageBox.position.x, imageBox.position.y, imageBox.size.x,  imageBox.size.y);
 		context.setGlobalAlpha(1);
 	}
 }

@@ -1,9 +1,9 @@
-package stasgora.mesh.editor.services.triangulation;
+package stasgora.mesh.editor.services.mesh.triangulation;
 
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.Rectangle;
-import stasgora.mesh.editor.model.geom.Triangle;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
+import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 
 import java.util.Arrays;
@@ -25,6 +25,10 @@ public class NodeUtils {
 		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.proportionalSpaceFactor");
 	}
 
+	public Triangle findNodeTriangle(Point node) {
+		return canvasData.mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.nodes).anyMatch(vertex -> vertex == node)).findFirst().orElse(null);
+	}
+
 	Point getClosestNode(Point location, Triangle triangle) {
 		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.imageBox.size.x / REL_SPACE_FACTOR);
 		for (Point node : triangle.nodes) {
@@ -36,7 +40,7 @@ public class NodeUtils {
 		return null;
 	}
 
-	void getNodeNeighbours(Point node, Triangle firstTriangle, List<Point> outPoints, List<Triangle> outTriangles) {
+	public void getNodeNeighbours(Point node, Triangle firstTriangle, List<Point> outPoints, List<Triangle> outTriangles) {
 		Triangle currentTriangle = firstTriangle;
 		do {
 			int nodeIndex = Arrays.asList(currentTriangle.nodes).indexOf(node);
@@ -44,14 +48,12 @@ public class NodeUtils {
 				LOGGER.warning("triangle " + currentTriangle + " does not contain given node " + node);
 			}
 			nodeIndex = (nodeIndex + 2) % 3;
-			outPoints.add(currentTriangle.nodes[nodeIndex]);
+			if(outPoints != null)
+				outPoints.add(currentTriangle.nodes[nodeIndex]);
 			currentTriangle = currentTriangle.triangles[nodeIndex];
-			outTriangles.add(currentTriangle);
+			if(outTriangles != null)
+				outTriangles.add(currentTriangle);
 		} while (currentTriangle != firstTriangle);
-	}
-
-	public Point[] getCanvasSpaceNodes() {
-		return canvasData.mesh.get().getNodes().stream().map(this::proportionalToCanvasPos).toArray(Point[]::new);
 	}
 
 	public Point proportionalToCanvasPos(Point node) {
@@ -69,9 +71,8 @@ public class NodeUtils {
 		return new Point(node).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
 	}
 
-	public Point canvasToPixelPos(Point node) {
-		Rectangle imageBox = canvasData.imageBox;
-		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / canvasData.baseImage.get().getWidth());
+	public Point proportionalToPixelPos(Point node) {
+		return new Point(node).multiplyByScalar(canvasData.baseImage.get().getWidth() / REL_SPACE_FACTOR);
 	}
 
 	public Point getProportionalMarginSize() {

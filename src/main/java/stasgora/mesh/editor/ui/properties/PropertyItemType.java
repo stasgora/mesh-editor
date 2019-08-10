@@ -4,10 +4,12 @@ public enum PropertyItemType {
 
 	IMAGE("image", "transparency"),
 	MESH("mesh.title", "transparency"),
+	TRIANGULATION("mesh.layer.triangulation", "transparency"),
+	VORONOI_DIAGRAM("mesh.layer.voronoiDiagram", "transparency"),
+
+	POLYGONS("mesh.polygons"),
 	EDGES("mesh.edges", "edgeThickness", "meshBox.edgeThickness"),
-	NODES("mesh.nodes", "nodeRadius", "meshBox.nodeRadius"),
-	TRIANGLES("mesh.triangles"),
-	MESH_TYPE("mesh.type.title", "mesh.type");
+	NODES("mesh.nodes", "nodeRadius", "meshBox.nodeRadius");
 
 	private static final String KEY_PREFIX = "fxml.properties.";
 	private static final String TEXT_KEY_PREFIX = KEY_PREFIX + "tree.";

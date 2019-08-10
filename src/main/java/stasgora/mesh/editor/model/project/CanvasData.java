@@ -3,7 +3,7 @@ package stasgora.mesh.editor.model.project;
 import io.github.stasgora.observetree.Observable;
 import javafx.scene.image.Image;
 import stasgora.mesh.editor.model.geom.Mesh;
-import stasgora.mesh.editor.model.geom.Rectangle;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import io.github.stasgora.observetree.SettableObservable;
 import io.github.stasgora.observetree.SettableProperty;
 

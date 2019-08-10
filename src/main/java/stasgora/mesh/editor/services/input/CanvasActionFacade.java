@@ -1,4 +1,4 @@
-package stasgora.mesh.editor.services.drawing;
+package stasgora.mesh.editor.services.input;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
@@ -7,6 +7,8 @@ import javafx.scene.input.ScrollEvent;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.project.LoadState;
+import stasgora.mesh.editor.services.drawing.ImageBox;
+import stasgora.mesh.editor.services.drawing.MeshBox;
 
 public class CanvasActionFacade implements CanvasAction {
 

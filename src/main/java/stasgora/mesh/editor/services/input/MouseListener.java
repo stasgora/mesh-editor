@@ -1,4 +1,4 @@
-package stasgora.mesh.editor.services.drawing;
+package stasgora.mesh.editor.services.input;
 
 import javafx.scene.input.MouseButton;
 import stasgora.mesh.editor.model.geom.Point;

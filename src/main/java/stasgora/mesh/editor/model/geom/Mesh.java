@@ -1,23 +1,25 @@
 package stasgora.mesh.editor.model.geom;
 
 import io.github.stasgora.observetree.Observable;
+import stasgora.mesh.editor.model.geom.polygons.Polygon;
+import stasgora.mesh.editor.model.geom.polygons.Triangle;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Mesh extends Observable implements Serializable {
 
 	private static final Logger LOGGER = Logger.getLogger(Mesh.class.getName());
 	private static final long serialVersionUID = 1L;
 
-	private List<Point> nodes = new ArrayList<>();
+	private List<PointRegion> nodeRegions = new ArrayList<>();
 	private List<Triangle> triangles = new ArrayList<>();
 
 	public List<Point> boundingNodes;
@@ -26,32 +28,40 @@ public class Mesh extends Observable implements Serializable {
 		if(boundingNodes.length != 3) {
 			LOGGER.warning("Mesh bounding nodes number wrong");
 		}
-		this.boundingNodes = Collections.unmodifiableList(Arrays.asList(boundingNodes));
+		this.boundingNodes = List.of(boundingNodes);
 		addTriangle(new Triangle(boundingNodes[0], boundingNodes[1], boundingNodes[2]));
 	}
 
 	public void addNode(Point node) {
-		nodes.add(node);
+		nodeRegions.add(new PointRegion(node));
 		addSubObservable(node);
 		onValueChanged();
 	}
 
-	public void removeNode(int nodeIndex) {
-		nodes.remove(nodeIndex);
-		onValueChanged();
+	public Polygon getPointRegion(Point node) {
+		for (PointRegion pointRegion : nodeRegions) {
+			if (pointRegion.node == node)
+				return pointRegion.region;
+		}
+		return null;
 	}
 
 	public void removeNode(Point node) {
-		nodes.remove(node);
+		for (int i = 0; i < nodeRegions.size(); i++) {
+			if(nodeRegions.get(i).node == node) {
+				nodeRegions.remove(i);
+				break;
+			}
+		}
 		onValueChanged();
 	}
 
-	public Point getNode(int index) {
-		return nodes.get(index);
+	public List<Point> getNodes() {
+		return nodeRegions.stream().map(pointRegion -> pointRegion.node).collect(Collectors.toUnmodifiableList());
 	}
 
-	public List<Point> getNodes() {
-		return Collections.unmodifiableList(nodes);
+	public List<PointRegion> getNodeRegions() {
+		return Collections.unmodifiableList(nodeRegions);
 	}
 
 	public void addTriangle(Triangle triangle) {
@@ -81,7 +91,7 @@ public class Mesh extends Observable implements Serializable {
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
-		nodes.forEach(this::addSubObservable);
+		nodeRegions.forEach(pointRegion -> addSubObservable(pointRegion.node));
 		triangles.forEach(this::assignTriangleNeighbours);
 	}
 

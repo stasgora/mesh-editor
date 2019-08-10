@@ -1,11 +1,15 @@
-package stasgora.mesh.editor.services.triangulation;
+package stasgora.mesh.editor.services.mesh.triangulation;
 
+import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.Triangle;
-import io.github.stasgora.observetree.SettableObservable;
+import stasgora.mesh.editor.model.geom.polygons.Triangle;
+import stasgora.mesh.editor.services.mesh.voronoi.VoronoiDiagramService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
 
 public class FlipBasedTriangulationService implements TriangulationService {
 
@@ -13,12 +17,15 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	private NodeUtils nodeUtils;
 	private TriangleUtils triangleUtils;
 	private FlippingUtils flippingUtils;
+	private VoronoiDiagramService voronoiDiagramService;
 
-	public FlipBasedTriangulationService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils, TriangleUtils triangleUtils, FlippingUtils flippingUtils) {
+	public FlipBasedTriangulationService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils, TriangleUtils triangleUtils,
+	                                     FlippingUtils flippingUtils, VoronoiDiagramService voronoiDiagramService) {
 		this.mesh = mesh;
 		this.nodeUtils = nodeUtils;
 		this.triangleUtils = triangleUtils;
 		this.flippingUtils = flippingUtils;
+		this.voronoiDiagramService = voronoiDiagramService;
 	}
 
 	@Override
@@ -47,8 +54,11 @@ public class FlipBasedTriangulationService implements TriangulationService {
 			mesh.addTriangle(newTriangles[i]);
 			trianglesToCheck.push(newTriangles[i]);
 		}
-		flippingUtils.flipInvalidTriangles(trianglesToCheck);
+		List<Triangle> changedTriangles = flippingUtils.flipInvalidTriangles(trianglesToCheck);
+		changedTriangles.addAll(Arrays.asList(newTriangles));
 		mesh.addNode(location);
+
+		voronoiDiagramService.generateDiagram(triangleUtils.getTrianglePointSet(changedTriangles));
 		mesh.notifyListeners();
 		return true;
 	}
@@ -69,7 +79,11 @@ public class FlipBasedTriangulationService implements TriangulationService {
 		List<Point> points = new ArrayList<>();
 		List<Triangle> triangles = new ArrayList<>();
 		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
+		List<Point> neighbourPoints = new ArrayList<>(points);
 		retriangulateNodeHole(node, points, triangles);
+		mesh.get().removeNode(node);
+
+		voronoiDiagramService.generateDiagram(neighbourPoints);
 		mesh.get().notifyListeners();
 		return true;
 	}
@@ -85,12 +99,14 @@ public class FlipBasedTriangulationService implements TriangulationService {
 		Stack<Triangle> trianglesToCheck = new Stack<>();
 		trianglesToCheck.addAll(triangles);
 		flippingUtils.flipInvalidTriangles(trianglesToCheck);
+
+		points.add(node);
+		voronoiDiagramService.generateDiagram(points);
 		mesh.get().notifyListeners();
 		return node;
 	}
 
 	private void retriangulateNodeHole(Point node, List<Point> nodes, List<Triangle> triangles) {
-		Mesh mesh = this.mesh.get();
 		Point[] currentNodes = new Point[3];
 		currentNodes[0] = nodes.get(0);
 		while (nodes.size() > 3) {
@@ -106,7 +122,6 @@ public class FlipBasedTriangulationService implements TriangulationService {
 			}
 		}
 		triangleUtils.mergeTrianglesIntoOne(nodes, triangles);
-		mesh.removeNode(node);
 	}
 
 	private boolean checkTriangleAgainstNodes(List<Point> nodes, Point[] currentNodes, int currentId) {

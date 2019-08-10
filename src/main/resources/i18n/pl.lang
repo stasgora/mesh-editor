@@ -24,16 +24,15 @@
 			}
 		},
 		"properties": {
-			"title": "Ustawienia",
+			"title": "Warstwy",
 			"tree": {
 				"image": "Obraz",
 				"mesh": {
 					"title": "Siatka",
 					"nodes": "Punkty",
 					"edges": "Linie",
-					"triangles": "Trójkąty",
-					"type": {
-						"title": "Typ",
+					"polygons": "Płaszczyzny",
+					"layer": {
 						"triangulation": "Triangulacja",
 						"voronoiDiagram": "Diagram Voronoi"
 					}

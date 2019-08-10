@@ -30,7 +30,7 @@ public class ProjectFileUtils implements FileUtils {
 				visualProperties.writeProperties(objectStream);
 				fileStream.write(canvasData.rawImageFile);
 			}
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			throw new ProjectIOException(e);
 		}
 	}

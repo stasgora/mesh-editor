@@ -1,6 +1,7 @@
-package stasgora.mesh.editor.model.geom;
+package stasgora.mesh.editor.model.geom.polygons;
 
 import io.github.stasgora.observetree.Observable;
+import stasgora.mesh.editor.model.geom.Point;
 
 import java.io.Serializable;
 

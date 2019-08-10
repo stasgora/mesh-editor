@@ -33,7 +33,7 @@ public class PropertiesView extends SubController {
 	@Override
 	void init() {
 		visualProperties.addListener(() -> stateSaved.setAndNotify(false));
+		configModelMapper.map(visualProperties, "default.visualProperties");
 		propertyTree.setCellFactory(propertyTreeCellFactory);
-		configModelMapper.mapConfigPathToModelObject(visualProperties, "default.visualProperties", true);
 	}
 }

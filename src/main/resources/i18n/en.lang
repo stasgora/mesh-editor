@@ -24,16 +24,15 @@
 			}
 		},
 		"properties": {
-			"title": "Properties",
+			"title": "Layers",
 			"tree": {
 				"image": "Image",
 				"mesh": {
 					"title": "Mesh",
 					"nodes": "Points",
 					"edges": "Lines",
-					"triangles": "Triangles",
-					"type": {
-						"title": "Type",
+					"polygons": "Surfaces",
+					"layer": {
 						"triangulation": "Triangulation",
 						"voronoiDiagram": "Voronoi diagram"
 					}

@@ -4,23 +4,24 @@ import io.github.stasgora.observetree.enums.ListenerPriority;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableMap;
 import javafx.scene.layout.Region;
-import stasgora.mesh.editor.services.drawing.CanvasAction;
+import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.model.geom.Point;
 import io.github.stasgora.observetree.SettableProperty;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.Project;
 import stasgora.mesh.editor.services.drawing.ImageBox;
-import stasgora.mesh.editor.services.triangulation.NodeUtils;
-import stasgora.mesh.editor.services.triangulation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
+import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
+import stasgora.mesh.editor.ui.canvas.Canvas;
 import stasgora.mesh.editor.ui.canvas.ImageCanvas;
-import stasgora.mesh.editor.ui.canvas.MeshCanvas;
 
 import java.util.Map;
 
 public class CanvasView extends SubController {
 
 	public ImageCanvas imageCanvas;
-	public MeshCanvas meshCanvas;
+	public Canvas meshCanvas;
 
 	private final Project project;
 	private Point canvasViewSize;
@@ -30,9 +31,11 @@ public class CanvasView extends SubController {
 	private TriangleUtils triangleUtils;
 	private final CanvasAction canvasAction;
 	private final SettableProperty<Boolean> loaded;
+	private final CanvasMeshRenderer canvasMeshRenderer;
 
-	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, Project project, Point canvasViewSize,
-	                  ImageBox imageBox, NodeUtils nodeUtils, TriangleUtils triangleUtils, CanvasAction canvasAction, SettableProperty<Boolean> loaded) {
+	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, Project project,
+	                  Point canvasViewSize, ImageBox imageBox, NodeUtils nodeUtils, TriangleUtils triangleUtils, CanvasAction canvasAction,
+	                  SettableProperty<Boolean> loaded, CanvasMeshRenderer canvasMeshRenderer) {
 		super(root, viewType, viewNamespaces);
 
 		this.project = project;
@@ -42,6 +45,9 @@ public class CanvasView extends SubController {
 		this.triangleUtils = triangleUtils;
 		this.canvasAction = canvasAction;
 		this.loaded = loaded;
+		this.canvasMeshRenderer = canvasMeshRenderer;
+		canvasMeshRenderer.setContext(meshCanvas.getGraphicsContext2D());
+
 		init();
 	}
 
@@ -96,15 +102,14 @@ public class CanvasView extends SubController {
 	private void drawMesh() {
 		meshCanvas.clear();
 		if(project.loadState.loaded.get() && project.visualProperties.meshVisible.get()) {
-			meshCanvas.draw(nodeUtils.getCanvasSpaceNodes(), triangleUtils.getCanvasSpaceTriangles(), nodeUtils.getCanvasSpaceNodeBoundingBox());
+			canvasMeshRenderer.render();
 		}
 	}
 
 	private void drawImage() {
 		imageCanvas.clear();
 		if(project.loadState.loaded.get() && project.visualProperties.imageVisible.get()) {
-			CanvasData canvasData = project.canvasData;
-			imageCanvas.draw(canvasData.imageBox, canvasData.baseImage.get());
+			imageCanvas.draw();
 		}
 	}
 

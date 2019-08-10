@@ -3,17 +3,18 @@ package stasgora.mesh.editor.services.drawing;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
-import stasgora.mesh.editor.services.triangulation.TriangulationService;
+import stasgora.mesh.editor.services.input.MouseListener;
+import stasgora.mesh.editor.services.mesh.triangulation.TriangulationService;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.model.geom.Mesh;
 import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.Rectangle;
+import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.services.history.actions.node.AddNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.MoveNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.RemoveNodeAction;
-import stasgora.mesh.editor.services.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
 
 public class MeshBox implements MouseListener {
 
@@ -62,10 +63,7 @@ public class MeshBox implements MouseListener {
 			draggedNodeStartPosition = new Point(draggedNode);
 			return true;
 		}
-		if(mouseButton == mouseConfig.placeNodeButton) {
-			return true;
-		}
-		return false;
+		return mouseButton == mouseConfig.placeNodeButton;
 	}
 
 	@Override

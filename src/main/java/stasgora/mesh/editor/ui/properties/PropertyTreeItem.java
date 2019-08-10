@@ -4,7 +4,8 @@ import javafx.scene.control.TreeItem;
 
 public class PropertyTreeItem<T> extends TreeItem<T> {
 	public PropertyItemType itemType;
-	public boolean hasCheckBox, hasSlider, hasComboBox;
+	public boolean hasCheckBox = true;
+	public boolean hasSlider, hasComboBox;
 
 	public double sliderChangeStartValue;
 
