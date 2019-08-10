@@ -7,10 +7,8 @@ import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class VoronoiDiagramService {
@@ -24,7 +22,7 @@ public class VoronoiDiagramService {
 		this.nodeUtils = nodeUtils;
 	}
 
-	public void generateDiagram(List<Point> nodes) {
+	public void generateDiagram(Collection<Point> nodes) {
 		Map<Triangle, Point> triangleCircumcenterMap = new HashMap<>();
 		for (Point node : nodes) {
 			Polygon pointRegion = mesh.get().getPointRegion(node);

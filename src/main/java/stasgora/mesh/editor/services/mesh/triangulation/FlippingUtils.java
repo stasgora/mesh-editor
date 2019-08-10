@@ -5,6 +5,7 @@ import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import io.github.stasgora.observetree.SettableObservable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
@@ -19,7 +20,8 @@ public class FlippingUtils {
 		this.triangleUtils = triangleUtils;
 	}
 
-	void flipInvalidTriangles(Stack<Triangle> remaining) {
+	List<Triangle> flipInvalidTriangles(Stack<Triangle> remaining) {
+		List<Triangle> changedTriangles = new ArrayList<>();
 		while (!remaining.empty()) {
 			Triangle current = remaining.pop();
 			if(!mesh.get().getTriangles().contains(current)) {
@@ -32,10 +34,12 @@ public class FlippingUtils {
 				Point otherNode = triangleUtils.getSeparateNode(neighbour, current);
 				if (isPointInsideCircumcircle(otherNode, current)) {
 					Triangle[] created = flipTriangles(current, neighbour);
+					changedTriangles.addAll(Arrays.asList(created));
 					remaining.addAll(Arrays.asList(created));
 				}
 			}
 		}
+		return changedTriangles;
 	}
 
 	void flipTrianglesFromRing(Point node, List<Point> nodes, List<Triangle> triangles, int currentId) {

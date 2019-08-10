@@ -7,6 +7,7 @@ import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.services.mesh.voronoi.VoronoiDiagramService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -53,10 +54,11 @@ public class FlipBasedTriangulationService implements TriangulationService {
 			mesh.addTriangle(newTriangles[i]);
 			trianglesToCheck.push(newTriangles[i]);
 		}
-		flippingUtils.flipInvalidTriangles(trianglesToCheck);
+		List<Triangle> changedTriangles = flippingUtils.flipInvalidTriangles(trianglesToCheck);
+		changedTriangles.addAll(Arrays.asList(newTriangles));
 		mesh.addNode(location);
 
-		voronoiDiagramService.generateDiagram(mesh.getNodes());
+		voronoiDiagramService.generateDiagram(triangleUtils.getTrianglePointSet(changedTriangles));
 		mesh.notifyListeners();
 		return true;
 	}

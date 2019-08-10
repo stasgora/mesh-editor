@@ -61,8 +61,12 @@ public class TriangleUtils {
 
 	public List<Polygon> getValidVoronoiRegions() {
 		Stream<Triangle> boundingTriangleStream = mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.nodes).anyMatch(mesh.get().boundingNodes::contains));
-		Set<Point> boundingNodes = boundingTriangleStream.flatMap(triangle -> Arrays.stream(triangle.nodes)).collect(Collectors.toSet());
+		Set<Point> boundingNodes = getTrianglePointSet(boundingTriangleStream.collect(Collectors.toList()));
 		return mesh.get().getNodeRegions().stream().filter(region -> !boundingNodes.contains(region.node)).map(pointRegion -> pointRegion.region).collect(Collectors.toList());
+	}
+
+	public Set<Point> getTrianglePointSet(List<Triangle> triangles) {
+		return triangles.stream().flatMap(triangle -> Arrays.stream(triangle.nodes)).collect(Collectors.toSet());
 	}
 
 	public List<Triangle> getValidTriangles() {
