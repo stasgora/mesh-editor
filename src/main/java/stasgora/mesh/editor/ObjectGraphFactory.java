@@ -42,6 +42,7 @@ public class ObjectGraphFactory {
 	private final WindowView windowView;
 	private final Parent root;
 	private final Stage stage;
+	private AboutWindow aboutWindow;
 
 	private PropertiesView propertiesView;
 	private CanvasView canvasView;
@@ -128,6 +129,7 @@ public class ObjectGraphFactory {
 	private void setupVisualObjects() {
 		windowView.createWindowScene(appSettings, stage, root);
 		mouseCursor = stage.getScene().cursorProperty();
+		aboutWindow = new AboutWindow(stage, appConfig);
 	}
 
 	private void createRenderingServices() {
@@ -160,7 +162,7 @@ public class ObjectGraphFactory {
 	private void initControllerObjects() {
 		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW,
 				viewNamespaces, project.visualProperties, project.loadState.stateSaved, configModelMapper, propertyTreeCellFactory);
-		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState, actionHistoryService);
+		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState, actionHistoryService, aboutWindow);
 		canvasView = new CanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW, viewNamespaces, project,
 				canvasViewSize, imageBox, nodeUtils, triangleUtils, canvasAction, project.loadState.loaded, canvasMeshRenderer);
 		windowView.init(project.loadState, stage, appConfig, workspaceAction);

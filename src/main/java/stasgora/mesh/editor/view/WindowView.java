@@ -44,7 +44,7 @@ public class WindowView {
 	}
 
 	private void setWindowTitle() {
-		String title = appConfig.getString("appName");
+		String title = appConfig.getString("app.name");
 		LoadState loadState = this.loadState;
 		if (loadState.loaded.get()) {
 			String projectName = workspaceAction.getProjectName();

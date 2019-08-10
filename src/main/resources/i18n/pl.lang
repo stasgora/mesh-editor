@@ -21,6 +21,12 @@
 					"undo": "_Cofnij",
 					"redo": "_Ponów"
 				}
+			},
+			"help": {
+				"title": "_Help",
+				"item": {
+					"about": "_About"
+				}
 			}
 		},
 		"properties": {
