@@ -27,7 +27,8 @@ public class VoronoiDiagramService {
 		for (Point node : nodes) {
 			Polygon pointRegion = mesh.get().getPointRegion(node);
 			if(pointRegion == null) {
-				LOGGER.warning("Mesh does not contain given node");
+				if(!mesh.get().boundingNodes.contains(node))
+					LOGGER.warning("Mesh does not contain given node");
 				continue;
 			}
 			List<Triangle> triangles = new ArrayList<>();
