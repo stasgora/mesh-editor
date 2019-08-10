@@ -30,7 +30,7 @@ public class SvgMeshRenderer extends MeshRenderer {
 	protected void prepareRendering() {
 		Rectangle boundingBox = nodeUtils.getProportionalNodeBoundingBox();
 		graphics = new SVGGraphics2D((int) boundingBox.size.x, (int) boundingBox.size.y);
-		graphics.setBackground(new Color(1f,1f,1f,0f ));
+		graphics.setBackground(new Color(1f, 1f, 1f, 0f));
 		Point marginSize = nodeUtils.getProportionalMarginSize();
 		graphics.translate(marginSize.x, marginSize.y);
 	}

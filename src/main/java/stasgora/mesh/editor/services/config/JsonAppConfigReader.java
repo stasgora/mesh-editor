@@ -57,7 +57,7 @@ public class JsonAppConfigReader extends JsonConfigReader implements AppConfigRe
 	}
 
 	public static JsonAppConfigReader forFile(String fileName) {
-		try(InputStream input = new FileInputStream(new File(fileName))) {
+		try (InputStream input = new FileInputStream(new File(fileName))) {
 			return new JsonAppConfigReader(createJsonConfig(input, fileName));
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed creating Config Reader for resource '" + fileName + "'", e);

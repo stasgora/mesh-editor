@@ -18,7 +18,7 @@ public class Triangle extends Polygon {
 
 	public Triangle(Point[] nodes) {
 		super(nodes);
-		if(nodes.length != 3)
+		if (nodes.length != 3)
 			LOGGER.warning("Triangle initialized with " + nodes.length + " points");
 	}
 

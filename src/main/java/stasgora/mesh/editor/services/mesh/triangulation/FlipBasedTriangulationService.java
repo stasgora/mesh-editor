@@ -38,7 +38,7 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	public boolean addNode(Point location) {
 		Mesh mesh = this.mesh.get();
 		Triangle triangle = triangleUtils.findTriangleByLocation(location);
-		if(nodeUtils.getClosestNode(location, triangle) != null) {
+		if (nodeUtils.getClosestNode(location, triangle) != null) {
 			return false;
 		}
 		mesh.removeTriangle(triangle);
@@ -73,7 +73,7 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	public boolean removeNode(Point location) {
 		Triangle triangle = triangleUtils.findTriangleByLocation(location);
 		Point node = nodeUtils.getClosestNode(location, triangle);
-		if(node == null) {
+		if (node == null) {
 			return false;
 		}
 		List<Point> points = new ArrayList<>();
@@ -128,7 +128,7 @@ public class FlipBasedTriangulationService implements TriangulationService {
 		for (int i = 0; i < nodes.size() - 3; i++) {
 			int index = (currentId + 3 + i) % nodes.size();
 			double circumcircleTest = triangleUtils.H_matrixDet(currentNodes[2], currentNodes[1], currentNodes[0], nodes.get(index));
-			if(circumcircleTest > 0) {
+			if (circumcircleTest > 0) {
 				return false;
 			}
 		}

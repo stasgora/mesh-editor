@@ -38,7 +38,7 @@ public class SerializableColor implements Serializable {
 	public java.awt.Color toAwtColor() {
 		return new java.awt.Color((float) red, (float) green, (float) blue, (float) alpha);
 	}
-	
+
 	public SerializableColor averageWith(SerializableColor color) {
 		red = (red + color.red) / 2;
 		green = (green + color.green) / 2;

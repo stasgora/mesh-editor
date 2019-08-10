@@ -53,7 +53,7 @@ public class PropertyContainer extends Observable {
 
 	private <T> void iterateProperties(StreamAction<T> propertyAction, T param) throws IOException, ClassNotFoundException {
 		for (SettableProperty property : properties) {
-			if(property.get() instanceof PropertyContainer)
+			if (property.get() instanceof PropertyContainer)
 				((PropertyContainer) property.get()).iterateProperties(propertyAction, param);
 			else
 				propertyAction.execute(property, param);
@@ -62,7 +62,7 @@ public class PropertyContainer extends Observable {
 
 	private void iterateProperties(Consumer<SettableProperty> propertyAction) {
 		for (SettableProperty property : properties) {
-			if(property.get() instanceof PropertyContainer)
+			if (property.get() instanceof PropertyContainer)
 				((PropertyContainer) property.get()).iterateProperties(propertyAction);
 			else
 				propertyAction.accept(property);

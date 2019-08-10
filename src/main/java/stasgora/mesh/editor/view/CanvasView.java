@@ -1,15 +1,15 @@
 package stasgora.mesh.editor.view;
 
+import io.github.stasgora.observetree.SettableProperty;
 import io.github.stasgora.observetree.enums.ListenerPriority;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableMap;
 import javafx.scene.layout.Region;
-import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.model.geom.Point;
-import io.github.stasgora.observetree.SettableProperty;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.Project;
 import stasgora.mesh.editor.services.drawing.ImageBox;
+import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
 import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
 import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
@@ -76,7 +76,7 @@ public class CanvasView extends SubController {
 
 		project.visualProperties.addListener(this::drawBothLayers);
 		loaded.addListener(() -> {
-			if(!loaded.get()) return;
+			if (!loaded.get()) return;
 			imageBox.calcImageBox();
 
 		}, ListenerPriority.HIGH);
@@ -101,14 +101,14 @@ public class CanvasView extends SubController {
 
 	private void drawMesh() {
 		meshCanvas.clear();
-		if(project.loadState.loaded.get() && project.visualProperties.meshVisible.get()) {
+		if (project.loadState.loaded.get() && project.visualProperties.meshVisible.get()) {
 			canvasMeshRenderer.render();
 		}
 	}
 
 	private void drawImage() {
 		imageCanvas.clear();
-		if(project.loadState.loaded.get() && project.visualProperties.imageVisible.get()) {
+		if (project.loadState.loaded.get() && project.visualProperties.imageVisible.get()) {
 			imageCanvas.draw();
 		}
 	}

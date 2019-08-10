@@ -15,7 +15,7 @@ public class Line {
 
 	public Point intersectWith(Line line) {
 		double delta = a * line.b - line.a * b;
-		if(delta == 0) {
+		if (delta == 0) {
 			LOGGER.warning("Lines are parallel");
 			return null;
 		}

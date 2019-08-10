@@ -2,7 +2,7 @@ package stasgora.mesh.editor.view;
 
 import io.github.stasgora.observetree.SettableProperty;
 import javafx.collections.ObservableMap;
-import javafx.scene.control.*;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.Region;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.mapping.ConfigModelMapper;

@@ -1,26 +1,26 @@
 package stasgora.mesh.editor.services.drawing;
 
+import io.github.stasgora.observetree.SettableObservable;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
-import stasgora.mesh.editor.services.input.MouseListener;
-import stasgora.mesh.editor.services.mesh.triangulation.TriangulationService;
-import stasgora.mesh.editor.services.history.ActionHistoryService;
-import stasgora.mesh.editor.model.geom.Mesh;
-import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.MouseConfig;
+import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
+import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.services.history.actions.node.AddNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.MoveNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.RemoveNodeAction;
+import stasgora.mesh.editor.services.input.MouseListener;
 import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.triangulation.TriangulationService;
 
 public class MeshBox implements MouseListener {
 
 	private Point draggedNode;
 	private Point draggedNodeStartPosition;
-	
+
 	private final SettableObservable<Mesh> mesh;
 	private final MouseConfig mouseConfig;
 	private final Point canvasViewSize;
@@ -54,11 +54,11 @@ public class MeshBox implements MouseListener {
 	@Override
 	public boolean onDragStart(Point mousePos, MouseButton mouseButton) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
-		if(mouseButton == mouseConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
+		if (mouseButton == mouseConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
 			actionHistoryService.registerAction(new RemoveNodeAction(proportionalPos.x, proportionalPos.y));
 			return true;
 		}
-		if(mouseButton == mouseConfig.moveNodeButton && draggedNode != null) {
+		if (mouseButton == mouseConfig.moveNodeButton && draggedNode != null) {
 			mouseCursor.setValue(Cursor.CLOSED_HAND);
 			draggedNodeStartPosition = new Point(draggedNode);
 			return true;
@@ -74,9 +74,9 @@ public class MeshBox implements MouseListener {
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
 		dragPoint(mousePos, mouseButton, true);
-		if(draggedNode == null && mouseButton == mouseConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
+		if (draggedNode == null && mouseButton == mouseConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
 			Point point = nodeUtils.canvasToProportionalPos(mousePos);
-			if(triangulationService.addNode(point))
+			if (triangulationService.addNode(point))
 				actionHistoryService.registerAction(new AddNodeAction(point.x, point.y));
 		}
 		draggedNode = null;
@@ -84,12 +84,12 @@ public class MeshBox implements MouseListener {
 	}
 
 	private void dragPoint(Point mousePos, MouseButton button, boolean dragFinished) {
-		if(draggedNode == null || button != mouseConfig.moveNodeButton) {
+		if (draggedNode == null || button != mouseConfig.moveNodeButton) {
 			return;
 		}
 		Point targetPos = nodeUtils.canvasToProportionalPos(clampCanvasSpaceNodePos(mousePos.clamp(canvasViewSize)));
 		Point newPos = triangulationService.moveNode(draggedNode, targetPos);
-		if(dragFinished)
+		if (dragFinished)
 			actionHistoryService.registerAction(new MoveNodeAction(newPos, draggedNodeStartPosition));
 		mesh.get().notifyListeners();
 	}

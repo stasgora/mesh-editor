@@ -15,13 +15,13 @@ public class ImageCanvas extends Canvas {
 	}
 
 	public void draw() {
-		if(!isVisible()) {
+		if (!isVisible()) {
 			return;
 		}
 		double alpha = imageTransparency.get();
 		context.setGlobalAlpha(alpha);
 		Rectangle imageBox = canvasData.imageBox;
-		context.drawImage(canvasData.baseImage.get(), imageBox.position.x, imageBox.position.y, imageBox.size.x,  imageBox.size.y);
+		context.drawImage(canvasData.baseImage.get(), imageBox.position.x, imageBox.position.y, imageBox.size.x, imageBox.size.y);
 		context.setGlobalAlpha(1);
 	}
 }

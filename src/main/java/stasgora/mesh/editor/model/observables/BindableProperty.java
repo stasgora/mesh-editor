@@ -24,7 +24,7 @@ public class BindableProperty<T> extends SettableProperty<T> {
 		observable.addListener((observableValue, oldVal, newVal) -> setAndNotify(fromFxObservable.apply(newVal)));
 		ChangeListener setFxObservable = () -> observable.setValue(toFxObservable.apply(modelValue));
 		addListener(setFxObservable);
-		if(modelValue != null)
+		if (modelValue != null)
 			setFxObservable.call();
 	}
 

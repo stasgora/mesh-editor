@@ -1,14 +1,13 @@
 package stasgora.mesh.editor.services.mesh.triangulation;
 
+import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.PointRegion;
 import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
-import io.github.stasgora.observetree.SettableObservable;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -99,11 +98,11 @@ public class TriangleUtils {
 
 	void bindTrianglesBothWays(Triangle a, int aIndex, Triangle b, Triangle bIndex) {
 		a.triangles[aIndex] = b;
-		if(b == null) {
+		if (b == null) {
 			return;
 		}
 		int index = Arrays.asList(b.triangles).indexOf(bIndex);
-		if(index == -1) {
+		if (index == -1) {
 			LOGGER.warning("Triangle " + bIndex + " is not an neighbour of " + b);
 			return;
 		}

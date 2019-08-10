@@ -9,8 +9,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import stasgora.mesh.editor.services.files.workspace.FileChooserAction;
 import stasgora.mesh.editor.services.config.LangConfigReader;
+import stasgora.mesh.editor.services.files.workspace.FileChooserAction;
 
 import java.io.File;
 import java.util.Optional;
@@ -53,7 +53,7 @@ public class UiDialogUtils {
 
 	private Optional<ButtonType> showDialog(Alert.AlertType type, String title, String header, String content, ButtonType[] buttons) {
 		Alert dialog;
-		if(buttons != null) {
+		if (buttons != null) {
 			dialog = new Alert(type, content, buttons);
 		} else {
 			dialog = new Alert(type, content);

@@ -37,10 +37,10 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;
 		this.actionHistoryService = actionHistoryService;
-		
+
 		initPropertyMaps();
 	}
-	
+
 	private void initPropertyMaps() {
 		propertyTypeToVisibleValue = Map.of(
 				PropertyItemType.IMAGE, item -> visualProperties.imageVisible,
@@ -88,11 +88,11 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				body.setSpacing(5);
 				body.setAlignment(Pos.CENTER_LEFT);
 
-				if(treeItem.hasCheckBox)
+				if (treeItem.hasCheckBox)
 					addCheckBox(treeItem, body);
-				if(treeItem.hasSlider)
+				if (treeItem.hasSlider)
 					addSlider(treeItem, body);
-				if(treeItem.hasComboBox)
+				if (treeItem.hasComboBox)
 					addComboBox(treeItem, body);
 				setGraphic(body);
 			}
@@ -112,7 +112,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				propertyTypeToSliderValue.get(treeItem.itemType).apply(treeItem).bindWithFxObservable(slider.valueProperty());
 
 				slider.valueChangingProperty().addListener((observable, oldChanging, changing) -> {
-					if(changing)
+					if (changing)
 						treeItem.sliderChangeStartValue = slider.getValue();
 					else
 						actionHistoryService.registerAction(new PropertyChangeAction<>(slider.getValue(), treeItem.sliderChangeStartValue, slider::setValue));

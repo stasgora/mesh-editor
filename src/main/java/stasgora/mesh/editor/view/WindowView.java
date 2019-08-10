@@ -7,9 +7,9 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
-import stasgora.mesh.editor.model.project.LoadState;
 
 public class WindowView {
 
@@ -46,9 +46,9 @@ public class WindowView {
 	private void setWindowTitle() {
 		String title = appConfig.getString("appName");
 		LoadState loadState = this.loadState;
-		if(loadState.loaded.get()) {
+		if (loadState.loaded.get()) {
 			String projectName = workspaceAction.getProjectName();
-			if(!loadState.stateSaved.get()) {
+			if (!loadState.stateSaved.get()) {
 				projectName += "*";
 			}
 			title = projectName + " - " + title;
@@ -64,7 +64,7 @@ public class WindowView {
 	public void createWindowScene(AppConfigReader appSettings, Stage stage, Parent root) {
 		Scene scene;
 		String windowPath = "last.windowPlacement";
-		if(appSettings.containsPath(windowPath)) {
+		if (appSettings.containsPath(windowPath)) {
 			scene = new Scene(root, appSettings.getInt(windowPath + ".size.w"), appSettings.getInt(windowPath + ".size.h"));
 			stage.setX(appSettings.getInt(windowPath + ".position.x"));
 			stage.setY(appSettings.getInt(windowPath + ".position.y"));

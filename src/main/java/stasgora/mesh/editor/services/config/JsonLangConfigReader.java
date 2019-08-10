@@ -34,7 +34,7 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 	@Override
 	public String getText(String keyPath) {
 		for (JsonConfig config : configList) {
-			if(containsPath(config, keyPath)) {
+			if (containsPath(config, keyPath)) {
 				return getValue(config, keyPath, JSONObject::optString);
 			}
 		}
@@ -45,7 +45,7 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 	@Override
 	public List<String> getMultipartText(String keyPath) {
 		for (JsonConfig config : configList) {
-			if(containsPath(config, keyPath)) {
+			if (containsPath(config, keyPath)) {
 				return getList(config, keyPath, JSONArray::optString);
 			}
 		}
@@ -62,7 +62,7 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 	@Override
 	public boolean containsPath(String keyPath) {
 		for (JsonConfig config : configList) {
-			if(containsPath(config, keyPath)) {
+			if (containsPath(config, keyPath)) {
 				return true;
 			}
 		}
@@ -73,12 +73,12 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 		configList.subList(0, configList.size() - 1).clear();
 		String defLang = appConfig.getString("default.language");
 		String mainLang = appSettings.getString("settings.language");
-		if(mainLang.equals(defLang)) {
+		if (mainLang.equals(defLang)) {
 			return;
 		}
-		if(mainLang.contains("_")) {
+		if (mainLang.contains("_")) {
 			String generalizedLang = mainLang.split("_")[0];
-			if(!generalizedLang.equals(defLang)) {
+			if (!generalizedLang.equals(defLang)) {
 				configList.add(0, loadJsonConfig(getLangFileName(generalizedLang)));
 			}
 		}
@@ -95,7 +95,7 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 		for (String key : current.keySet()) {
 			Object child = current.get(key);
 			String childKey = keyPath.isEmpty() ? key : keyPath + "." + key;
-			if(child instanceof JSONObject) {
+			if (child instanceof JSONObject) {
 				scanChildren(childKey, (JSONObject) child);
 			} else {
 				String viewName = keyPath.split("\\.")[0];

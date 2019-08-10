@@ -24,7 +24,7 @@ public abstract class MeshRenderer {
 	}
 
 	public void render() {
-		if(!visualProperties.meshVisible.get())
+		if (!visualProperties.meshVisible.get())
 			return;
 		prepareRendering();
 
@@ -33,35 +33,39 @@ public abstract class MeshRenderer {
 		MeshLayer voronoiDiagramLayer = visualProperties.voronoiDiagramLayer.get();
 		MeshLayer triangulationLayer = visualProperties.triangulationLayer.get();
 
-		if(voronoiDiagramLayer.layerVisible.get())
+		if (voronoiDiagramLayer.layerVisible.get())
 			drawPolygons(regions, voronoiDiagramLayer);
-		if(triangulationLayer.layerVisible.get())
+		if (triangulationLayer.layerVisible.get())
 			drawPolygons(triangles, triangulationLayer);
-		if(voronoiDiagramLayer.layerVisible.get())
+		if (voronoiDiagramLayer.layerVisible.get())
 			drawEdges(regions, voronoiDiagramLayer);
-		if(triangulationLayer.layerVisible.get())
+		if (triangulationLayer.layerVisible.get())
 			drawEdges(triangles, triangulationLayer);
-		if(voronoiDiagramLayer.layerVisible.get())
+		if (voronoiDiagramLayer.layerVisible.get())
 			drawNodes(regions, voronoiDiagramLayer);
-		if(triangulationLayer.layerVisible.get())
+		if (triangulationLayer.layerVisible.get())
 			drawNodes(triangles, triangulationLayer);
 	}
 
 	protected abstract void drawEdge(Point from, Point to, SerializableColor color);
+
 	protected abstract void drawPoint(Point point, double radius, SerializableColor color);
+
 	protected abstract void drawPolygon(Polygon polygon, SerializableColor color);
 
 	protected abstract void setUpEdgeDrawing(double thickness);
-	protected void prepareRendering() {}
+
+	protected void prepareRendering() {
+	}
 
 	private void drawNodes(List<? extends Polygon> polygons, MeshLayer layer) {
-		if(!layer.nodesVisible.get())
+		if (!layer.nodesVisible.get())
 			return;
 		List<Point> drawnPoints = new ArrayList<>();
 		double transparency = visualProperties.meshTransparency.get() * layer.layerTransparency.get();
 		for (Polygon polygon : polygons) {
 			for (Point vertex : polygon.nodes) {
-				if(drawnPoints.contains(vertex))
+				if (drawnPoints.contains(vertex))
 					continue;
 				drawPoint(vertex, layer.nodeRadius.get(), colorUtils.getNodeColor(vertex).setAlpha(transparency));
 				drawnPoints.add(vertex);
@@ -70,14 +74,14 @@ public abstract class MeshRenderer {
 	}
 
 	private void drawPolygons(List<? extends Polygon> polygons, MeshLayer layer) {
-		if(!layer.polygonsVisible.get())
+		if (!layer.polygonsVisible.get())
 			return;
 		double transparency = visualProperties.meshTransparency.get() * layer.layerTransparency.get();
 		polygons.forEach(polygon -> drawPolygon(polygon, colorUtils.getPolygonColor(polygon.nodes).setAlpha(transparency)));
 	}
 
 	private void drawEdges(List<? extends Polygon> polygons, MeshLayer layer) {
-		if(!layer.edgesVisible.get())
+		if (!layer.edgesVisible.get())
 			return;
 		setUpEdgeDrawing(layer.edgeThickness.get());
 		double transparency = visualProperties.meshTransparency.get() * layer.layerTransparency.get();

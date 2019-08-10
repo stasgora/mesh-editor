@@ -25,7 +25,7 @@ public class Mesh extends Observable implements Serializable {
 	public List<Point> boundingNodes;
 
 	public Mesh(Point[] boundingNodes) {
-		if(boundingNodes.length != 3) {
+		if (boundingNodes.length != 3) {
 			LOGGER.warning("Mesh bounding nodes number wrong");
 		}
 		this.boundingNodes = List.of(boundingNodes);
@@ -48,7 +48,7 @@ public class Mesh extends Observable implements Serializable {
 
 	public void removeNode(Point node) {
 		for (int i = 0; i < nodeRegions.size(); i++) {
-			if(nodeRegions.get(i).node == node) {
+			if (nodeRegions.get(i).node == node) {
 				nodeRegions.remove(i);
 				break;
 			}
@@ -98,7 +98,7 @@ public class Mesh extends Observable implements Serializable {
 	private void assignTriangleNeighbours(Triangle triangle) {
 		triangle.triangles = new Triangle[3];
 		for (int i = 0; i < 3; i++) {
-			if(triangle.triangleIds[i] >= 0) {
+			if (triangle.triangleIds[i] >= 0) {
 				triangle.triangles[i] = triangles.get(triangle.triangleIds[i]);
 			}
 		}

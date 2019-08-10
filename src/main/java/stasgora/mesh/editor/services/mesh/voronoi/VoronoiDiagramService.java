@@ -8,7 +8,6 @@ import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class VoronoiDiagramService {
@@ -26,8 +25,8 @@ public class VoronoiDiagramService {
 		Map<Triangle, Point> triangleCircumcenterMap = new HashMap<>();
 		for (Point node : nodes) {
 			Polygon pointRegion = mesh.get().getPointRegion(node);
-			if(pointRegion == null) {
-				if(!mesh.get().boundingNodes.contains(node))
+			if (pointRegion == null) {
+				if (!mesh.get().boundingNodes.contains(node))
 					LOGGER.warning("Mesh does not contain given node");
 				continue;
 			}
@@ -35,7 +34,7 @@ public class VoronoiDiagramService {
 			nodeUtils.getNodeNeighbours(node, nodeUtils.findNodeTriangle(node), null, triangles);
 			List<Point> vertices = new ArrayList<>();
 			for (Triangle triangle : triangles) {
-				if(!triangleCircumcenterMap.containsKey(triangle)) {
+				if (!triangleCircumcenterMap.containsKey(triangle)) {
 					vertices.add(triangle.circumcenter());
 					triangleCircumcenterMap.put(triangle, vertices.get(vertices.size() - 1));
 				} else {

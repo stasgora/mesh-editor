@@ -37,6 +37,6 @@ public abstract class SubController {
 		viewNamespaces.put(viewType.langPrefix, namespace);
 	}
 
-	 abstract void init();
+	abstract void init();
 
 }

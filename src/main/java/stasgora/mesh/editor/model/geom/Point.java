@@ -86,7 +86,7 @@ public class Point extends Observable implements Serializable {
 		boolean changed = this.x != x || this.y != y;
 		this.x = x;
 		this.y = y;
-		if(changed) {
+		if (changed) {
 			onValueChanged();
 		}
 	}

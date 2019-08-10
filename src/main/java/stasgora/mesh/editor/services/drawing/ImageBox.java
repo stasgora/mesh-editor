@@ -1,15 +1,15 @@
 package stasgora.mesh.editor.services.drawing;
 
+import io.github.stasgora.observetree.SettableProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.MouseConfig;
+import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.project.CanvasData;
-import stasgora.mesh.editor.model.geom.Point;
-import io.github.stasgora.observetree.SettableProperty;
+import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.input.MouseListener;
 
 public class ImageBox implements MouseListener {
@@ -35,10 +35,10 @@ public class ImageBox implements MouseListener {
 	}
 
 	public void onResizeCanvas() {
-		if(canvasData.baseImage.get() != null) {
+		if (canvasData.baseImage.get() != null) {
 			return;
 		}
-		if(lastCanvasSize == null) {
+		if (lastCanvasSize == null) {
 			lastCanvasSize = new Point(canvasViewSize);
 			return;
 		}
@@ -48,7 +48,7 @@ public class ImageBox implements MouseListener {
 	}
 
 	public void calcImageBox() {
-		if(canvasData.baseImage.get() == null) {
+		if (canvasData.baseImage.get() == null) {
 			return;
 		}
 		SettableProperty<Image> baseImage = canvasData.baseImage;
@@ -56,7 +56,7 @@ public class ImageBox implements MouseListener {
 
 		Point canvasSize = canvasViewSize;
 		double defBorder = appConfig.getDouble("imageBox.defaultBorder");
-		if(imgRatio > canvasSize.x / canvasSize.y) {
+		if (imgRatio > canvasSize.x / canvasSize.y) {
 			double imgWidth = canvasSize.x * (1 - defBorder);
 			double imgHeight = imgWidth / imgRatio;
 			canvasData.imageBox.position.set(canvasSize.x * defBorder * 0.5, (canvasSize.y - imgHeight) / 2);
@@ -89,7 +89,7 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public boolean onDragStart(Point mousePos, MouseButton button) {
-		if(button == mouseConfig.dragImageButton) {
+		if (button == mouseConfig.dragImageButton) {
 			mouseCursor.setValue(Cursor.CLOSED_HAND);
 			return true;
 		}
@@ -98,7 +98,7 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
-		if(button != mouseConfig.dragImageButton) {
+		if (button != mouseConfig.dragImageButton) {
 			return;
 		}
 		Rectangle imageBox = this.canvasData.imageBox;

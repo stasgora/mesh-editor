@@ -30,7 +30,7 @@ public class CanvasMeshRenderer extends MeshRenderer {
 	@Override
 	protected void drawEdge(Point from, Point to, SerializableColor color) {
 		context.setStroke(color.toFXColor());
-		createPath(new Point[] {from, to});
+		createPath(new Point[]{from, to});
 		context.stroke();
 	}
 

@@ -1,7 +1,7 @@
 package stasgora.mesh.editor.services.history;
 
-import stasgora.mesh.editor.services.history.actions.UserAction;
 import stasgora.mesh.editor.model.project.LoadState;
+import stasgora.mesh.editor.services.history.actions.UserAction;
 
 import java.util.Stack;
 
@@ -11,14 +11,14 @@ public class CommandActionHistoryService implements ActionHistoryService {
 
 	public CommandActionHistoryService(LoadState loadState) {
 		loadState.loaded.addListener(() -> {
-			if(!loadState.loaded.get())
+			if (!loadState.loaded.get())
 				clearActionHistory();
 		});
 	}
 
 	@Override
 	public void undo() {
-		if(undoActionStack.isEmpty())
+		if (undoActionStack.isEmpty())
 			return;
 		undoActionStack.peek().unExecute();
 		redoActionStack.push(undoActionStack.pop());
@@ -26,7 +26,7 @@ public class CommandActionHistoryService implements ActionHistoryService {
 
 	@Override
 	public void redo() {
-		if(redoActionStack.isEmpty())
+		if (redoActionStack.isEmpty())
 			return;
 		redoActionStack.peek().execute();
 		undoActionStack.push(redoActionStack.pop());

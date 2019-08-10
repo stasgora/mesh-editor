@@ -1,10 +1,10 @@
 package stasgora.mesh.editor.services.mesh.triangulation;
 
-import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
+import stasgora.mesh.editor.services.config.AppConfigReader;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,14 +44,14 @@ public class NodeUtils {
 		Triangle currentTriangle = firstTriangle;
 		do {
 			int nodeIndex = Arrays.asList(currentTriangle.nodes).indexOf(node);
-			if(nodeIndex == -1) {
+			if (nodeIndex == -1) {
 				LOGGER.warning("triangle " + currentTriangle + " does not contain given node " + node);
 			}
 			nodeIndex = (nodeIndex + 2) % 3;
-			if(outPoints != null)
+			if (outPoints != null)
 				outPoints.add(currentTriangle.nodes[nodeIndex]);
 			currentTriangle = currentTriangle.triangles[nodeIndex];
-			if(outTriangles != null)
+			if (outTriangles != null)
 				outTriangles.add(currentTriangle);
 		} while (currentTriangle != firstTriangle);
 	}
@@ -93,10 +93,10 @@ public class NodeUtils {
 	Point[] getBoundingNodes() {
 		Rectangle boundingBox = getProportionalNodeBoundingBox();
 		double majorLength = boundingBox.size.x + boundingBox.size.y;
-		return new Point[] {
-			new Point(boundingBox.position.x + boundingBox.size.x / 2, -majorLength),
-			new Point(boundingBox.position.x - majorLength, boundingBox.size.y),
-			new Point(boundingBox.position.x + boundingBox.size.x + majorLength, boundingBox.size.y)
+		return new Point[]{
+				new Point(boundingBox.position.x + boundingBox.size.x / 2, -majorLength),
+				new Point(boundingBox.position.x - majorLength, boundingBox.size.y),
+				new Point(boundingBox.position.x + boundingBox.size.x + majorLength, boundingBox.size.y)
 		};
 	}
 

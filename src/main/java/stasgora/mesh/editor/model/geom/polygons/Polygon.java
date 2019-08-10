@@ -10,7 +10,8 @@ public class Polygon implements Serializable {
 
 	protected static final long serialVersionUID = 1L;
 
-	public Polygon() { }
+	public Polygon() {
+	}
 
 	public Polygon(Point[] nodes) {
 		this.nodes = nodes;

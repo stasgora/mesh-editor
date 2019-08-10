@@ -6,10 +6,10 @@ import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
-import stasgora.mesh.editor.services.files.ProjectIOException;
+import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
-import stasgora.mesh.editor.model.project.LoadState;
+import stasgora.mesh.editor.services.files.ProjectIOException;
 import stasgora.mesh.editor.services.ui.UiDialogUtils;
 
 import java.io.File;

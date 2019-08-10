@@ -41,12 +41,12 @@ public enum PropertyItemType {
 	}
 
 	public String getMinValueKey() {
-		if(valueKey == null) return null;
+		if (valueKey == null) return null;
 		return valueKey + ".min";
 	}
 
 	public String getMaxValueKey() {
-		if(valueKey == null) return null;
+		if (valueKey == null) return null;
 		return valueKey + ".max";
 	}
 }

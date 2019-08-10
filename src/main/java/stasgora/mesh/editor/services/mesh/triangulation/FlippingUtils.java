@@ -1,9 +1,9 @@
 package stasgora.mesh.editor.services.mesh.triangulation;
 
+import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
-import io.github.stasgora.observetree.SettableObservable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class FlippingUtils {
 		List<Triangle> changedTriangles = new ArrayList<>();
 		while (!remaining.empty()) {
 			Triangle current = remaining.pop();
-			if(!mesh.get().getTriangles().contains(current)) {
+			if (!mesh.get().getTriangles().contains(current)) {
 				continue;
 			}
 			for (Triangle neighbour : current.triangles) {
@@ -44,7 +44,7 @@ public class FlippingUtils {
 
 	void flipTrianglesFromRing(Point node, List<Point> nodes, List<Triangle> triangles, int currentId) {
 		int nextId = (currentId + 1) % nodes.size();
-		Triangle[] currentTriangles = new Triangle[] { triangles.get(currentId), triangles.get(nextId) };
+		Triangle[] currentTriangles = new Triangle[]{triangles.get(currentId), triangles.get(nextId)};
 		Triangle[] newTriangles = flipTriangles(currentTriangles[0], currentTriangles[1]);
 		Triangle newNeighbour = Arrays.asList(newTriangles[0].nodes).contains(node) ? newTriangles[0] : newTriangles[1];
 		nodes.remove(nextId);

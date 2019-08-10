@@ -23,7 +23,7 @@ public abstract class JsonConfigReader {
 	protected <T> T getValue(JsonConfig config, String keyPath, BiFunction<JSONObject, String, T> getValue) {
 		JSONObject parent = getParent(config, keyPath);
 		String lastKey = getLastKey(keyPath);
-		if(!parent.has(lastKey)) {
+		if (!parent.has(lastKey)) {
 			logInvalidKey(config.name, lastKey, keyPath);
 		}
 		return getValue.apply(parent, lastKey);
@@ -32,7 +32,7 @@ public abstract class JsonConfigReader {
 	protected <T> List<T> getList(JsonConfig config, String keyPath, BiFunction<JSONArray, Integer, T> getValue) {
 		JSONObject parent = getParent(config, keyPath);
 		String lastKey = getLastKey(keyPath);
-		if(!parent.has(lastKey)) {
+		if (!parent.has(lastKey)) {
 			logInvalidKey(config.name, lastKey, keyPath);
 			return Collections.emptyList();
 		}
@@ -51,7 +51,7 @@ public abstract class JsonConfigReader {
 			if (!object.has(keyChain[i])) {
 				return false;
 			}
-			if(i < keyChain.length - 1) {
+			if (i < keyChain.length - 1) {
 				object = object.getJSONObject(keyChain[i]);
 			}
 		}
@@ -69,7 +69,7 @@ public abstract class JsonConfigReader {
 
 	private JSONObject getParent(JsonConfig config, String keyPath) {
 		List<String> keys = Arrays.asList(getKeyChain(keyPath));
-		if(keys.size() <= 1) {
+		if (keys.size() <= 1) {
 			return config.config;
 		}
 		return getJsonObject(config, String.join(".", keys.subList(0, keys.size() - 1)));
@@ -98,7 +98,7 @@ public abstract class JsonConfigReader {
 	}
 
 	protected static JsonConfig loadJsonConfig(String fileName) {
-		try(InputStream input = JsonAppConfigReader.class.getResourceAsStream(fileName)) {
+		try (InputStream input = JsonAppConfigReader.class.getResourceAsStream(fileName)) {
 			return createJsonConfig(input, fileName);
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed creating Config Reader for resource '" + fileName + "'", e);

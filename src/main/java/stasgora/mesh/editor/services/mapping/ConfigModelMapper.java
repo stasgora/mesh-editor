@@ -5,7 +5,10 @@ import io.github.stasgora.observetree.SettableProperty;
 import org.json.JSONObject;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,11 +43,11 @@ public class ConfigModelMapper {
 			Object configFieldValue = configPathRoot.get(propertyKey);
 			if (configFieldValue instanceof JSONObject) {
 				map(modelFieldValue, configPath + "." + propertyKey);
-				if(isFieldSettable)
+				if (isFieldSettable)
 					callSettableOnValueChanged(modelSettableField);
 			} else {
 				Object fieldValue = getPrimitiveConfigFieldValue(configFieldValue, modelFieldType);
-				if(isFieldSettable)
+				if (isFieldSettable)
 					modelSettableField.set(fieldValue);
 				else
 					setModelField(modelField, model, fieldValue);

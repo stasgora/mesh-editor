@@ -1,7 +1,7 @@
 package stasgora.mesh.editor.services.history.actions.node;
 
-import stasgora.mesh.editor.services.history.actions.UserAction;
 import stasgora.mesh.editor.model.geom.Point;
+import stasgora.mesh.editor.services.history.actions.UserAction;
 
 import java.util.function.Consumer;
 
