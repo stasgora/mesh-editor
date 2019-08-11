@@ -112,7 +112,7 @@ public class ObjectGraphFactory {
 		appLang.onSetMainLanguage();
 	}
 
-	private void createConfigServices() {
+	private void createConfigServices() { //✓
 		appConfig = JsonAppConfigReader.forResource("/app.config");
 		appSettings = JsonAppConfigReader.forFile("config/app.settings");
 		appLang = new JsonLangConfigReader(appConfig, appSettings, viewNamespaces);

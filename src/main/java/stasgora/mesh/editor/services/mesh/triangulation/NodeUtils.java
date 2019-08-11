@@ -1,10 +1,12 @@
 package stasgora.mesh.editor.services.mesh.triangulation;
 
+import com.google.inject.Inject;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +21,8 @@ public class NodeUtils {
 
 	private final double REL_SPACE_FACTOR;
 
-	public NodeUtils(AppConfigReader appConfig, CanvasData canvasData) {
+	@Inject
+	public NodeUtils(@AppConfig AppConfigReader appConfig, CanvasData canvasData) {
 		this.appConfig = appConfig;
 		this.canvasData = canvasData;
 		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.proportionalSpaceFactor");

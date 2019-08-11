@@ -1,33 +1,39 @@
 package stasgora.mesh.editor.services.config;
 
-import javafx.collections.ObservableMap;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import stasgora.mesh.editor.model.JsonConfig;
+import stasgora.mesh.editor.model.NamespaceMap;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
+import stasgora.mesh.editor.services.config.annotation.AppSettings;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class JsonLangConfigReader extends JsonConfigReader implements LangConfigReader {
+@Singleton
+class JsonLangConfigReader extends JsonConfigReader implements LangConfigReader {
 
 	private static final Logger LOGGER = Logger.getLogger(JsonLangConfigReader.class.getName());
 
 	private final AppConfigReader appConfig;
 	private final AppConfigReader appSettings;
-	private Map<String, ObservableMap<String, Object>> viewNamespaces;
+	private final NamespaceMap namespaceMap;
 
 	private List<JsonConfig> configList = new ArrayList<>();
 
 	private static final String FXML_TREE_PREFIX = "fxml";
 
-	public JsonLangConfigReader(AppConfigReader appConfig, AppConfigReader appSettings, Map<String, ObservableMap<String, Object>> viewNamespaces) {
+	@Inject
+	JsonLangConfigReader(@AppConfig AppConfigReader appConfig, @AppSettings AppConfigReader appSettings, NamespaceMap namespaceMap) {
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
-		this.viewNamespaces = viewNamespaces;
+		this.namespaceMap = namespaceMap;
+
 		configList.add(loadJsonConfig(getLangFileName(appConfig.getString("default.language"))));
 	}
 
@@ -99,7 +105,7 @@ public class JsonLangConfigReader extends JsonConfigReader implements LangConfig
 				scanChildren(childKey, (JSONObject) child);
 			} else {
 				String viewName = keyPath.split("\\.")[0];
-				viewNamespaces.get(viewName).put(childKey.replace('.', '_'), getText(FXML_TREE_PREFIX + "." + childKey));
+				namespaceMap.get(viewName).put(childKey.replace('.', '_'), getText(FXML_TREE_PREFIX + "." + childKey));
 			}
 		}
 	}
