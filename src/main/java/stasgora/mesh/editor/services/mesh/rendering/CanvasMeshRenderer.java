@@ -37,6 +37,7 @@ public class CanvasMeshRenderer extends MeshRenderer {
 	@Override
 	protected void drawPoint(Point point, double radius, SerializableColor color) {
 		context.setFill(color.toFXColor());
+		radius /= nodeUtils.proportionalScaleFactor();
 		point = nodeUtils.proportionalToCanvasPos(point);
 		context.fillOval(point.x - radius / 2d, point.y - radius / 2d, radius, radius);
 	}
@@ -51,6 +52,7 @@ public class CanvasMeshRenderer extends MeshRenderer {
 	@Override
 	protected void setUpEdgeDrawing(double thickness) {
 		context.setLineCap(StrokeLineCap.ROUND);
+		thickness /= nodeUtils.proportionalScaleFactor();
 		context.setLineWidth(thickness);
 	}
 

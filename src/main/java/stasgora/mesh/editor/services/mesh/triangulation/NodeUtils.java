@@ -67,8 +67,12 @@ public class NodeUtils {
 	}
 
 	public Point canvasToProportionalSize(Point node) {
+		return new Point(node).multiplyByScalar(proportionalScaleFactor());
+	}
+
+	public double proportionalScaleFactor() {
 		Rectangle imageBox = canvasData.imageBox;
-		return new Point(node).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
+		return REL_SPACE_FACTOR / imageBox.size.x;
 	}
 
 	public Point proportionalToPixelPos(Point node) {
