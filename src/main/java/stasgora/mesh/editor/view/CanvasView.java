@@ -10,8 +10,8 @@ import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.services.drawing.ImageBox;
 import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
-import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
-import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.generation.TriangleUtils;
 import stasgora.mesh.editor.ui.canvas.Canvas;
 import stasgora.mesh.editor.ui.canvas.ImageCanvas;
 

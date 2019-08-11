@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.paint.SerializableColor;
 import stasgora.mesh.editor.services.config.AppConfigReader;
-import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import stasgora.mesh.editor.model.project.ModelModule;
 import stasgora.mesh.editor.services.config.ConfigModule;
 import stasgora.mesh.editor.services.inject.InjectModule;
+import stasgora.mesh.editor.services.mesh.generation.MeshGenerationModule;
 import stasgora.mesh.editor.view.WindowView;
 
 public class MeshEditor extends Application {
@@ -19,7 +20,7 @@ public class MeshEditor extends Application {
 		Parent root = loader.load();
 		WindowView windowView = loader.getController();
 
-		Guice.createInjector(new InjectModule(windowView, root, stage, loader.getNamespace()), new ConfigModule(), new ModelModule());
+		Guice.createInjector(new InjectModule(windowView, root, stage, loader.getNamespace()), new ConfigModule(), new ModelModule(), new MeshGenerationModule());
 
 		new ObjectGraphFactory(windowView, root, stage, loader.getNamespace()).createObjectGraph();
 		stage.getIcons().add(new Image(MeshEditor.class.getResourceAsStream("/logo.png")));

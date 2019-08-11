@@ -27,8 +27,8 @@ import stasgora.mesh.editor.services.input.CanvasActionFacade;
 import stasgora.mesh.editor.services.mapping.ConfigModelMapper;
 import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
 import stasgora.mesh.editor.services.mesh.rendering.SvgMeshRenderer;
-import stasgora.mesh.editor.services.mesh.triangulation.*;
-import stasgora.mesh.editor.services.mesh.voronoi.VoronoiDiagramService;
+import stasgora.mesh.editor.services.mesh.generation.*;
+import stasgora.mesh.editor.services.mesh.generation.VoronoiDiagramService;
 import stasgora.mesh.editor.services.ui.PropertyTreeCellFactory;
 import stasgora.mesh.editor.services.ui.UiDialogUtils;
 import stasgora.mesh.editor.view.*;
@@ -117,7 +117,7 @@ public class ObjectGraphFactory {
 		appLang = new JsonLangConfigReader(appConfig, appSettings, viewNamespaces);
 	}
 
-	private void createTriangulationServices() {
+	private void createTriangulationServices() { //✓
 		nodeUtils = new NodeUtils(appConfig, project.canvasData);
 		triangleUtils = new TriangleUtils(project.canvasData.mesh, nodeUtils);
 		flippingUtils = new FlippingUtils(project.canvasData.mesh, triangleUtils);

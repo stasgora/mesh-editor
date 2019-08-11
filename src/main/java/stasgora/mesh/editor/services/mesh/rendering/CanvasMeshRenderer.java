@@ -9,8 +9,8 @@ import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.paint.SerializableColor;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.drawing.ColorUtils;
-import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
-import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.generation.TriangleUtils;
 
 import java.util.Arrays;
 

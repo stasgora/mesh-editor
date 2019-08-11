@@ -13,8 +13,8 @@ import stasgora.mesh.editor.services.history.actions.node.AddNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.MoveNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.RemoveNodeAction;
 import stasgora.mesh.editor.services.input.MouseListener;
-import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
-import stasgora.mesh.editor.services.mesh.triangulation.TriangulationService;
+import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.generation.TriangulationService;
 
 public class MeshBox implements MouseListener {
 

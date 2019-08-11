@@ -7,7 +7,7 @@ import stasgora.mesh.editor.model.paint.SerializableColor;
 import stasgora.mesh.editor.model.project.MeshLayer;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.drawing.ColorUtils;
-import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.generation.TriangleUtils;
 
 import java.util.ArrayList;
 import java.util.List;

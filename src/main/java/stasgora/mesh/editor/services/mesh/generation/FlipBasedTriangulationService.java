@@ -1,17 +1,20 @@
-package stasgora.mesh.editor.services.mesh.triangulation;
+package stasgora.mesh.editor.services.mesh.generation;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
-import stasgora.mesh.editor.services.mesh.voronoi.VoronoiDiagramService;
+import stasgora.mesh.editor.model.project.CanvasData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
-public class FlipBasedTriangulationService implements TriangulationService {
+@Singleton
+class FlipBasedTriangulationService implements TriangulationService {
 
 	private SettableObservable<Mesh> mesh;
 	private NodeUtils nodeUtils;
@@ -19,9 +22,10 @@ public class FlipBasedTriangulationService implements TriangulationService {
 	private FlippingUtils flippingUtils;
 	private VoronoiDiagramService voronoiDiagramService;
 
-	public FlipBasedTriangulationService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils, TriangleUtils triangleUtils,
+	@Inject
+	FlipBasedTriangulationService(CanvasData canvasData, NodeUtils nodeUtils, TriangleUtils triangleUtils,
 	                                     FlippingUtils flippingUtils, VoronoiDiagramService voronoiDiagramService) {
-		this.mesh = mesh;
+		this.mesh = canvasData.mesh;
 		this.nodeUtils = nodeUtils;
 		this.triangleUtils = triangleUtils;
 		this.flippingUtils = flippingUtils;

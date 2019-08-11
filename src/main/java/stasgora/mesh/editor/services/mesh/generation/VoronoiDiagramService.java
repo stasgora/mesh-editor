@@ -1,11 +1,13 @@
-package stasgora.mesh.editor.services.mesh.voronoi;
+package stasgora.mesh.editor.services.mesh.generation;
 
+import com.google.inject.Inject;
 import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
-import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
+import stasgora.mesh.editor.model.project.CanvasData;
+import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -16,8 +18,9 @@ public class VoronoiDiagramService {
 	private SettableObservable<Mesh> mesh;
 	private NodeUtils nodeUtils;
 
-	public VoronoiDiagramService(SettableObservable<Mesh> mesh, NodeUtils nodeUtils) {
-		this.mesh = mesh;
+	@Inject
+	VoronoiDiagramService(CanvasData canvasData, NodeUtils nodeUtils) {
+		this.mesh = canvasData.mesh;
 		this.nodeUtils = nodeUtils;
 	}
 

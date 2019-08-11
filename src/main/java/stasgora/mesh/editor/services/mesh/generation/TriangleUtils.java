@@ -1,11 +1,14 @@
-package stasgora.mesh.editor.services.mesh.triangulation;
+package stasgora.mesh.editor.services.mesh.generation;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.PointRegion;
 import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
+import stasgora.mesh.editor.model.project.CanvasData;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Singleton
 public class TriangleUtils {
 
 	private static final Logger LOGGER = Logger.getLogger(TriangleUtils.class.getName());
@@ -21,8 +25,9 @@ public class TriangleUtils {
 	private SettableObservable<Mesh> mesh;
 	private NodeUtils nodeUtils;
 
-	public TriangleUtils(SettableObservable<Mesh> mesh, NodeUtils nodeUtils) {
-		this.mesh = mesh;
+	@Inject
+	TriangleUtils(CanvasData canvasData, NodeUtils nodeUtils) {
+		this.mesh = canvasData.mesh;
 		this.nodeUtils = nodeUtils;
 	}
 
