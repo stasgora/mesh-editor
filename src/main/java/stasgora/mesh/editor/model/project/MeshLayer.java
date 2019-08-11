@@ -14,7 +14,7 @@ public class MeshLayer extends PropertyContainer {
 	public BindableProperty<Boolean> edgesVisible = new BindableProperty<>();
 	public BindableProperty<Double> edgeThickness = new BindableProperty<>();
 
-	public MeshLayer() {
+	MeshLayer() {
 		scan();
 	}
 }

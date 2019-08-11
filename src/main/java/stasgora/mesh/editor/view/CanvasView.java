@@ -7,7 +7,6 @@ import javafx.collections.ObservableMap;
 import javafx.scene.layout.Region;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.project.CanvasData;
-import stasgora.mesh.editor.model.project.Project;
 import stasgora.mesh.editor.services.drawing.ImageBox;
 import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;

@@ -1,6 +1,8 @@
 package stasgora.mesh.editor.ui.properties;
 
-public enum PropertyItemType {
+import stasgora.mesh.editor.model.TextKeyProvider;
+
+public enum PropertyItemType implements TextKeyProvider {
 
 	IMAGE("image", "transparency"),
 	MESH("mesh.title", "transparency"),
@@ -32,6 +34,7 @@ public enum PropertyItemType {
 		this.textKey = textKey;
 	}
 
+	@Override
 	public String getTextKey() {
 		return TEXT_KEY_PREFIX + textKey;
 	}

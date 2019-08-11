@@ -3,7 +3,6 @@ package stasgora.mesh.editor.services.files.workspace;
 import stasgora.mesh.editor.ObjectGraphFactory;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.LoadState;
-import stasgora.mesh.editor.model.project.Project;
 import stasgora.mesh.editor.services.files.FileUtils;
 import stasgora.mesh.editor.services.files.ProjectIOException;
 import stasgora.mesh.editor.services.mesh.rendering.SvgMeshRenderer;

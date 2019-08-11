@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.project.Project;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.JsonAppConfigReader;
 import stasgora.mesh.editor.services.config.JsonLangConfigReader;
@@ -50,7 +49,7 @@ public class ObjectGraphFactory {
 
 	private Map<String, ObservableMap<String, Object>> viewNamespaces = new HashMap<>();
 
-	private Project project = new Project();
+	private Project project = new Project(loadState, visualProperties, canvasData);
 
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
