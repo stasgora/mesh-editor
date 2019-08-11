@@ -103,6 +103,7 @@ public class CanvasView extends SubController {
 		meshCanvas.clear();
 		if (project.loadState.loaded.get() && project.visualProperties.meshVisible.get()) {
 			canvasMeshRenderer.render();
+			canvasMeshRenderer.drawBoundingBox(nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
 	}
 
