@@ -22,8 +22,8 @@ public class TriangleUtils {
 
 	private static final Logger LOGGER = Logger.getLogger(TriangleUtils.class.getName());
 
-	private SettableObservable<Mesh> mesh;
-	private NodeUtils nodeUtils;
+	private final SettableObservable<Mesh> mesh;
+	private final NodeUtils nodeUtils;
 
 	@Inject
 	TriangleUtils(CanvasData canvasData, NodeUtils nodeUtils) {

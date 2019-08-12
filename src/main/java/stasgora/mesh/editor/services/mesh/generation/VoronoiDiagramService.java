@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 public class VoronoiDiagramService {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 
-	private SettableObservable<Mesh> mesh;
-	private NodeUtils nodeUtils;
+	private final SettableObservable<Mesh> mesh;
+	private final NodeUtils nodeUtils;
 
 	@Inject
 	VoronoiDiagramService(CanvasData canvasData, NodeUtils nodeUtils) {

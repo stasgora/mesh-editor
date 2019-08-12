@@ -1,13 +1,15 @@
 package stasgora.mesh.editor.services.drawing;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.stasgora.observetree.SettableObservable;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
-import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
+import stasgora.mesh.editor.model.project.CanvasData;
+import stasgora.mesh.editor.model.project.CanvasUI;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.services.history.actions.node.AddNodeAction;
 import stasgora.mesh.editor.services.history.actions.node.MoveNodeAction;
@@ -16,25 +18,22 @@ import stasgora.mesh.editor.services.input.MouseListener;
 import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
 import stasgora.mesh.editor.services.mesh.generation.TriangulationService;
 
+@Singleton
 public class MeshBox implements MouseListener {
 
 	private Point draggedNode;
 	private Point draggedNodeStartPosition;
 
 	private final SettableObservable<Mesh> mesh;
-	private final MouseConfig mouseConfig;
-	private final Point canvasViewSize;
-	private final ObjectProperty<Cursor> mouseCursor;
-	private TriangulationService triangulationService;
-	private NodeUtils nodeUtils;
-	private ActionHistoryService actionHistoryService;
+	private CanvasUI canvasUI;
+	private final TriangulationService triangulationService;
+	private final NodeUtils nodeUtils;
+	private final ActionHistoryService actionHistoryService;
 
-	public MeshBox(SettableObservable<Mesh> mesh, MouseConfig mouseConfig, Point canvasViewSize, ObjectProperty<Cursor> mouseCursor,
-	               TriangulationService triangulationService, NodeUtils nodeUtils, ActionHistoryService actionHistoryService) {
-		this.mesh = mesh;
-		this.mouseConfig = mouseConfig;
-		this.canvasViewSize = canvasViewSize;
-		this.mouseCursor = mouseCursor;
+	@Inject
+	MeshBox(CanvasData canvasData, CanvasUI canvasUI, TriangulationService triangulationService, NodeUtils nodeUtils, ActionHistoryService actionHistoryService) {
+		this.mesh = canvasData.mesh;
+		this.canvasUI = canvasUI;
 		this.triangulationService = triangulationService;
 		this.nodeUtils = nodeUtils;
 		this.actionHistoryService = actionHistoryService;
@@ -48,22 +47,22 @@ public class MeshBox implements MouseListener {
 	public void onMouseMove(Point mousePos) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
 		draggedNode = triangulationService.findNodeByLocation(proportionalPos);
-		mouseCursor.setValue(draggedNode != null ? Cursor.HAND : mouseConfig.defaultCanvasCursor);
+		canvasUI.canvasMouseCursor.setValue(draggedNode != null ? Cursor.HAND : canvasUI.mouseConfig.defaultCanvasCursor);
 	}
 
 	@Override
 	public boolean onDragStart(Point mousePos, MouseButton mouseButton) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
-		if (mouseButton == mouseConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
+		if (mouseButton == canvasUI.mouseConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
 			actionHistoryService.registerAction(new RemoveNodeAction(proportionalPos.x, proportionalPos.y));
 			return true;
 		}
-		if (mouseButton == mouseConfig.moveNodeButton && draggedNode != null) {
-			mouseCursor.setValue(Cursor.CLOSED_HAND);
+		if (mouseButton == canvasUI.mouseConfig.moveNodeButton && draggedNode != null) {
+			canvasUI.canvasMouseCursor.setValue(Cursor.CLOSED_HAND);
 			draggedNodeStartPosition = new Point(draggedNode);
 			return true;
 		}
-		return mouseButton == mouseConfig.placeNodeButton;
+		return mouseButton == canvasUI.mouseConfig.placeNodeButton;
 	}
 
 	@Override
@@ -74,20 +73,20 @@ public class MeshBox implements MouseListener {
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
 		dragPoint(mousePos, mouseButton, true);
-		if (draggedNode == null && mouseButton == mouseConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
+		if (draggedNode == null && mouseButton == canvasUI.mouseConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
 			Point point = nodeUtils.canvasToProportionalPos(mousePos);
 			if (triangulationService.addNode(point))
 				actionHistoryService.registerAction(new AddNodeAction(point.x, point.y));
 		}
 		draggedNode = null;
-		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
+		canvasUI.canvasMouseCursor.setValue(mousePos.isBetween(new Point(), canvasUI.canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
 	}
 
 	private void dragPoint(Point mousePos, MouseButton button, boolean dragFinished) {
-		if (draggedNode == null || button != mouseConfig.moveNodeButton) {
+		if (draggedNode == null || button != canvasUI.mouseConfig.moveNodeButton) {
 			return;
 		}
-		Point targetPos = nodeUtils.canvasToProportionalPos(clampCanvasSpaceNodePos(mousePos.clamp(canvasViewSize)));
+		Point targetPos = nodeUtils.canvasToProportionalPos(clampCanvasSpaceNodePos(mousePos.clamp(canvasUI.canvasViewSize)));
 		Point newPos = triangulationService.moveNode(draggedNode, targetPos);
 		if (dragFinished)
 			actionHistoryService.registerAction(new MoveNodeAction(newPos, draggedNodeStartPosition));

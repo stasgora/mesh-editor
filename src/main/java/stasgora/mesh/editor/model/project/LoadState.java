@@ -9,9 +9,9 @@ import java.io.File;
 @Singleton
 public class LoadState extends Observable {
 
-	public SettableProperty<Boolean> stateSaved = new SettableProperty<>(true);
-	public SettableProperty<File> file = new SettableProperty<>();
-	public SettableProperty<Boolean> loaded = new SettableProperty<>(false);
+	public final SettableProperty<Boolean> stateSaved = new SettableProperty<>(true);
+	public final SettableProperty<File> file = new SettableProperty<>();
+	public final SettableProperty<Boolean> loaded = new SettableProperty<>(false);
 
 	LoadState() {
 		addSubObservable(stateSaved);

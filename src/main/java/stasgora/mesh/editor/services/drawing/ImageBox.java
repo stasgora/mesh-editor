@@ -1,5 +1,7 @@
 package stasgora.mesh.editor.services.drawing;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.stasgora.observetree.SettableProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
@@ -9,9 +11,13 @@ import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.project.CanvasData;
+import stasgora.mesh.editor.model.project.CanvasUI;
 import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
+import stasgora.mesh.editor.services.config.annotation.AppSettings;
 import stasgora.mesh.editor.services.input.MouseListener;
 
+@Singleton
 public class ImageBox implements MouseListener {
 
 	private Point lastCanvasSize;
@@ -19,19 +25,17 @@ public class ImageBox implements MouseListener {
 
 	private final Point canvasViewSize;
 	private final CanvasData canvasData;
-	private AppConfigReader appConfig;
-	private AppConfigReader appSettings;
-	private ObjectProperty<Cursor> mouseCursor;
-	private MouseConfig mouseConfig;
+	private final AppConfigReader appConfig;
+	private final AppConfigReader appSettings;
+	private CanvasUI canvasUI;
 
-	public ImageBox(Point canvasViewSize, CanvasData canvasData, AppConfigReader appConfig,
-	                AppConfigReader appSettings, ObjectProperty<Cursor> mouseCursor, MouseConfig mouseConfig) {
-		this.canvasViewSize = canvasViewSize;
+	@Inject
+	ImageBox(CanvasData canvasData, CanvasUI canvasUI, @AppConfig AppConfigReader appConfig, @AppSettings AppConfigReader appSettings) {
 		this.canvasData = canvasData;
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
-		this.mouseCursor = mouseCursor;
-		this.mouseConfig = mouseConfig;
+		this.canvasUI = canvasUI;
+		canvasViewSize = canvasUI.canvasViewSize;
 	}
 
 	public void onResizeCanvas() {
@@ -89,8 +93,8 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public boolean onDragStart(Point mousePos, MouseButton button) {
-		if (button == mouseConfig.dragImageButton) {
-			mouseCursor.setValue(Cursor.CLOSED_HAND);
+		if (button == canvasUI.mouseConfig.dragImageButton) {
+			canvasUI.canvasMouseCursor.setValue(Cursor.CLOSED_HAND);
 			return true;
 		}
 		return false;
@@ -98,7 +102,7 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onMouseDrag(Point dragAmount, Point mousePos, MouseButton button) {
-		if (button != mouseConfig.dragImageButton) {
+		if (button != canvasUI.mouseConfig.dragImageButton) {
 			return;
 		}
 		Rectangle imageBox = this.canvasData.imageBox;
@@ -108,7 +112,7 @@ public class ImageBox implements MouseListener {
 
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton button) {
-		mouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? mouseConfig.defaultCanvasCursor : Cursor.DEFAULT);
+		canvasUI.canvasMouseCursor.setValue(mousePos.isBetween(new Point(), canvasViewSize) ? canvasUI.mouseConfig.defaultCanvasCursor : Cursor.DEFAULT);
 	}
 
 }
