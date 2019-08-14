@@ -26,7 +26,7 @@ import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.services.input.CanvasActionFacade;
 import stasgora.mesh.editor.services.mapping.ConfigModelMapper;
 import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
-import stasgora.mesh.editor.services.mesh.rendering.SvgMeshRenderer;
+import stasgora.mesh.editor.services.mesh.rendering.JFreeSvgMeshRenderer;
 import stasgora.mesh.editor.services.mesh.generation.*;
 import stasgora.mesh.editor.services.mesh.generation.VoronoiDiagramService;
 import stasgora.mesh.editor.services.ui.PropertyTreeCellFactory;
@@ -68,7 +68,7 @@ public class ObjectGraphFactory {
 
 	private ColorUtils colorUtils;
 	private CanvasMeshRenderer canvasMeshRenderer;
-	private SvgMeshRenderer svgMeshRenderer;
+	private JFreeSvgMeshRenderer svgMeshRenderer;
 
 	private UiDialogUtils dialogUtils;
 	private ObjectProperty<Cursor> mouseCursor;
@@ -132,10 +132,10 @@ public class ObjectGraphFactory {
 	}
 
 	private void createRenderingServices() {
-		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
+		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig); //✓
 
 		canvasMeshRenderer = new CanvasMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
-		svgMeshRenderer = new SvgMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
+		svgMeshRenderer = new JFreeSvgMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
 	}
 
 	private void createProjectServices() {
@@ -153,8 +153,8 @@ public class ObjectGraphFactory {
 	}
 
 	private void createCanvasBoxServices() {
-		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig);
-		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils, actionHistoryService);
+		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig); //✓
+		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils, actionHistoryService); //✓
 		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor, mouseConfig);
 	}
 

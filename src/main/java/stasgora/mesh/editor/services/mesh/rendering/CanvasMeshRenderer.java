@@ -1,5 +1,7 @@
 package stasgora.mesh.editor.services.mesh.rendering;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
@@ -14,11 +16,13 @@ import stasgora.mesh.editor.services.mesh.generation.TriangleUtils;
 
 import java.util.Arrays;
 
-public class CanvasMeshRenderer extends MeshRenderer {
+@Singleton
+class CanvasMeshRenderer extends MeshRenderer implements CanvasRenderer {
 	private GraphicsContext context;
 	private final NodeUtils nodeUtils;
 
-	public CanvasMeshRenderer(TriangleUtils triangleUtils, NodeUtils nodeUtils, ColorUtils colorUtils, VisualProperties visualProperties) {
+	@Inject
+	CanvasMeshRenderer(TriangleUtils triangleUtils, NodeUtils nodeUtils, ColorUtils colorUtils, VisualProperties visualProperties) {
 		super(colorUtils, triangleUtils, visualProperties);
 		this.nodeUtils = nodeUtils;
 	}
@@ -56,6 +60,7 @@ public class CanvasMeshRenderer extends MeshRenderer {
 		context.setLineWidth(thickness);
 	}
 
+	@Override
 	public void drawBoundingBox(Rectangle boundingBox) {
 		context.setStroke(Color.gray(0.8));
 		context.setLineDashes(10, 15);

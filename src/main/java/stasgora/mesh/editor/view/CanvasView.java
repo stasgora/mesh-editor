@@ -9,9 +9,9 @@ import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.services.drawing.ImageBox;
 import stasgora.mesh.editor.services.input.CanvasAction;
-import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
 import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
 import stasgora.mesh.editor.services.mesh.generation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.rendering.CanvasRenderer;
 import stasgora.mesh.editor.ui.canvas.Canvas;
 import stasgora.mesh.editor.ui.canvas.ImageCanvas;
 
@@ -30,11 +30,11 @@ public class CanvasView extends SubController {
 	private TriangleUtils triangleUtils;
 	private final CanvasAction canvasAction;
 	private final SettableProperty<Boolean> loaded;
-	private final CanvasMeshRenderer canvasMeshRenderer;
+	private final CanvasRenderer canvasMeshRenderer;
 
 	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, Project project,
 	                  Point canvasViewSize, ImageBox imageBox, NodeUtils nodeUtils, TriangleUtils triangleUtils, CanvasAction canvasAction,
-	                  SettableProperty<Boolean> loaded, CanvasMeshRenderer canvasMeshRenderer) {
+	                  SettableProperty<Boolean> loaded, CanvasRenderer canvasMeshRenderer) {
 		super(root, viewType, viewNamespaces);
 
 		this.project = project;
