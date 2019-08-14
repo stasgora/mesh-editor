@@ -1,6 +1,7 @@
 package stasgora.mesh.editor;
 
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,9 +10,9 @@ import javafx.stage.Stage;
 import stasgora.mesh.editor.model.project.ModelModule;
 import stasgora.mesh.editor.services.config.ConfigModule;
 import stasgora.mesh.editor.services.drawing.DrawingModule;
-import stasgora.mesh.editor.services.inject.InjectModule;
 import stasgora.mesh.editor.services.mesh.generation.MeshGenerationModule;
 import stasgora.mesh.editor.services.mesh.rendering.MeshRenderingModule;
+import stasgora.mesh.editor.view.WindowModule;
 import stasgora.mesh.editor.view.WindowView;
 
 public class MeshEditor extends Application {
@@ -22,8 +23,9 @@ public class MeshEditor extends Application {
 		Parent root = loader.load();
 		WindowView windowView = loader.getController();
 
-		Guice.createInjector(new InjectModule(windowView, root, stage, loader.getNamespace()), new ConfigModule(), new ModelModule(),
+		Injector injector = Guice.createInjector(new WindowModule(root, stage, loader.getNamespace()), new ConfigModule(), new ModelModule(),
 				new MeshGenerationModule(), new MeshRenderingModule(), new DrawingModule());
+		injector.injectMembers(windowView);
 
 		new ObjectGraphFactory(windowView, root, stage, loader.getNamespace()).createObjectGraph();
 		stage.getIcons().add(new Image(MeshEditor.class.getResourceAsStream("/logo.png")));

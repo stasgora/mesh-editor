@@ -1,5 +1,7 @@
 package stasgora.mesh.editor.view;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -8,11 +10,14 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.MeshEditor;
 import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
+import stasgora.mesh.editor.view.annotation.MainWindowStage;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Singleton
 public class AboutWindow {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 
@@ -20,7 +25,8 @@ public class AboutWindow {
 	private final Stage mainWindow;
 	public ImageView logo;
 
-	public AboutWindow(Stage mainWindow, AppConfigReader appConfig) {
+	@Inject
+	AboutWindow(@MainWindowStage Stage mainWindow, @AppConfig AppConfigReader appConfig) {
 		this.mainWindow = mainWindow;
 
 		FXMLLoader loader = new FXMLLoader(MeshEditor.class.getResource("/fxml/AboutWindow.fxml"));

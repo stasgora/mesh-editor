@@ -27,6 +27,7 @@ class CanvasMeshRenderer extends MeshRenderer implements CanvasRenderer {
 		this.nodeUtils = nodeUtils;
 	}
 
+	@Override
 	public void setContext(GraphicsContext context) {
 		this.context = context;
 	}

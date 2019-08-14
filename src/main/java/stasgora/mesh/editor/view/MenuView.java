@@ -1,15 +1,21 @@
 package stasgora.mesh.editor.view;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.assistedinject.Assisted;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Region;
+import stasgora.mesh.editor.model.NamespaceMap;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
+import stasgora.mesh.editor.view.sub.SubView;
 
 import java.util.Map;
 
-public class MenuView extends SubController {
+@Singleton
+public class MenuView extends SubView {
 
 	private WorkspaceAction workspaceAction;
 	private final ActionHistoryService actionHistoryService;
@@ -32,8 +38,9 @@ public class MenuView extends SubController {
 
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 
-	public MenuView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces,
-	                WorkspaceAction workspaceAction, LoadState loadState, ActionHistoryService actionHistoryService, AboutWindow aboutWindow) {
+	@Inject
+	MenuView(@Assisted Region root, @Assisted ViewType viewType, NamespaceMap viewNamespaces,
+	         WorkspaceAction workspaceAction, LoadState loadState, ActionHistoryService actionHistoryService, AboutWindow aboutWindow) {
 		super(root, viewType, viewNamespaces);
 		this.workspaceAction = workspaceAction;
 		this.loadState = loadState;
@@ -43,7 +50,7 @@ public class MenuView extends SubController {
 	}
 
 	@Override
-	public void init() {
+	protected void init() {
 		newProjectMenuItem.setOnAction(event -> workspaceAction.onNewProject());
 		openProjectMenuItem.setOnAction(event -> workspaceAction.onOpenProject());
 		closeProjectMenuItem.setOnAction(event -> workspaceAction.onCloseProject());

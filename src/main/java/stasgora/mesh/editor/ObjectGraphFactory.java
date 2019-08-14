@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.services.config.AppConfigReader;
-import stasgora.mesh.editor.services.config.JsonAppConfigReader;
-import stasgora.mesh.editor.services.config.JsonLangConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.drawing.ColorUtils;
 import stasgora.mesh.editor.services.drawing.ImageBox;
@@ -25,8 +23,6 @@ import stasgora.mesh.editor.services.history.actions.node.NodeModifiedAction;
 import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.services.input.CanvasActionFacade;
 import stasgora.mesh.editor.services.mapping.ConfigModelMapper;
-import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
-import stasgora.mesh.editor.services.mesh.rendering.JFreeSvgMeshRenderer;
 import stasgora.mesh.editor.services.mesh.generation.*;
 import stasgora.mesh.editor.services.mesh.generation.VoronoiDiagramService;
 import stasgora.mesh.editor.services.ui.PropertyTreeCellFactory;
@@ -48,8 +44,6 @@ public class ObjectGraphFactory {
 	private MenuView menuView;
 
 	private Map<String, ObservableMap<String, Object>> viewNamespaces = new HashMap<>();
-
-	private Project project = new Project(loadState, visualProperties, canvasData);
 
 	private AppConfigReader appConfig;
 	private AppConfigReader appSettings;
@@ -134,8 +128,8 @@ public class ObjectGraphFactory {
 	private void createRenderingServices() {
 		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig); //✓
 
-		canvasMeshRenderer = new CanvasMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
-		svgMeshRenderer = new JFreeSvgMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
+		canvasMeshRenderer = new CanvasMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties); //✓
+		svgMeshRenderer = new JFreeSvgMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties); //✓
 	}
 
 	private void createProjectServices() {

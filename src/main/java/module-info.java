@@ -7,6 +7,7 @@ module mesh.editor {
 	requires java.desktop;
 	requires stasgora.observetree;
 	requires com.google.guice;
+	requires com.google.guice.extensions.assistedinject;
 
 	opens stasgora.mesh.editor to javafx.fxml;
 	exports stasgora.mesh.editor;
