@@ -11,6 +11,7 @@ import stasgora.mesh.editor.model.project.ModelModule;
 import stasgora.mesh.editor.services.config.ConfigModule;
 import stasgora.mesh.editor.services.drawing.DrawingModule;
 import stasgora.mesh.editor.services.files.FileIOModule;
+import stasgora.mesh.editor.services.files.workspace.WorkspaceActionModule;
 import stasgora.mesh.editor.services.history.ActionHistoryModule;
 import stasgora.mesh.editor.services.input.InputModule;
 import stasgora.mesh.editor.services.mesh.generation.MeshGenerationModule;
@@ -26,11 +27,12 @@ public class MeshEditor extends Application {
 		Parent root = loader.load();
 		WindowView windowView = loader.getController();
 
-		Injector injector = Guice.createInjector(new WindowModule(root, stage, loader.getNamespace()), new ConfigModule(), new ModelModule(),
-				new MeshGenerationModule(), new MeshRenderingModule(), new DrawingModule(), new InputModule(), new ActionHistoryModule(), new FileIOModule());
+		Injector injector = Guice.createInjector(new WindowModule(root, stage, loader.getNamespace()), new ConfigModule(),
+				new ModelModule(), new MeshGenerationModule(), new MeshRenderingModule(), new DrawingModule(), new InputModule(),
+				new ActionHistoryModule(), new FileIOModule(), new WorkspaceActionModule());
+
 		injector.injectMembers(windowView);
 
-		new ObjectGraphFactory(windowView, root, stage, loader.getNamespace()).createObjectGraph();
 		stage.getIcons().add(new Image(MeshEditor.class.getResourceAsStream("/logo.png")));
 		stage.requestFocus();
 		stage.show();
