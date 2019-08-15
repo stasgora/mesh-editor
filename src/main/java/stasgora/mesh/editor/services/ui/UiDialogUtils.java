@@ -1,5 +1,7 @@
 package stasgora.mesh.editor.services.ui;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -11,10 +13,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.files.workspace.FileChooserAction;
+import stasgora.mesh.editor.view.annotation.MainWindowStage;
 
 import java.io.File;
 import java.util.Optional;
 
+@Singleton
 public class UiDialogUtils {
 
 	private Stage window;
@@ -26,7 +30,8 @@ public class UiDialogUtils {
 		}
 	};
 
-	public UiDialogUtils(Stage window, LangConfigReader appLang) {
+	@Inject
+	UiDialogUtils(@MainWindowStage Stage window, LangConfigReader appLang) {
 		this.window = window;
 		this.appLang = appLang;
 	}

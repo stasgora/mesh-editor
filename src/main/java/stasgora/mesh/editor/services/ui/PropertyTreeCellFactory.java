@@ -1,5 +1,7 @@
 package stasgora.mesh.editor.services.ui;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -12,6 +14,7 @@ import stasgora.mesh.editor.model.project.MeshLayer;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.services.history.actions.property.CheckBoxChangeAction;
 import stasgora.mesh.editor.services.history.actions.property.PropertyChangeAction;
@@ -23,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Singleton
 public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeCell<String>> {
 
 	private LangConfigReader appLang;
@@ -32,7 +36,8 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 
 	private Map<PropertyItemType, Function<PropertyTreeItem, BindableProperty>> propertyTypeToVisibleValue, propertyTypeToSliderValue, propertyTypeToComboBoxValue;
 
-	public PropertyTreeCellFactory(LangConfigReader appLang, AppConfigReader appConfig, VisualProperties visualProperties, ActionHistoryService actionHistoryService) {
+	@Inject
+	PropertyTreeCellFactory(LangConfigReader appLang, @AppConfig AppConfigReader appConfig, VisualProperties visualProperties, ActionHistoryService actionHistoryService) {
 		this.appLang = appLang;
 		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;

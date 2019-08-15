@@ -16,6 +16,7 @@ import stasgora.mesh.editor.services.history.ActionHistoryModule;
 import stasgora.mesh.editor.services.input.InputModule;
 import stasgora.mesh.editor.services.mesh.generation.MeshGenerationModule;
 import stasgora.mesh.editor.services.mesh.rendering.MeshRenderingModule;
+import stasgora.mesh.editor.services.ui.UIModule;
 import stasgora.mesh.editor.view.*;
 
 public class MeshEditor extends Application {
@@ -30,7 +31,7 @@ public class MeshEditor extends Application {
 
 		injector = Guice.createInjector(new WindowModule(root, stage, loader.getNamespace()), new ConfigModule(),
 				new ModelModule(), new MeshGenerationModule(), new MeshRenderingModule(), new DrawingModule(), new InputModule(),
-				new ActionHistoryModule(), new FileIOModule(), new WorkspaceActionModule());
+				new ActionHistoryModule(), new FileIOModule(), new WorkspaceActionModule(), new UIModule());
 		initViews();
 
 		stage.getIcons().add(new Image(MeshEditor.class.getResourceAsStream("/logo.png")));
