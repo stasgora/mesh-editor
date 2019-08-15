@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.model.project.ModelModule;
 import stasgora.mesh.editor.services.config.ConfigModule;
+import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.drawing.DrawingModule;
 import stasgora.mesh.editor.services.files.FileIOModule;
 import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
@@ -49,6 +50,8 @@ public class MeshEditor extends Application {
 		subViewFactory.buildPropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW);
 		subViewFactory.buildMenuView(windowView.menuViewRoot, ViewType.MENU_VIEW);
 		subViewFactory.buildCanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW);
+
+		injector.getInstance(LangConfigReader.class).onSetMainLanguage(); //TODO move once we have language settings
 	}
 
 	public static void main(String[] args) {
