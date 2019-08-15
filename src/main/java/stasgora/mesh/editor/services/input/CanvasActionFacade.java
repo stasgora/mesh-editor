@@ -16,14 +16,14 @@ import stasgora.mesh.editor.services.drawing.MeshBox;
 @Singleton
 class CanvasActionFacade implements CanvasAction {
 
-	private MouseListener[] eventConsumersQueue;
+	private final MouseListener[] eventConsumersQueue;
 	private final LoadState loadState;
-	private CanvasUI canvasUI;
+	private final CanvasUI canvasUI;
+	private final ImageBox imageBox;
+	private final MeshBox meshBox;
 
 	private Point lastMouseDragPoint;
-	private ImageBox imageBox;
 	private MouseListener activeConsumer;
-	private MeshBox meshBox;
 
 	@Inject
 	CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, CanvasUI canvasUI) {

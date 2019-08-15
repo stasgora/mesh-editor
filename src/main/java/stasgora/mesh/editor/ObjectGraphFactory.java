@@ -22,7 +22,7 @@ import stasgora.mesh.editor.services.history.CommandActionHistoryService;
 import stasgora.mesh.editor.services.history.actions.node.NodeModifiedAction;
 import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.services.input.CanvasActionFacade;
-import stasgora.mesh.editor.services.mapping.ConfigModelMapper;
+import stasgora.mesh.editor.services.files.ConfigModelMapper;
 import stasgora.mesh.editor.services.mesh.generation.*;
 import stasgora.mesh.editor.services.mesh.generation.VoronoiDiagramService;
 import stasgora.mesh.editor.services.ui.PropertyTreeCellFactory;
@@ -119,7 +119,7 @@ public class ObjectGraphFactory {
 		triangulationService = new FlipBasedTriangulationService(project.canvasData.mesh, nodeUtils, triangleUtils, flippingUtils, voronoiDiagramService);
 	}
 
-	private void setupVisualObjects() {
+	private void setupVisualObjects() { //✓
 		windowView.createWindowScene(appSettings, stage, root);
 		mouseCursor = stage.getScene().cursorProperty();
 		aboutWindow = new AboutWindow(stage, appConfig);

@@ -4,17 +4,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
 import io.github.stasgora.observetree.SettableProperty;
-import javafx.collections.ObservableMap;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Region;
 import stasgora.mesh.editor.model.NamespaceMap;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.model.project.VisualProperties;
-import stasgora.mesh.editor.services.mapping.ConfigModelMapper;
+import stasgora.mesh.editor.services.files.ConfigModelMapper;
 import stasgora.mesh.editor.services.ui.PropertyTreeCellFactory;
 import stasgora.mesh.editor.view.sub.SubView;
-
-import java.util.Map;
 
 @Singleton
 public class PropertiesView extends SubView {

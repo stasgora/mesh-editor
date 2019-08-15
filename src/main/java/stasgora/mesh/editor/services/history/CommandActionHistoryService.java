@@ -11,8 +11,8 @@ import java.util.Stack;
 
 @Singleton
 class CommandActionHistoryService implements ActionHistoryService {
-	private Stack<UserAction> undoActionStack = new Stack<>();
-	private Stack<UserAction> redoActionStack = new Stack<>();
+	private final Stack<UserAction> undoActionStack = new Stack<>();
+	private final Stack<UserAction> redoActionStack = new Stack<>();
 
 	@Inject
 	CommandActionHistoryService(LoadState loadState, TriangulationService triangulationService) {
