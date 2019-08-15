@@ -52,6 +52,7 @@ public class CanvasView extends SubView {
 		this.loadState = loadState;
 		this.canvasMeshRenderer = canvasMeshRenderer;
 
+		imageCanvas.init(canvasData, visualProperties.imageTransparency);
 		canvasMeshRenderer.setContext(meshCanvas.getGraphicsContext2D());
 		init();
 	}

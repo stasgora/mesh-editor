@@ -125,11 +125,11 @@ public class ObjectGraphFactory {
 		aboutWindow = new AboutWindow(stage, appConfig);
 	}
 
-	private void createRenderingServices() {
-		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig); //✓
+	private void createRenderingServices() { //✓
+		colorUtils = new ColorUtils(nodeUtils, project.canvasData.baseImage, appConfig);
 
-		canvasMeshRenderer = new CanvasMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties); //✓
-		svgMeshRenderer = new JFreeSvgMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties); //✓
+		canvasMeshRenderer = new CanvasMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
+		svgMeshRenderer = new JFreeSvgMeshRenderer(triangleUtils, nodeUtils, colorUtils, project.visualProperties);
 	}
 
 	private void createProjectServices() {
@@ -146,13 +146,13 @@ public class ObjectGraphFactory {
 		NodeModifiedAction.setNodeMethodReferences(triangulationService::addNode, triangulationService::removeNode);
 	}
 
-	private void createCanvasBoxServices() {
-		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig); //✓
-		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils, actionHistoryService); //✓
+	private void createCanvasBoxServices() { //✓
+		imageBox = new ImageBox(canvasViewSize, project.canvasData, appConfig, appSettings, mouseCursor, mouseConfig);
+		meshBox = new MeshBox(project.canvasData.mesh, mouseConfig, canvasViewSize, mouseCursor, triangulationService, nodeUtils, actionHistoryService);
 		canvasAction = new CanvasActionFacade(project.loadState, imageBox, meshBox, mouseCursor, mouseConfig);
 	}
 
-	private void initControllerObjects() {
+	private void initControllerObjects() { //✓
 		propertiesView = new PropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW,
 				viewNamespaces, project.visualProperties, project.loadState.stateSaved, configModelMapper, propertyTreeCellFactory);
 		menuView = new MenuView(windowView.menuViewRoot, ViewType.MENU_VIEW, viewNamespaces, workspaceAction, project.loadState, actionHistoryService, aboutWindow);
