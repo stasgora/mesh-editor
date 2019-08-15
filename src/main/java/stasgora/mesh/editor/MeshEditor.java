@@ -19,6 +19,7 @@ import stasgora.mesh.editor.services.mesh.generation.MeshGenerationModule;
 import stasgora.mesh.editor.services.mesh.rendering.MeshRenderingModule;
 import stasgora.mesh.editor.services.ui.UIModule;
 import stasgora.mesh.editor.view.*;
+import stasgora.mesh.editor.view.sub.SubViewFactory;
 
 public class MeshEditor extends Application {
 	private WindowView windowView;
@@ -44,9 +45,10 @@ public class MeshEditor extends Application {
 		injector.injectMembers(windowView);
 		windowView.setWorkspaceAction(injector.getInstance(WorkspaceAction.class));
 
-		injector.getInstance(PropertiesView.class);
-		injector.getInstance(MenuView.class);
-		injector.getInstance(CanvasView.class);
+		SubViewFactory subViewFactory = injector.getInstance(SubViewFactory.class);
+		subViewFactory.buildPropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW);
+		subViewFactory.buildMenuView(windowView.menuViewRoot, ViewType.MENU_VIEW);
+		subViewFactory.buildCanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW);
 	}
 
 	public static void main(String[] args) {
