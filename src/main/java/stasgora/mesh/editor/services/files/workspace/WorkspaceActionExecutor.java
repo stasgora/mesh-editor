@@ -46,7 +46,7 @@ public class WorkspaceActionExecutor {
 		state.file.set(location);
 		state.stateSaved.set(true);
 
-		loadState.notifyListeners();
+		notifyListeners();
 	}
 
 	void saveProject(File location) throws ProjectIOException {
@@ -54,6 +54,7 @@ public class WorkspaceActionExecutor {
 		fileUtils.save(location);
 		loadState.file.set(location);
 		loadState.stateSaved.set(true);
+
 		loadState.notifyListeners();
 	}
 
@@ -66,7 +67,7 @@ public class WorkspaceActionExecutor {
 			loadState.file.set(null);
 			loadState.stateSaved.set(false);
 
-			loadState.notifyListeners();
+			notifyListeners();
 		} catch (IOException e) {
 			throw new ProjectIOException(e);
 		}
@@ -91,6 +92,12 @@ public class WorkspaceActionExecutor {
 
 		loadState.notifyListeners();
 		canvasData.notifyListeners();
+	}
+
+	private void notifyListeners() {
+		loadState.notifyListeners();
+		canvasData.notifyListeners();
+		visualProperties.notifyListeners();
 	}
 
 	private void createProjectModel() {
