@@ -31,17 +31,19 @@ public class WindowView {
 
 	@Inject
 	void init(LoadState loadState, @MainWindowStage Stage window, @AppConfig AppConfigReader appConfig,
-	          WorkspaceAction workspaceAction, @AppConfig AppConfigReader appSettings, @MainWindowRoot Parent windowRoot) {
+	          @AppConfig AppConfigReader appSettings, @MainWindowRoot Parent windowRoot) {
 		this.loadState = loadState;
 		this.window = window;
 		this.appConfig = appConfig;
-		this.workspaceAction = workspaceAction;
 
 		setWindowTitle();
 		setListeners();
-		window.setOnCloseRequest(workspaceAction::onWindowCloseRequest);
-
 		createWindowScene(appSettings, windowRoot);
+	}
+
+	public void setWorkspaceAction(WorkspaceAction workspaceAction) {
+		this.workspaceAction = workspaceAction;
+		window.setOnCloseRequest(workspaceAction::onWindowCloseRequest);
 	}
 
 	private void setListeners() {

@@ -11,6 +11,7 @@ import stasgora.mesh.editor.model.project.ModelModule;
 import stasgora.mesh.editor.services.config.ConfigModule;
 import stasgora.mesh.editor.services.drawing.DrawingModule;
 import stasgora.mesh.editor.services.files.FileIOModule;
+import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
 import stasgora.mesh.editor.services.files.workspace.WorkspaceActionModule;
 import stasgora.mesh.editor.services.history.ActionHistoryModule;
 import stasgora.mesh.editor.services.input.InputModule;
@@ -41,6 +42,8 @@ public class MeshEditor extends Application {
 
 	private void initViews() {
 		injector.injectMembers(windowView);
+		windowView.setWorkspaceAction(injector.getInstance(WorkspaceAction.class));
+
 		injector.getInstance(PropertiesView.class);
 		injector.getInstance(MenuView.class);
 		injector.getInstance(CanvasView.class);
