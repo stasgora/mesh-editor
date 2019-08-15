@@ -1,9 +1,12 @@
-package stasgora.mesh.editor.services.mapping;
+package stasgora.mesh.editor.services.files;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.stasgora.observetree.Observable;
 import io.github.stasgora.observetree.SettableProperty;
 import org.json.JSONObject;
 import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -12,6 +15,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Singleton
 public class ConfigModelMapper {
 
 	private static final Logger LOGGER = Logger.getLogger(ConfigModelMapper.class.getName());
@@ -19,7 +23,8 @@ public class ConfigModelMapper {
 
 	private AppConfigReader appConfig;
 
-	public ConfigModelMapper(AppConfigReader appConfig) {
+	@Inject
+	ConfigModelMapper(@AppConfig AppConfigReader appConfig) {
 		this.appConfig = appConfig;
 	}
 

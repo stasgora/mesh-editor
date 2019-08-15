@@ -1,29 +1,35 @@
 package stasgora.mesh.editor.services.drawing;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.stasgora.observetree.SettableProperty;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.paint.SerializableColor;
+import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.services.config.AppConfigReader;
-import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
+import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Singleton
 public class ColorUtils {
 
-	private NodeUtils nodeUtils;
-	private SettableProperty<Image> baseImage;
-	private AppConfigReader appConfig;
+	private final NodeUtils nodeUtils;
+	private final SettableProperty<Image> baseImage;
+	private final AppConfigReader appConfig;
 
 	private static final Color OUTSIDE_IMAGE_COLOR = Color.BLACK;
 
-	public ColorUtils(NodeUtils nodeUtils, SettableProperty<Image> baseImage, AppConfigReader appConfig) {
+	@Inject
+	ColorUtils(NodeUtils nodeUtils, CanvasData canvasData, @AppConfig AppConfigReader appConfig) {
 		this.nodeUtils = nodeUtils;
-		this.baseImage = baseImage;
+		this.baseImage = canvasData.baseImage;
 		this.appConfig = appConfig;
 	}
 

@@ -1,17 +1,20 @@
 package stasgora.mesh.editor.services.ui;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import stasgora.mesh.editor.model.TextKeyProvider;
 import stasgora.mesh.editor.model.observables.BindableProperty;
 import stasgora.mesh.editor.model.project.MeshLayer;
-import stasgora.mesh.editor.model.project.MeshType;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.services.history.actions.property.CheckBoxChangeAction;
 import stasgora.mesh.editor.services.history.actions.property.PropertyChangeAction;
@@ -23,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Singleton
 public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeCell<String>> {
 
 	private LangConfigReader appLang;
@@ -32,7 +36,8 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 
 	private Map<PropertyItemType, Function<PropertyTreeItem, BindableProperty>> propertyTypeToVisibleValue, propertyTypeToSliderValue, propertyTypeToComboBoxValue;
 
-	public PropertyTreeCellFactory(LangConfigReader appLang, AppConfigReader appConfig, VisualProperties visualProperties, ActionHistoryService actionHistoryService) {
+	@Inject
+	PropertyTreeCellFactory(LangConfigReader appLang, @AppConfig AppConfigReader appConfig, VisualProperties visualProperties, ActionHistoryService actionHistoryService) {
 		this.appLang = appLang;
 		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;
@@ -92,8 +97,8 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 					addCheckBox(treeItem, body);
 				if (treeItem.hasSlider)
 					addSlider(treeItem, body);
-				if (treeItem.hasComboBox)
-					addComboBox(treeItem, body);
+				//if (treeItem.hasComboBox)
+				//	addComboBox(treeItem, body);
 				setGraphic(body);
 			}
 
@@ -120,21 +125,20 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				body.getChildren().add(slider);
 			}
 
-			private void addComboBox(PropertyTreeItem treeItem, HBox body) {
-				ComboBox<MeshType> comboBox = new ComboBox<>();
-				comboBox.setItems(FXCollections.observableArrayList(MeshType.values()));
+			private <T extends Enum<T> & TextKeyProvider> void addComboBox(Class<T> enumType, PropertyTreeItem treeItem, HBox body) {
+				ComboBox<T> comboBox = new ComboBox<>();
+				comboBox.setItems(FXCollections.observableArrayList(enumType.getEnumConstants()));
 				comboBox.setConverter(new StringConverter<>() {
 					@Override
-					public String toString(MeshType meshType) {
+					public String toString(T meshType) {
 						return appLang.getText(meshType.getTextKey());
 					}
 
 					@Override
-					public MeshType fromString(String s) {
-						return Arrays.stream(MeshType.values()).filter(type -> type.name().equals(s)).findFirst().orElse(null);
+					public T fromString(String s) {
+						return Arrays.stream(enumType.getEnumConstants()).filter(type -> type.name().equals(s)).findFirst().orElse(null);
 					}
 				});
-				comboBox.setValue(MeshType.TRIANGULATION);
 				propertyTypeToComboBoxValue.get(treeItem.itemType).apply(treeItem).bindWithFxObservable(comboBox.valueProperty());
 
 				//comboBox.valueProperty().addListener((observable, oldVal, newVal) -> actionHistoryService.registerAction(

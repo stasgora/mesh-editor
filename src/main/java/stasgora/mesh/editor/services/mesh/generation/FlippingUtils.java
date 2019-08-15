@@ -1,22 +1,27 @@
-package stasgora.mesh.editor.services.mesh.triangulation;
+package stasgora.mesh.editor.services.mesh.generation;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
+import stasgora.mesh.editor.model.project.CanvasData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
+@Singleton
 public class FlippingUtils {
 
 	private final SettableObservable<Mesh> mesh;
 	private final TriangleUtils triangleUtils;
 
-	public FlippingUtils(SettableObservable<Mesh> mesh, TriangleUtils triangleUtils) {
-		this.mesh = mesh;
+	@Inject
+	FlippingUtils(CanvasData canvasData, TriangleUtils triangleUtils) {
+		this.mesh = canvasData.mesh;
 		this.triangleUtils = triangleUtils;
 	}
 

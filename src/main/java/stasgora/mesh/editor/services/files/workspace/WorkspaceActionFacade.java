@@ -1,14 +1,18 @@
 package stasgora.mesh.editor.services.files.workspace;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
+import stasgora.mesh.editor.model.project.CanvasUI;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.files.ProjectIOException;
 import stasgora.mesh.editor.services.ui.UiDialogUtils;
 
@@ -18,25 +22,27 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class WorkspaceActionFacade implements WorkspaceAction {
+@Singleton
+class WorkspaceActionFacade implements WorkspaceAction {
 
-	private static final Logger LOGGER = Logger.getLogger(WorkspaceActionFacade.class.getName());
+	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 
 	private final WorkspaceActionExecutor workspaceActionExecutor;
 	private final LangConfigReader appLang;
-	private UiDialogUtils dialogUtils;
-	private AppConfigReader appConfig;
-	private LoadState loadState;
+	private final UiDialogUtils dialogUtils;
+	private final AppConfigReader appConfig;
+	private final LoadState loadState;
 	private final ObjectProperty<Cursor> mouseCursor;
 
-	public WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils,
-	                             AppConfigReader appConfig, LoadState loadState, ObjectProperty<Cursor> mouseCursor) {
+	@Inject
+	WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils,
+	                      @AppConfig AppConfigReader appConfig, LoadState loadState, CanvasUI canvasUI) {
 		this.workspaceActionExecutor = workspaceActionExecutor;
 		this.appLang = appLang;
 		this.dialogUtils = dialogUtils;
 		this.appConfig = appConfig;
 		this.loadState = loadState;
-		this.mouseCursor = mouseCursor;
+		this.mouseCursor = canvasUI.canvasMouseCursor;
 	}
 
 	@Override

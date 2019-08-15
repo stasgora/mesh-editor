@@ -1,57 +1,63 @@
 package stasgora.mesh.editor.view;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.assistedinject.Assisted;
 import io.github.stasgora.observetree.SettableProperty;
 import io.github.stasgora.observetree.enums.ListenerPriority;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableMap;
 import javafx.scene.layout.Region;
+import stasgora.mesh.editor.model.NamespaceMap;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.project.CanvasData;
-import stasgora.mesh.editor.model.project.Project;
+import stasgora.mesh.editor.model.project.CanvasUI;
+import stasgora.mesh.editor.model.project.LoadState;
+import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.drawing.ImageBox;
 import stasgora.mesh.editor.services.input.CanvasAction;
-import stasgora.mesh.editor.services.mesh.rendering.CanvasMeshRenderer;
-import stasgora.mesh.editor.services.mesh.triangulation.NodeUtils;
-import stasgora.mesh.editor.services.mesh.triangulation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
+import stasgora.mesh.editor.services.mesh.generation.TriangleUtils;
+import stasgora.mesh.editor.services.mesh.rendering.CanvasRenderer;
 import stasgora.mesh.editor.ui.canvas.Canvas;
 import stasgora.mesh.editor.ui.canvas.ImageCanvas;
+import stasgora.mesh.editor.view.sub.SubView;
 
-import java.util.Map;
-
-public class CanvasView extends SubController {
+public class CanvasView extends SubView {
 
 	public ImageCanvas imageCanvas;
 	public Canvas meshCanvas;
 
-	private final Project project;
+	private final VisualProperties visualProperties;
 	private Point canvasViewSize;
 
+	private final CanvasData canvasData;
 	private ImageBox imageBox;
 	private NodeUtils nodeUtils;
-	private TriangleUtils triangleUtils;
 	private final CanvasAction canvasAction;
-	private final SettableProperty<Boolean> loaded;
-	private final CanvasMeshRenderer canvasMeshRenderer;
+	private final LoadState loadState;
+	private final CanvasRenderer canvasMeshRenderer;
 
-	public CanvasView(Region root, ViewType viewType, Map<String, ObservableMap<String, Object>> viewNamespaces, Project project,
-	                  Point canvasViewSize, ImageBox imageBox, NodeUtils nodeUtils, TriangleUtils triangleUtils, CanvasAction canvasAction,
-	                  SettableProperty<Boolean> loaded, CanvasMeshRenderer canvasMeshRenderer) {
+	@Inject
+	CanvasView(@Assisted Region root, @Assisted ViewType viewType, NamespaceMap viewNamespaces, VisualProperties visualProperties, CanvasUI canvasUI,
+	           CanvasData canvasData, ImageBox imageBox, NodeUtils nodeUtils, CanvasAction canvasAction, LoadState loadState, CanvasRenderer canvasMeshRenderer) {
 		super(root, viewType, viewNamespaces);
 
-		this.project = project;
-		this.canvasViewSize = canvasViewSize;
+		this.visualProperties = visualProperties;
+		this.canvasViewSize = canvasUI.canvasViewSize;
+		this.canvasData = canvasData;
 		this.imageBox = imageBox;
 		this.nodeUtils = nodeUtils;
-		this.triangleUtils = triangleUtils;
 		this.canvasAction = canvasAction;
-		this.loaded = loaded;
+		this.loadState = loadState;
 		this.canvasMeshRenderer = canvasMeshRenderer;
-		canvasMeshRenderer.setContext(meshCanvas.getGraphicsContext2D());
 
+		imageCanvas.init(canvasData, visualProperties.imageTransparency);
+		canvasMeshRenderer.setContext(meshCanvas.getGraphicsContext2D());
 		init();
 	}
 
-	public void init() {
+	@Override
+	protected void init() {
 		setListeners();
 		setMouseHandlers();
 	}
@@ -66,17 +72,16 @@ public class CanvasView extends SubController {
 			meshCanvas.setWidth(canvasViewSize.x);
 			meshCanvas.setHeight(canvasViewSize.y);
 		});
-		CanvasData canvasData = project.canvasData;
 		canvasViewSize.addListener(() -> imageBox.onResizeCanvas());
-		canvasData.mesh.addStaticListener(() -> project.loadState.stateSaved.setAndNotify(false));
+		canvasData.mesh.addStaticListener(() -> loadState.stateSaved.setAndNotify(false));
 
 		canvasViewSize.addListener(this::drawBothLayers);
 		canvasData.addListener(this::drawBothLayers);
-		project.visualProperties.addListener(this::drawMesh);
+		visualProperties.addListener(this::drawMesh);
 
-		project.visualProperties.addListener(this::drawBothLayers);
-		loaded.addListener(() -> {
-			if (!loaded.get()) return;
+		visualProperties.addListener(this::drawBothLayers);
+		loadState.loaded.addListener(() -> {
+			if (!loadState.loaded.get()) return;
 			imageBox.calcImageBox();
 
 		}, ListenerPriority.HIGH);
@@ -101,7 +106,7 @@ public class CanvasView extends SubController {
 
 	private void drawMesh() {
 		meshCanvas.clear();
-		if (project.loadState.loaded.get() && project.visualProperties.meshVisible.get()) {
+		if (loadState.loaded.get() && visualProperties.meshVisible.get()) {
 			canvasMeshRenderer.render();
 			canvasMeshRenderer.drawBoundingBox(nodeUtils.getCanvasSpaceNodeBoundingBox());
 		}
@@ -109,7 +114,7 @@ public class CanvasView extends SubController {
 
 	private void drawImage() {
 		imageCanvas.clear();
-		if (project.loadState.loaded.get() && project.visualProperties.imageVisible.get()) {
+		if (loadState.loaded.get() && visualProperties.imageVisible.get()) {
 			imageCanvas.draw();
 		}
 	}

@@ -1,20 +1,25 @@
 package stasgora.mesh.editor.services.files;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.scene.image.Image;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
 
 import java.io.*;
 
-public class ProjectFileUtils implements FileUtils {
+@Singleton
+class ProjectFileUtils implements FileUtils {
 
-	private CanvasData canvasData;
-	private AppConfigReader appConfig;
-	private VisualProperties visualProperties;
+	private final CanvasData canvasData;
+	private final AppConfigReader appConfig;
+	private final VisualProperties visualProperties;
 
-	public ProjectFileUtils(CanvasData canvasData, AppConfigReader appConfig, VisualProperties visualProperties) {
+	@Inject
+	ProjectFileUtils(CanvasData canvasData, @AppConfig AppConfigReader appConfig, VisualProperties visualProperties) {
 		this.canvasData = canvasData;
 		this.appConfig = appConfig;
 		this.visualProperties = visualProperties;

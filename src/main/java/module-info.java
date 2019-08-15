@@ -1,4 +1,4 @@
-module mesh.editor {
+open module mesh.editor {
 	requires javafx.controls;
 	requires javafx.fxml;
 	requires java.logging;
@@ -6,7 +6,8 @@ module mesh.editor {
 	requires org.jfree.jfreesvg;
 	requires java.desktop;
 	requires stasgora.observetree;
+	requires com.google.guice;
+	requires com.google.guice.extensions.assistedinject;
 
-	opens stasgora.mesh.editor to javafx.fxml;
 	exports stasgora.mesh.editor;
 }

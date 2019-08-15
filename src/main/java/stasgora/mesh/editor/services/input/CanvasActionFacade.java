@@ -1,33 +1,36 @@
 package stasgora.mesh.editor.services.input;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import stasgora.mesh.editor.model.MouseConfig;
 import stasgora.mesh.editor.model.geom.Point;
+import stasgora.mesh.editor.model.project.CanvasUI;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.drawing.ImageBox;
 import stasgora.mesh.editor.services.drawing.MeshBox;
 
-public class CanvasActionFacade implements CanvasAction {
+@Singleton
+class CanvasActionFacade implements CanvasAction {
 
-	private MouseListener[] eventConsumersQueue;
+	private final MouseListener[] eventConsumersQueue;
 	private final LoadState loadState;
-	private MouseConfig mouseConfig;
+	private final CanvasUI canvasUI;
+	private final ImageBox imageBox;
+	private final MeshBox meshBox;
 
 	private Point lastMouseDragPoint;
-	private ImageBox imageBox;
 	private MouseListener activeConsumer;
-	private MeshBox meshBox;
-	private ObjectProperty<Cursor> mouseCursor;
 
-	public CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, ObjectProperty<Cursor> mouseCursor, MouseConfig mouseConfig) {
+	@Inject
+	CanvasActionFacade(LoadState loadState, ImageBox imageBox, MeshBox meshBox, CanvasUI canvasUI) {
 		this.imageBox = imageBox;
 		this.meshBox = meshBox;
-		this.mouseCursor = mouseCursor;
 		this.loadState = loadState;
-		this.mouseConfig = mouseConfig;
+		this.canvasUI = canvasUI;
 		eventConsumersQueue = new MouseListener[]{meshBox, imageBox};
 	}
 
@@ -74,14 +77,14 @@ public class CanvasActionFacade implements CanvasAction {
 	@Override
 	public void onMouseEnter(MouseEvent event) {
 		if (loadState.loaded.get() && lastMouseDragPoint == null) {
-			mouseCursor.setValue(mouseConfig.defaultCanvasCursor);
+			canvasUI.canvasMouseCursor.setValue(canvasUI.mouseConfig.defaultCanvasCursor);
 		}
 	}
 
 	@Override
 	public void onMouseExit(MouseEvent event) {
 		if (loadState.loaded.get() && lastMouseDragPoint == null) {
-			mouseCursor.setValue(Cursor.DEFAULT);
+			canvasUI.canvasMouseCursor.setValue(Cursor.DEFAULT);
 		}
 	}
 

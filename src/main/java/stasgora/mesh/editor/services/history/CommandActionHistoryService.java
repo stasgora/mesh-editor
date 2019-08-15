@@ -1,19 +1,26 @@
 package stasgora.mesh.editor.services.history;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.history.actions.UserAction;
+import stasgora.mesh.editor.services.history.actions.node.NodeModifiedAction;
+import stasgora.mesh.editor.services.mesh.generation.TriangulationService;
 
 import java.util.Stack;
 
-public class CommandActionHistoryService implements ActionHistoryService {
-	private Stack<UserAction> undoActionStack = new Stack<>();
-	private Stack<UserAction> redoActionStack = new Stack<>();
+@Singleton
+class CommandActionHistoryService implements ActionHistoryService {
+	private final Stack<UserAction> undoActionStack = new Stack<>();
+	private final Stack<UserAction> redoActionStack = new Stack<>();
 
-	public CommandActionHistoryService(LoadState loadState) {
+	@Inject
+	CommandActionHistoryService(LoadState loadState, TriangulationService triangulationService) {
 		loadState.loaded.addListener(() -> {
 			if (!loadState.loaded.get())
 				clearActionHistory();
 		});
+		NodeModifiedAction.setNodeMethodReferences(triangulationService::addNode, triangulationService::removeNode);
 	}
 
 	@Override

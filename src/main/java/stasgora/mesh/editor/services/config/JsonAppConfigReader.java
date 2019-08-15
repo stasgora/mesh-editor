@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class JsonAppConfigReader extends JsonConfigReader implements AppConfigReader {
+class JsonAppConfigReader extends JsonConfigReader implements AppConfigReader {
 
 	private static final Logger LOGGER = Logger.getLogger(JsonAppConfigReader.class.getName());
 
@@ -52,11 +52,11 @@ public class JsonAppConfigReader extends JsonConfigReader implements AppConfigRe
 		return getJsonObject(config, keyPath);
 	}
 
-	public static JsonAppConfigReader forResource(String fileName) {
+	static JsonAppConfigReader forResource(String fileName) {
 		return new JsonAppConfigReader(loadJsonConfig(fileName));
 	}
 
-	public static JsonAppConfigReader forFile(String fileName) {
+	static JsonAppConfigReader forFile(String fileName) {
 		try (InputStream input = new FileInputStream(new File(fileName))) {
 			return new JsonAppConfigReader(createJsonConfig(input, fileName));
 		} catch (IOException e) {

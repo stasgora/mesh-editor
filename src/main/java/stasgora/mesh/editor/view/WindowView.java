@@ -1,5 +1,6 @@
 package stasgora.mesh.editor.view;
 
+import com.google.inject.Inject;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,7 +10,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
+import stasgora.mesh.editor.view.annotation.MainWindowRoot;
+import stasgora.mesh.editor.view.annotation.MainWindowStage;
 
 public class WindowView {
 
@@ -25,14 +29,20 @@ public class WindowView {
 
 	private WorkspaceAction workspaceAction;
 
-	public void init(LoadState loadState, Stage window, AppConfigReader appConfig, WorkspaceAction workspaceAction) {
+	@Inject
+	void init(LoadState loadState, @MainWindowStage Stage window, @AppConfig AppConfigReader appConfig,
+	          @AppConfig AppConfigReader appSettings, @MainWindowRoot Parent windowRoot) {
 		this.loadState = loadState;
 		this.window = window;
 		this.appConfig = appConfig;
-		this.workspaceAction = workspaceAction;
 
 		setWindowTitle();
 		setListeners();
+		createWindowScene(appSettings, windowRoot);
+	}
+
+	public void setWorkspaceAction(WorkspaceAction workspaceAction) {
+		this.workspaceAction = workspaceAction;
 		window.setOnCloseRequest(workspaceAction::onWindowCloseRequest);
 	}
 
@@ -61,17 +71,17 @@ public class WindowView {
 		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
 	}
 
-	public void createWindowScene(AppConfigReader appSettings, Stage stage, Parent root) {
+	private void createWindowScene(AppConfigReader appSettings, Parent windowRoot) {
 		Scene scene;
 		String windowPath = "last.windowPlacement";
 		if (appSettings.containsPath(windowPath)) {
-			scene = new Scene(root, appSettings.getInt(windowPath + ".size.w"), appSettings.getInt(windowPath + ".size.h"));
-			stage.setX(appSettings.getInt(windowPath + ".position.x"));
-			stage.setY(appSettings.getInt(windowPath + ".position.y"));
+			scene = new Scene(windowRoot, appSettings.getInt(windowPath + ".size.w"), appSettings.getInt(windowPath + ".size.h"));
+			window.setX(appSettings.getInt(windowPath + ".position.x"));
+			window.setY(appSettings.getInt(windowPath + ".position.y"));
 		} else {
-			scene = new Scene(root, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
+			scene = new Scene(windowRoot, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
 		}
-		stage.setScene(scene);
+		window.setScene(scene);
 	}
 
 }
