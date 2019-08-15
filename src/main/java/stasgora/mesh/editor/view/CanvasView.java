@@ -22,7 +22,6 @@ import stasgora.mesh.editor.ui.canvas.Canvas;
 import stasgora.mesh.editor.ui.canvas.ImageCanvas;
 import stasgora.mesh.editor.view.sub.SubView;
 
-@Singleton
 public class CanvasView extends SubView {
 
 	public ImageCanvas imageCanvas;

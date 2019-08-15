@@ -14,7 +14,6 @@ import stasgora.mesh.editor.view.sub.SubView;
 
 import java.util.Map;
 
-@Singleton
 public class MenuView extends SubView {
 
 	private WorkspaceAction workspaceAction;

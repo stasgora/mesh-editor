@@ -13,7 +13,6 @@ import stasgora.mesh.editor.services.files.ConfigModelMapper;
 import stasgora.mesh.editor.services.ui.PropertyTreeCellFactory;
 import stasgora.mesh.editor.view.sub.SubView;
 
-@Singleton
 public class PropertiesView extends SubView {
 
 	private VisualProperties visualProperties;

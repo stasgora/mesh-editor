@@ -8,9 +8,11 @@ import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
+import stasgora.mesh.editor.model.project.CanvasUI;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.files.ProjectIOException;
 import stasgora.mesh.editor.services.ui.UiDialogUtils;
 
@@ -34,13 +36,13 @@ class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Inject
 	WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils,
-	                             AppConfigReader appConfig, LoadState loadState, ObjectProperty<Cursor> mouseCursor) {
+	                      @AppConfig AppConfigReader appConfig, LoadState loadState, CanvasUI canvasUI) {
 		this.workspaceActionExecutor = workspaceActionExecutor;
 		this.appLang = appLang;
 		this.dialogUtils = dialogUtils;
 		this.appConfig = appConfig;
 		this.loadState = loadState;
-		this.mouseCursor = mouseCursor;
+		this.mouseCursor = canvasUI.canvasMouseCursor;
 	}
 
 	@Override
