@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import stasgora.mesh.editor.model.project.ModelModule;
 import stasgora.mesh.editor.services.config.ConfigModule;
 import stasgora.mesh.editor.services.drawing.DrawingModule;
+import stasgora.mesh.editor.services.history.ActionHistoryModule;
 import stasgora.mesh.editor.services.input.InputModule;
 import stasgora.mesh.editor.services.mesh.generation.MeshGenerationModule;
 import stasgora.mesh.editor.services.mesh.rendering.MeshRenderingModule;
@@ -25,7 +26,7 @@ public class MeshEditor extends Application {
 		WindowView windowView = loader.getController();
 
 		Injector injector = Guice.createInjector(new WindowModule(root, stage, loader.getNamespace()), new ConfigModule(), new ModelModule(),
-				new MeshGenerationModule(), new MeshRenderingModule(), new DrawingModule(), new InputModule());
+				new MeshGenerationModule(), new MeshRenderingModule(), new DrawingModule(), new InputModule(), new ActionHistoryModule());
 		injector.injectMembers(windowView);
 
 		new ObjectGraphFactory(windowView, root, stage, loader.getNamespace()).createObjectGraph();

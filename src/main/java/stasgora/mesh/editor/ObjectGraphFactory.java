@@ -141,7 +141,7 @@ public class ObjectGraphFactory {
 		propertyTreeCellFactory = new PropertyTreeCellFactory(appLang, appConfig, project.visualProperties, actionHistoryService);
 	}
 
-	private void createActionHistoryService() {
+	private void createActionHistoryService() { //✓
 		actionHistoryService = new CommandActionHistoryService(project.loadState);
 		NodeModifiedAction.setNodeMethodReferences(triangulationService::addNode, triangulationService::removeNode);
 	}
