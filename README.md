@@ -16,12 +16,11 @@ Simple desktop application for creating vector low poly art from raster images
 [Releases page](https://github.com/stasgora/mesh-editor/releases)
 
 ## Features:
-- Dynamic & Kinetic Delaunay Triangulation Implementation
+- Dynamic & Kinetic Delaunay Triangulation & Voronoi Diagram
 - Project Saving & Loading
 - Export to SVG
-- Image-Mesh blend view for easy editing
+- Layers properties view with disabling & blending for easy editing
 - Mesh colors dynamically sampled from image
-- Control over Triangles, Edges & Points visibility
 - UI localization files
 
 ### Other examples:
