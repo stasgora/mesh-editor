@@ -63,7 +63,7 @@ class CanvasMeshRenderer extends MeshRenderer implements CanvasRenderer {
 
 	@Override
 	public void drawBoundingBox(Rectangle boundingBox) {
-		context.setStroke(Color.gray(0.8));
+		context.setStroke(Color.gray(0.4));
 		context.setLineDashes(10, 15);
 		context.strokeRect(boundingBox.position.x, boundingBox.position.y, boundingBox.size.x, boundingBox.size.y);
 		context.setLineDashes(0);

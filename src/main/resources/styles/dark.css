@@ -16,7 +16,6 @@
 .main-pane {
 	-fx-background-color: bg-color;
 	-fx-min-width: 50;
-	-fx-pref-width: 300;
 }
 .split-pane-divider {
 	-fx-background-color: transparent;
@@ -28,6 +27,7 @@
 /* property-item */
 .property-item {
 	-fx-background-color: bg-color-dark;
+	-fx-padding: 6px;
 }
 .property-item:focused {
 	-fx-background-color: bg-color-light;
@@ -83,13 +83,15 @@
 	-fx-border-color: text-color;
 	-fx-background-color: bg-color-dark;
 }
+.slider:pressed > .thumb {
+	-fx-border-width: 0;
+	-fx-background-color: accent-color;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 2, 0.75, 1.5, 3);
+}
+
 .property-item:focused .slider > .thumb {
 	-fx-background-color: bg-color-light;
 }
-.property-item:focused .slider > .thumb {
-	-fx-border-color: accent-color;
-}
-.slider:pressed > .thumb {
-	-fx-border-width: 0;
+.property-item:focused .slider:pressed > .thumb {
 	-fx-background-color: accent-color;
 }
