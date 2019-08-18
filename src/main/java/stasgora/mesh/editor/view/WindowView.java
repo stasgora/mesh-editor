@@ -8,6 +8,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import stasgora.mesh.editor.MeshEditor;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
@@ -81,6 +82,7 @@ public class WindowView {
 		} else {
 			scene = new Scene(windowRoot, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
 		}
+		scene.getStylesheets().add(MeshEditor.class.getResource("/styles/dark.css").toExternalForm());
 		window.setScene(scene);
 	}
 

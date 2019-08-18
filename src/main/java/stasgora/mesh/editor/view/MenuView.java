@@ -1,21 +1,23 @@
 package stasgora.mesh.editor.view;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
-import javafx.collections.ObservableMap;
+import javafx.collections.ObservableList;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 import stasgora.mesh.editor.model.NamespaceMap;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
+import stasgora.mesh.editor.view.annotation.MainWindowStage;
 import stasgora.mesh.editor.view.sub.SubView;
 
-import java.util.Map;
+import java.nio.file.Paths;
 
 public class MenuView extends SubView {
 
+	private final Stage stage;
 	private WorkspaceAction workspaceAction;
 	private final ActionHistoryService actionHistoryService;
 	private final AboutWindow aboutWindow;
@@ -35,12 +37,15 @@ public class MenuView extends SubView {
 
 	public MenuItem aboutMenuItem;
 
+	public MenuItem reloadStylesMenuItem;
+
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 
 	@Inject
-	MenuView(@Assisted Region root, @Assisted ViewType viewType, NamespaceMap viewNamespaces,
+	MenuView(@Assisted Region root, @Assisted ViewType viewType, NamespaceMap viewNamespaces, @MainWindowStage Stage stage,
 	         WorkspaceAction workspaceAction, LoadState loadState, ActionHistoryService actionHistoryService, AboutWindow aboutWindow) {
 		super(root, viewType, viewNamespaces);
+		this.stage = stage;
 		this.workspaceAction = workspaceAction;
 		this.loadState = loadState;
 		this.actionHistoryService = actionHistoryService;
@@ -62,6 +67,12 @@ public class MenuView extends SubView {
 		redoMenuItem.setOnAction(event -> actionHistoryService.redo());
 
 		aboutMenuItem.setOnAction(event -> aboutWindow.show());
+
+		reloadStylesMenuItem.setOnAction(event -> {
+			ObservableList<String> stylesheets = stage.getScene().getStylesheets();
+			stylesheets.clear();
+			stylesheets.add(Paths.get("src/main/resources/styles/dark.css").toUri().toString());
+		});
 
 		namespace.put(MENU_FILE_ITEM_DISABLED, true);
 		loadState.loaded.addListener(() -> namespace.put(MENU_FILE_ITEM_DISABLED, !((boolean) namespace.get(MENU_FILE_ITEM_DISABLED))));

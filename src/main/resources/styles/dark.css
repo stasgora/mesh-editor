@@ -1,0 +1,14 @@
+.root {
+    bg-color: #292d3e;
+    bg-color-light: #3e435b;
+    bg-color-dark: #202331;
+}
+.root.popup {
+}
+.window-pane {
+    -fx-background-color: bg-color-dark;
+    -fx-min-width: 50;
+}
+.tree-view {
+    -fx-background-color: bg-color;
+}
