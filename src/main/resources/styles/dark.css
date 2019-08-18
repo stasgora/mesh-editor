@@ -1,36 +1,95 @@
 .root {
-    bg-color: #292d3e;
-    bg-color-light: #3e435b;
-    bg-color-dark: #202331;
+	bg-color: #292d3e;
+	bg-color-light: #3e435b;
+	bg-color-dark: #202331;
 
-    text-color: #8c93b3;
-    text-color-selected: #fff;
+	text-color: #8c93b3;
+	text-color-selected: #fff;
+
+	accent-color: #ab47bc;
 }
 .root .popup {
 }
 .root > .split-pane {
-    -fx-background-color: bg-color;
+	-fx-background-color: bg-color;
 }
 .main-pane {
-    -fx-background-color: bg-color;
-    -fx-min-width: 50;
-    -fx-pref-width: 300;
+	-fx-background-color: bg-color;
+	-fx-min-width: 50;
+	-fx-pref-width: 300;
 }
 .split-pane-divider {
-    -fx-background-color: transparent;
+	-fx-background-color: transparent;
 }
 .properties-root {
-    -fx-background-color: bg-color-dark;
+	-fx-background-color: bg-color-dark;
 }
+
+/* property-item */
 .property-item {
-    -fx-background-color: bg-color-dark;
+	-fx-background-color: bg-color-dark;
 }
 .property-item:focused {
-    -fx-background-color: bg-color-light;
+	-fx-background-color: bg-color-light;
+	-fx-border-width: 0 0 0 2px;
+	-fx-border-color: accent-color;
 }
+
+/* property-item label */
 .property-item .label {
-    -fx-text-fill: text-color;
+	-fx-text-fill: text-color;
 }
 .property-item:focused .label {
-    -fx-text-fill: text-color-selected;
+	-fx-text-fill: text-color-selected;
+}
+
+/* property-item arrow */
+.property-item .tree-disclosure-node .arrow {
+	-fx-background-color: text-color;
+}
+.property-item:focused .tree-disclosure-node .arrow {
+	-fx-background-color: accent-color;
+}
+
+/* check-box */
+.check-box > .box {
+	-fx-border-radius: 2;
+	-fx-border-width: 2;
+	-fx-border-color: text-color;
+	-fx-background-color: transparent;
+	-fx-padding: 0;
+}
+.check-box:selected > .box {
+	-fx-border-color: accent-color;
+	-fx-background-color: accent-color;
+}
+.check-box:selected > .box > .mark {
+	-fx-shape: "M 20.361328,6.0214844 8.9238281,16.005859 4.3867188,12.746094 2.9277344,14.775391 9.0761719,19.193359 22.005859,7.9042969 Z";
+	-fx-position-shape: true;
+	-fx-background-color: bg-color-dark;
+}
+
+/* slider */
+.slider > .track {
+	-fx-background-color: text-color;
+	-fx-pref-height: 2px;
+}
+
+.slider > .thumb {
+	-fx-pref-height: 13px;
+	-fx-pref-width: 13px;
+	-fx-border-radius: 50%;
+	-fx-border-width: 2;
+	-fx-border-color: text-color;
+	-fx-background-color: bg-color-dark;
+}
+.property-item:focused .slider > .thumb {
+	-fx-background-color: bg-color-light;
+}
+.property-item:focused .slider > .thumb {
+	-fx-border-color: accent-color;
+}
+.slider:pressed > .thumb {
+	-fx-border-width: 0;
+	-fx-background-color: accent-color;
 }
