@@ -2,13 +2,35 @@
     bg-color: #292d3e;
     bg-color-light: #3e435b;
     bg-color-dark: #202331;
+
+    text-color: #8c93b3;
+    text-color-selected: #fff;
 }
-.root.popup {
+.root .popup {
 }
-.window-pane {
-    -fx-background-color: bg-color-dark;
-    -fx-min-width: 50;
-}
-.tree-view {
+.root > .split-pane {
     -fx-background-color: bg-color;
+}
+.main-pane {
+    -fx-background-color: bg-color;
+    -fx-min-width: 50;
+    -fx-pref-width: 300;
+}
+.split-pane-divider {
+    -fx-background-color: transparent;
+}
+.properties-root {
+    -fx-background-color: bg-color-dark;
+}
+.property-item {
+    -fx-background-color: bg-color-dark;
+}
+.property-item:focused {
+    -fx-background-color: bg-color-light;
+}
+.property-item .label {
+    -fx-text-fill: text-color;
+}
+.property-item:focused .label {
+    -fx-text-fill: text-color-selected;
 }

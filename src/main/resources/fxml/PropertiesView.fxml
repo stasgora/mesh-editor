@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <fx:root type="javafx.scene.layout.AnchorPane" visible="false" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
-	<TreeView fx:id="propertyTree" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+	<TreeView fx:id="propertyTree" styleClass="properties-root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 		<TreeItem value="${properties_title}" expanded="true">
 			<children>
 				<PropertyTreeItem itemType="IMAGE" hasSlider="true"/>

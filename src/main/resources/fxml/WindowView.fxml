@@ -8,7 +8,7 @@
 <VBox minWidth="250.0" prefHeight="556.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="stasgora.mesh.editor.view.WindowView">
 	<MenuBar fx:id="menuViewRoot" layoutX="185.0" layoutY="-14.0" />
 	<SplitPane fx:id="mainSplitPane" dividerPositions="0.3" prefHeight="480.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
-		<AnchorPane fx:id="propertiesViewRoot" styleClass="window-pane"/>
-		<AnchorPane fx:id="canvasViewRoot" styleClass="window-pane"/>
+		<AnchorPane fx:id="propertiesViewRoot" styleClass="main-pane"/>
+		<AnchorPane fx:id="canvasViewRoot" styleClass="main-pane"/>
 	</SplitPane>
 </VBox>
