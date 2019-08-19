@@ -1,9 +1,13 @@
 .root {
 	bg-color: #292d3e;
 	bg-color-light: #3e435b;
+	bg-color-broken: #34324a;
 	bg-color-dark: #202331;
 
-	text-color: #8c93b3;
+	properties-bg-color: bg-color-dark;
+
+	text-color: #676e95;
+	text-color-light: #a6accd;
 	text-color-selected: #fff;
 
 	accent-color: #ab47bc;
@@ -21,12 +25,12 @@
 	-fx-background-color: transparent;
 }
 .properties-root {
-	-fx-background-color: bg-color-dark;
+	-fx-background-color: properties-bg-color;
 }
 
 /* property-item */
 .property-item {
-	-fx-background-color: bg-color-dark;
+	-fx-background-color: properties-bg-color;
 	-fx-padding: 6px;
 }
 .property-item:focused {
@@ -94,4 +98,58 @@
 }
 .property-item:focused .slider:pressed > .thumb {
 	-fx-background-color: accent-color;
+}
+
+/* menu */
+.menu-bar {
+	-fx-padding: 0;
+	-fx-background-color: bg-color;
+}
+.context-menu {
+	-fx-padding: 1;
+	-fx-background-color: bg-color;
+	-fx-border-width: 1;
+	-fx-border-color: bg-color-broken;
+}
+.menu {
+	-fx-padding: 8 6;
+}
+.menu:hover {
+	-fx-background-color: bg-color;
+}
+.menu:showing {
+	-fx-background-color: bg-color-light;
+}
+.menu .label {
+	-fx-text-fill: text-color-light;
+}
+.menu-item:hover {
+	-fx-background-color: bg-color-light;
+}
+.menu:showing > .label, .menu-item:hover > .label {
+	-fx-text-fill: text-color-selected;
+}
+.menu:disabled, .menu-item:disabled {
+	-fx-background-color: bg-color;
+}
+.menu:disabled > .label, .menu-item:disabled > .label {
+	-fx-text-fill: text-color;
+}
+.menu-item {
+	-fx-background-color: bg-color;
+	-fx-text-fill: text-color-light;
+	-fx-padding: 8 6 8 24;
+}
+.menu-item > .accelerator-text {
+	-fx-text-fill: text-color;
+}
+.separator > .line {
+	-fx-border-insets: 1;
+	-fx-border-width: 1;
+	-fx-pref-height: 4;
+	-fx-background-color: bg-color;
+	-fx-border-color: bg-color-broken;
+}
+.mnemonic-underline {
+	-fx-stroke: -fx-text-fill;
 }
