@@ -50,7 +50,7 @@ public class WindowView {
 	private void setListeners() {
 		LoadState loadState = this.loadState;
 		loadState.addListener(this::setWindowTitle);
-		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
+		SplitPane.setResizableWithParent(mainSplitPane.getItems().get(0), false);
 		loadState.loaded.addListener(() -> propertiesViewRoot.setVisible(loadState.loaded.get()));
 	}
 
@@ -65,11 +65,6 @@ public class WindowView {
 			title = projectName + " - " + title;
 		}
 		window.setTitle(title);
-	}
-
-	private void keepDividerInPlace(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
-		SplitPane.Divider divider = mainSplitPane.getDividers().get(0);
-		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
 	}
 
 	private void createWindowScene(AppConfigReader appSettings, Parent windowRoot) {

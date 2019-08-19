@@ -24,7 +24,7 @@
 	<Menu text="${menu_help_title}">
 		<MenuItem fx:id="aboutMenuItem" text="${menu_help_item_about}" />
 	</Menu>
-	<Menu text="${menu_debug_title}">
+	<Menu text="${menu_debug_title}" visible="${debug_menu_visible}">
 		<MenuItem fx:id="reloadStylesMenuItem" text="${menu_debug_item_reloadStyles}" accelerator="Ctrl+R" />
 	</Menu>
 </fx:root>
