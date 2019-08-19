@@ -1,7 +1,7 @@
 # Mesh Editor
 Simple desktop application for creating vector low poly art from raster images
 
-![Screenshot_20190815_204412](https://user-images.githubusercontent.com/8643919/63118226-bc36f600-bf9d-11e9-9810-48822d9d9558.png)
+![Screenshot_20190820_000325](https://user-images.githubusercontent.com/8643919/63302654-ffff6780-c2dd-11e9-8a90-f9b2d0de0ebf.png)
 
 ![Screenshot_20190402_205226](https://user-images.githubusercontent.com/8643919/55430423-5d448780-558e-11e9-9461-6ffd15f42d33.png)
 <sup>(old version screenshot)</sup>
