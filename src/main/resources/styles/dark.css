@@ -4,18 +4,15 @@
 	bg-color-broken: #34324a;
 	bg-color-dark: #202331;
 
-	properties-bg-color: bg-color-dark;
-
 	text-color: #676e95;
 	text-color-light: #a6accd;
 	text-color-selected: #fff;
 
 	accent-color: #ab47bc;
 }
-.root .popup {
-}
 .root > .split-pane {
 	-fx-background-color: bg-color;
+	-fx-padding: 0;
 }
 .main-pane {
 	-fx-background-color: bg-color;
@@ -25,12 +22,13 @@
 	-fx-background-color: transparent;
 }
 .properties-root {
-	-fx-background-color: properties-bg-color;
+	-fx-padding: 0;
+	-fx-background-color: bg-color-dark;
 }
 
 /* property-item */
 .property-item {
-	-fx-background-color: properties-bg-color;
+	-fx-background-color: transparent;
 	-fx-padding: 6px;
 }
 .property-item:focused {
@@ -90,7 +88,7 @@
 .slider:pressed > .thumb {
 	-fx-border-width: 0;
 	-fx-background-color: accent-color;
-	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 2, 0.75, 1.5, 3);
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.1, 1, 2);
 }
 
 .property-item:focused .slider > .thumb {
