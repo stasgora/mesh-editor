@@ -151,3 +151,11 @@
 .mnemonic-underline {
 	-fx-stroke: -fx-text-fill;
 }
+
+.tooltip {
+	-fx-background-color: bg-color;
+	-fx-text-fill: text-color-light;
+	-fx-border-width: 1;
+	-fx-border-color: bg-color-light;
+	-fx-border-radius: 3;
+}
