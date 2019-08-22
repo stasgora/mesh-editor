@@ -25,7 +25,6 @@
 	-fx-padding: 0;
 	-fx-background-color: bg-color-dark;
 }
-
 /* property-item */
 .property-item {
 	-fx-background-color: transparent;
@@ -158,4 +157,35 @@
 	-fx-border-width: 1;
 	-fx-border-color: bg-color-light;
 	-fx-border-radius: 3;
+}
+
+/* scroll-bar */
+.scroll-bar {
+	-fx-background-color: transparent;
+}
+.scroll-bar > .thumb {
+	-fx-background-color: accent-color;
+	-fx-opacity: 0.2;
+}
+.scroll-bar > .thumb:hover {
+	-fx-opacity: 0.3;
+}
+.scroll-bar:horizontal {
+	-fx-pref-height: 9;
+}
+.scroll-bar:vertical {
+	-fx-pref-width: 9;
+}
+.scroll-bar:horizontal > .increment-button, .scroll-bar > .decrement-button {
+	-fx-pref-width: 0;
+}
+.scroll-bar:vertical > .increment-button, .scroll-bar > .decrement-button {
+	-fx-pref-height: 0;
+}
+.scroll-bar > .increment-button > .increment-arrow, .scroll-bar > .decrement-button > .decrement-arrow {
+	-fx-shape: "";
+	-fx-background-color: transparent;
+}
+.virtual-flow > .corner, .scroll-pane > .corner {
+	-fx-background-color: transparent;
 }
