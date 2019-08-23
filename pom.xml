@@ -6,9 +6,15 @@
 
 	<groupId>stasgora.mesh-editor</groupId>
 	<artifactId>mesh-editor</artifactId>
-	<version>0.8</version>
+	<version>0.9</version>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<guice.version>4.2.2</guice.version>
+		<javafx.version>12.0.2</javafx.version>
+		<observetree.version>1.0.0</observetree.version>
+		<json-lib.version>20190722</json-lib.version>
+		<jfreesvg.version>3.4</jfreesvg.version>
 	</properties>
 
 	<build>
@@ -16,7 +22,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>12</source>
 					<target>12</target>
@@ -26,7 +32,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.1.2</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -37,7 +43,9 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.1</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -92,40 +100,40 @@
 		<dependency>
 			<groupId>io.github.stasgora</groupId>
 			<artifactId>observetree</artifactId>
-			<version>1.0.0</version>
+			<version>${observetree.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20180813</version>
+			<version>${json-lib.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>
 			<artifactId>jfreesvg</artifactId>
-			<version>3.4</version>
+			<version>${jfreesvg.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>12</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>12</version>
+			<version>${javafx.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>4.2.2</version>
+			<version>${guice.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
-			<version>4.2.2</version>
+			<version>${guice.version}</version>
 		</dependency>
 	</dependencies>
 </project>
