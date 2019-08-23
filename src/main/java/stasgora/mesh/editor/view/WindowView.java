@@ -1,12 +1,13 @@
 package stasgora.mesh.editor.view;
 
 import com.google.inject.Inject;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.MeshEditor;
 import stasgora.mesh.editor.model.project.LoadState;
@@ -19,13 +20,14 @@ import stasgora.mesh.editor.view.annotation.MainWindowStage;
 public class WindowView {
 
 	public AnchorPane propertiesViewRoot;
-	public AnchorPane canvasViewRoot;
+	public StackPane canvasViewRoot;
 	public MenuBar menuViewRoot;
 
 	private AppConfigReader appConfig;
 	private LoadState loadState;
 	private Stage window;
 
+	public VBox root;
 	public SplitPane mainSplitPane;
 
 	private WorkspaceAction workspaceAction;

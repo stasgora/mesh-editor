@@ -5,10 +5,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.layout.StackPane?>
 <VBox fx:id="root" xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="stasgora.mesh.editor.view.WindowView">
 	<MenuBar fx:id="menuViewRoot"/>
 	<SplitPane fx:id="mainSplitPane" dividerPositions="0.3" VBox.vgrow="ALWAYS" minHeight="0" minWidth="0">
 		<AnchorPane fx:id="propertiesViewRoot" styleClass="main-pane" prefWidth="300" minHeight="0" visible="false"/>
-		<AnchorPane fx:id="canvasViewRoot" styleClass="main-pane"/>
+		<StackPane fx:id="canvasViewRoot" styleClass="main-pane" minHeight="0"/>
 	</SplitPane>
 </VBox>
