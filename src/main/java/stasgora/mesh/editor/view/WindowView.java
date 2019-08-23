@@ -1,13 +1,15 @@
 package stasgora.mesh.editor.view;
 
 import com.google.inject.Inject;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import stasgora.mesh.editor.MeshEditor;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
@@ -18,13 +20,14 @@ import stasgora.mesh.editor.view.annotation.MainWindowStage;
 public class WindowView {
 
 	public AnchorPane propertiesViewRoot;
-	public AnchorPane canvasViewRoot;
+	public StackPane canvasViewRoot;
 	public MenuBar menuViewRoot;
 
 	private AppConfigReader appConfig;
 	private LoadState loadState;
 	private Stage window;
 
+	public VBox root;
 	public SplitPane mainSplitPane;
 
 	private WorkspaceAction workspaceAction;
@@ -49,7 +52,7 @@ public class WindowView {
 	private void setListeners() {
 		LoadState loadState = this.loadState;
 		loadState.addListener(this::setWindowTitle);
-		mainSplitPane.widthProperty().addListener(this::keepDividerInPlace);
+		SplitPane.setResizableWithParent(mainSplitPane.getItems().get(0), false);
 		loadState.loaded.addListener(() -> propertiesViewRoot.setVisible(loadState.loaded.get()));
 	}
 
@@ -66,11 +69,6 @@ public class WindowView {
 		window.setTitle(title);
 	}
 
-	private void keepDividerInPlace(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
-		SplitPane.Divider divider = mainSplitPane.getDividers().get(0);
-		divider.setPosition(divider.getPosition() * oldVal.doubleValue() / newVal.doubleValue());
-	}
-
 	private void createWindowScene(AppConfigReader appSettings, Parent windowRoot) {
 		Scene scene;
 		String windowPath = "last.windowPlacement";
@@ -81,6 +79,7 @@ public class WindowView {
 		} else {
 			scene = new Scene(windowRoot, appConfig.getInt("default.windowSize.w"), appConfig.getInt("default.windowSize.h"));
 		}
+		scene.getStylesheets().add(MeshEditor.class.getResource("/styles/dark.css").toExternalForm());
 		window.setScene(scene);
 	}
 

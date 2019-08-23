@@ -27,6 +27,12 @@
 				"item": {
 					"about": "_About"
 				}
+			},
+			"debug": {
+				"title": "_Debug",
+				"item": {
+					"reloadStyles": "_Reload styles"
+				}
 			}
 		},
 		"properties": {

@@ -1,0 +1,191 @@
+.root {
+	bg-color: #292d3e;
+	bg-color-light: #3e435b;
+	bg-color-broken: #34324a;
+	bg-color-dark: #202331;
+
+	text-color: #676e95;
+	text-color-light: #a6accd;
+	text-color-selected: #fff;
+
+	accent-color: #ab47bc;
+}
+.root > .split-pane {
+	-fx-background-color: bg-color;
+	-fx-padding: 0;
+}
+.main-pane {
+	-fx-background-color: bg-color;
+	-fx-min-width: 50;
+}
+.split-pane-divider {
+	-fx-background-color: transparent;
+}
+.properties-root {
+	-fx-padding: 0;
+	-fx-background-color: bg-color-dark;
+}
+/* property-item */
+.property-item {
+	-fx-background-color: transparent;
+	-fx-padding: 6px;
+}
+.property-item:focused {
+	-fx-background-color: bg-color-light;
+	-fx-border-width: 0 0 0 2px;
+	-fx-border-color: accent-color;
+}
+
+/* property-item label */
+.property-item .label {
+	-fx-text-fill: text-color;
+}
+.property-item:focused .label {
+	-fx-text-fill: text-color-selected;
+}
+
+/* property-item arrow */
+.property-item .tree-disclosure-node .arrow {
+	-fx-background-color: text-color;
+}
+.property-item:focused .tree-disclosure-node .arrow {
+	-fx-background-color: accent-color;
+}
+
+/* check-box */
+.check-box > .box {
+	-fx-border-radius: 2;
+	-fx-border-width: 2;
+	-fx-border-color: text-color;
+	-fx-background-color: transparent;
+	-fx-padding: 0;
+}
+.check-box:selected > .box {
+	-fx-border-color: accent-color;
+	-fx-background-color: accent-color;
+}
+.check-box:selected > .box > .mark {
+	-fx-shape: "M 20.361328,6.0214844 8.9238281,16.005859 4.3867188,12.746094 2.9277344,14.775391 9.0761719,19.193359 22.005859,7.9042969 Z";
+	-fx-position-shape: true;
+	-fx-background-color: bg-color-dark;
+}
+
+/* slider */
+.slider > .track {
+	-fx-background-color: text-color;
+	-fx-pref-height: 2px;
+}
+
+.slider > .thumb {
+	-fx-pref-height: 13px;
+	-fx-pref-width: 13px;
+	-fx-border-radius: 50%;
+	-fx-border-width: 2;
+	-fx-border-color: text-color;
+	-fx-background-color: bg-color-dark;
+}
+.slider:pressed > .thumb {
+	-fx-border-width: 0;
+	-fx-background-color: accent-color;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.1, 1, 2);
+}
+
+.property-item:focused .slider > .thumb {
+	-fx-background-color: bg-color-light;
+}
+.property-item:focused .slider:pressed > .thumb {
+	-fx-background-color: accent-color;
+}
+
+/* menu */
+.menu-bar {
+	-fx-padding: 0;
+	-fx-background-color: bg-color;
+}
+.context-menu {
+	-fx-padding: 1;
+	-fx-background-color: bg-color;
+	-fx-border-width: 1;
+	-fx-border-color: bg-color-broken;
+}
+.menu {
+	-fx-padding: 8 6;
+}
+.menu:hover {
+	-fx-background-color: bg-color;
+}
+.menu:showing {
+	-fx-background-color: bg-color-light;
+}
+.menu .label {
+	-fx-text-fill: text-color-light;
+}
+.menu-item:hover {
+	-fx-background-color: bg-color-light;
+}
+.menu:showing > .label, .menu-item:hover > .label {
+	-fx-text-fill: text-color-selected;
+}
+.menu:disabled, .menu-item:disabled {
+	-fx-background-color: bg-color;
+}
+.menu:disabled > .label, .menu-item:disabled > .label {
+	-fx-text-fill: text-color;
+}
+.menu-item {
+	-fx-background-color: bg-color;
+	-fx-text-fill: text-color-light;
+	-fx-padding: 8 6 8 24;
+}
+.menu-item > .accelerator-text {
+	-fx-text-fill: text-color;
+}
+.separator > .line {
+	-fx-border-insets: 1;
+	-fx-border-width: 1;
+	-fx-pref-height: 4;
+	-fx-background-color: bg-color;
+	-fx-border-color: bg-color-broken;
+}
+.mnemonic-underline {
+	-fx-stroke: -fx-text-fill;
+}
+
+.tooltip {
+	-fx-background-color: bg-color;
+	-fx-text-fill: text-color-light;
+	-fx-border-width: 1;
+	-fx-border-color: bg-color-light;
+	-fx-border-radius: 3;
+}
+
+/* scroll-bar */
+.scroll-bar {
+	-fx-background-color: transparent;
+}
+.scroll-bar > .thumb {
+	-fx-background-color: accent-color;
+	-fx-opacity: 0.2;
+}
+.scroll-bar > .thumb:hover {
+	-fx-opacity: 0.3;
+}
+.scroll-bar:horizontal {
+	-fx-pref-height: 9;
+}
+.scroll-bar:vertical {
+	-fx-pref-width: 9;
+}
+.scroll-bar:horizontal > .increment-button, .scroll-bar > .decrement-button {
+	-fx-pref-width: 0;
+}
+.scroll-bar:vertical > .increment-button, .scroll-bar > .decrement-button {
+	-fx-pref-height: 0;
+}
+.scroll-bar > .increment-button > .increment-arrow, .scroll-bar > .decrement-button > .decrement-arrow {
+	-fx-shape: "";
+	-fx-background-color: transparent;
+}
+.virtual-flow > .corner, .scroll-pane > .corner {
+	-fx-background-color: transparent;
+}

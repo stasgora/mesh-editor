@@ -8,13 +8,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #222d32;">
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #3e435b;">
 	<VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
 		<padding>
 			<Insets topRightBottomLeft="40" />
 		</padding>
 		<fx:define>
-			<CopyableLabel fx:id="label" textFill="#aaaaaa">
+			<CopyableLabel fx:id="label" textFill="#a6accd">
 				<font>
 					<Font size="12.0" />
 				</font>

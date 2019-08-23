@@ -73,12 +73,13 @@ public class MeshBox implements MouseListener {
 	@Override
 	public void onDragEnd(Point mousePos, MouseButton mouseButton) {
 		dragPoint(mousePos, mouseButton, true);
+		Point point = null;
 		if (draggedNode == null && mouseButton == canvasUI.mouseConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
-			Point point = nodeUtils.canvasToProportionalPos(mousePos);
+			point = nodeUtils.canvasToProportionalPos(mousePos);
 			if (triangulationService.addNode(point))
 				actionHistoryService.registerAction(new AddNodeAction(point.x, point.y));
 		}
-		draggedNode = null;
+		draggedNode = point;
 		canvasUI.canvasMouseCursor.setValue(mousePos.isBetween(new Point(), canvasUI.canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);
 	}
 

@@ -28,6 +28,7 @@ import java.util.function.Function;
 
 @Singleton
 public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeCell<String>> {
+	private static final String PROPERTY_STYLE_CLASS = "property-item";
 
 	private LangConfigReader appLang;
 	private AppConfigReader appConfig;
@@ -78,28 +79,33 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 			@Override
 			public void updateItem(String value, boolean empty) {
 				super.updateItem(value, empty);
+				getStyleClass().add(PROPERTY_STYLE_CLASS);
 				if (empty) {
 					setGraphic(null);
 					setText(null);
 					return;
 				}
-				if (!(getTreeItem() instanceof PropertyTreeItem)) {
-					setText(value);
-					return;
-				}
-				PropertyTreeItem treeItem = (PropertyTreeItem) getTreeItem();
-				HBox body = new HBox(new Label(appLang.getText(treeItem.getItemType().getTextKey())));
+				String itemLabelText = value;
+				if (getTreeItem() instanceof PropertyTreeItem)
+					itemLabelText = appLang.getText(((PropertyTreeItem) getTreeItem()).getItemType().getTextKey());
+
+				HBox body = new HBox(new Label(itemLabelText));
 				setText(null);
+				setGraphic(body);
+
 				body.setSpacing(5);
 				body.setAlignment(Pos.CENTER_LEFT);
 
+				if (!(getTreeItem() instanceof PropertyTreeItem))
+					return;
+
+				PropertyTreeItem treeItem = (PropertyTreeItem) getTreeItem();
 				if (treeItem.hasCheckBox)
 					addCheckBox(treeItem, body);
 				if (treeItem.hasSlider)
 					addSlider(treeItem, body);
 				//if (treeItem.hasComboBox)
 				//	addComboBox(treeItem, body);
-				setGraphic(body);
 			}
 
 			private void addCheckBox(PropertyTreeItem treeItem, HBox body) {
