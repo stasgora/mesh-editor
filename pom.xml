@@ -8,6 +8,26 @@
 	<artifactId>mesh-editor</artifactId>
 	<version>0.9</version>
 
+	<name>Mesh Editor</name>
+	<description>JavaFX editor created to turn raster images into low poly vector art</description>
+	<url>https://github.com/stasgora/mesh-editor</url>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Stanisław Góra</name>
+			<email>stasgora@gmail.com</email>
+			<roles>
+				<role>Project Owner</role>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<guice.version>4.2.2</guice.version>
