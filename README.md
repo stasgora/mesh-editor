@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/stasgora/mesh-editor.svg?branch=master)](https://travis-ci.org/stasgora/mesh-editor)
+
 # Mesh Editor
 Desktop application created to turn raster images into low poly vector art
 
