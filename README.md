@@ -1,7 +1,7 @@
 # Mesh Editor
 Desktop application created to turn raster images into low poly vector art
 
-![Screenshot_20190820_000325](https://user-images.githubusercontent.com/8643919/63302654-ffff6780-c2dd-11e9-8a90-f9b2d0de0ebf.png)
+![Screenshot_20190820_0003253](https://user-images.githubusercontent.com/8643919/63635464-3d0f8500-c663-11e9-868c-a98127023140.png)
 
 ## Getting started
 ### Build & Run - Maven
