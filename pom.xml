@@ -30,6 +30,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar.java.libraries>target</sonar.java.libraries>
+
 		<guice.version>4.2.2</guice.version>
 		<javafx.version>12.0.2</javafx.version>
 		<observetree.version>1.0.2.1</observetree.version>

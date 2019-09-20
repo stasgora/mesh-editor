@@ -1,6 +1,8 @@
 language: java
 jdk:
   - openjdk12
+git:
+  depth: false
 cache:
   directories:
     - '$HOME/.m2/repository'
