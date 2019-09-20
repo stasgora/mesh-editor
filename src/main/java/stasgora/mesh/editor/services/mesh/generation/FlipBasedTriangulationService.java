@@ -44,12 +44,12 @@ class FlipBasedTriangulationService implements TriangulationService {
 		Triangle[] newTriangles = new Triangle[3];
 		for (int i = 0; i < 3; i++) {
 			newTriangles[i] = new Triangle(triangle.getNodes()[i], triangle.getNodes()[(i + 1) % 3], location);
-			triangleUtils.bindTrianglesBothWays(newTriangles[i], 0, triangle.triangles[i], triangle);
+			triangleUtils.bindTrianglesBothWays(newTriangles[i], 0, triangle.getTriangles()[i], triangle);
 		}
 		Deque<Triangle> trianglesToCheck = new ArrayDeque<>();
 		for (int i = 0; i < 3; i++) {
-			newTriangles[i].triangles[1] = newTriangles[(i + 1) % 3];
-			newTriangles[i].triangles[2] = newTriangles[(i + 2) % 3];
+			newTriangles[i].getTriangles()[1] = newTriangles[(i + 1) % 3];
+			newTriangles[i].getTriangles()[2] = newTriangles[(i + 2) % 3];
 			mesh.get().addTriangle(newTriangles[i]);
 			trianglesToCheck.push(newTriangles[i]);
 		}

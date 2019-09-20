@@ -6,9 +6,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Point extends Observable implements Serializable {
-
-	public double x;
-	public double y;
+	private double x;
+	private double y;
 
 	private static final double ROUNDING_MULT = 100;
 	private static final long serialVersionUID = 1L;

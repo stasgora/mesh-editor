@@ -55,7 +55,7 @@ public class NodeUtils {
 			nodeIndex = (nodeIndex + 2) % 3;
 			if (outPoints != null)
 				outPoints.add(currentTriangle.getNodes()[nodeIndex]);
-			currentTriangle = currentTriangle.triangles[nodeIndex];
+			currentTriangle = currentTriangle.getTriangles()[nodeIndex];
 			if (outTriangles != null)
 				outTriangles.add(currentTriangle);
 		} while (currentTriangle != firstTriangle);

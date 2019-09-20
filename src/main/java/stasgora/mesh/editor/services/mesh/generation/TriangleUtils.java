@@ -33,7 +33,7 @@ public class TriangleUtils {
 		for (int i = 0; i < 3; i++) {
 			Triangle triangle = triangles.get(i);
 			int triNeighbourId = Arrays.asList(triangle.getNodes()).indexOf(nodes.get(i));
-			bindTrianglesBothWays(newTriangle, i, triangle.triangles[triNeighbourId], triangle);
+			bindTrianglesBothWays(newTriangle, i, triangle.getTriangles()[triNeighbourId], triangle);
 		}
 		triangles.forEach(mesh.get()::removeTriangle);
 		mesh.get().addTriangle(newTriangle);
@@ -56,7 +56,7 @@ public class TriangleUtils {
 
 	private Triangle getCloserTriangle(Point node, Triangle current, int nodeIndex) {
 		double det = dMatrixDet(current.getNodes()[nodeIndex], node, current.getNodes()[(nodeIndex + 1) % 3]);
-		return det + 1e-5 < 0 ? current.triangles[nodeIndex] : null;
+		return det + 1e-5 < 0 ? current.getTriangles()[nodeIndex] : null;
 	}
 
 	public List<Polygon> getValidVoronoiRegions() {
@@ -94,16 +94,16 @@ public class TriangleUtils {
 	}
 
 	void bindTrianglesBothWays(Triangle a, int aIndex, Triangle b, Triangle bIndex) {
-		a.triangles[aIndex] = b;
+		a.getTriangles()[aIndex] = b;
 		if (b == null) {
 			return;
 		}
-		int index = Arrays.asList(b.triangles).indexOf(bIndex);
+		int index = Arrays.asList(b.getTriangles()).indexOf(bIndex);
 		if (index == -1) {
 			LOGGER.warning(() -> String.format("Triangle %s is not an neighbour of %s", bIndex, b));
 			return;
 		}
-		b.triangles[index] = a;
+		b.getTriangles()[index] = a;
 	}
 
 	double dMatrixDet(Point a, Point b, Point c) {

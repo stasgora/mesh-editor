@@ -29,7 +29,7 @@ public class FlippingUtils {
 			if (!mesh.get().getTriangles().contains(current)) {
 				continue;
 			}
-			for (Triangle neighbour : current.triangles) {
+			for (Triangle neighbour : current.getTriangles()) {
 				if (neighbour == null) {
 					continue;
 				}
@@ -63,12 +63,12 @@ public class FlippingUtils {
 		Triangle[] added = new Triangle[2];
 		added[0] = new Triangle(a.getNodes()[aNodeIndex], a.getNodes()[(aNodeIndex + 1) % 3], b.getNodes()[bNodeIndex]);
 		added[1] = new Triangle(b.getNodes()[bNodeIndex], b.getNodes()[(bNodeIndex + 1) % 3], a.getNodes()[aNodeIndex]);
-		triangleUtils.bindTrianglesBothWays(added[0], 0, a.triangles[aNodeIndex], a);
-		triangleUtils.bindTrianglesBothWays(added[0], 1, b.triangles[(bNodeIndex + 2) % 3], b);
-		triangleUtils.bindTrianglesBothWays(added[1], 0, b.triangles[bNodeIndex], b);
-		triangleUtils.bindTrianglesBothWays(added[1], 1, a.triangles[(aNodeIndex + 2) % 3], a);
-		added[0].triangles[2] = added[1];
-		added[1].triangles[2] = added[0];
+		triangleUtils.bindTrianglesBothWays(added[0], 0, a.getTriangles()[aNodeIndex], a);
+		triangleUtils.bindTrianglesBothWays(added[0], 1, b.getTriangles()[(bNodeIndex + 2) % 3], b);
+		triangleUtils.bindTrianglesBothWays(added[1], 0, b.getTriangles()[bNodeIndex], b);
+		triangleUtils.bindTrianglesBothWays(added[1], 1, a.getTriangles()[(aNodeIndex + 2) % 3], a);
+		added[0].getTriangles()[2] = added[1];
+		added[1].getTriangles()[2] = added[0];
 		mesh.get().addTriangle(added[0]);
 		mesh.get().addTriangle(added[1]);
 		return added;

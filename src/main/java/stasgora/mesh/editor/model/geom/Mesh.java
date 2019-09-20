@@ -88,7 +88,7 @@ public class Mesh extends Observable implements Serializable {
 
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		for (int i = 0; i < triangles.size(); i++) {
-			triangles.get(i).triangleId = i;
+			triangles.get(i).setTriangleId(i);
 		}
 		out.defaultWriteObject();
 	}
@@ -100,10 +100,10 @@ public class Mesh extends Observable implements Serializable {
 	}
 
 	private void assignTriangleNeighbours(Triangle triangle) {
-		triangle.triangles = new Triangle[3];
+		triangle.setTriangles(new Triangle[3]);
 		for (int i = 0; i < 3; i++) {
 			if (triangle.triangleIds[i] >= 0) {
-				triangle.triangles[i] = triangles.get(triangle.triangleIds[i]);
+				triangle.getTriangles()[i] = triangles.get(triangle.triangleIds[i]);
 			}
 		}
 	}

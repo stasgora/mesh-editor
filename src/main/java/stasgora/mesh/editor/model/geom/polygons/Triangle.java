@@ -11,15 +11,15 @@ import java.util.logging.Logger;
 public class Triangle extends Polygon {
 	private static final Logger LOGGER = Logger.getLogger(Triangle.class.getName());
 
-	public transient Triangle[] triangles = new Triangle[3];
+	private transient Triangle[] triangles = new Triangle[3];
 
-	public transient int triangleId;
-	public int[] triangleIds = new int[3];
+	private transient int triangleId;
+	public final int[] triangleIds = new int[3];
 
 	public Triangle(Point[] nodes) {
 		super(nodes);
 		if (nodes.length != 3)
-			LOGGER.warning("Triangle initialized with " + nodes.length + " points");
+			LOGGER.warning(() -> String.format("Triangle initialized with %d points", nodes.length));
 	}
 
 	public Triangle(Point a, Point b, Point c) {
@@ -41,4 +41,19 @@ public class Triangle extends Polygon {
 		in.defaultReadObject();
 	}
 
+	public Triangle[] getTriangles() {
+		return triangles;
+	}
+
+	public void setTriangles(Triangle[] triangles) {
+		this.triangles = triangles;
+	}
+
+	public int getTriangleId() {
+		return triangleId;
+	}
+
+	public void setTriangleId(int triangleId) {
+		this.triangleId = triangleId;
+	}
 }
