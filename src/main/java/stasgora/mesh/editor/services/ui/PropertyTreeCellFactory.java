@@ -35,7 +35,9 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 	private VisualProperties visualProperties;
 	private ActionHistoryService actionHistoryService;
 
-	private Map<PropertyItemType, Function<PropertyTreeItem, BindableProperty>> propertyTypeToVisibleValue, propertyTypeToSliderValue, propertyTypeToComboBoxValue;
+	private Map<PropertyItemType, Function<PropertyTreeItem, BindableProperty>> propertyTypeToVisibleValue;
+	private Map<PropertyItemType, Function<PropertyTreeItem, BindableProperty>> propertyTypeToSliderValue;
+	private Map<PropertyItemType, Function<PropertyTreeItem, BindableProperty>> propertyTypeToComboBoxValue;
 
 	@Inject
 	PropertyTreeCellFactory(LangConfigReader appLang, @AppConfig AppConfigReader appConfig, VisualProperties visualProperties, ActionHistoryService actionHistoryService) {
@@ -104,8 +106,6 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 					addCheckBox(treeItem, body);
 				if (treeItem.hasSlider)
 					addSlider(treeItem, body);
-				//if (treeItem.hasComboBox)
-				//	addComboBox(treeItem, body);
 			}
 
 			private void addCheckBox(PropertyTreeItem treeItem, HBox body) {
@@ -147,8 +147,6 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				});
 				propertyTypeToComboBoxValue.get(treeItem.itemType).apply(treeItem).bindWithFxObservable(comboBox.valueProperty());
 
-				//comboBox.valueProperty().addListener((observable, oldVal, newVal) -> actionHistoryService.registerAction(
-				//		new PropertyChangeAction<>(newVal, oldVal, comboBox::setValue))); // TODO register mesh type changes in action history (currently self recursive)
 				body.getChildren().add(comboBox);
 			}
 

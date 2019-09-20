@@ -13,8 +13,8 @@ import stasgora.mesh.editor.view.annotation.MainWindowStage;
 @Singleton
 public class CanvasUI extends Observable {
 
-	public Point canvasViewSize = new Point();
-	public ObjectProperty<Cursor> canvasMouseCursor;
+	public final Point canvasViewSize = new Point();
+	public final ObjectProperty<Cursor> canvasMouseCursor;
 	public final MouseConfig mouseConfig = new MouseConfig();
 
 	@Inject

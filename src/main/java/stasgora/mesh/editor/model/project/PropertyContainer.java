@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class PropertyContainer extends Observable {
-	private final Logger LOGGER = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 
 	private List<SettableProperty> properties;
 
@@ -28,7 +28,7 @@ public class PropertyContainer extends Observable {
 			try {
 				return (SettableProperty) field.get(this);
 			} catch (IllegalAccessException e) {
-				LOGGER.log(Level.SEVERE, "Resolving property field " + field.getName() + " failed", e);
+				logger.log(Level.SEVERE, "Resolving property field " + field.getName() + " failed", e);
 			}
 			return null;
 		}).collect(Collectors.toList());

@@ -24,8 +24,7 @@ import java.util.logging.Logger;
 
 @Singleton
 class WorkspaceActionFacade implements WorkspaceAction {
-
-	private final Logger LOGGER = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 
 	private final WorkspaceActionExecutor workspaceActionExecutor;
 	private final LangConfigReader appLang;
@@ -48,7 +47,6 @@ class WorkspaceActionFacade implements WorkspaceAction {
 	@Override
 	public String getProjectName() {
 		String projectName;
-		LoadState loadState = this.loadState;
 		if (loadState.file.get() == null) {
 			projectName = loadState.loaded.get() ? appLang.getText("defaultProjectName") : null;
 		} else {
@@ -71,7 +69,7 @@ class WorkspaceActionFacade implements WorkspaceAction {
 			try {
 				workspaceActionExecutor.createNewProject(location);
 			} catch (ProjectIOException e) {
-				LOGGER.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
+				logger.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
 				showErrorDialog(title);
 			}
 		}
@@ -88,7 +86,7 @@ class WorkspaceActionFacade implements WorkspaceAction {
 			try {
 				workspaceActionExecutor.openProject(location);
 			} catch (ProjectIOException e) {
-				LOGGER.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
+				logger.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
 				showErrorDialog(title);
 			}
 		}
@@ -96,7 +94,7 @@ class WorkspaceActionFacade implements WorkspaceAction {
 
 	@Override
 	public void onOpenRecentProject() {
-
+		// TODO: implement
 	}
 
 	@Override
@@ -126,7 +124,7 @@ class WorkspaceActionFacade implements WorkspaceAction {
 			try {
 				workspaceActionExecutor.exportProjectAsSvg(location);
 			} catch (ProjectIOException e) {
-				LOGGER.log(Level.SEVERE, "Failed exporting project at '" + location.getAbsolutePath() + "'", e);
+				logger.log(Level.SEVERE, "Failed exporting project at '" + location.getAbsolutePath() + "'", e);
 				showErrorDialog(title);
 			}
 		}
@@ -159,7 +157,6 @@ class WorkspaceActionFacade implements WorkspaceAction {
 
 	private void saveProject(boolean asNew) {
 		File location;
-		LoadState loadState = this.loadState;
 		if (asNew || loadState.file.get() == null) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if (location == null) {
@@ -171,7 +168,7 @@ class WorkspaceActionFacade implements WorkspaceAction {
 		try {
 			workspaceActionExecutor.saveProject(location);
 		} catch (ProjectIOException e) {
-			LOGGER.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
+			logger.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
 			showErrorDialog(appLang.getText("action.project.save"));
 		}
 	}

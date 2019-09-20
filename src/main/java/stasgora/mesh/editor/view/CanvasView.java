@@ -1,9 +1,7 @@
 package stasgora.mesh.editor.view;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
-import io.github.stasgora.observetree.SettableProperty;
 import io.github.stasgora.observetree.enums.ListenerPriority;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.Region;
@@ -16,16 +14,15 @@ import stasgora.mesh.editor.model.project.VisualProperties;
 import stasgora.mesh.editor.services.drawing.ImageBox;
 import stasgora.mesh.editor.services.input.CanvasAction;
 import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
-import stasgora.mesh.editor.services.mesh.generation.TriangleUtils;
 import stasgora.mesh.editor.services.mesh.rendering.CanvasRenderer;
-import stasgora.mesh.editor.ui.canvas.Canvas;
 import stasgora.mesh.editor.ui.canvas.ImageCanvas;
+import stasgora.mesh.editor.ui.canvas.ResizableCanvas;
 import stasgora.mesh.editor.view.sub.SubView;
 
 public class CanvasView extends SubView {
 
 	public ImageCanvas imageCanvas;
-	public Canvas meshCanvas;
+	public ResizableCanvas meshCanvas;
 
 	private final VisualProperties visualProperties;
 	private Point canvasViewSize;

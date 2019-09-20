@@ -7,13 +7,12 @@ import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
-import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
 
 import java.util.*;
 import java.util.logging.Logger;
 
 public class VoronoiDiagramService {
-	private final Logger LOGGER = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 
 	private final SettableObservable<Mesh> mesh;
 	private final NodeUtils nodeUtils;
@@ -29,8 +28,8 @@ public class VoronoiDiagramService {
 		for (Point node : nodes) {
 			Polygon pointRegion = mesh.get().getPointRegion(node);
 			if (pointRegion == null) {
-				if (!mesh.get().boundingNodes.contains(node))
-					LOGGER.warning("Mesh does not contain given node");
+				if (!mesh.get().getBoundingNodes().contains(node))
+					logger.warning("Mesh does not contain given node");
 				continue;
 			}
 			List<Triangle> triangles = new ArrayList<>();

@@ -17,7 +17,9 @@ public enum PropertyItemType implements TextKeyProvider {
 	private static final String TEXT_KEY_PREFIX = KEY_PREFIX + "tree.";
 	private static final String SLIDER_KEY_PREFIX = KEY_PREFIX + "tooltips.";
 
-	private String textKey, tooltipKey, valueKey;
+	private final String textKey;
+	private String tooltipKey;
+	private String valueKey;
 
 	PropertyItemType(String textKey, String tooltipKey) {
 		this.textKey = textKey;

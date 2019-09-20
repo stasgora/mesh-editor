@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import io.github.stasgora.observetree.SettableObservable;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.geom.Point;
-import stasgora.mesh.editor.model.geom.PointRegion;
 import stasgora.mesh.editor.model.geom.polygons.Polygon;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
@@ -23,24 +22,21 @@ public class TriangleUtils {
 	private static final Logger LOGGER = Logger.getLogger(TriangleUtils.class.getName());
 
 	private final SettableObservable<Mesh> mesh;
-	private final NodeUtils nodeUtils;
 
 	@Inject
-	TriangleUtils(CanvasData canvasData, NodeUtils nodeUtils) {
+	TriangleUtils(CanvasData canvasData) {
 		this.mesh = canvasData.mesh;
-		this.nodeUtils = nodeUtils;
 	}
 
 	void mergeTrianglesIntoOne(List<Point> nodes, List<Triangle> triangles) {
-		Mesh mesh = this.mesh.get();
 		Triangle newTriangle = new Triangle(nodes.toArray(new Point[3]));
 		for (int i = 0; i < 3; i++) {
 			Triangle triangle = triangles.get(i);
 			int triNeighbourId = Arrays.asList(triangle.nodes).indexOf(nodes.get(i));
 			bindTrianglesBothWays(newTriangle, i, triangle.triangles[triNeighbourId], triangle);
 		}
-		triangles.forEach(mesh::removeTriangle);
-		mesh.addTriangle(newTriangle);
+		triangles.forEach(mesh.get()::removeTriangle);
+		mesh.get().addTriangle(newTriangle);
 	}
 
 	Triangle findTriangleByLocation(Point location) {
@@ -59,12 +55,12 @@ public class TriangleUtils {
 	}
 
 	private Triangle getCloserTriangle(Point node, Triangle current, int nodeIndex) {
-		double det = D_matrixDet(current.nodes[nodeIndex], node, current.nodes[(nodeIndex + 1) % 3]);
+		double det = dMatrixDet(current.nodes[nodeIndex], node, current.nodes[(nodeIndex + 1) % 3]);
 		return det + 1e-5 < 0 ? current.triangles[nodeIndex] : null;
 	}
 
 	public List<Polygon> getValidVoronoiRegions() {
-		Stream<Triangle> boundingTriangleStream = mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.nodes).anyMatch(mesh.get().boundingNodes::contains));
+		Stream<Triangle> boundingTriangleStream = mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.nodes).anyMatch(mesh.get().getBoundingNodes()::contains));
 		Set<Point> boundingNodes = getTrianglePointSet(boundingTriangleStream.collect(Collectors.toList()));
 		return mesh.get().getNodeRegions().stream().filter(region -> !boundingNodes.contains(region.node)).map(pointRegion -> pointRegion.region).collect(Collectors.toList());
 	}
@@ -78,12 +74,8 @@ public class TriangleUtils {
 	}
 
 	private boolean isTriangleValid(Triangle triangle) {
-		List<Point> boundingNodes = mesh.get().boundingNodes;
+		List<Point> boundingNodes = mesh.get().getBoundingNodes();
 		return Arrays.stream(triangle.nodes).noneMatch(boundingNodes::contains);
-	}
-
-	private boolean isNodeRegionValid(PointRegion region) {
-		return !mesh.get().boundingNodes.contains(region.node);
 	}
 
 	Point getSeparateNode(Triangle from, Triangle with) {
@@ -108,17 +100,17 @@ public class TriangleUtils {
 		}
 		int index = Arrays.asList(b.triangles).indexOf(bIndex);
 		if (index == -1) {
-			LOGGER.warning("Triangle " + bIndex + " is not an neighbour of " + b);
+			LOGGER.warning(() -> String.format("Triangle %s is not an neighbour of %s", bIndex, b));
 			return;
 		}
 		b.triangles[index] = a;
 	}
 
-	double D_matrixDet(Point a, Point b, Point c) {
+	double dMatrixDet(Point a, Point b, Point c) {
 		return a.x * b.y + a.y * c.x + b.x * c.y - a.y * b.x - b.y * c.x - c.y * a.x;
 	}
 
-	double H_matrixDet(Point a, Point b, Point c, Point d) {
+	double hMatrixDet(Point a, Point b, Point c, Point d) {
 		return a.x * a.x * b.x * c.y - a.x * a.x * b.x * d.y + a.x * a.x * (-b.y) * c.x + a.x * a.x * b.y * d.x + a.x * a.x * c.x * d.y - a.x * a.x * c.y * d.x
 				- a.x * b.x * b.x * c.y + a.x * b.x * b.x * d.y - a.x * b.y * b.y * c.y + a.x * b.y * b.y * d.y + a.x * b.y * c.x * c.x + a.x * b.y * c.y * c.y
 				- a.x * b.y * d.x * d.x - a.x * b.y * d.y * d.y - a.x * c.x * c.x * d.y - a.x * c.y * c.y * d.y + a.x * c.y * d.x * d.x + a.x * c.y * d.y * d.y

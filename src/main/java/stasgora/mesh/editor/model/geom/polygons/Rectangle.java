@@ -7,7 +7,8 @@ import java.io.Serializable;
 
 public class Rectangle extends Observable implements Serializable {
 
-	public Point position, size;
+	public Point position;
+	public Point size;
 
 	private static final long serialVersionUID = 1L;
 

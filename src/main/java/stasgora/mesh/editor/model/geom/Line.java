@@ -5,7 +5,9 @@ import java.util.logging.Logger;
 public class Line {
 	private static final Logger LOGGER = Logger.getLogger(Line.class.getName());
 
-	public double a, b, c;
+	public final double a;
+	public final double b;
+	public final double c;
 
 	public Line(double a, double b, double c) {
 		this.a = a;

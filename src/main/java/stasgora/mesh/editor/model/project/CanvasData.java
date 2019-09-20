@@ -11,10 +11,10 @@ import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 @Singleton
 public class CanvasData extends Observable {
 
-	public SettableObservable<Mesh> mesh = new SettableObservable<>();
+	public final SettableObservable<Mesh> mesh = new SettableObservable<>();
 	public final Rectangle imageBox = new Rectangle();
 
-	public SettableProperty<Image> baseImage = new SettableProperty<>();
+	public final SettableProperty<Image> baseImage = new SettableProperty<>();
 	public byte[] rawImageFile;
 
 	CanvasData() {

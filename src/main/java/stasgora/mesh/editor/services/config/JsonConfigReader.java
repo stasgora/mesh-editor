@@ -90,7 +90,7 @@ public abstract class JsonConfigReader {
 	}
 
 	private void logInvalidKey(String configName, String key, String keyPath) {
-		LOGGER.log(Level.SEVERE, "Failed reading '" + configName + "' config property '" + key + "' from path '" + keyPath + "'");
+		LOGGER.log(Level.SEVERE, () -> String.format("Failed reading '%s' config property '%s' from path '%s'", configName, key, keyPath));
 	}
 
 	protected static JsonConfig createJsonConfig(InputStream inputStream, String fileName) {

@@ -22,7 +22,7 @@ public class Mesh extends Observable implements Serializable {
 	private List<PointRegion> nodeRegions = new ArrayList<>();
 	private List<Triangle> triangles = new ArrayList<>();
 
-	public List<Point> boundingNodes;
+	private List<Point> boundingNodes;
 
 	public Mesh(Point[] boundingNodes) {
 		if (boundingNodes.length != 3) {
@@ -72,6 +72,10 @@ public class Mesh extends Observable implements Serializable {
 	public void removeTriangle(Triangle triangle) {
 		triangles.remove(triangle);
 		onValueChanged();
+	}
+
+	public List<Point> getBoundingNodes() {
+		return boundingNodes;
 	}
 
 	public Triangle getTriangle(int index) {

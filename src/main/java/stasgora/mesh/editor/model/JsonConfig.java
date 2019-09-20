@@ -4,8 +4,8 @@ import org.json.JSONObject;
 
 public class JsonConfig {
 
-	public String name;
-	public JSONObject config;
+	public final String name;
+	public final JSONObject config;
 
 	public JsonConfig(String name, JSONObject config) {
 		this.name = name;

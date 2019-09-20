@@ -50,7 +50,6 @@ public class WindowView {
 	}
 
 	private void setListeners() {
-		LoadState loadState = this.loadState;
 		loadState.addListener(this::setWindowTitle);
 		SplitPane.setResizableWithParent(mainSplitPane.getItems().get(0), false);
 		loadState.loaded.addListener(() -> propertiesViewRoot.setVisible(loadState.loaded.get()));
@@ -58,7 +57,6 @@ public class WindowView {
 
 	private void setWindowTitle() {
 		String title = appConfig.getString("app.name");
-		LoadState loadState = this.loadState;
 		if (loadState.loaded.get()) {
 			String projectName = workspaceAction.getProjectName();
 			if (!loadState.stateSaved.get()) {

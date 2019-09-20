@@ -24,7 +24,7 @@ public class ColorUtils {
 	private final SettableProperty<Image> baseImage;
 	private final AppConfigReader appConfig;
 
-	private static final Color OUTSIDE_IMAGE_COLOR = Color.BLACK;
+	private static final Color OUTSIDE_IMAGE_COLOR = Color.WHITE;
 
 	@Inject
 	ColorUtils(NodeUtils nodeUtils, CanvasData canvasData, @AppConfig AppConfigReader appConfig) {

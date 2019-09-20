@@ -3,7 +3,6 @@ package stasgora.mesh.editor.view;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Popup;
@@ -19,9 +18,9 @@ import java.util.logging.Logger;
 
 @Singleton
 public class AboutWindow {
-	private final Logger LOGGER = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 
-	private final Popup aboutWindow = new Popup();
+	private final Popup aboutWindowPopup = new Popup();
 	private final Stage mainWindow;
 	public ImageView logo;
 
@@ -34,19 +33,19 @@ public class AboutWindow {
 		loader.getNamespace().put("app_version", appConfig.getString("app.version"));
 		loader.getNamespace().put("app_name", appConfig.getString("app.name"));
 		try {
-			aboutWindow.getContent().add(loader.load());
+			aboutWindowPopup.getContent().add(loader.load());
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Loading about page failed", e);
+			logger.log(Level.SEVERE, "Loading about page failed", e);
 		}
-		mainWindow.focusedProperty().addListener(((observable, oldValue, newValue) -> aboutWindow.hide()));
-		aboutWindow.setAutoHide(true);
+		mainWindow.focusedProperty().addListener(((observable, oldValue, newValue) -> aboutWindowPopup.hide()));
+		aboutWindowPopup.setAutoHide(true);
 
 		logo.setImage(new Image(MeshEditor.class.getResourceAsStream("/logo.png")));
 	}
 
 	public void show() {
-		aboutWindow.show(mainWindow);
-		aboutWindow.centerOnScreen();
-		aboutWindow.requestFocus();
+		aboutWindowPopup.show(mainWindow);
+		aboutWindowPopup.centerOnScreen();
+		aboutWindowPopup.requestFocus();
 	}
 }

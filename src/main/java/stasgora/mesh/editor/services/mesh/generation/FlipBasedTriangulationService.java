@@ -8,10 +8,7 @@ import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 @Singleton
 class FlipBasedTriangulationService implements TriangulationService {
@@ -34,33 +31,31 @@ class FlipBasedTriangulationService implements TriangulationService {
 
 	@Override
 	public void createNewMesh() {
-		Mesh mesh = new Mesh(nodeUtils.getBoundingNodes());
-		this.mesh.set(mesh);
+		mesh.set(new Mesh(nodeUtils.getBoundingNodes()));
 	}
 
 	@Override
 	public boolean addNode(Point location) {
-		Mesh mesh = this.mesh.get();
 		Triangle triangle = triangleUtils.findTriangleByLocation(location);
 		if (nodeUtils.getClosestNode(location, triangle) != null) {
 			return false;
 		}
-		mesh.removeTriangle(triangle);
+		mesh.get().removeTriangle(triangle);
 		Triangle[] newTriangles = new Triangle[3];
 		for (int i = 0; i < 3; i++) {
 			newTriangles[i] = new Triangle(triangle.nodes[i], triangle.nodes[(i + 1) % 3], location);
 			triangleUtils.bindTrianglesBothWays(newTriangles[i], 0, triangle.triangles[i], triangle);
 		}
-		Stack<Triangle> trianglesToCheck = new Stack<>();
+		Deque<Triangle> trianglesToCheck = new ArrayDeque<>();
 		for (int i = 0; i < 3; i++) {
 			newTriangles[i].triangles[1] = newTriangles[(i + 1) % 3];
 			newTriangles[i].triangles[2] = newTriangles[(i + 2) % 3];
-			mesh.addTriangle(newTriangles[i]);
+			mesh.get().addTriangle(newTriangles[i]);
 			trianglesToCheck.push(newTriangles[i]);
 		}
 		List<Triangle> changedTriangles = flippingUtils.flipInvalidTriangles(trianglesToCheck);
 		changedTriangles.addAll(Arrays.asList(newTriangles));
-		mesh.addNode(location);
+		mesh.get().addNode(location);
 
 		voronoiDiagramService.generateDiagram(triangleUtils.getTrianglePointSet(changedTriangles));
 		mesh.notifyListeners();
@@ -100,8 +95,7 @@ class FlipBasedTriangulationService implements TriangulationService {
 		nodeUtils.getNodeNeighbours(node, triangle, points, triangles);
 
 		node.set(position);
-		Stack<Triangle> trianglesToCheck = new Stack<>();
-		trianglesToCheck.addAll(triangles);
+		Deque<Triangle> trianglesToCheck = new ArrayDeque<>(triangles);
 		flippingUtils.flipInvalidTriangles(trianglesToCheck);
 
 		points.add(node);
@@ -117,8 +111,8 @@ class FlipBasedTriangulationService implements TriangulationService {
 			int currentId = nodes.indexOf(currentNodes[0]);
 			currentNodes[1] = nodes.get((currentId + 1) % nodes.size());
 			currentNodes[2] = nodes.get((currentId + 2) % nodes.size());
-			double earTest = triangleUtils.D_matrixDet(currentNodes[2], currentNodes[1], currentNodes[0]);
-			double enclosingTest = triangleUtils.D_matrixDet(currentNodes[0], node, currentNodes[2]);
+			double earTest = triangleUtils.dMatrixDet(currentNodes[2], currentNodes[1], currentNodes[0]);
+			double enclosingTest = triangleUtils.dMatrixDet(currentNodes[0], node, currentNodes[2]);
 			if (earTest >= 0 && enclosingTest >= 0 && checkTriangleAgainstNodes(nodes, currentNodes, currentId)) {
 				flippingUtils.flipTrianglesFromRing(node, nodes, triangles, currentId);
 			} else {
@@ -131,7 +125,7 @@ class FlipBasedTriangulationService implements TriangulationService {
 	private boolean checkTriangleAgainstNodes(List<Point> nodes, Point[] currentNodes, int currentId) {
 		for (int i = 0; i < nodes.size() - 3; i++) {
 			int index = (currentId + 3 + i) % nodes.size();
-			double circumcircleTest = triangleUtils.H_matrixDet(currentNodes[2], currentNodes[1], currentNodes[0], nodes.get(index));
+			double circumcircleTest = triangleUtils.hMatrixDet(currentNodes[2], currentNodes[1], currentNodes[0], nodes.get(index));
 			if (circumcircleTest > 0) {
 				return false;
 			}

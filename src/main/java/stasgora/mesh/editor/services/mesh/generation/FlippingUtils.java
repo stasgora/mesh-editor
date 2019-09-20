@@ -8,10 +8,7 @@ import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Triangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 @Singleton
 public class FlippingUtils {
@@ -25,9 +22,9 @@ public class FlippingUtils {
 		this.triangleUtils = triangleUtils;
 	}
 
-	List<Triangle> flipInvalidTriangles(Stack<Triangle> remaining) {
+	List<Triangle> flipInvalidTriangles(Deque<Triangle> remaining) {
 		List<Triangle> changedTriangles = new ArrayList<>();
-		while (!remaining.empty()) {
+		while (!remaining.isEmpty()) {
 			Triangle current = remaining.pop();
 			if (!mesh.get().getTriangles().contains(current)) {
 				continue;
@@ -59,11 +56,10 @@ public class FlippingUtils {
 	}
 
 	private Triangle[] flipTriangles(Triangle a, Triangle b) {
-		Mesh mesh = this.mesh.get();
 		int aNodeIndex = triangleUtils.getSeparateNodeIndex(a, b);
 		int bNodeIndex = triangleUtils.getSeparateNodeIndex(b, a);
-		mesh.removeTriangle(a);
-		mesh.removeTriangle(b);
+		mesh.get().removeTriangle(a);
+		mesh.get().removeTriangle(b);
 		Triangle[] added = new Triangle[2];
 		added[0] = new Triangle(a.nodes[aNodeIndex], a.nodes[(aNodeIndex + 1) % 3], b.nodes[bNodeIndex]);
 		added[1] = new Triangle(b.nodes[bNodeIndex], b.nodes[(bNodeIndex + 1) % 3], a.nodes[aNodeIndex]);
@@ -73,13 +69,13 @@ public class FlippingUtils {
 		triangleUtils.bindTrianglesBothWays(added[1], 1, a.triangles[(aNodeIndex + 2) % 3], a);
 		added[0].triangles[2] = added[1];
 		added[1].triangles[2] = added[0];
-		mesh.addTriangle(added[0]);
-		mesh.addTriangle(added[1]);
+		mesh.get().addTriangle(added[0]);
+		mesh.get().addTriangle(added[1]);
 		return added;
 	}
 
 	private boolean isPointInsideCircumcircle(Point node, Triangle triangle) {
-		return triangleUtils.H_matrixDet(triangle.nodes[2], triangle.nodes[1], triangle.nodes[0], node) > 0;
+		return triangleUtils.hMatrixDet(triangle.nodes[2], triangle.nodes[1], triangle.nodes[0], node) > 0;
 	}
 
 }

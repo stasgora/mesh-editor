@@ -17,9 +17,7 @@ import java.util.logging.Logger;
 
 @Singleton
 public class ConfigModelMapper {
-
 	private static final Logger LOGGER = Logger.getLogger(ConfigModelMapper.class.getName());
-	private static final String CONFIG_TYPE_FIELD = "objectType";
 
 	private AppConfigReader appConfig;
 

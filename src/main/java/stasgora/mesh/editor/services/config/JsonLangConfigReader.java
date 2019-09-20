@@ -112,7 +112,7 @@ class JsonLangConfigReader extends JsonConfigReader implements LangConfigReader 
 
 	private void logMissingKey(String keyPath) {
 		String languages = String.join(" -> ", configList.stream().map(item -> item.name).toArray(String[]::new));
-		LOGGER.log(Level.SEVERE, "Failed reading language property (" + languages + ") from path '" + keyPath + "'");
+		LOGGER.log(Level.SEVERE, () -> String.format("Failed reading language property (%s) from path '%s'", languages, keyPath));
 	}
 
 	private String getLangFileName(String lang) {

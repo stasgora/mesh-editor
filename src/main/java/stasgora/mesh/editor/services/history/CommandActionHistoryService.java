@@ -7,12 +7,14 @@ import stasgora.mesh.editor.services.history.actions.UserAction;
 import stasgora.mesh.editor.services.history.actions.node.NodeModifiedAction;
 import stasgora.mesh.editor.services.mesh.generation.TriangulationService;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 @Singleton
 class CommandActionHistoryService implements ActionHistoryService {
-	private final Stack<UserAction> undoActionStack = new Stack<>();
-	private final Stack<UserAction> redoActionStack = new Stack<>();
+	private final Deque<UserAction> undoActionStack = new ArrayDeque<>();
+	private final Deque<UserAction> redoActionStack = new ArrayDeque<>();
 
 	@Inject
 	CommandActionHistoryService(LoadState loadState, TriangulationService triangulationService) {

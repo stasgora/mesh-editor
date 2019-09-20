@@ -4,7 +4,7 @@ import io.github.stasgora.observetree.SettableProperty;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 
-public class ImageCanvas extends Canvas {
+public class ImageCanvas extends ResizableCanvas {
 
 	private CanvasData canvasData;
 	private SettableProperty<Double> imageTransparency;

@@ -1,7 +1,6 @@
 package stasgora.mesh.editor.view;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
 import io.github.stasgora.observetree.SettableProperty;
 import javafx.scene.control.TreeView;

@@ -12,6 +12,7 @@ public enum ViewType {
 		this.fxmlFileName = fxmlFileName;
 	}
 
-	public String langPrefix, fxmlFileName;
+	public final String langPrefix;
+	public final String fxmlFileName;
 
 }

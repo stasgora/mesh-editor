@@ -21,13 +21,13 @@ public class NodeUtils {
 	private final AppConfigReader appConfig;
 	private final CanvasData canvasData;
 
-	private final double REL_SPACE_FACTOR;
+	private final double relativeSpaceFactor;
 
 	@Inject
 	NodeUtils(@AppConfig AppConfigReader appConfig, CanvasData canvasData) {
 		this.appConfig = appConfig;
 		this.canvasData = canvasData;
-		REL_SPACE_FACTOR = appConfig.getDouble("meshBox.proportionalSpaceFactor");
+		relativeSpaceFactor = appConfig.getDouble("meshBox.proportionalSpaceFactor");
 	}
 
 	public Triangle findNodeTriangle(Point node) {
@@ -35,7 +35,7 @@ public class NodeUtils {
 	}
 
 	Point getClosestNode(Point location, Triangle triangle) {
-		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.imageBox.size.x / REL_SPACE_FACTOR);
+		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.imageBox.size.x / relativeSpaceFactor);
 		for (Point node : triangle.nodes) {
 			Point dist = new Point(node).subtract(location).abs();
 			if (dist.x <= nodeBoxRadius && dist.y <= nodeBoxRadius) {
@@ -50,7 +50,7 @@ public class NodeUtils {
 		do {
 			int nodeIndex = Arrays.asList(currentTriangle.nodes).indexOf(node);
 			if (nodeIndex == -1) {
-				LOGGER.warning("triangle " + currentTriangle + " does not contain given node " + node);
+				LOGGER.warning(String.format("triangle %s does not contain given node %s", currentTriangle, node));
 			}
 			nodeIndex = (nodeIndex + 2) % 3;
 			if (outPoints != null)
@@ -63,12 +63,12 @@ public class NodeUtils {
 
 	public Point proportionalToCanvasPos(Point node) {
 		Rectangle imageBox = canvasData.imageBox;
-		return new Point(node).multiplyByScalar(imageBox.size.x / REL_SPACE_FACTOR).add(imageBox.position);
+		return new Point(node).multiplyByScalar(imageBox.size.x / relativeSpaceFactor).add(imageBox.position);
 	}
 
 	public Point canvasToProportionalPos(Point node) {
 		Rectangle imageBox = canvasData.imageBox;
-		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / REL_SPACE_FACTOR);
+		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / relativeSpaceFactor);
 	}
 
 	public Point canvasToProportionalSize(Point node) {
@@ -77,11 +77,11 @@ public class NodeUtils {
 
 	public double proportionalScaleFactor() {
 		Rectangle imageBox = canvasData.imageBox;
-		return REL_SPACE_FACTOR / imageBox.size.x;
+		return relativeSpaceFactor / imageBox.size.x;
 	}
 
 	public Point proportionalToPixelPos(Point node) {
-		return new Point(node).multiplyByScalar(canvasData.baseImage.get().getWidth() / REL_SPACE_FACTOR);
+		return new Point(node).multiplyByScalar(canvasData.baseImage.get().getWidth() / relativeSpaceFactor);
 	}
 
 	public Point getProportionalMarginSize() {

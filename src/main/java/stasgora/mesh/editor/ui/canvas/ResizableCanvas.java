@@ -1,8 +1,9 @@
 package stasgora.mesh.editor.ui.canvas;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Canvas extends javafx.scene.canvas.Canvas {
+public class ResizableCanvas extends Canvas {
 
 	protected GraphicsContext context = getGraphicsContext2D();
 

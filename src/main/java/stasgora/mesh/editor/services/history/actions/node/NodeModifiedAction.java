@@ -6,7 +6,8 @@ import stasgora.mesh.editor.services.history.actions.UserAction;
 import java.util.function.Consumer;
 
 public abstract class NodeModifiedAction implements UserAction {
-	protected double x, y;
+	protected double x;
+	protected double y;
 
 	protected static Consumer<Point> addNode;
 	protected static Consumer<Point> removeNode;

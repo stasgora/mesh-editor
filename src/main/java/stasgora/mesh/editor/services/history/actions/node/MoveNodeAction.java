@@ -4,7 +4,8 @@ import stasgora.mesh.editor.model.geom.Point;
 
 public class MoveNodeAction extends NodeModifiedAction {
 	private Point point;
-	private double oldX, oldY;
+	private double oldX;
+	private double oldY;
 
 	public MoveNodeAction(Point movedPoint, Point oldPoint) {
 		super(movedPoint.x, movedPoint.y);
