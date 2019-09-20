@@ -4,8 +4,9 @@ jdk:
 cache:
   directories:
     - $HOME/.m2
+    - $HOME/.sonar/cache
 script:
-  - mvn clean compile package
+  - mvn clean compile package sonar:sonar
 addons:
   sonarcloud:
     organization: "stasgora"
