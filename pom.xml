@@ -101,6 +101,12 @@
 					<mainClass>stasgora.mesh.editor.Main</mainClass>
 				</configuration>
 			</plugin>
+			<!-- sonar -->
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.6.1.1688</version>
+			</plugin>
 		</plugins>
 		<resources>
 			<resource>
