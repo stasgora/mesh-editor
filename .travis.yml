@@ -6,3 +6,8 @@ cache:
     - $HOME/.m2
 script:
   - mvn clean compile package
+addons:
+  sonarcloud:
+    organization: "stasgora"
+    token:
+      secure: nZzAwnJjmFy1kf22Pi2oAWugmGj0Y3IWvaSrZrcbcp/k2NrI4hGbmTHDMG28I6URp4m15DKwFQOeFbzg107iJ+vYPpUy25pLmO8snOh4tj2WdjaSYySAjf4IpoD4kZJEW9a7h7gIYFwGNoU+PEYgimunvh6Qc+o9wEgrAmJB7RUptiPCO7ibbBI0xVNABH5GGY5GA+wWy40ad7BNk/IUPU9M+p5liBkNHB0MOXjcIR/PDoSFj3FxfVfAMCn9AoID3UYma+F44CNbDBGxcsl2UdnWjmP1Helbn8311p8gOclw3ADCJTDuWzRVj19zklPEPxO0CjmFHgNzbOlhfleBnVWkWOaFWGEA/8mWB7P93/Zt0FNfYZUDZiro3Zn5zL/4cjkMO7DxO0oXpKx6o/zDgURx8Lzfhtgd0LcN/RY3OYhz7+0wDqvnlUevzmTgNAkPX/lXHb0zMGshUvrQSLET1N2bkSjmr1FNXWJYyWHmtm5Zb54wjNPVJIAT+Jxck/elUVUYNy+SbJTva81MAmaDdFo44LknjbUsFzDaG6IxM7N9Tid76TIENmRKLJPi0REoRKCvXnRiw8FyP1kEqMjmH/GVaKVrr1rgn8BYqscbNxJvIIrE1sgOGbbiopzgV1/9r90NmRYkmAgNo+/pUkrWmimDwteR5nDAw0tBVOTx00c=
