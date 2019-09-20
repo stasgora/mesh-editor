@@ -50,15 +50,15 @@ public class ColorUtils {
 	public SerializableColor getNodeColor(Point node) {
 		node = nodeUtils.proportionalToPixelPos(node);
 		Point pixelImgSize = new Point(baseImage.get().getWidth(), baseImage.get().getHeight());
-		Color color = node.isBetween(new Point(), pixelImgSize) ? baseImage.get().getPixelReader().getColor((int) node.x, (int) node.y) : OUTSIDE_IMAGE_COLOR;
+		Color color = node.isBetween(new Point(), pixelImgSize) ? baseImage.get().getPixelReader().getColor((int) node.getX(), (int) node.getY()) : OUTSIDE_IMAGE_COLOR;
 		return new SerializableColor(color);
 	}
 
 	private SerializableColor getAverageNodeColor(List<Point> points) {
 		List<SerializableColor> colors = points.stream().map(this::getNodeColor).collect(Collectors.toList());
-		double r = colors.stream().mapToDouble(color -> color.red).average().orElse(255);
-		double g = colors.stream().mapToDouble(color -> color.green).average().orElse(255);
-		double b = colors.stream().mapToDouble(color -> color.blue).average().orElse(255);
+		double r = colors.stream().mapToDouble(color -> color.getRed()).average().orElse(255);
+		double g = colors.stream().mapToDouble(color -> color.getGreen()).average().orElse(255);
+		double b = colors.stream().mapToDouble(color -> color.getBlue()).average().orElse(255);
 		return new SerializableColor(r, g, b, 1);
 	}
 

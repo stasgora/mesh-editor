@@ -3,6 +3,7 @@ package stasgora.mesh.editor.view;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -18,6 +19,33 @@ import stasgora.mesh.editor.view.sub.SubView;
 import java.nio.file.Paths;
 
 public class MenuView extends SubView {
+	@FXML
+	private MenuItem newProjectMenuItem;
+	@FXML
+	private MenuItem openProjectMenuItem;
+	@FXML
+	private MenuItem openRecentMenuItem;
+	@FXML
+	private MenuItem closeProjectMenuItem;
+	@FXML
+	private MenuItem saveProjectMenuItem;
+	@FXML
+	private MenuItem saveProjectAsMenuItem;
+	@FXML
+	private MenuItem exportProjectMenuItem;
+	@FXML
+	private MenuItem exitAppMenuItem;
+
+	@FXML
+	private MenuItem undoMenuItem;
+	@FXML
+	private MenuItem redoMenuItem;
+
+	@FXML
+	private MenuItem aboutMenuItem;
+
+	@FXML
+	private MenuItem reloadStylesMenuItem;
 
 	private final Stage stage;
 	private final AppConfigReader appConfig;
@@ -25,22 +53,6 @@ public class MenuView extends SubView {
 	private final ActionHistoryService actionHistoryService;
 	private final AboutWindow aboutWindow;
 	private final LoadState loadState;
-
-	public MenuItem newProjectMenuItem;
-	public MenuItem openProjectMenuItem;
-	public MenuItem openRecentMenuItem;
-	public MenuItem closeProjectMenuItem;
-	public MenuItem saveProjectMenuItem;
-	public MenuItem saveProjectAsMenuItem;
-	public MenuItem exportProjectMenuItem;
-	public MenuItem exitAppMenuItem;
-
-	public MenuItem undoMenuItem;
-	public MenuItem redoMenuItem;
-
-	public MenuItem aboutMenuItem;
-
-	public MenuItem reloadStylesMenuItem;
 
 	private static final String MENU_FILE_ITEM_DISABLED = "menu_file_item_disabled";
 	private static final String DEBUG_MENU_VISIBLE = "debug_menu_visible";

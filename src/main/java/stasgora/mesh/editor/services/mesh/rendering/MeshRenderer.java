@@ -64,7 +64,7 @@ public abstract class MeshRenderer {
 		List<Point> drawnPoints = new ArrayList<>();
 		double transparency = visualProperties.meshTransparency.get() * layer.layerTransparency.get();
 		for (Polygon polygon : polygons) {
-			for (Point vertex : polygon.nodes) {
+			for (Point vertex : polygon.getNodes()) {
 				if (drawnPoints.contains(vertex))
 					continue;
 				drawPoint(vertex, layer.nodeRadius.get(), colorUtils.getNodeColor(vertex).setAlpha(transparency));
@@ -77,7 +77,7 @@ public abstract class MeshRenderer {
 		if (!layer.polygonsVisible.get())
 			return;
 		double transparency = visualProperties.meshTransparency.get() * layer.layerTransparency.get();
-		polygons.forEach(polygon -> drawPolygon(polygon, colorUtils.getPolygonColor(polygon.nodes).setAlpha(transparency)));
+		polygons.forEach(polygon -> drawPolygon(polygon, colorUtils.getPolygonColor(polygon.getNodes()).setAlpha(transparency)));
 	}
 
 	private void drawEdges(List<? extends Polygon> polygons, MeshLayer layer) {
@@ -86,7 +86,7 @@ public abstract class MeshRenderer {
 		setUpEdgeDrawing(layer.edgeThickness.get());
 		double transparency = visualProperties.meshTransparency.get() * layer.layerTransparency.get();
 		for (Polygon polygon : polygons) { // FIXME drawing twice most lines
-			Point[] nodes = polygon.nodes;
+			Point[] nodes = polygon.getNodes();
 			for (int i = 0; i < nodes.length; i++) {
 				int nextIndex = (i + 1) % nodes.length;
 				drawEdge(nodes[i], nodes[nextIndex], colorUtils.getEdgeColor(nodes[i], nodes[nextIndex]).setAlpha(transparency));

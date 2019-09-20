@@ -1,6 +1,7 @@
 package stasgora.mesh.editor.view;
 
 import com.google.inject.Inject;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
@@ -18,17 +19,21 @@ import stasgora.mesh.editor.view.annotation.MainWindowRoot;
 import stasgora.mesh.editor.view.annotation.MainWindowStage;
 
 public class WindowView {
-
-	public AnchorPane propertiesViewRoot;
-	public StackPane canvasViewRoot;
-	public MenuBar menuViewRoot;
+	@FXML
+	private AnchorPane propertiesViewRoot;
+	@FXML
+	private StackPane canvasViewRoot;
+	@FXML
+	private MenuBar menuViewRoot;
 
 	private AppConfigReader appConfig;
 	private LoadState loadState;
 	private Stage window;
 
-	public VBox root;
-	public SplitPane mainSplitPane;
+	@FXML
+	private VBox root;
+	@FXML
+	private SplitPane mainSplitPane;
 
 	private WorkspaceAction workspaceAction;
 
@@ -81,4 +86,15 @@ public class WindowView {
 		window.setScene(scene);
 	}
 
+	public AnchorPane getPropertiesViewRoot() {
+		return propertiesViewRoot;
+	}
+
+	public StackPane getCanvasViewRoot() {
+		return canvasViewRoot;
+	}
+
+	public MenuBar getMenuViewRoot() {
+		return menuViewRoot;
+	}
 }

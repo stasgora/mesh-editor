@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class Polygon implements Serializable {
-	public Point[] nodes = new Point[0];
+	protected Point[] nodes = new Point[0];
 
 	protected static final long serialVersionUID = 1L;
 
@@ -18,15 +18,23 @@ public class Polygon implements Serializable {
 	}
 
 	public int[] xCoords() {
-		return Arrays.stream(nodes).map(point -> (int) Math.round(point.x)).mapToInt(Integer::intValue).toArray();
+		return Arrays.stream(nodes).map(point -> (int) Math.round(point.getX())).mapToInt(Integer::intValue).toArray();
 	}
 
 	public int[] yCoords() {
-		return Arrays.stream(nodes).map(point -> (int) Math.round(point.y)).mapToInt(Integer::intValue).toArray();
+		return Arrays.stream(nodes).map(point -> (int) Math.round(point.getY())).mapToInt(Integer::intValue).toArray();
 	}
 
 	@Override
 	public String toString() {
 		return Arrays.toString(nodes);
+	}
+
+	public Point[] getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(Point[] nodes) {
+		this.nodes = nodes;
 	}
 }

@@ -6,9 +6,8 @@ import stasgora.mesh.editor.model.geom.Point;
 import java.io.Serializable;
 
 public class Rectangle extends Observable implements Serializable {
-
-	public Point position;
-	public Point size;
+	private Point position;
+	private Point size;
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,7 +19,22 @@ public class Rectangle extends Observable implements Serializable {
 	}
 
 	public boolean contains(Point point) {
-		return point.x >= position.x && point.x <= position.x + size.x && point.y >= position.y && point.y <= position.y + size.y;
+		return point.getX() >= position.getX() && point.getX() <= position.getX() + size.getX() && point.getY() >= position.getY() && point.getY() <= position.getY() + size.getY();
 	}
 
+	public Point getPosition() {
+		return position;
+	}
+
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+
+	public Point getSize() {
+		return size;
+	}
+
+	public void setSize(Point size) {
+		this.size = size;
+	}
 }

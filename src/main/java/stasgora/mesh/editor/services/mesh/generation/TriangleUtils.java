@@ -32,7 +32,7 @@ public class TriangleUtils {
 		Triangle newTriangle = new Triangle(nodes.toArray(new Point[3]));
 		for (int i = 0; i < 3; i++) {
 			Triangle triangle = triangles.get(i);
-			int triNeighbourId = Arrays.asList(triangle.nodes).indexOf(nodes.get(i));
+			int triNeighbourId = Arrays.asList(triangle.getNodes()).indexOf(nodes.get(i));
 			bindTrianglesBothWays(newTriangle, i, triangle.triangles[triNeighbourId], triangle);
 		}
 		triangles.forEach(mesh.get()::removeTriangle);
@@ -55,18 +55,18 @@ public class TriangleUtils {
 	}
 
 	private Triangle getCloserTriangle(Point node, Triangle current, int nodeIndex) {
-		double det = dMatrixDet(current.nodes[nodeIndex], node, current.nodes[(nodeIndex + 1) % 3]);
+		double det = dMatrixDet(current.getNodes()[nodeIndex], node, current.getNodes()[(nodeIndex + 1) % 3]);
 		return det + 1e-5 < 0 ? current.triangles[nodeIndex] : null;
 	}
 
 	public List<Polygon> getValidVoronoiRegions() {
-		Stream<Triangle> boundingTriangleStream = mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.nodes).anyMatch(mesh.get().getBoundingNodes()::contains));
+		Stream<Triangle> boundingTriangleStream = mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.getNodes()).anyMatch(mesh.get().getBoundingNodes()::contains));
 		Set<Point> boundingNodes = getTrianglePointSet(boundingTriangleStream.collect(Collectors.toList()));
 		return mesh.get().getNodeRegions().stream().filter(region -> !boundingNodes.contains(region.node)).map(pointRegion -> pointRegion.region).collect(Collectors.toList());
 	}
 
 	public Set<Point> getTrianglePointSet(List<Triangle> triangles) {
-		return triangles.stream().flatMap(triangle -> Arrays.stream(triangle.nodes)).collect(Collectors.toSet());
+		return triangles.stream().flatMap(triangle -> Arrays.stream(triangle.getNodes())).collect(Collectors.toSet());
 	}
 
 	public List<Triangle> getValidTriangles() {
@@ -75,17 +75,17 @@ public class TriangleUtils {
 
 	private boolean isTriangleValid(Triangle triangle) {
 		List<Point> boundingNodes = mesh.get().getBoundingNodes();
-		return Arrays.stream(triangle.nodes).noneMatch(boundingNodes::contains);
+		return Arrays.stream(triangle.getNodes()).noneMatch(boundingNodes::contains);
 	}
 
 	Point getSeparateNode(Triangle from, Triangle with) {
-		return from.nodes[getSeparateNodeIndex(from, with)];
+		return from.getNodes()[getSeparateNodeIndex(from, with)];
 	}
 
 	int getSeparateNodeIndex(Triangle from, Triangle with) {
-		List<Point> nodes = Arrays.asList(with.nodes);
-		for (int i = 0; i < from.nodes.length; i++) {
-			if (!nodes.contains(from.nodes[i])) {
+		List<Point> nodes = Arrays.asList(with.getNodes());
+		for (int i = 0; i < from.getNodes().length; i++) {
+			if (!nodes.contains(from.getNodes()[i])) {
 				return i;
 			}
 		}
@@ -107,18 +107,18 @@ public class TriangleUtils {
 	}
 
 	double dMatrixDet(Point a, Point b, Point c) {
-		return a.x * b.y + a.y * c.x + b.x * c.y - a.y * b.x - b.y * c.x - c.y * a.x;
+		return a.getX() * b.getY() + a.getY() * c.getX() + b.getX() * c.getY() - a.getY() * b.getX() - b.getY() * c.getX() - c.getY() * a.getX();
 	}
 
 	double hMatrixDet(Point a, Point b, Point c, Point d) {
-		return a.x * a.x * b.x * c.y - a.x * a.x * b.x * d.y + a.x * a.x * (-b.y) * c.x + a.x * a.x * b.y * d.x + a.x * a.x * c.x * d.y - a.x * a.x * c.y * d.x
-				- a.x * b.x * b.x * c.y + a.x * b.x * b.x * d.y - a.x * b.y * b.y * c.y + a.x * b.y * b.y * d.y + a.x * b.y * c.x * c.x + a.x * b.y * c.y * c.y
-				- a.x * b.y * d.x * d.x - a.x * b.y * d.y * d.y - a.x * c.x * c.x * d.y - a.x * c.y * c.y * d.y + a.x * c.y * d.x * d.x + a.x * c.y * d.y * d.y
-				+ a.y * a.y * b.x * c.y - a.y * a.y * b.x * d.y - a.y * a.y * b.y * c.x + a.y * a.y * b.y * d.x + a.y * a.y * c.x * d.y - a.y * a.y * c.y * d.x
-				+ a.y * b.x * b.x * c.x - a.y * b.x * b.x * d.x - a.y * b.x * c.x * c.x - a.y * b.x * c.y * c.y + a.y * b.x * d.x * d.x + a.y * b.x * d.y * d.y
-				+ a.y * b.y * b.y * c.x - a.y * b.y * b.y * d.x + a.y * c.x * c.x * d.x - a.y * c.x * d.x * d.x - a.y * c.x * d.y * d.y + a.y * c.y * c.y * d.x
-				- b.x * b.x * c.x * d.y + b.x * b.x * c.y * d.x + b.x * c.x * c.x * d.y + b.x * c.y * c.y * d.y - b.x * c.y * d.x * d.x - b.x * c.y * d.y * d.y
-				- b.y * b.y * c.x * d.y + b.y * b.y * c.y * d.x - b.y * c.x * c.x * d.x + b.y * c.x * d.x * d.x + b.y * c.x * d.y * d.y - b.y * c.y * c.y * d.x;
+		return a.getX() * a.getX() * b.getX() * c.getY() - a.getX() * a.getX() * b.getX() * d.getY() + a.getX() * a.getX() * (-b.getY()) * c.getX() + a.getX() * a.getX() * b.getY() * d.getX() + a.getX() * a.getX() * c.getX() * d.getY() - a.getX() * a.getX() * c.getY() * d.getX()
+				- a.getX() * b.getX() * b.getX() * c.getY() + a.getX() * b.getX() * b.getX() * d.getY() - a.getX() * b.getY() * b.getY() * c.getY() + a.getX() * b.getY() * b.getY() * d.getY() + a.getX() * b.getY() * c.getX() * c.getX() + a.getX() * b.getY() * c.getY() * c.getY()
+				- a.getX() * b.getY() * d.getX() * d.getX() - a.getX() * b.getY() * d.getY() * d.getY() - a.getX() * c.getX() * c.getX() * d.getY() - a.getX() * c.getY() * c.getY() * d.getY() + a.getX() * c.getY() * d.getX() * d.getX() + a.getX() * c.getY() * d.getY() * d.getY()
+				+ a.getY() * a.getY() * b.getX() * c.getY() - a.getY() * a.getY() * b.getX() * d.getY() - a.getY() * a.getY() * b.getY() * c.getX() + a.getY() * a.getY() * b.getY() * d.getX() + a.getY() * a.getY() * c.getX() * d.getY() - a.getY() * a.getY() * c.getY() * d.getX()
+				+ a.getY() * b.getX() * b.getX() * c.getX() - a.getY() * b.getX() * b.getX() * d.getX() - a.getY() * b.getX() * c.getX() * c.getX() - a.getY() * b.getX() * c.getY() * c.getY() + a.getY() * b.getX() * d.getX() * d.getX() + a.getY() * b.getX() * d.getY() * d.getY()
+				+ a.getY() * b.getY() * b.getY() * c.getX() - a.getY() * b.getY() * b.getY() * d.getX() + a.getY() * c.getX() * c.getX() * d.getX() - a.getY() * c.getX() * d.getX() * d.getX() - a.getY() * c.getX() * d.getY() * d.getY() + a.getY() * c.getY() * c.getY() * d.getX()
+				- b.getX() * b.getX() * c.getX() * d.getY() + b.getX() * b.getX() * c.getY() * d.getX() + b.getX() * c.getX() * c.getX() * d.getY() + b.getX() * c.getY() * c.getY() * d.getY() - b.getX() * c.getY() * d.getX() * d.getX() - b.getX() * c.getY() * d.getY() * d.getY()
+				- b.getY() * b.getY() * c.getX() * d.getY() + b.getY() * b.getY() * c.getY() * d.getX() - b.getY() * c.getX() * c.getX() * d.getX() + b.getY() * c.getX() * d.getX() * d.getX() + b.getY() * c.getX() * d.getY() * d.getY() - b.getY() * c.getY() * c.getY() * d.getX();
 	}
 
 }

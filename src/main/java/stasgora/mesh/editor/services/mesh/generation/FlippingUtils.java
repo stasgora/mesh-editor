@@ -48,7 +48,7 @@ public class FlippingUtils {
 		int nextId = (currentId + 1) % nodes.size();
 		Triangle[] currentTriangles = new Triangle[]{triangles.get(currentId), triangles.get(nextId)};
 		Triangle[] newTriangles = flipTriangles(currentTriangles[0], currentTriangles[1]);
-		Triangle newNeighbour = Arrays.asList(newTriangles[0].nodes).contains(node) ? newTriangles[0] : newTriangles[1];
+		Triangle newNeighbour = Arrays.asList(newTriangles[0].getNodes()).contains(node) ? newTriangles[0] : newTriangles[1];
 		nodes.remove(nextId);
 		triangles.add(currentId, newNeighbour);
 		triangles.remove(currentTriangles[0]);
@@ -61,8 +61,8 @@ public class FlippingUtils {
 		mesh.get().removeTriangle(a);
 		mesh.get().removeTriangle(b);
 		Triangle[] added = new Triangle[2];
-		added[0] = new Triangle(a.nodes[aNodeIndex], a.nodes[(aNodeIndex + 1) % 3], b.nodes[bNodeIndex]);
-		added[1] = new Triangle(b.nodes[bNodeIndex], b.nodes[(bNodeIndex + 1) % 3], a.nodes[aNodeIndex]);
+		added[0] = new Triangle(a.getNodes()[aNodeIndex], a.getNodes()[(aNodeIndex + 1) % 3], b.getNodes()[bNodeIndex]);
+		added[1] = new Triangle(b.getNodes()[bNodeIndex], b.getNodes()[(bNodeIndex + 1) % 3], a.getNodes()[aNodeIndex]);
 		triangleUtils.bindTrianglesBothWays(added[0], 0, a.triangles[aNodeIndex], a);
 		triangleUtils.bindTrianglesBothWays(added[0], 1, b.triangles[(bNodeIndex + 2) % 3], b);
 		triangleUtils.bindTrianglesBothWays(added[1], 0, b.triangles[bNodeIndex], b);
@@ -75,7 +75,7 @@ public class FlippingUtils {
 	}
 
 	private boolean isPointInsideCircumcircle(Point node, Triangle triangle) {
-		return triangleUtils.hMatrixDet(triangle.nodes[2], triangle.nodes[1], triangle.nodes[0], node) > 0;
+		return triangleUtils.hMatrixDet(triangle.getNodes()[2], triangle.getNodes()[1], triangle.getNodes()[0], node) > 0;
 	}
 
 }

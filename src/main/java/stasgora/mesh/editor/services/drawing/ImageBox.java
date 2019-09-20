@@ -45,7 +45,7 @@ public class ImageBox implements MouseListener {
 			return;
 		}
 		Point sizeDiff = new Point(canvasViewSize).subtract(lastCanvasSize);
-		canvasData.imageBox.position.add(sizeDiff.divideByScalar(2));
+		canvasData.imageBox.getPosition().add(sizeDiff.divideByScalar(2));
 		lastCanvasSize.set(canvasViewSize);
 	}
 
@@ -58,16 +58,16 @@ public class ImageBox implements MouseListener {
 
 		Point canvasSize = canvasViewSize;
 		double defBorder = appConfig.getDouble("imageBox.defaultBorder");
-		if (imgRatio > canvasSize.x / canvasSize.y) {
-			double imgWidth = canvasSize.x * (1 - defBorder);
+		if (imgRatio > canvasSize.getX() / canvasSize.getY()) {
+			double imgWidth = canvasSize.getX() * (1 - defBorder);
 			double imgHeight = imgWidth / imgRatio;
-			canvasData.imageBox.position.set(canvasSize.x * defBorder * 0.5, (canvasSize.y - imgHeight) / 2);
-			canvasData.imageBox.size.set(imgWidth, imgHeight);
+			canvasData.imageBox.getPosition().set(canvasSize.getX() * defBorder * 0.5, (canvasSize.getY() - imgHeight) / 2);
+			canvasData.imageBox.getSize().set(imgWidth, imgHeight);
 		} else {
-			double imgHeight = canvasSize.y * (1 - defBorder);
+			double imgHeight = canvasSize.getY() * (1 - defBorder);
 			double imgWidth = imgRatio * imgHeight;
-			canvasData.imageBox.position.set((canvasSize.x - imgWidth) / 2, canvasSize.y * defBorder * 0.5);
-			canvasData.imageBox.size.set(imgWidth, imgHeight);
+			canvasData.imageBox.getPosition().set((canvasSize.getX() - imgWidth) / 2, canvasSize.getY() * defBorder * 0.5);
+			canvasData.imageBox.getSize().set(imgWidth, imgHeight);
 		}
 		canvasData.imageBox.notifyListeners();
 	}
@@ -80,11 +80,11 @@ public class ImageBox implements MouseListener {
 		double zoomFactor = 1 - amount * appSettings.getInt("settings.imageBox.zoom.dir") * appSettings.getDouble("settings.imageBox.zoom.speed");
 		zoom = Math.max(minZoom, Math.min(maxZoom, zoom * zoomFactor));
 
-		double moveFactor = 1 - baseImageSize.x * zoom / canvasData.imageBox.size.x;
-		Point zoomPos = new Point(mousePos).subtract(canvasData.imageBox.position).multiplyByScalar(moveFactor);
+		double moveFactor = 1 - baseImageSize.getX() * zoom / canvasData.imageBox.getSize().getX();
+		Point zoomPos = new Point(mousePos).subtract(canvasData.imageBox.getPosition()).multiplyByScalar(moveFactor);
 
-		canvasData.imageBox.position.add(zoomPos);
-		canvasData.imageBox.size.set(new Point(baseImageSize).multiplyByScalar(zoom));
+		canvasData.imageBox.getPosition().add(zoomPos);
+		canvasData.imageBox.getSize().set(new Point(baseImageSize).multiplyByScalar(zoom));
 		canvasData.notifyListeners();
 		return true;
 	}
@@ -104,7 +104,7 @@ public class ImageBox implements MouseListener {
 			return;
 		}
 		Rectangle imageBox = this.canvasData.imageBox;
-		imageBox.position.add(dragAmount).clamp(new Point(imageBox.size).multiplyByScalar(-1), canvasViewSize);
+		imageBox.getPosition().add(dragAmount).clamp(new Point(imageBox.getSize()).multiplyByScalar(-1), canvasViewSize);
 		imageBox.notifyListeners();
 	}
 

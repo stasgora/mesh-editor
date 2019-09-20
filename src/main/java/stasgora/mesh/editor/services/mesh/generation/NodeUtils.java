@@ -31,14 +31,14 @@ public class NodeUtils {
 	}
 
 	public Triangle findNodeTriangle(Point node) {
-		return canvasData.mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.nodes).anyMatch(vertex -> vertex == node)).findFirst().orElse(null);
+		return canvasData.mesh.get().getTriangles().stream().filter(triangle -> Arrays.stream(triangle.getNodes()).anyMatch(vertex -> vertex == node)).findFirst().orElse(null);
 	}
 
 	Point getClosestNode(Point location, Triangle triangle) {
-		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.imageBox.size.x / relativeSpaceFactor);
-		for (Point node : triangle.nodes) {
+		double nodeBoxRadius = appConfig.getDouble("meshBox.nodeBoxRadius") / (canvasData.imageBox.getSize().getX() / relativeSpaceFactor);
+		for (Point node : triangle.getNodes()) {
 			Point dist = new Point(node).subtract(location).abs();
-			if (dist.x <= nodeBoxRadius && dist.y <= nodeBoxRadius) {
+			if (dist.getX() <= nodeBoxRadius && dist.getY() <= nodeBoxRadius) {
 				return node;
 			}
 		}
@@ -48,13 +48,13 @@ public class NodeUtils {
 	public void getNodeNeighbours(Point node, Triangle firstTriangle, List<Point> outPoints, List<Triangle> outTriangles) {
 		Triangle currentTriangle = firstTriangle;
 		do {
-			int nodeIndex = Arrays.asList(currentTriangle.nodes).indexOf(node);
+			int nodeIndex = Arrays.asList(currentTriangle.getNodes()).indexOf(node);
 			if (nodeIndex == -1) {
 				LOGGER.warning(String.format("triangle %s does not contain given node %s", currentTriangle, node));
 			}
 			nodeIndex = (nodeIndex + 2) % 3;
 			if (outPoints != null)
-				outPoints.add(currentTriangle.nodes[nodeIndex]);
+				outPoints.add(currentTriangle.getNodes()[nodeIndex]);
 			currentTriangle = currentTriangle.triangles[nodeIndex];
 			if (outTriangles != null)
 				outTriangles.add(currentTriangle);
@@ -63,12 +63,12 @@ public class NodeUtils {
 
 	public Point proportionalToCanvasPos(Point node) {
 		Rectangle imageBox = canvasData.imageBox;
-		return new Point(node).multiplyByScalar(imageBox.size.x / relativeSpaceFactor).add(imageBox.position);
+		return new Point(node).multiplyByScalar(imageBox.getSize().getX() / relativeSpaceFactor).add(imageBox.getPosition());
 	}
 
 	public Point canvasToProportionalPos(Point node) {
 		Rectangle imageBox = canvasData.imageBox;
-		return new Point(node).subtract(imageBox.position).divideByScalar(imageBox.size.x / relativeSpaceFactor);
+		return new Point(node).subtract(imageBox.getPosition()).divideByScalar(imageBox.getSize().getX() / relativeSpaceFactor);
 	}
 
 	public Point canvasToProportionalSize(Point node) {
@@ -77,7 +77,7 @@ public class NodeUtils {
 
 	public double proportionalScaleFactor() {
 		Rectangle imageBox = canvasData.imageBox;
-		return relativeSpaceFactor / imageBox.size.x;
+		return relativeSpaceFactor / imageBox.getSize().getX();
 	}
 
 	public Point proportionalToPixelPos(Point node) {
@@ -86,33 +86,33 @@ public class NodeUtils {
 
 	public Point getProportionalMarginSize() {
 		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
-		return canvasToProportionalSize(new Point(canvasData.imageBox.size).multiplyByScalar(spaceAroundImage));
+		return canvasToProportionalSize(new Point(canvasData.imageBox.getSize()).multiplyByScalar(spaceAroundImage));
 	}
 
 	public Rectangle getCanvasSpaceNodeBoundingBox() {
 		Rectangle imageBox = canvasData.imageBox;
 		double spaceAroundImage = appConfig.getDouble("meshBox.spaceAroundImage");
 		Rectangle area = new Rectangle();
-		Point boxSize = imageBox.size;
-		area.position = new Point(imageBox.position).subtract(new Point(boxSize).multiplyByScalar(spaceAroundImage));
-		area.size = new Point(boxSize).multiplyByScalar(spaceAroundImage * 2 + 1);
+		Point boxSize = imageBox.getSize();
+		area.setPosition(new Point(imageBox.getPosition()).subtract(new Point(boxSize).multiplyByScalar(spaceAroundImage)));
+		area.setSize(new Point(boxSize).multiplyByScalar(spaceAroundImage * 2 + 1));
 		return area;
 	}
 
 	Point[] getBoundingNodes() {
 		Rectangle boundingBox = getProportionalNodeBoundingBox();
-		double majorLength = boundingBox.size.x + boundingBox.size.y;
+		double majorLength = boundingBox.getSize().getX() + boundingBox.getSize().getY();
 		return new Point[]{
-				new Point(boundingBox.position.x + boundingBox.size.x / 2, -majorLength),
-				new Point(boundingBox.position.x - majorLength, boundingBox.size.y),
-				new Point(boundingBox.position.x + boundingBox.size.x + majorLength, boundingBox.size.y)
+				new Point(boundingBox.getPosition().getX() + boundingBox.getSize().getX() / 2, -majorLength),
+				new Point(boundingBox.getPosition().getX() - majorLength, boundingBox.getSize().getY()),
+				new Point(boundingBox.getPosition().getX() + boundingBox.getSize().getX() + majorLength, boundingBox.getSize().getY())
 		};
 	}
 
 	public Rectangle getProportionalNodeBoundingBox() {
 		Rectangle canvasSpaceBox = getCanvasSpaceNodeBoundingBox();
-		canvasSpaceBox.position = canvasToProportionalPos(canvasSpaceBox.position);
-		canvasSpaceBox.size = canvasToProportionalSize(canvasSpaceBox.size);
+		canvasSpaceBox.setPosition(canvasToProportionalPos(canvasSpaceBox.getPosition()));
+		canvasSpaceBox.setSize(canvasToProportionalSize(canvasSpaceBox.getSize()));
 		return canvasSpaceBox;
 	}
 

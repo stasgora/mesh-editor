@@ -3,6 +3,7 @@ package stasgora.mesh.editor.view;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import io.github.stasgora.observetree.SettableProperty;
+import javafx.fxml.FXML;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Region;
 import stasgora.mesh.editor.model.NamespaceMap;
@@ -13,13 +14,13 @@ import stasgora.mesh.editor.services.ui.PropertyTreeCellFactory;
 import stasgora.mesh.editor.view.sub.SubView;
 
 public class PropertiesView extends SubView {
-
 	private VisualProperties visualProperties;
 	private final SettableProperty<Boolean> stateSaved;
 	private final ConfigModelMapper configModelMapper;
 	private final PropertyTreeCellFactory propertyTreeCellFactory;
 
-	public TreeView<String> propertyTree;
+	@FXML
+	private TreeView<String> propertyTree;
 
 	@Inject
 	PropertiesView(@Assisted Region root, @Assisted ViewType viewType, NamespaceMap viewNamespaces, VisualProperties visualProperties,

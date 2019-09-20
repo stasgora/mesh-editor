@@ -44,13 +44,13 @@ class CanvasMeshRenderer extends MeshRenderer implements CanvasRenderer {
 		context.setFill(color.toFXColor());
 		radius /= nodeUtils.proportionalScaleFactor();
 		point = nodeUtils.proportionalToCanvasPos(point);
-		context.fillOval(point.x - radius / 2d, point.y - radius / 2d, radius, radius);
+		context.fillOval(point.getX() - radius / 2d, point.getY() - radius / 2d, radius, radius);
 	}
 
 	@Override
 	protected void drawPolygon(Polygon polygon, SerializableColor color) {
 		context.setFill(color.toFXColor());
-		createPath(polygon.nodes);
+		createPath(polygon.getNodes());
 		context.fill();
 	}
 
@@ -65,16 +65,16 @@ class CanvasMeshRenderer extends MeshRenderer implements CanvasRenderer {
 	public void drawBoundingBox(Rectangle boundingBox) {
 		context.setStroke(Color.gray(0.4));
 		context.setLineDashes(10, 15);
-		context.strokeRect(boundingBox.position.x, boundingBox.position.y, boundingBox.size.x, boundingBox.size.y);
+		context.strokeRect(boundingBox.getPosition().getX(), boundingBox.getPosition().getY(), boundingBox.getSize().getX(), boundingBox.getSize().getY());
 		context.setLineDashes(0);
 	}
 
 	private void createPath(Point[] vertices) {
 		vertices = Arrays.stream(vertices).map(nodeUtils::proportionalToCanvasPos).toArray(Point[]::new);
 		context.beginPath();
-		context.moveTo(vertices[0].x, vertices[0].y);
+		context.moveTo(vertices[0].getX(), vertices[0].getY());
 		for (int i = 1; i < vertices.length; i++) {
-			context.lineTo(vertices[i].x, vertices[i].y);
+			context.lineTo(vertices[i].getX(), vertices[i].getY());
 		}
 		context.closePath();
 		context.fill();

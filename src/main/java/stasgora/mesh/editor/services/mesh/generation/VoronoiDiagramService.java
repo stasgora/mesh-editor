@@ -43,7 +43,7 @@ public class VoronoiDiagramService {
 					vertices.add(triangleCircumcenterMap.get(triangle));
 				}
 			}
-			pointRegion.nodes = vertices.toArray(Point[]::new);
+			pointRegion.setNodes(vertices.toArray(Point[]::new));
 		}
 	}
 

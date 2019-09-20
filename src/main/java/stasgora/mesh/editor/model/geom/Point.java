@@ -92,6 +92,14 @@ public class Point extends Observable implements Serializable {
 		}
 	}
 
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
 	@Override
 	public String toString() {
 		return "(" + Math.round(x * ROUNDING_MULT) / ROUNDING_MULT + ", " + Math.round(y * ROUNDING_MULT) / ROUNDING_MULT + ')';

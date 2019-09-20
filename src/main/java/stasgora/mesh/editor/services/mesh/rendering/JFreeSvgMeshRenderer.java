@@ -33,28 +33,28 @@ class JFreeSvgMeshRenderer extends MeshRenderer implements SvgMeshRenderer {
 	@Override
 	protected void prepareRendering() {
 		Rectangle boundingBox = nodeUtils.getProportionalNodeBoundingBox();
-		graphics = new SVGGraphics2D((int) boundingBox.size.x, (int) boundingBox.size.y);
+		graphics = new SVGGraphics2D((int) boundingBox.getSize().getX(), (int) boundingBox.getSize().getY());
 		graphics.setBackground(new Color(1f, 1f, 1f, 0f));
 		Point marginSize = nodeUtils.getProportionalMarginSize();
-		graphics.translate(marginSize.x, marginSize.y);
+		graphics.translate(marginSize.getX(), marginSize.getY());
 	}
 
 	@Override
 	protected void drawEdge(Point from, Point to, SerializableColor color) {
 		graphics.setColor(color.toAwtColor());
-		graphics.drawLine((int) from.x, (int) from.y, (int) to.x, (int) to.y);
+		graphics.drawLine((int) from.getX(), (int) from.getY(), (int) to.getX(), (int) to.getY());
 	}
 
 	@Override
 	protected void drawPoint(Point point, double radius, SerializableColor color) {
 		graphics.setColor(color.toAwtColor());
-		graphics.fillOval((int) (point.x - radius / 2), (int) (point.y - radius / 2), (int) radius, (int) radius);
+		graphics.fillOval((int) (point.getX() - radius / 2), (int) (point.getY() - radius / 2), (int) radius, (int) radius);
 	}
 
 	@Override
 	protected void drawPolygon(Polygon polygon, SerializableColor color) {
 		graphics.setColor(color.toAwtColor());
-		graphics.fillPolygon(polygon.xCoords(), polygon.yCoords(), polygon.nodes.length);
+		graphics.fillPolygon(polygon.xCoords(), polygon.yCoords(), polygon.getNodes().length);
 	}
 
 	@Override

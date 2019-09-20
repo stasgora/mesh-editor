@@ -2,6 +2,7 @@ package stasgora.mesh.editor.view;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,7 +23,8 @@ public class AboutWindow {
 
 	private final Popup aboutWindowPopup = new Popup();
 	private final Stage mainWindow;
-	public ImageView logo;
+	@FXML
+	private ImageView logo;
 
 	@Inject
 	AboutWindow(@MainWindowStage Stage mainWindow, @AppConfig AppConfigReader appConfig) {

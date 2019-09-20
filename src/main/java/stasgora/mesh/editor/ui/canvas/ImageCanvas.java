@@ -21,7 +21,7 @@ public class ImageCanvas extends ResizableCanvas {
 		double alpha = imageTransparency.get();
 		context.setGlobalAlpha(alpha);
 		Rectangle imageBox = canvasData.imageBox;
-		context.drawImage(canvasData.baseImage.get(), imageBox.position.x, imageBox.position.y, imageBox.size.x, imageBox.size.y);
+		context.drawImage(canvasData.baseImage.get(), imageBox.getPosition().getX(), imageBox.getPosition().getY(), imageBox.getSize().getX(), imageBox.getSize().getY());
 		context.setGlobalAlpha(1);
 	}
 }

@@ -3,11 +3,12 @@ package stasgora.mesh.editor.ui.properties;
 import javafx.scene.control.TreeItem;
 
 public class PropertyTreeItem<T> extends TreeItem<T> {
-	public PropertyItemType itemType;
-	public boolean hasCheckBox = true;
-	public boolean hasSlider, hasComboBox;
+	private PropertyItemType itemType;
+	private boolean hasCheckBox = true;
+	private boolean hasSlider;
+	private boolean hasComboBox;
 
-	public double sliderChangeStartValue;
+	private double sliderChangeStartValue;
 
 	public PropertyItemType getItemType() {
 		return itemType;
@@ -39,5 +40,13 @@ public class PropertyTreeItem<T> extends TreeItem<T> {
 
 	public void setHasComboBox(boolean hasComboBox) {
 		this.hasComboBox = hasComboBox;
+	}
+
+	public double getSliderChangeStartValue() {
+		return sliderChangeStartValue;
+	}
+
+	public void setSliderChangeStartValue(double sliderChangeStartValue) {
+		this.sliderChangeStartValue = sliderChangeStartValue;
 	}
 }

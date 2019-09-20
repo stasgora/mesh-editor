@@ -5,11 +5,10 @@ import javafx.scene.paint.Color;
 import java.io.Serializable;
 
 public class SerializableColor implements Serializable {
-
-	public double red;
-	public double green;
-	public double blue;
-	public double alpha;
+	private double red;
+	private double green;
+	private double blue;
+	private double alpha;
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,9 +46,17 @@ public class SerializableColor implements Serializable {
 		return this;
 	}
 
+	public double getRed() {
+		return red;
+	}
+
 	public SerializableColor setRed(double red) {
 		this.red = red;
 		return this;
+	}
+
+	public double getGreen() {
+		return green;
 	}
 
 	public SerializableColor setGreen(double green) {
@@ -57,14 +64,21 @@ public class SerializableColor implements Serializable {
 		return this;
 	}
 
+	public double getBlue() {
+		return blue;
+	}
+
 	public SerializableColor setBlue(double blue) {
 		this.blue = blue;
 		return this;
+	}
+
+	public double getAlpha() {
+		return alpha;
 	}
 
 	public SerializableColor setAlpha(double alpha) {
 		this.alpha = alpha;
 		return this;
 	}
-
 }

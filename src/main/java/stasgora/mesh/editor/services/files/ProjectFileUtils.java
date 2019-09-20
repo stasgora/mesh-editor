@@ -33,7 +33,7 @@ class ProjectFileUtils implements FileUtils {
 			     ObjectOutputStream objectStream = new ObjectOutputStream(fileStream)) {
 				objectStream.writeObject(canvasData.mesh.get());
 				visualProperties.writeProperties(objectStream);
-				fileStream.write(canvasData.rawImageFile);
+				fileStream.write(canvasData.getRawImageFile());
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			throw new ProjectIOException(e);
@@ -54,8 +54,8 @@ class ProjectFileUtils implements FileUtils {
 
 	@Override
 	public void loadImage(FileInputStream fileStream) throws ProjectIOException {
-		canvasData.rawImageFile = readFileIntoMemory(fileStream);
-		try (ByteArrayInputStream imageStream = new ByteArrayInputStream(canvasData.rawImageFile)) {
+		canvasData.setRawImageFile(readFileIntoMemory(fileStream));
+		try (ByteArrayInputStream imageStream = new ByteArrayInputStream(canvasData.getRawImageFile())) {
 			canvasData.baseImage.set(new Image(imageStream));
 		} catch (IOException e) {
 			throw new ProjectIOException(e);

@@ -8,10 +8,10 @@ public class MoveNodeAction extends NodeModifiedAction {
 	private double oldY;
 
 	public MoveNodeAction(Point movedPoint, Point oldPoint) {
-		super(movedPoint.x, movedPoint.y);
+		super(movedPoint.getX(), movedPoint.getY());
 		this.point = movedPoint;
-		this.oldX = oldPoint.x;
-		this.oldY = oldPoint.y;
+		this.oldX = oldPoint.getX();
+		this.oldY = oldPoint.getY();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import io.github.stasgora.observetree.enums.ListenerPriority;
 import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 import javafx.scene.layout.Region;
 import stasgora.mesh.editor.model.NamespaceMap;
 import stasgora.mesh.editor.model.geom.Point;
@@ -20,9 +21,10 @@ import stasgora.mesh.editor.ui.canvas.ResizableCanvas;
 import stasgora.mesh.editor.view.sub.SubView;
 
 public class CanvasView extends SubView {
-
-	public ImageCanvas imageCanvas;
-	public ResizableCanvas meshCanvas;
+	@FXML
+	private ImageCanvas imageCanvas;
+	@FXML
+	private ResizableCanvas meshCanvas;
 
 	private final VisualProperties visualProperties;
 	private Point canvasViewSize;
@@ -64,10 +66,10 @@ public class CanvasView extends SubView {
 		root.heightProperty().addListener(this::paneSizeChanged);
 
 		canvasViewSize.addListener(() -> {
-			imageCanvas.setWidth(canvasViewSize.x);
-			imageCanvas.setHeight(canvasViewSize.y);
-			meshCanvas.setWidth(canvasViewSize.x);
-			meshCanvas.setHeight(canvasViewSize.y);
+			imageCanvas.setWidth(canvasViewSize.getX());
+			imageCanvas.setHeight(canvasViewSize.getY());
+			meshCanvas.setWidth(canvasViewSize.getX());
+			meshCanvas.setHeight(canvasViewSize.getY());
 		});
 		canvasViewSize.addListener(() -> imageBox.onResizeCanvas());
 		canvasData.mesh.addStaticListener(() -> loadState.stateSaved.setAndNotify(false));

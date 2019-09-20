@@ -71,7 +71,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 	}
 
 	private MeshLayer getPropertyLayer(PropertyTreeItem item) {
-		return ((PropertyTreeItem) item.getParent()).itemType == PropertyItemType.TRIANGULATION ?
+		return ((PropertyTreeItem) item.getParent()).getItemType() == PropertyItemType.TRIANGULATION ?
 				visualProperties.triangulationLayer.get() : visualProperties.voronoiDiagramLayer.get();
 	}
 
@@ -102,9 +102,9 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 					return;
 
 				PropertyTreeItem treeItem = (PropertyTreeItem) getTreeItem();
-				if (treeItem.hasCheckBox)
+				if (treeItem.isHasCheckBox())
 					addCheckBox(treeItem, body);
-				if (treeItem.hasSlider)
+				if (treeItem.isHasSlider())
 					addSlider(treeItem, body);
 			}
 
@@ -112,21 +112,21 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 				CheckBox checkBox = new CheckBox();
 				checkBox.setOnAction(event -> actionHistoryService.registerAction(new CheckBoxChangeAction(checkBox.isSelected(), checkBox::setSelected)));
 				checkBox.setTooltip(new Tooltip(appLang.getText("fxml.properties.tooltips.visibility")));
-				propertyTypeToVisibleValue.get(treeItem.itemType).apply(treeItem).bindWithFxObservable(checkBox.selectedProperty());
+				propertyTypeToVisibleValue.get(treeItem.getItemType()).apply(treeItem).bindWithFxObservable(checkBox.selectedProperty());
 				body.getChildren().add(0, checkBox);
 			}
 
 			private void addSlider(PropertyTreeItem treeItem, HBox body) {
-				double minValue = getSliderConfigValue(treeItem.itemType.getMinValueKey(), 0);
-				Slider slider = new Slider(minValue, getSliderConfigValue(treeItem.itemType.getMaxValueKey(), 1), minValue);
-				slider.setTooltip(new Tooltip(appLang.getText(treeItem.itemType.getSliderKey())));
-				propertyTypeToSliderValue.get(treeItem.itemType).apply(treeItem).bindWithFxObservable(slider.valueProperty());
+				double minValue = getSliderConfigValue(treeItem.getItemType().getMinValueKey(), 0);
+				Slider slider = new Slider(minValue, getSliderConfigValue(treeItem.getItemType().getMaxValueKey(), 1), minValue);
+				slider.setTooltip(new Tooltip(appLang.getText(treeItem.getItemType().getSliderKey())));
+				propertyTypeToSliderValue.get(treeItem.getItemType()).apply(treeItem).bindWithFxObservable(slider.valueProperty());
 
 				slider.valueChangingProperty().addListener((observable, oldChanging, changing) -> {
 					if (changing)
-						treeItem.sliderChangeStartValue = slider.getValue();
+						treeItem.setSliderChangeStartValue(slider.getValue());
 					else
-						actionHistoryService.registerAction(new PropertyChangeAction<>(slider.getValue(), treeItem.sliderChangeStartValue, slider::setValue));
+						actionHistoryService.registerAction(new PropertyChangeAction<>(slider.getValue(), treeItem.getSliderChangeStartValue(), slider::setValue));
 				});
 				body.getChildren().add(slider);
 			}
@@ -145,7 +145,7 @@ public class PropertyTreeCellFactory implements Callback<TreeView<String>, TreeC
 						return Arrays.stream(enumType.getEnumConstants()).filter(type -> type.name().equals(s)).findFirst().orElse(null);
 					}
 				});
-				propertyTypeToComboBoxValue.get(treeItem.itemType).apply(treeItem).bindWithFxObservable(comboBox.valueProperty());
+				propertyTypeToComboBoxValue.get(treeItem.getItemType()).apply(treeItem).bindWithFxObservable(comboBox.valueProperty());
 
 				body.getChildren().add(comboBox);
 			}

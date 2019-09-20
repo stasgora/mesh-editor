@@ -47,9 +47,9 @@ public class MeshEditor extends Application {
 		windowView.setWorkspaceAction(injector.getInstance(WorkspaceAction.class));
 
 		SubViewFactory subViewFactory = injector.getInstance(SubViewFactory.class);
-		subViewFactory.buildPropertiesView(windowView.propertiesViewRoot, ViewType.PROPERTIES_VIEW);
-		subViewFactory.buildMenuView(windowView.menuViewRoot, ViewType.MENU_VIEW);
-		subViewFactory.buildCanvasView(windowView.canvasViewRoot, ViewType.CANVAS_VIEW);
+		subViewFactory.buildPropertiesView(windowView.getPropertiesViewRoot(), ViewType.PROPERTIES_VIEW);
+		subViewFactory.buildMenuView(windowView.getMenuViewRoot(), ViewType.MENU_VIEW);
+		subViewFactory.buildCanvasView(windowView.getCanvasViewRoot(), ViewType.CANVAS_VIEW);
 
 		injector.getInstance(LangConfigReader.class).onSetMainLanguage(); //TODO move once we have language settings
 	}

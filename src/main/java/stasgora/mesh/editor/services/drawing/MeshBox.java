@@ -41,7 +41,7 @@ public class MeshBox implements MouseListener {
 
 	private Point clampCanvasSpaceNodePos(Point node) {
 		Rectangle box = nodeUtils.getCanvasSpaceNodeBoundingBox();
-		return node.clamp(box.position, new Point(box.position).add(box.size));
+		return node.clamp(box.getPosition(), new Point(box.getPosition()).add(box.getSize()));
 	}
 
 	public void onMouseMove(Point mousePos) {
@@ -54,7 +54,7 @@ public class MeshBox implements MouseListener {
 	public boolean onDragStart(Point mousePos, MouseButton mouseButton) {
 		Point proportionalPos = nodeUtils.canvasToProportionalPos(mousePos);
 		if (mouseButton == canvasUI.mouseConfig.removeNodeButton && triangulationService.removeNode(proportionalPos)) {
-			actionHistoryService.registerAction(new RemoveNodeAction(proportionalPos.x, proportionalPos.y));
+			actionHistoryService.registerAction(new RemoveNodeAction(proportionalPos.getX(), proportionalPos.getY()));
 			return true;
 		}
 		if (mouseButton == canvasUI.mouseConfig.moveNodeButton && draggedNode != null) {
@@ -77,7 +77,7 @@ public class MeshBox implements MouseListener {
 		if (draggedNode == null && mouseButton == canvasUI.mouseConfig.placeNodeButton && nodeUtils.getCanvasSpaceNodeBoundingBox().contains(mousePos)) {
 			point = nodeUtils.canvasToProportionalPos(mousePos);
 			if (triangulationService.addNode(point))
-				actionHistoryService.registerAction(new AddNodeAction(point.x, point.y));
+				actionHistoryService.registerAction(new AddNodeAction(point.getX(), point.getY()));
 		}
 		draggedNode = point;
 		canvasUI.canvasMouseCursor.setValue(mousePos.isBetween(new Point(), canvasUI.canvasViewSize) ? Cursor.HAND : Cursor.DEFAULT);

@@ -84,7 +84,7 @@ public class WorkspaceActionExecutor {
 	void closeProject() {
 		canvasData.mesh.set(null);
 		canvasData.baseImage.set(null);
-		canvasData.rawImageFile = null;
+		canvasData.setRawImageFile(null);
 
 		loadState.loaded.set(false);
 		loadState.file.set(null);

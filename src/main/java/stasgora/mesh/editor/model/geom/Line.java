@@ -25,7 +25,7 @@ public class Line {
 	}
 
 	public static Line bisectionOf(Point a, Point b) {
-		return new Line(2 * (a.x - b.x), 2 * (a.y - b.y), b.x * b.x + b.y * b.y - a.x * a.x - a.y * a.y);
+		return new Line(2 * (a.getX() - b.getX()), 2 * (a.getY() - b.getY()), b.getX() * b.getX() + b.getY() * b.getY() - a.getX() * a.getX() - a.getY() * a.getY());
 	}
 
 }

@@ -43,7 +43,7 @@ class FlipBasedTriangulationService implements TriangulationService {
 		mesh.get().removeTriangle(triangle);
 		Triangle[] newTriangles = new Triangle[3];
 		for (int i = 0; i < 3; i++) {
-			newTriangles[i] = new Triangle(triangle.nodes[i], triangle.nodes[(i + 1) % 3], location);
+			newTriangles[i] = new Triangle(triangle.getNodes()[i], triangle.getNodes()[(i + 1) % 3], location);
 			triangleUtils.bindTrianglesBothWays(newTriangles[i], 0, triangle.triangles[i], triangle);
 		}
 		Deque<Triangle> trianglesToCheck = new ArrayDeque<>();
