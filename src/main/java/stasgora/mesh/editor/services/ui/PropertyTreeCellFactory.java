@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import stasgora.mesh.editor.model.TextKeyProvider;
+import stasgora.mesh.editor.ui.properties.TextKeyProvider;
 import stasgora.mesh.editor.model.observables.BindableProperty;
 import stasgora.mesh.editor.model.project.MeshLayer;
 import stasgora.mesh.editor.model.project.VisualProperties;

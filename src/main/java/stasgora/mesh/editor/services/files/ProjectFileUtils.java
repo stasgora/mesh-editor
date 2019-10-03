@@ -81,12 +81,19 @@ class ProjectFileUtils implements FileUtils {
 		return getFileWithExtension(projectFile, appConfig.getString("extension.project"));
 	}
 
+	@Override
 	public File getFileWithExtension(File file, String extension) {
 		String projectExtension = "." + extension;
 		if (!file.getName().endsWith(projectExtension)) {
 			return new File(file.getPath() + projectExtension);
 		}
 		return file;
+	}
+
+	@Override
+	public String getProjectFileName(File projectFile) {
+		String name = projectFile.getName();
+		return name.substring(0, name.length() - appConfig.getString("extension.project").length() - 1);
 	}
 
 }

@@ -1,7 +1,5 @@
 package stasgora.mesh.editor.ui.properties;
 
-import stasgora.mesh.editor.model.TextKeyProvider;
-
 public enum PropertyItemType implements TextKeyProvider {
 
 	IMAGE("image", "transparency"),

@@ -2,6 +2,7 @@ package stasgora.mesh.editor.services.files.workspace;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.config.annotation.AppSettings;
 import stasgora.mesh.editor.services.config.interfaces.AppConfigManager;
@@ -10,6 +11,7 @@ import stasgora.mesh.editor.services.files.workspace.interfaces.RecentProjectMan
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class AppRecentProjectManager implements RecentProjectManager {
@@ -17,23 +19,32 @@ public class AppRecentProjectManager implements RecentProjectManager {
 
 	private AppConfigManager appSettings;
 	private AppConfigReader appConfig;
+	private LoadState loadState;
 
 	@Inject
-	AppRecentProjectManager(@AppSettings AppConfigManager appSettings, @AppConfig AppConfigReader appConfig) {
+	AppRecentProjectManager(@AppSettings AppConfigManager appSettings, @AppConfig AppConfigReader appConfig, LoadState loadState) {
 		this.appSettings = appSettings;
 		this.appConfig = appConfig;
+		this.loadState = loadState;
+
+		loadRecentProjects();
 	}
 
 	@Override
 	public void addRecentProject(File location) {
-		List<String> projects = appSettings.getStringList(RECENT_PROJECTS_KEY);
-		String newLocation = location.getAbsolutePath();
-		if(projects.contains(newLocation))
-			projects.remove(newLocation);
-		projects.add(0, newLocation);
+		List<File> projects = loadState.recentProjects.get();
+		location = location.getAbsoluteFile();
+		projects.remove(location);
+		projects.add(0, location);
 		int maxSize = appConfig.getInt("app.recentProjectCount");
 		if(projects.size() > maxSize)
 			projects = projects.subList(0, maxSize);
-		appSettings.setStringList(RECENT_PROJECTS_KEY, projects);
+		loadState.recentProjects.setAndNotify(projects);
+		appSettings.setStringList(RECENT_PROJECTS_KEY, projects.stream().map(File::getAbsolutePath).collect(Collectors.toList()));
+	}
+
+	private void loadRecentProjects() {
+		List<String> projects = appSettings.getStringList(RECENT_PROJECTS_KEY);
+		loadState.recentProjects.set(projects.stream().map(File::new).collect(Collectors.toList()));
 	}
 }

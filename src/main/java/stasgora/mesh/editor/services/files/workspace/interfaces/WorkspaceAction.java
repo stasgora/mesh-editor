@@ -2,6 +2,8 @@ package stasgora.mesh.editor.services.files.workspace.interfaces;
 
 import javafx.stage.WindowEvent;
 
+import java.io.File;
+
 public interface WorkspaceAction {
 	String getProjectName();
 
@@ -9,7 +11,7 @@ public interface WorkspaceAction {
 
 	void onOpenProject();
 
-	void onOpenRecentProject();
+	void onOpenRecentProject(File project);
 
 	void onCloseProject();
 

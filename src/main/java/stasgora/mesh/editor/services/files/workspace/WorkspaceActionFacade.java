@@ -13,6 +13,7 @@ import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
+import stasgora.mesh.editor.services.files.FileUtils;
 import stasgora.mesh.editor.services.files.ProjectIOException;
 import stasgora.mesh.editor.services.files.workspace.interfaces.RecentProjectManager;
 import stasgora.mesh.editor.services.files.workspace.interfaces.WorkspaceAction;
@@ -31,17 +32,19 @@ class WorkspaceActionFacade implements WorkspaceAction {
 	private final WorkspaceActionExecutor workspaceActionExecutor;
 	private final LangConfigReader appLang;
 	private final UiDialogUtils dialogUtils;
+	private final FileUtils fileUtils;
 	private final AppConfigReader appConfig;
 	private final LoadState loadState;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private final RecentProjectManager recentProjectManager;
 
 	@Inject
-	WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils,
+	WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils, FileUtils fileUtils,
 	                      @AppConfig AppConfigReader appConfig, LoadState loadState, CanvasUI canvasUI, RecentProjectManager recentProjectManager) {
 		this.workspaceActionExecutor = workspaceActionExecutor;
 		this.appLang = appLang;
 		this.dialogUtils = dialogUtils;
+		this.fileUtils = fileUtils;
 		this.appConfig = appConfig;
 		this.loadState = loadState;
 		this.mouseCursor = canvasUI.canvasMouseCursor;
@@ -51,12 +54,10 @@ class WorkspaceActionFacade implements WorkspaceAction {
 	@Override
 	public String getProjectName() {
 		String projectName;
-		if (loadState.file.get() == null) {
+		if (loadState.file.get() == null)
 			projectName = loadState.loaded.get() ? appLang.getText("defaultProjectName") : null;
-		} else {
-			String fileName = loadState.file.get().getName();
-			projectName = fileName.substring(0, fileName.length() - appConfig.getString("extension.project").length() - 1);
-		}
+		else
+			projectName = fileUtils.getProjectFileName(loadState.file.get());
 		return projectName;
 	}
 
@@ -86,20 +87,14 @@ class WorkspaceActionFacade implements WorkspaceAction {
 			return;
 		}
 		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
-		if (location != null) {
-			try {
-				workspaceActionExecutor.openProject(location);
-				recentProjectManager.addRecentProject(location);
-			} catch (ProjectIOException e) {
-				logger.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
-				showErrorDialog(title);
-			}
-		}
+		if (location != null)
+			openProject(location, title);
+
 	}
 
 	@Override
-	public void onOpenRecentProject() {
-		// TODO: implement
+	public void onOpenRecentProject(File project) {
+		openProject(project, appLang.getText("action.project.open"));
 	}
 
 	@Override
@@ -146,6 +141,16 @@ class WorkspaceActionFacade implements WorkspaceAction {
 	public void onExitApp() {
 		if (!showConfirmDialog() || confirmWorkspaceAction(appLang.getText("action.quit"))) {
 			Platform.exit();
+		}
+	}
+
+	private void openProject(File location, String errorTitle) {
+		try {
+			workspaceActionExecutor.openProject(location);
+			recentProjectManager.addRecentProject(location);
+		} catch (ProjectIOException e) {
+			logger.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
+			showErrorDialog(errorTitle);
 		}
 	}
 
