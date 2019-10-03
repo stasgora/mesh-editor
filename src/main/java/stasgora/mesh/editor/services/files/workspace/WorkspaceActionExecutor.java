@@ -49,13 +49,14 @@ public class WorkspaceActionExecutor {
 		notifyListeners();
 	}
 
-	void saveProject(File location) throws ProjectIOException {
+	File saveProject(File location) throws ProjectIOException {
 		location = fileUtils.getProjectFileWithExtension(location);
 		fileUtils.save(location);
 		loadState.file.set(location);
 		loadState.stateSaved.set(true);
 
 		loadState.notifyListeners();
+		return location;
 	}
 
 	void createNewProject(File location) throws ProjectIOException {

@@ -1,4 +1,4 @@
-package stasgora.mesh.editor.services.files.workspace;
+package stasgora.mesh.editor.services.files.workspace.interfaces;
 
 import javafx.stage.WindowEvent;
 

@@ -10,10 +10,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import stasgora.mesh.editor.model.project.CanvasUI;
 import stasgora.mesh.editor.model.project.LoadState;
-import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.files.ProjectIOException;
+import stasgora.mesh.editor.services.files.workspace.interfaces.RecentProjectManager;
+import stasgora.mesh.editor.services.files.workspace.interfaces.WorkspaceAction;
 import stasgora.mesh.editor.services.ui.UiDialogUtils;
 
 import java.io.File;
@@ -32,16 +34,18 @@ class WorkspaceActionFacade implements WorkspaceAction {
 	private final AppConfigReader appConfig;
 	private final LoadState loadState;
 	private final ObjectProperty<Cursor> mouseCursor;
+	private final RecentProjectManager recentProjectManager;
 
 	@Inject
 	WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils,
-	                      @AppConfig AppConfigReader appConfig, LoadState loadState, CanvasUI canvasUI) {
+	                      @AppConfig AppConfigReader appConfig, LoadState loadState, CanvasUI canvasUI, RecentProjectManager recentProjectManager) {
 		this.workspaceActionExecutor = workspaceActionExecutor;
 		this.appLang = appLang;
 		this.dialogUtils = dialogUtils;
 		this.appConfig = appConfig;
 		this.loadState = loadState;
 		this.mouseCursor = canvasUI.canvasMouseCursor;
+		this.recentProjectManager = recentProjectManager;
 	}
 
 	@Override
@@ -85,6 +89,7 @@ class WorkspaceActionFacade implements WorkspaceAction {
 		if (location != null) {
 			try {
 				workspaceActionExecutor.openProject(location);
+				recentProjectManager.addRecentProject(location);
 			} catch (ProjectIOException e) {
 				logger.log(Level.SEVERE, "Failed loading project from '" + location.getAbsolutePath() + "'", e);
 				showErrorDialog(title);
@@ -157,7 +162,8 @@ class WorkspaceActionFacade implements WorkspaceAction {
 
 	private void saveProject(boolean asNew) {
 		File location;
-		if (asNew || loadState.file.get() == null) {
+		boolean savingAsNew = asNew || loadState.file.get() == null;
+		if (savingAsNew) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
 			if (location == null) {
 				return;
@@ -166,7 +172,9 @@ class WorkspaceActionFacade implements WorkspaceAction {
 			location = loadState.file.get();
 		}
 		try {
-			workspaceActionExecutor.saveProject(location);
+			location = workspaceActionExecutor.saveProject(location);
+			if(savingAsNew)
+				recentProjectManager.addRecentProject(location);
 		} catch (ProjectIOException e) {
 			logger.log(Level.SEVERE, "Failed saving project to '" + location.getAbsolutePath() + "'", e);
 			showErrorDialog(appLang.getText("action.project.save"));

@@ -11,7 +11,7 @@ import stasgora.mesh.editor.model.NamespaceMap;
 import stasgora.mesh.editor.model.project.LoadState;
 import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
-import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
+import stasgora.mesh.editor.services.files.workspace.interfaces.WorkspaceAction;
 import stasgora.mesh.editor.services.history.ActionHistoryService;
 import stasgora.mesh.editor.view.annotation.MainWindowStage;
 import stasgora.mesh.editor.view.sub.SubView;

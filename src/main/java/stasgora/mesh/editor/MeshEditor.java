@@ -12,7 +12,7 @@ import stasgora.mesh.editor.services.config.ConfigModule;
 import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.drawing.DrawingModule;
 import stasgora.mesh.editor.services.files.FileIOModule;
-import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
+import stasgora.mesh.editor.services.files.workspace.interfaces.WorkspaceAction;
 import stasgora.mesh.editor.services.files.workspace.WorkspaceActionModule;
 import stasgora.mesh.editor.services.history.ActionHistoryModule;
 import stasgora.mesh.editor.services.input.InputModule;

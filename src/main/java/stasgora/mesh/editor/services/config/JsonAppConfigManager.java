@@ -1,5 +1,6 @@
 package stasgora.mesh.editor.services.config;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import stasgora.mesh.editor.model.config.JsonConfig;
 import stasgora.mesh.editor.model.config.JsonFileConfig;
@@ -39,7 +40,7 @@ public class JsonAppConfigManager extends JsonAppConfigReader implements AppConf
 
 	@Override
 	public void setStringList(String keyPath, List<String> list) {
-		setValue(config, keyPath, list);
+		setValue(config, keyPath, new JSONArray(list));
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public class JsonAppConfigManager extends JsonAppConfigReader implements AppConf
 		if(!(config instanceof JsonFileConfig))
 			return;
 		try(FileWriter writer = new FileWriter(((JsonFileConfig) config).configFile)) {
-			writer.write(config.config.toString(4));
+			writer.write(config.config.toString(4).replaceAll(" {4}", "\t"));
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Saving config failed", e);
 		}
