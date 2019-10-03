@@ -10,7 +10,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import stasgora.mesh.editor.model.project.CanvasUI;
 import stasgora.mesh.editor.model.project.LoadState;
-import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.files.ProjectIOException;

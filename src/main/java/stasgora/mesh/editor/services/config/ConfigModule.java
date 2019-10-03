@@ -5,6 +5,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.config.annotation.AppSettings;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigManager;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 
 public class ConfigModule extends AbstractModule {
 
@@ -21,7 +23,7 @@ public class ConfigModule extends AbstractModule {
 
 	@AppSettings
 	@Provides @Singleton
-	AppConfigReader appSettings() {
-		return JsonAppConfigReader.forFile("config/app.settings");
+	AppConfigManager appSettings() {
+		return JsonAppConfigManager.forFile("config/app.settings");
 	}
 }

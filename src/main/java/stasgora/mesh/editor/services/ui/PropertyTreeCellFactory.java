@@ -12,7 +12,7 @@ import stasgora.mesh.editor.model.TextKeyProvider;
 import stasgora.mesh.editor.model.observables.BindableProperty;
 import stasgora.mesh.editor.model.project.MeshLayer;
 import stasgora.mesh.editor.model.project.VisualProperties;
-import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.LangConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.history.ActionHistoryService;

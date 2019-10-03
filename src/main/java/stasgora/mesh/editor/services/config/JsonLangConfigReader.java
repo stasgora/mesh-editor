@@ -4,10 +4,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import stasgora.mesh.editor.model.JsonConfig;
 import stasgora.mesh.editor.model.NamespaceMap;
+import stasgora.mesh.editor.model.config.JsonConfig;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.config.annotation.AppSettings;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigManager;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +31,7 @@ class JsonLangConfigReader extends JsonConfigReader implements LangConfigReader 
 	private static final String FXML_TREE_PREFIX = "fxml";
 
 	@Inject
-	JsonLangConfigReader(@AppConfig AppConfigReader appConfig, @AppSettings AppConfigReader appSettings, NamespaceMap namespaceMap) {
+	JsonLangConfigReader(@AppConfig AppConfigReader appConfig, @AppSettings AppConfigManager appSettings, NamespaceMap namespaceMap) {
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;
 		this.namespaceMap = namespaceMap;

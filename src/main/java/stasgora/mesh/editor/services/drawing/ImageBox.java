@@ -10,9 +10,10 @@ import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.geom.polygons.Rectangle;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.CanvasUI;
-import stasgora.mesh.editor.services.config.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.config.annotation.AppSettings;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigManager;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.input.MouseListener;
 
 @Singleton
@@ -28,7 +29,7 @@ public class ImageBox implements MouseListener {
 	private CanvasUI canvasUI;
 
 	@Inject
-	ImageBox(CanvasData canvasData, CanvasUI canvasUI, @AppConfig AppConfigReader appConfig, @AppSettings AppConfigReader appSettings) {
+	ImageBox(CanvasData canvasData, CanvasUI canvasUI, @AppConfig AppConfigReader appConfig, @AppSettings AppConfigManager appSettings) {
 		this.canvasData = canvasData;
 		this.appConfig = appConfig;
 		this.appSettings = appSettings;

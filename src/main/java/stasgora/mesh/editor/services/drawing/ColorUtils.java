@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import stasgora.mesh.editor.model.geom.Point;
 import stasgora.mesh.editor.model.paint.SerializableColor;
 import stasgora.mesh.editor.model.project.CanvasData;
-import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.mesh.generation.NodeUtils;
 

@@ -12,7 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.MeshEditor;
 import stasgora.mesh.editor.model.project.LoadState;
-import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.annotation.AppSettings;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigManager;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.services.files.workspace.WorkspaceAction;
 import stasgora.mesh.editor.view.annotation.MainWindowRoot;
@@ -39,7 +41,7 @@ public class WindowView {
 
 	@Inject
 	void init(LoadState loadState, @MainWindowStage Stage window, @AppConfig AppConfigReader appConfig,
-	          @AppConfig AppConfigReader appSettings, @MainWindowRoot Parent windowRoot) {
+	          @AppSettings AppConfigManager appSettings, @MainWindowRoot Parent windowRoot) {
 		this.loadState = loadState;
 		this.window = window;
 		this.appConfig = appConfig;

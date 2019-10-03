@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import stasgora.mesh.editor.model.geom.Mesh;
 import stasgora.mesh.editor.model.project.CanvasData;
 import stasgora.mesh.editor.model.project.VisualProperties;
-import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 
 import java.io.*;

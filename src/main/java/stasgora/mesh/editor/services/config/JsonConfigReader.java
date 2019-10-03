@@ -4,8 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import stasgora.mesh.editor.model.JsonConfig;
+import stasgora.mesh.editor.model.config.JsonConfig;
+import stasgora.mesh.editor.model.config.JsonFileConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public abstract class JsonConfigReader {
 		return true;
 	}
 
-	private String getLastKey(String keyPath) {
+	protected String getLastKey(String keyPath) {
 		String[] path = getKeyChain(keyPath);
 		return path.length > 0 ? path[path.length - 1] : keyPath;
 	}
@@ -67,7 +69,7 @@ public abstract class JsonConfigReader {
 		return keyPath.split("\\.");
 	}
 
-	private JSONObject getParent(JsonConfig config, String keyPath) {
+	protected JSONObject getParent(JsonConfig config, String keyPath) {
 		List<String> keys = Arrays.asList(getKeyChain(keyPath));
 		if (keys.size() <= 1) {
 			return config.config;
@@ -89,17 +91,20 @@ public abstract class JsonConfigReader {
 		return parent;
 	}
 
-	private void logInvalidKey(String configName, String key, String keyPath) {
+	protected void logInvalidKey(String configName, String key, String keyPath) {
 		LOGGER.log(Level.SEVERE, () -> String.format("Failed reading '%s' config property '%s' from path '%s'", configName, key, keyPath));
 	}
 
-	protected static JsonConfig createJsonConfig(InputStream inputStream, String fileName) {
-		return new JsonConfig(fileName, new JSONObject(new JSONTokener(inputStream)));
+	protected static JsonConfig createJsonConfig(InputStream inputStream, String fileName, boolean isFile) {
+		JSONObject config = new JSONObject(new JSONTokener(inputStream));
+		if(isFile)
+			return new JsonFileConfig(new File(fileName), config);
+		return new JsonConfig(fileName, config);
 	}
 
 	protected static JsonConfig loadJsonConfig(String fileName) {
 		try (InputStream input = JsonAppConfigReader.class.getResourceAsStream(fileName)) {
-			return createJsonConfig(input, fileName);
+			return createJsonConfig(input, fileName, false);
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed creating Config Reader for resource '" + fileName + "'", e);
 		}

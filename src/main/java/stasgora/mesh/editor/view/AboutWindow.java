@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import stasgora.mesh.editor.MeshEditor;
-import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 import stasgora.mesh.editor.view.annotation.MainWindowStage;
 

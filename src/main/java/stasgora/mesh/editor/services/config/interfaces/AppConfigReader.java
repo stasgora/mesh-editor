@@ -1,4 +1,4 @@
-package stasgora.mesh.editor.services.config;
+package stasgora.mesh.editor.services.config.interfaces;
 
 import org.json.JSONObject;
 

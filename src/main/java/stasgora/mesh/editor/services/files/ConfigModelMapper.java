@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import io.github.stasgora.observetree.Observable;
 import io.github.stasgora.observetree.SettableProperty;
 import org.json.JSONObject;
-import stasgora.mesh.editor.services.config.AppConfigReader;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 import stasgora.mesh.editor.services.config.annotation.AppConfig;
 
 import java.lang.reflect.Field;

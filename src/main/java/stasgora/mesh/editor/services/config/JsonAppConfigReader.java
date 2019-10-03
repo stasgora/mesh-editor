@@ -2,7 +2,8 @@ package stasgora.mesh.editor.services.config;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import stasgora.mesh.editor.model.JsonConfig;
+import stasgora.mesh.editor.model.config.JsonConfig;
+import stasgora.mesh.editor.services.config.interfaces.AppConfigReader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,12 +14,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class JsonAppConfigReader extends JsonConfigReader implements AppConfigReader {
+	protected static final Logger LOGGER = Logger.getLogger(JsonAppConfigReader.class.getName());
 
-	private static final Logger LOGGER = Logger.getLogger(JsonAppConfigReader.class.getName());
+	protected JsonConfig config;
 
-	private JsonConfig config;
-
-	public JsonAppConfigReader(JsonConfig config) {
+	protected JsonAppConfigReader(JsonConfig config) {
 		this.config = config;
 	}
 
@@ -54,15 +54,6 @@ class JsonAppConfigReader extends JsonConfigReader implements AppConfigReader {
 
 	static JsonAppConfigReader forResource(String fileName) {
 		return new JsonAppConfigReader(loadJsonConfig(fileName));
-	}
-
-	static JsonAppConfigReader forFile(String fileName) {
-		try (InputStream input = new FileInputStream(new File(fileName))) {
-			return new JsonAppConfigReader(createJsonConfig(input, fileName));
-		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Failed creating Config Reader for resource '" + fileName + "'", e);
-		}
-		return null;
 	}
 
 	@Override
