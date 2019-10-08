@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.org/stasgora/mesh-editor.svg?branch=master)](https://travis-ci.org/stasgora/mesh-editor)
 [![License](https://img.shields.io/github/license/stasgora/mesh-editor?color=blueviolet)](https://github.com/stasgora/mesh-editor/blob/master/LICENSE)
 ![GitHub top language](https://img.shields.io/github/languages/top/stasgora/mesh-editor)
-[![Sonar Violations](https://img.shields.io/sonar/violations/stasgora.mesh-editor:mesh-editor?format=long&server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=stasgora.mesh-editor%3Amesh-editor)
 
 # Mesh Editor
 Desktop application created to turn raster images into low poly vector art

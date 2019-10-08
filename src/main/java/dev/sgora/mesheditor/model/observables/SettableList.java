@@ -15,7 +15,7 @@ public class SettableList<T> extends Observable implements Serializable {
 	public SettableList() { }
 
 	public SettableList(List<T> modelList) {
-		modelList.addAll(modelList);
+		this.modelList.addAll(modelList);
 	}
 
 	public List<T> get() {
