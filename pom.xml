@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>stasgora.mesh-editor</groupId>
+	<groupId>dev.sgora</groupId>
 	<artifactId>mesh-editor</artifactId>
-	<version>0.9</version>
+	<version>0.9.1-SNAPSHOT</version>
 
 	<name>Mesh Editor</name>
 	<description>JavaFX editor created to turn raster images into low poly vector art</description>
@@ -59,7 +59,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>stasgora.mesh.editor.Main</mainClass>
+							<mainClass>dev.sgora.mesheditor.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -71,7 +71,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>stasgora.mesh.editor.Main</mainClass>
+							<mainClass>dev.sgora.mesheditor.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -100,7 +100,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>stasgora.mesh.editor.Main</mainClass>
+					<mainClass>dev.sgora.mesheditor.Main</mainClass>
 				</configuration>
 			</plugin>
 			<!-- sonar -->

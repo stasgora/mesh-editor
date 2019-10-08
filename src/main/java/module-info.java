@@ -9,5 +9,5 @@ open module mesh.editor {
 	requires com.google.guice;
 	requires com.google.guice.extensions.assistedinject;
 
-	exports stasgora.mesh.editor;
+	exports dev.sgora.mesheditor;
 }

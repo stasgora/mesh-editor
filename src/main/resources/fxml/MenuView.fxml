@@ -8,7 +8,7 @@
 	<Menu text="${menu_file_title}">
 		<MenuItem fx:id="newProjectMenuItem" text="${menu_file_item_new}" accelerator="Ctrl+N" />
 		<MenuItem fx:id="openProjectMenuItem" text="${menu_file_item_open}" accelerator="Ctrl+O" />
-		<Menu fx:id="openRecentMenuItem" visible="false" disable="true" text="${menu_file_item_openRecent}" />
+		<Menu fx:id="openRecentMenu" text="${menu_file_item_openRecent}" />
 		<MenuItem fx:id="closeProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_close}" accelerator="Ctrl+C" />
 		<SeparatorMenuItem mnemonicParsing="false" />
 		<MenuItem fx:id="saveProjectMenuItem" disable="${menu_file_item_disabled}" text="${menu_file_item_save}" accelerator="Ctrl+S" />
