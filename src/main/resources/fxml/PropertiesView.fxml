@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import stasgora.mesh.editor.ui.properties.PropertyTreeItem?>
+<?import dev.sgora.mesheditor.ui.properties.PropertyTreeItem?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 

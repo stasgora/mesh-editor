@@ -2,8 +2,8 @@
 
 <?import javafx.scene.layout.*?>
 
-<?import stasgora.mesh.editor.ui.canvas.ImageCanvas?>
-<?import stasgora.mesh.editor.ui.canvas.ResizableCanvas?>
+<?import dev.sgora.mesheditor.ui.canvas.ImageCanvas?>
+<?import dev.sgora.mesheditor.ui.canvas.ResizableCanvas?>
 
 <fx:root type="javafx.scene.layout.StackPane" fx:id="canvasView" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
 	<ImageCanvas fx:id="imageCanvas" />
