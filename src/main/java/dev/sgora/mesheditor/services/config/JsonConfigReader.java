@@ -19,26 +19,28 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class JsonConfigReader {
-
 	private static final Logger LOGGER = Logger.getLogger(JsonConfigReader.class.getName());
+
+	protected boolean disableLoggingForRead;
 
 	protected <T> T getValue(JsonConfig config, String keyPath, BiFunction<JSONObject, String, T> getValue) {
 		JSONObject parent = getParent(config, keyPath);
 		String lastKey = getLastKey(keyPath);
-		if (!parent.has(lastKey)) {
+		if (!disableLoggingForRead && !parent.has(lastKey))
 			logInvalidKey(config.name, lastKey, keyPath);
-		}
+		disableLoggingForRead = false;
 		return getValue.apply(parent, lastKey);
 	}
 
 	protected <T> List<T> getList(JsonConfig config, String keyPath, BiFunction<JSONArray, Integer, T> getValue) {
 		JSONObject parent = getParent(config, keyPath);
 		String lastKey = getLastKey(keyPath);
-		if (!parent.has(lastKey)) {
+		if (!disableLoggingForRead && !parent.has(lastKey))
 			logInvalidKey(config.name, lastKey, keyPath);
+		disableLoggingForRead = false;
+		JSONArray jsonArray = parent.optJSONArray(lastKey);
+		if(jsonArray == null)
 			return Collections.emptyList();
-		}
-		JSONArray jsonArray = parent.getJSONArray(lastKey);
 		List<T> list = new ArrayList<>(jsonArray.length());
 		for (int i = 0; i < jsonArray.length(); i++) {
 			list.add(getValue.apply(jsonArray, i));

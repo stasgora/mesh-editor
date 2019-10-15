@@ -20,4 +20,6 @@ public interface AppConfigReader {
 
 	boolean containsPath(String keyPath);
 
+	AppConfigReader opt();
+
 }

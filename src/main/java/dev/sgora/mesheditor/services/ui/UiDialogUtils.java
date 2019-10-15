@@ -36,9 +36,11 @@ public class UiDialogUtils {
 		this.appLang = appLang;
 	}
 
-	public File showFileChooser(FileChooserAction action, String title, FileChooser.ExtensionFilter extensionFilter) {
+	public File showFileChooser(FileChooserAction action, String title, File initialDirectory, FileChooser.ExtensionFilter extensionFilter) {
 		FileChooser projectFileChooser = new FileChooser();
 		projectFileChooser.setTitle(title);
+		if(initialDirectory != null && initialDirectory.isDirectory())
+			projectFileChooser.setInitialDirectory(initialDirectory);
 		projectFileChooser.getExtensionFilters().addAll(extensionFilter, getDefaultFilter());
 		if (action == FileChooserAction.SAVE_DIALOG) {
 			return projectFileChooser.showSaveDialog(window);

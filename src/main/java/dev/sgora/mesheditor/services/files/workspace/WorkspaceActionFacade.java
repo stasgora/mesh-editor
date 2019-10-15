@@ -5,6 +5,8 @@ import com.google.inject.Singleton;
 import dev.sgora.mesheditor.model.project.CanvasUI;
 import dev.sgora.mesheditor.model.project.LoadState;
 import dev.sgora.mesheditor.services.config.annotation.AppConfig;
+import dev.sgora.mesheditor.services.config.annotation.AppSettings;
+import dev.sgora.mesheditor.services.config.interfaces.AppConfigManager;
 import dev.sgora.mesheditor.services.files.workspace.interfaces.RecentProjectManager;
 import dev.sgora.mesheditor.services.ui.UiDialogUtils;
 import javafx.application.Platform;
@@ -34,18 +36,21 @@ class WorkspaceActionFacade implements WorkspaceAction {
 	private final UiDialogUtils dialogUtils;
 	private final FileUtils fileUtils;
 	private final AppConfigReader appConfig;
+	private final AppConfigManager appSettings;
 	private final LoadState loadState;
 	private final ObjectProperty<Cursor> mouseCursor;
 	private final RecentProjectManager recentProjectManager;
 
 	@Inject
-	WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils, FileUtils fileUtils,
-	                      @AppConfig AppConfigReader appConfig, LoadState loadState, CanvasUI canvasUI, RecentProjectManager recentProjectManager) {
+	WorkspaceActionFacade(WorkspaceActionExecutor workspaceActionExecutor, LangConfigReader appLang, UiDialogUtils dialogUtils,
+	                      FileUtils fileUtils, @AppConfig AppConfigReader appConfig, @AppSettings AppConfigManager appSettings,
+	                      LoadState loadState, CanvasUI canvasUI, RecentProjectManager recentProjectManager) {
 		this.workspaceActionExecutor = workspaceActionExecutor;
 		this.appLang = appLang;
 		this.dialogUtils = dialogUtils;
 		this.fileUtils = fileUtils;
 		this.appConfig = appConfig;
+		this.appSettings = appSettings;
 		this.loadState = loadState;
 		this.mouseCursor = canvasUI.canvasMouseCursor;
 		this.recentProjectManager = recentProjectManager;
@@ -69,10 +74,11 @@ class WorkspaceActionFacade implements WorkspaceAction {
 		}
 		String[] imageTypes = appConfig.getStringList("supported.imageTypes").stream().map(item -> "*." + item).toArray(String[]::new);
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.image"), imageTypes);
-		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, appLang.getText("action.project.new"), filter);
+		File location = dialogUtils.showFileChooser(FileChooserAction.OPEN_DIALOG, appLang.getText("action.project.new"), getLastChosenDir(FileType.IMAGE), filter);
 		if (location != null) {
 			try {
 				workspaceActionExecutor.createNewProject(location);
+				setLastChosenDir(FileType.IMAGE, location);
 			} catch (ProjectIOException e) {
 				logger.log(Level.SEVERE, "Failed creating new project at '" + location.getAbsolutePath() + "'", e);
 				showErrorDialog(title);
@@ -87,9 +93,10 @@ class WorkspaceActionFacade implements WorkspaceAction {
 			return;
 		}
 		File location = showProjectFileChooser(FileChooserAction.OPEN_DIALOG);
-		if (location != null)
+		if (location != null) {
 			openProject(location, title);
-
+			setLastChosenDir(FileType.PROJECT, location);
+		}
 	}
 
 	@Override
@@ -119,10 +126,11 @@ class WorkspaceActionFacade implements WorkspaceAction {
 	public void onExportProject() {
 		String title = appLang.getText("action.project.export");
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(appLang.getText("dialog.fileChooser.extension.svg"), "*.svg");
-		File location = dialogUtils.showFileChooser(FileChooserAction.SAVE_DIALOG, title, filter);
+		File location = dialogUtils.showFileChooser(FileChooserAction.SAVE_DIALOG, title, getLastChosenDir(FileType.EXPORT), filter);
 		if (location != null) {
 			try {
 				workspaceActionExecutor.exportProjectAsSvg(location);
+				setLastChosenDir(FileType.EXPORT, location);
 			} catch (ProjectIOException e) {
 				logger.log(Level.SEVERE, "Failed exporting project at '" + location.getAbsolutePath() + "'", e);
 				showErrorDialog(title);
@@ -144,6 +152,14 @@ class WorkspaceActionFacade implements WorkspaceAction {
 		}
 	}
 
+	private File getLastChosenDir(FileType type) {
+		return new File(appSettings.opt().getString("last.chosenDir." + type.key));
+	}
+
+	private void setLastChosenDir(FileType type, File file) {
+		appSettings.setString("last.chosenDir." + type.key, file.getParent());
+	}
+
 	private void openProject(File location, String errorTitle) {
 		try {
 			workspaceActionExecutor.openProject(location);
@@ -162,7 +178,7 @@ class WorkspaceActionFacade implements WorkspaceAction {
 		String projectExtension = appConfig.getString("extension.project");
 		String extensionTitle = appLang.getText("dialog.fileChooser.extension.project");
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(extensionTitle, "*." + projectExtension);
-		return dialogUtils.showFileChooser(action, appLang.getText("action.project." + action.langKey), filter);
+		return dialogUtils.showFileChooser(action, appLang.getText("action.project." + action.langKey), getLastChosenDir(FileType.PROJECT), filter);
 	}
 
 	private void saveProject(boolean asNew) {
@@ -170,9 +186,10 @@ class WorkspaceActionFacade implements WorkspaceAction {
 		boolean savingAsNew = asNew || loadState.file.get() == null;
 		if (savingAsNew) {
 			location = showProjectFileChooser(FileChooserAction.SAVE_DIALOG);
-			if (location == null) {
+			if (location == null)
 				return;
-			}
+			else
+				setLastChosenDir(FileType.PROJECT, location);
 		} else {
 			location = loadState.file.get();
 		}

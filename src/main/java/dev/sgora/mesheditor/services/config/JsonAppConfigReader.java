@@ -56,4 +56,10 @@ class JsonAppConfigReader extends JsonConfigReader implements AppConfigReader {
 		return containsPath(config, keyPath);
 	}
 
+	@Override
+	public AppConfigReader opt() {
+		disableLoggingForRead = true;
+		return this;
+	}
+
 }
